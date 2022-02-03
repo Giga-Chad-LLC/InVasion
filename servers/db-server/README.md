@@ -1,0 +1,1 @@
+Here will be server for HTTP calls (for persistent users' data)
