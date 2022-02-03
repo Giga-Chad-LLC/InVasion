@@ -94,7 +94,8 @@ ClientBin/
 *.publishsettings
 node_modules/
 __pycache__/
-.import
+*.import
+.idea
 
 # KDE
 .directory
