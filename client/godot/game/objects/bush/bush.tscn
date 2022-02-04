@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://models/bush/images/sprite.png" type="Texture" id=1]
+[ext_resource path="res://objects/bush/images/bush.png" type="Texture" id=1]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 8.0
