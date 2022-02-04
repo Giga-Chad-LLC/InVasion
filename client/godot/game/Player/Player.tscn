@@ -1,7 +1,7 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=26 format=2]
 
-[ext_resource path="res://Player.gd" type="Script" id=1]
-[ext_resource path="res://Player.png" type="Texture" id=2]
+[ext_resource path="res://Player/Player.gd" type="Script" id=1]
+[ext_resource path="res://Player/Player.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.27653
@@ -10,6 +10,7 @@ height = 0.0
 [sub_resource type="Animation" id=4]
 resource_name = "IdleDown"
 length = 0.1
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -26,6 +27,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=5]
 resource_name = "IdleLeft"
 length = 0.1
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -42,6 +44,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=6]
 resource_name = "IdleRight"
 length = 0.1
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -58,6 +61,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=7]
 resource_name = "IdleUp"
 length = 0.1
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -71,24 +75,10 @@ tracks/0/keys = {
 "values": [ 6 ]
 }
 
-[sub_resource type="Animation" id=2]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 1 ]
-}
-
 [sub_resource type="Animation" id=8]
 resource_name = "RunDown"
 length = 0.6
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -105,7 +95,6 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=9]
 resource_name = "RunLeft"
 length = 0.6
-loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -122,6 +111,7 @@ tracks/0/keys = {
 [sub_resource type="Animation" id=3]
 resource_name = "RunRight"
 length = 0.6
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -166,13 +156,15 @@ animation = "IdleRight"
 
 [sub_resource type="AnimationNodeBlendSpace2D" id=15]
 blend_point_0/node = SubResource( 11 )
-blend_point_0/pos = Vector2( 0, 1 )
+blend_point_0/pos = Vector2( 0, 1.3 )
 blend_point_1/node = SubResource( 12 )
-blend_point_1/pos = Vector2( 0, -1 )
+blend_point_1/pos = Vector2( 0, -1.3 )
 blend_point_2/node = SubResource( 13 )
 blend_point_2/pos = Vector2( -1, 0 )
 blend_point_3/node = SubResource( 14 )
 blend_point_3/pos = Vector2( 1, 0 )
+min_space = Vector2( -1, -2 )
+max_space = Vector2( 1, 2 )
 blend_mode = 1
 
 [sub_resource type="AnimationNodeAnimation" id=16]
@@ -189,13 +181,15 @@ animation = "RunRight"
 
 [sub_resource type="AnimationNodeBlendSpace2D" id=20]
 blend_point_0/node = SubResource( 16 )
-blend_point_0/pos = Vector2( 0, 1 )
+blend_point_0/pos = Vector2( 0, 1.3 )
 blend_point_1/node = SubResource( 17 )
-blend_point_1/pos = Vector2( 0, -1 )
+blend_point_1/pos = Vector2( 0, -1.3 )
 blend_point_2/node = SubResource( 18 )
 blend_point_2/pos = Vector2( -1, 0 )
 blend_point_3/node = SubResource( 19 )
 blend_point_3/pos = Vector2( 1, 0 )
+min_space = Vector2( -1, -2 )
+max_space = Vector2( 1, 2 )
 blend_mode = 1
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=21]
@@ -220,7 +214,7 @@ position = Vector2( 0, -8 )
 scale = Vector2( 0.637295, 0.730469 )
 texture = ExtResource( 2 )
 hframes = 60
-frame = 18
+frame = 12
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -3 )
@@ -233,7 +227,6 @@ anims/IdleDown = SubResource( 4 )
 anims/IdleLeft = SubResource( 5 )
 anims/IdleRight = SubResource( 6 )
 anims/IdleUp = SubResource( 7 )
-anims/RESET = SubResource( 2 )
 anims/RunDown = SubResource( 8 )
 anims/RunLeft = SubResource( 9 )
 anims/RunRight = SubResource( 3 )
