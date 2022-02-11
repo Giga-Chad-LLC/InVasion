@@ -1,4 +1,4 @@
-# Copyright 2018 gRPC authors.
+# Copyright 2021 the gRPC authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@
 
 cmake_minimum_required(VERSION 3.5.1)
 
-project(HelloWorld C CXX)
+project(InVasion)
 
-include(common.cmake)
+include(cmake-test/CMakeLists.txt)
 
 # Proto file
-get_filename_component(hw_proto "../../protos/helloworld.proto" ABSOLUTE)
+get_filename_component(hw_proto "proto/helloworld.proto" ABSOLUTE)
 get_filename_component(hw_proto_path "${hw_proto}" PATH)
 
 # Generated sources
@@ -56,9 +56,9 @@ target_link_libraries(hw_grpc_proto
         ${_GRPC_GRPCPP}
         ${_PROTOBUF_LIBPROTOBUF})
 
-# Targets greeter_[async_](client|server)
+# Targets greeter_(client|server)
 foreach(_target
-        )
+        greeter_client greeter_server)
     add_executable(${_target} "${_target}.cc")
     target_link_libraries(${_target}
             hw_grpc_proto

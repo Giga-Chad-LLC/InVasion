@@ -16,73 +16,71 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
-namespace helloworld {
-constexpr HelloRequest::HelloRequest(
+namespace test {
+constexpr Request::Request(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
-struct HelloRequestDefaultTypeInternal {
-  constexpr HelloRequestDefaultTypeInternal()
+  : text_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
+struct RequestDefaultTypeInternal {
+  constexpr RequestDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~HelloRequestDefaultTypeInternal() {}
+  ~RequestDefaultTypeInternal() {}
   union {
-    HelloRequest _instance;
+    Request _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT HelloRequestDefaultTypeInternal _HelloRequest_default_instance_;
-constexpr HelloReply::HelloReply(
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RequestDefaultTypeInternal _Request_default_instance_;
+constexpr Reply::Reply(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : message_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
-struct HelloReplyDefaultTypeInternal {
-  constexpr HelloReplyDefaultTypeInternal()
+struct ReplyDefaultTypeInternal {
+  constexpr ReplyDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~HelloReplyDefaultTypeInternal() {}
+  ~ReplyDefaultTypeInternal() {}
   union {
-    HelloReply _instance;
+    Reply _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT HelloReplyDefaultTypeInternal _HelloReply_default_instance_;
-}  // namespace helloworld
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ReplyDefaultTypeInternal _Reply_default_instance_;
+}  // namespace test
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_server_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_server_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_server_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_server_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::helloworld::HelloRequest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::test::Request, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::helloworld::HelloRequest, name_),
+  PROTOBUF_FIELD_OFFSET(::test::Request, text_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::helloworld::HelloReply, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::test::Reply, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::helloworld::HelloReply, message_),
+  PROTOBUF_FIELD_OFFSET(::test::Reply, message_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::helloworld::HelloRequest)},
-  { 7, -1, -1, sizeof(::helloworld::HelloReply)},
+  { 0, -1, -1, sizeof(::test::Request)},
+  { 7, -1, -1, sizeof(::test::Reply)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::helloworld::_HelloRequest_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::helloworld::_HelloReply_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::test::_Request_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::test::_Reply_default_instance_),
 };
 
 const char descriptor_table_protodef_server_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\014server.proto\022\nhelloworld\"\034\n\014HelloReque"
-  "st\022\014\n\004name\030\001 \001(\t\"\035\n\nHelloReply\022\017\n\007messag"
-  "e\030\001 \001(\t2\216\001\n\007Greeter\022>\n\010SayHello\022\030.hellow"
-  "orld.HelloRequest\032\026.helloworld.HelloRepl"
-  "y\"\000\022C\n\rSayHelloAgain\022\030.helloworld.HelloR"
-  "equest\032\026.helloworld.HelloReply\"\000b\006proto3"
+  "\n\014server.proto\022\004test\"\027\n\007Request\022\014\n\004text\030"
+  "\001 \001(\t\"\030\n\005Reply\022\017\n\007message\030\001 \001(\t22\n\007Greet"
+  "er\022\'\n\007Message\022\r.test.Request\032\013.test.Repl"
+  "y\"\000b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_server_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_server_2eproto = {
-  false, false, 240, descriptor_table_protodef_server_2eproto, "server.proto", 
+  false, false, 131, descriptor_table_protodef_server_2eproto, "server.proto", 
   &descriptor_table_server_2eproto_once, nullptr, 0, 2,
   schemas, file_default_instances, TableStruct_server_2eproto::offsets,
   file_level_metadata_server_2eproto, file_level_enum_descriptors_server_2eproto, file_level_service_descriptors_server_2eproto,
@@ -93,82 +91,82 @@ PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable
 
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_server_2eproto(&descriptor_table_server_2eproto);
-namespace helloworld {
+namespace test {
 
 // ===================================================================
 
-class HelloRequest::_Internal {
+class Request::_Internal {
  public:
 };
 
-HelloRequest::HelloRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+Request::Request(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
   }
-  // @@protoc_insertion_point(arena_constructor:helloworld.HelloRequest)
+  // @@protoc_insertion_point(arena_constructor:test.Request)
 }
-HelloRequest::HelloRequest(const HelloRequest& from)
+Request::Request(const Request& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_name().empty()) {
-    name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
+  text_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_text().empty()) {
+    text_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_text(), 
       GetArenaForAllocation());
   }
-  // @@protoc_insertion_point(copy_constructor:helloworld.HelloRequest)
+  // @@protoc_insertion_point(copy_constructor:test.Request)
 }
 
-void HelloRequest::SharedCtor() {
-name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+void Request::SharedCtor() {
+text_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-HelloRequest::~HelloRequest() {
-  // @@protoc_insertion_point(destructor:helloworld.HelloRequest)
+Request::~Request() {
+  // @@protoc_insertion_point(destructor:test.Request)
   if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
   _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-inline void HelloRequest::SharedDtor() {
+inline void Request::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  text_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void HelloRequest::ArenaDtor(void* object) {
-  HelloRequest* _this = reinterpret_cast< HelloRequest* >(object);
+void Request::ArenaDtor(void* object) {
+  Request* _this = reinterpret_cast< Request* >(object);
   (void)_this;
 }
-void HelloRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+void Request::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 }
-void HelloRequest::SetCachedSize(int size) const {
+void Request::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void HelloRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:helloworld.HelloRequest)
+void Request::Clear() {
+// @@protoc_insertion_point(message_clear_start:test.Request)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmpty();
+  text_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* HelloRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* Request::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // string name = 1;
+      // string text = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_name();
+          auto str = _internal_mutable_text();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "helloworld.HelloRequest.name"));
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "test.Request.text"));
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -196,97 +194,97 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* HelloRequest::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* Request::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:helloworld.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:test.Request)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string name = 1;
-  if (!this->_internal_name().empty()) {
+  // string text = 1;
+  if (!this->_internal_text().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      this->_internal_text().data(), static_cast<int>(this->_internal_text().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "helloworld.HelloRequest.name");
+      "test.Request.text");
     target = stream->WriteStringMaybeAliased(
-        1, this->_internal_name(), target);
+        1, this->_internal_text(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:helloworld.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:test.Request)
   return target;
 }
 
-size_t HelloRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:helloworld.HelloRequest)
+size_t Request::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:test.Request)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string name = 1;
-  if (!this->_internal_name().empty()) {
+  // string text = 1;
+  if (!this->_internal_text().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_name());
+        this->_internal_text());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData HelloRequest::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Request::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    HelloRequest::MergeImpl
+    Request::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*HelloRequest::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Request::GetClassData() const { return &_class_data_; }
 
-void HelloRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+void Request::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
                       const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<HelloRequest *>(to)->MergeFrom(
-      static_cast<const HelloRequest &>(from));
+  static_cast<Request *>(to)->MergeFrom(
+      static_cast<const Request &>(from));
 }
 
 
-void HelloRequest::MergeFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:helloworld.HelloRequest)
+void Request::MergeFrom(const Request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:test.Request)
   GOOGLE_DCHECK_NE(&from, this);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_name().empty()) {
-    _internal_set_name(from._internal_name());
+  if (!from._internal_text().empty()) {
+    _internal_set_text(from._internal_text());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void HelloRequest::CopyFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:helloworld.HelloRequest)
+void Request::CopyFrom(const Request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:test.Request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool HelloRequest::IsInitialized() const {
+bool Request::IsInitialized() const {
   return true;
 }
 
-void HelloRequest::InternalSwap(HelloRequest* other) {
+void Request::InternalSwap(Request* other) {
   using std::swap;
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      &name_, lhs_arena,
-      &other->name_, rhs_arena
+      &text_, lhs_arena,
+      &other->text_, rhs_arena
   );
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HelloRequest::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata Request::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_server_2eproto_getter, &descriptor_table_server_2eproto_once,
       file_level_metadata_server_2eproto[0]);
@@ -294,20 +292,20 @@ void HelloRequest::InternalSwap(HelloRequest* other) {
 
 // ===================================================================
 
-class HelloReply::_Internal {
+class Reply::_Internal {
  public:
 };
 
-HelloReply::HelloReply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+Reply::Reply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
   }
-  // @@protoc_insertion_point(arena_constructor:helloworld.HelloReply)
+  // @@protoc_insertion_point(arena_constructor:test.Reply)
 }
-HelloReply::HelloReply(const HelloReply& from)
+Reply::Reply(const Reply& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
@@ -315,37 +313,37 @@ HelloReply::HelloReply(const HelloReply& from)
     message_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_message(), 
       GetArenaForAllocation());
   }
-  // @@protoc_insertion_point(copy_constructor:helloworld.HelloReply)
+  // @@protoc_insertion_point(copy_constructor:test.Reply)
 }
 
-void HelloReply::SharedCtor() {
+void Reply::SharedCtor() {
 message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-HelloReply::~HelloReply() {
-  // @@protoc_insertion_point(destructor:helloworld.HelloReply)
+Reply::~Reply() {
+  // @@protoc_insertion_point(destructor:test.Reply)
   if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
   _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-inline void HelloReply::SharedDtor() {
+inline void Reply::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   message_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void HelloReply::ArenaDtor(void* object) {
-  HelloReply* _this = reinterpret_cast< HelloReply* >(object);
+void Reply::ArenaDtor(void* object) {
+  Reply* _this = reinterpret_cast< Reply* >(object);
   (void)_this;
 }
-void HelloReply::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+void Reply::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 }
-void HelloReply::SetCachedSize(int size) const {
+void Reply::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void HelloReply::Clear() {
-// @@protoc_insertion_point(message_clear_start:helloworld.HelloReply)
+void Reply::Clear() {
+// @@protoc_insertion_point(message_clear_start:test.Reply)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -354,7 +352,7 @@ void HelloReply::Clear() {
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* HelloReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* Reply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -365,7 +363,7 @@ const char* HelloReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           auto str = _internal_mutable_message();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "helloworld.HelloReply.message"));
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "test.Reply.message"));
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -393,9 +391,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* HelloReply::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* Reply::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:helloworld.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_start:test.Reply)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -404,7 +402,7 @@ failure:
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_message().data(), static_cast<int>(this->_internal_message().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "helloworld.HelloReply.message");
+      "test.Reply.message");
     target = stream->WriteStringMaybeAliased(
         1, this->_internal_message(), target);
   }
@@ -413,12 +411,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:helloworld.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_end:test.Reply)
   return target;
 }
 
-size_t HelloReply::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:helloworld.HelloReply)
+size_t Reply::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:test.Reply)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -435,21 +433,21 @@ size_t HelloReply::ByteSizeLong() const {
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData HelloReply::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Reply::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    HelloReply::MergeImpl
+    Reply::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*HelloReply::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Reply::GetClassData() const { return &_class_data_; }
 
-void HelloReply::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+void Reply::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
                       const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<HelloReply *>(to)->MergeFrom(
-      static_cast<const HelloReply &>(from));
+  static_cast<Reply *>(to)->MergeFrom(
+      static_cast<const Reply &>(from));
 }
 
 
-void HelloReply::MergeFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:helloworld.HelloReply)
+void Reply::MergeFrom(const Reply& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:test.Reply)
   GOOGLE_DCHECK_NE(&from, this);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
@@ -460,18 +458,18 @@ void HelloReply::MergeFrom(const HelloReply& from) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void HelloReply::CopyFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:helloworld.HelloReply)
+void Reply::CopyFrom(const Reply& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:test.Reply)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool HelloReply::IsInitialized() const {
+bool Reply::IsInitialized() const {
   return true;
 }
 
-void HelloReply::InternalSwap(HelloReply* other) {
+void Reply::InternalSwap(Reply* other) {
   using std::swap;
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
@@ -483,20 +481,20 @@ void HelloReply::InternalSwap(HelloReply* other) {
   );
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HelloReply::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata Reply::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_server_2eproto_getter, &descriptor_table_server_2eproto_once,
       file_level_metadata_server_2eproto[1]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
-}  // namespace helloworld
+}  // namespace test
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::helloworld::HelloRequest* Arena::CreateMaybeMessage< ::helloworld::HelloRequest >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::helloworld::HelloRequest >(arena);
+template<> PROTOBUF_NOINLINE ::test::Request* Arena::CreateMaybeMessage< ::test::Request >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::test::Request >(arena);
 }
-template<> PROTOBUF_NOINLINE ::helloworld::HelloReply* Arena::CreateMaybeMessage< ::helloworld::HelloReply >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::helloworld::HelloReply >(arena);
+template<> PROTOBUF_NOINLINE ::test::Reply* Arena::CreateMaybeMessage< ::test::Reply >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::test::Reply >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

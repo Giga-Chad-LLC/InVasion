@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: HelloWorld
+# Project: InVasion
 # Configurations: Debug
 # =============================================================================
 
@@ -40,29 +40,6 @@ include CMakeFiles/rules.ninja
 # Logical path to working directory; prefix for absolute paths.
 
 cmake_ninja_workdir = /home/nikolai/Рабочий$ стол/InVasion/cmake-build-debug/
-
-#############################################
-# Utility command for edit_cache
-
-build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /snap/clion/180/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-  DESC = No interactive CMake dialog available...
-  restat = 1
-
-build edit_cache: phony CMakeFiles/edit_cache.util
-
-
-#############################################
-# Utility command for rebuild_cache
-
-build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /snap/clion/180/bin/cmake/linux/bin/cmake --regenerate-during-build -S"/home/nikolai/Рабочий стол/InVasion" -B"/home/nikolai/Рабочий стол/InVasion/cmake-build-debug"
-  DESC = Running CMake to regenerate build system...
-  pool = console
-  restat = 1
-
-build rebuild_cache: phony CMakeFiles/rebuild_cache.util
-
 # =============================================================================
 # Object build statements for STATIC_LIBRARY target hw_grpc_proto
 
@@ -106,10 +83,101 @@ build libhw_grpc_proto.a: CXX_STATIC_LIBRARY_LINKER__hw_grpc_proto_Debug CMakeFi
 
 
 #############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /snap/clion/180/bin/cmake/linux/bin/cmake --regenerate-during-build -S"/home/nikolai/Рабочий стол/InVasion" -B"/home/nikolai/Рабочий стол/InVasion/cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Object build statements for EXECUTABLE target greeter_server
+
+
+#############################################
+# Order-only phony target for greeter_server
+
+build cmake_object_order_depends_target_greeter_server: phony || cmake_object_order_depends_target_hw_grpc_proto
+
+build CMakeFiles/greeter_server.dir/greeter_server.cc.o: CXX_COMPILER__greeter_server_Debug /home/nikolai/Рабочий$ стол/InVasion/greeter_server.cc || cmake_object_order_depends_target_greeter_server
+  DEFINES = -DCARES_STATICLIB
+  DEP_FILE = CMakeFiles/greeter_server.dir/greeter_server.cc.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I"/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" -isystem /include
+  OBJECT_DIR = CMakeFiles/greeter_server.dir
+  OBJECT_FILE_DIR = CMakeFiles/greeter_server.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target greeter_server
+
+
+#############################################
+# Link the executable greeter_server
+
+build greeter_server: CXX_EXECUTABLE_LINKER__greeter_server_Debug CMakeFiles/greeter_server.dir/greeter_server.cc.o | libhw_grpc_proto.a /lib/libgrpc++_reflection.a /lib/libgrpc++.a /lib/libprotobuf.a /lib/libgrpc.a /lib/libz.a /lib/libcares.a /lib/libaddress_sorting.a /lib/libre2.a /lib/libabsl_raw_hash_set.a /lib/libabsl_hashtablez_sampler.a /lib/libabsl_hash.a /lib/libabsl_city.a /lib/libabsl_low_level_hash.a /lib/libabsl_statusor.a /lib/libabsl_bad_variant_access.a /lib/libgpr.a /lib/libupb.a /lib/libabsl_status.a /lib/libabsl_cord.a /lib/libabsl_bad_optional_access.a /lib/libabsl_cordz_info.a /lib/libabsl_cord_internal.a /lib/libabsl_cordz_functions.a /lib/libabsl_exponential_biased.a /lib/libabsl_cordz_handle.a /lib/libabsl_str_format_internal.a /lib/libabsl_synchronization.a /lib/libabsl_stacktrace.a /lib/libabsl_symbolize.a /lib/libabsl_debugging_internal.a /lib/libabsl_demangle_internal.a /lib/libabsl_graphcycles_internal.a /lib/libabsl_malloc_internal.a /lib/libabsl_time.a /lib/libabsl_strings.a /lib/libabsl_throw_delegate.a /lib/libabsl_int128.a /lib/libabsl_strings_internal.a /lib/libabsl_base.a /lib/libabsl_spinlock_wait.a /lib/libabsl_raw_logging_internal.a /lib/libabsl_log_severity.a /lib/libabsl_civil_time.a /lib/libabsl_time_zone.a /lib/libssl.a /lib/libcrypto.a || libhw_grpc_proto.a
+  FLAGS = -g
+  LINK_LIBRARIES = libhw_grpc_proto.a  /lib/libgrpc++_reflection.a  /lib/libgrpc++.a  /lib/libprotobuf.a  /lib/libgrpc.a  /lib/libz.a  /lib/libcares.a  -lnsl  /lib/libaddress_sorting.a  /lib/libre2.a  /lib/libabsl_raw_hash_set.a  /lib/libabsl_hashtablez_sampler.a  /lib/libabsl_hash.a  /lib/libabsl_city.a  /lib/libabsl_low_level_hash.a  /lib/libabsl_statusor.a  /lib/libabsl_bad_variant_access.a  /lib/libgpr.a  /lib/libupb.a  -ldl  -lrt  -lm  /lib/libabsl_status.a  /lib/libabsl_cord.a  /lib/libabsl_bad_optional_access.a  /lib/libabsl_cordz_info.a  /lib/libabsl_cord_internal.a  /lib/libabsl_cordz_functions.a  /lib/libabsl_exponential_biased.a  /lib/libabsl_cordz_handle.a  /lib/libabsl_str_format_internal.a  /lib/libabsl_synchronization.a  /lib/libabsl_stacktrace.a  /lib/libabsl_symbolize.a  /lib/libabsl_debugging_internal.a  /lib/libabsl_demangle_internal.a  /lib/libabsl_graphcycles_internal.a  /lib/libabsl_malloc_internal.a  /lib/libabsl_time.a  /lib/libabsl_strings.a  /lib/libabsl_throw_delegate.a  /lib/libabsl_int128.a  /lib/libabsl_strings_internal.a  /lib/libabsl_base.a  -lpthread  /lib/libabsl_spinlock_wait.a  -lrt  /lib/libabsl_raw_logging_internal.a  /lib/libabsl_log_severity.a  /lib/libabsl_civil_time.a  /lib/libabsl_time_zone.a  /lib/libssl.a  /lib/libcrypto.a  -lpthread  -pthread
+  OBJECT_DIR = CMakeFiles/greeter_server.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = greeter_server
+  TARGET_PDB = greeter_server.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target greeter_client
+
+
+#############################################
+# Order-only phony target for greeter_client
+
+build cmake_object_order_depends_target_greeter_client: phony || cmake_object_order_depends_target_hw_grpc_proto
+
+build CMakeFiles/greeter_client.dir/greeter_client.cc.o: CXX_COMPILER__greeter_client_Debug /home/nikolai/Рабочий$ стол/InVasion/greeter_client.cc || cmake_object_order_depends_target_greeter_client
+  DEFINES = -DCARES_STATICLIB
+  DEP_FILE = CMakeFiles/greeter_client.dir/greeter_client.cc.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I"/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" -isystem /include
+  OBJECT_DIR = CMakeFiles/greeter_client.dir
+  OBJECT_FILE_DIR = CMakeFiles/greeter_client.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target greeter_client
+
+
+#############################################
+# Link the executable greeter_client
+
+build greeter_client: CXX_EXECUTABLE_LINKER__greeter_client_Debug CMakeFiles/greeter_client.dir/greeter_client.cc.o | libhw_grpc_proto.a /lib/libgrpc++_reflection.a /lib/libgrpc++.a /lib/libprotobuf.a /lib/libgrpc.a /lib/libz.a /lib/libcares.a /lib/libaddress_sorting.a /lib/libre2.a /lib/libabsl_raw_hash_set.a /lib/libabsl_hashtablez_sampler.a /lib/libabsl_hash.a /lib/libabsl_city.a /lib/libabsl_low_level_hash.a /lib/libabsl_statusor.a /lib/libabsl_bad_variant_access.a /lib/libgpr.a /lib/libupb.a /lib/libabsl_status.a /lib/libabsl_cord.a /lib/libabsl_bad_optional_access.a /lib/libabsl_cordz_info.a /lib/libabsl_cord_internal.a /lib/libabsl_cordz_functions.a /lib/libabsl_exponential_biased.a /lib/libabsl_cordz_handle.a /lib/libabsl_str_format_internal.a /lib/libabsl_synchronization.a /lib/libabsl_stacktrace.a /lib/libabsl_symbolize.a /lib/libabsl_debugging_internal.a /lib/libabsl_demangle_internal.a /lib/libabsl_graphcycles_internal.a /lib/libabsl_malloc_internal.a /lib/libabsl_time.a /lib/libabsl_strings.a /lib/libabsl_throw_delegate.a /lib/libabsl_int128.a /lib/libabsl_strings_internal.a /lib/libabsl_base.a /lib/libabsl_spinlock_wait.a /lib/libabsl_raw_logging_internal.a /lib/libabsl_log_severity.a /lib/libabsl_civil_time.a /lib/libabsl_time_zone.a /lib/libssl.a /lib/libcrypto.a || libhw_grpc_proto.a
+  FLAGS = -g
+  LINK_LIBRARIES = libhw_grpc_proto.a  /lib/libgrpc++_reflection.a  /lib/libgrpc++.a  /lib/libprotobuf.a  /lib/libgrpc.a  /lib/libz.a  /lib/libcares.a  -lnsl  /lib/libaddress_sorting.a  /lib/libre2.a  /lib/libabsl_raw_hash_set.a  /lib/libabsl_hashtablez_sampler.a  /lib/libabsl_hash.a  /lib/libabsl_city.a  /lib/libabsl_low_level_hash.a  /lib/libabsl_statusor.a  /lib/libabsl_bad_variant_access.a  /lib/libgpr.a  /lib/libupb.a  -ldl  -lrt  -lm  /lib/libabsl_status.a  /lib/libabsl_cord.a  /lib/libabsl_bad_optional_access.a  /lib/libabsl_cordz_info.a  /lib/libabsl_cord_internal.a  /lib/libabsl_cordz_functions.a  /lib/libabsl_exponential_biased.a  /lib/libabsl_cordz_handle.a  /lib/libabsl_str_format_internal.a  /lib/libabsl_synchronization.a  /lib/libabsl_stacktrace.a  /lib/libabsl_symbolize.a  /lib/libabsl_debugging_internal.a  /lib/libabsl_demangle_internal.a  /lib/libabsl_graphcycles_internal.a  /lib/libabsl_malloc_internal.a  /lib/libabsl_time.a  /lib/libabsl_strings.a  /lib/libabsl_throw_delegate.a  /lib/libabsl_int128.a  /lib/libabsl_strings_internal.a  /lib/libabsl_base.a  -lpthread  /lib/libabsl_spinlock_wait.a  -lrt  /lib/libabsl_raw_logging_internal.a  /lib/libabsl_log_severity.a  /lib/libabsl_civil_time.a  /lib/libabsl_time_zone.a  /lib/libssl.a  /lib/libcrypto.a  -lpthread  -pthread
+  OBJECT_DIR = CMakeFiles/greeter_client.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = greeter_client
+  TARGET_PDB = greeter_client.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /snap/clion/180/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
 # Custom command for helloworld.pb.cc
 
-build helloworld.pb.cc helloworld.pb.h helloworld.grpc.pb.cc helloworld.grpc.pb.h | ${cmake_ninja_workdir}helloworld.pb.cc ${cmake_ninja_workdir}helloworld.pb.h ${cmake_ninja_workdir}helloworld.grpc.pb.cc ${cmake_ninja_workdir}helloworld.grpc.pb.h: CUSTOM_COMMAND /home/nikolai/protos/helloworld.proto
-  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /bin/protoc-3.18.1.0 --grpc_out /home/nikolai/Рабочий\ стол/InVasion/cmake-build-debug --cpp_out /home/nikolai/Рабочий\ стол/InVasion/cmake-build-debug -I /home/nikolai/protos --plugin=protoc-gen-grpc="/bin/grpc_cpp_plugin" /home/nikolai/protos/helloworld.proto
+build helloworld.pb.cc helloworld.pb.h helloworld.grpc.pb.cc helloworld.grpc.pb.h | ${cmake_ninja_workdir}helloworld.pb.cc ${cmake_ninja_workdir}helloworld.pb.h ${cmake_ninja_workdir}helloworld.grpc.pb.cc ${cmake_ninja_workdir}helloworld.grpc.pb.h: CUSTOM_COMMAND ../proto/helloworld.proto
+  COMMAND = cd "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug" && /bin/protoc-3.18.1.0 --grpc_out /home/nikolai/Рабочий\ стол/InVasion/cmake-build-debug --cpp_out /home/nikolai/Рабочий\ стол/InVasion/cmake-build-debug -I /home/nikolai/Рабочий\ стол/InVasion/proto --plugin=protoc-gen-grpc="/bin/grpc_cpp_plugin" /home/nikolai/Рабочий\ стол/InVasion/proto/helloworld.proto
   DESC = Generating helloworld.pb.cc, helloworld.pb.h, helloworld.grpc.pb.cc, helloworld.grpc.pb.h
   restat = 1
 
@@ -126,7 +194,7 @@ build hw_grpc_proto: phony libhw_grpc_proto.a
 #############################################
 # Folder: /home/nikolai/Рабочий стол/InVasion/cmake-build-debug
 
-build all: phony libhw_grpc_proto.a
+build all: phony libhw_grpc_proto.a greeter_server greeter_client
 
 # =============================================================================
 # Built-in targets
@@ -135,14 +203,14 @@ build all: phony libhw_grpc_proto.a
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../common.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeFindDependencyMacro.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/SelectLibraryConfigurations.cmake /usr/lib/cmake/absl/abslConfig.cmake /usr/lib/cmake/absl/abslConfigVersion.cmake /usr/lib/cmake/absl/abslTargets-noconfig.cmake /usr/lib/cmake/absl/abslTargets.cmake /usr/lib/cmake/grpc/gRPCConfig.cmake /usr/lib/cmake/grpc/gRPCConfigVersion.cmake /usr/lib/cmake/grpc/gRPCTargets-noconfig.cmake /usr/lib/cmake/grpc/gRPCTargets.cmake /usr/lib/cmake/protobuf/protobuf-config-version.cmake /usr/lib/cmake/protobuf/protobuf-config.cmake /usr/lib/cmake/protobuf/protobuf-module.cmake /usr/lib/cmake/protobuf/protobuf-options.cmake /usr/lib/cmake/protobuf/protobuf-targets-noconfig.cmake /usr/lib/cmake/protobuf/protobuf-targets.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../cmake-test/CMakeLists.txt /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeFindDependencyMacro.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/SelectLibraryConfigurations.cmake /usr/lib/cmake/absl/abslConfig.cmake /usr/lib/cmake/absl/abslConfigVersion.cmake /usr/lib/cmake/absl/abslTargets-noconfig.cmake /usr/lib/cmake/absl/abslTargets.cmake /usr/lib/cmake/grpc/gRPCConfig.cmake /usr/lib/cmake/grpc/gRPCConfigVersion.cmake /usr/lib/cmake/grpc/gRPCTargets-noconfig.cmake /usr/lib/cmake/grpc/gRPCTargets.cmake /usr/lib/cmake/protobuf/protobuf-config-version.cmake /usr/lib/cmake/protobuf/protobuf-config.cmake /usr/lib/cmake/protobuf/protobuf-module.cmake /usr/lib/cmake/protobuf/protobuf-options.cmake /usr/lib/cmake/protobuf/protobuf-targets-noconfig.cmake /usr/lib/cmake/protobuf/protobuf-targets.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../common.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeFindDependencyMacro.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/SelectLibraryConfigurations.cmake /usr/lib/cmake/absl/abslConfig.cmake /usr/lib/cmake/absl/abslConfigVersion.cmake /usr/lib/cmake/absl/abslTargets-noconfig.cmake /usr/lib/cmake/absl/abslTargets.cmake /usr/lib/cmake/grpc/gRPCConfig.cmake /usr/lib/cmake/grpc/gRPCConfigVersion.cmake /usr/lib/cmake/grpc/gRPCTargets-noconfig.cmake /usr/lib/cmake/grpc/gRPCTargets.cmake /usr/lib/cmake/protobuf/protobuf-config-version.cmake /usr/lib/cmake/protobuf/protobuf-config.cmake /usr/lib/cmake/protobuf/protobuf-module.cmake /usr/lib/cmake/protobuf/protobuf-options.cmake /usr/lib/cmake/protobuf/protobuf-targets-noconfig.cmake /usr/lib/cmake/protobuf/protobuf-targets.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../cmake-test/CMakeLists.txt /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeFindDependencyMacro.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /snap/clion/180/bin/cmake/linux/share/cmake-3.21/Modules/SelectLibraryConfigurations.cmake /usr/lib/cmake/absl/abslConfig.cmake /usr/lib/cmake/absl/abslConfigVersion.cmake /usr/lib/cmake/absl/abslTargets-noconfig.cmake /usr/lib/cmake/absl/abslTargets.cmake /usr/lib/cmake/grpc/gRPCConfig.cmake /usr/lib/cmake/grpc/gRPCConfigVersion.cmake /usr/lib/cmake/grpc/gRPCTargets-noconfig.cmake /usr/lib/cmake/grpc/gRPCTargets.cmake /usr/lib/cmake/protobuf/protobuf-config-version.cmake /usr/lib/cmake/protobuf/protobuf-config.cmake /usr/lib/cmake/protobuf/protobuf-module.cmake /usr/lib/cmake/protobuf/protobuf-options.cmake /usr/lib/cmake/protobuf/protobuf-targets-noconfig.cmake /usr/lib/cmake/protobuf/protobuf-targets.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
 
 
 #############################################

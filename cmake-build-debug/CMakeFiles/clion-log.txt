@@ -1,5 +1,4 @@
 /snap/clion/180/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/180/bin/ninja/linux/ninja -G Ninja "/home/nikolai/Рабочий стол/InVasion"
--- Found Protobuf: /bin/protoc-3.18.1.0 (found version "3.18.1.0") 
 -- Using protobuf 3.18.1.0
 -- Using gRPC 1.43.0
 -- Configuring done

@@ -146,7 +146,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=HelloWorld
+CMAKE_PROJECT_NAME:STATIC=InVasion
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -221,6 +221,15 @@ HelloWorld_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 HelloWorld_SOURCE_DIR:STATIC=/home/nikolai/Рабочий стол/InVasion
+
+//Value Computed by CMake
+InVasion_BINARY_DIR:STATIC=/home/nikolai/Рабочий стол/InVasion/cmake-build-debug
+
+//Value Computed by CMake
+InVasion_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+InVasion_SOURCE_DIR:STATIC=/home/nikolai/Рабочий стол/InVasion
 
 //Single output directory for building all libraries.
 LIBRARY_OUTPUT_PATH:PATH=

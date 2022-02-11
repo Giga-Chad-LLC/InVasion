@@ -1,5 +1,28 @@
 # ninja log v5
 0	17	1644485676813600929	server.pb.cc	b0ee4111ad1ad1f6
+0	43	1644605318561416493	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.cc	e72216a72abda87b
+0	43	1644605318561416493	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.h	e72216a72abda87b
+0	43	1644605318561416493	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.h	e72216a72abda87b
 0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.h	b0ee4111ad1ad1f6
+0	43	1644605318561416493	helloworld.pb.cc	e72216a72abda87b
+0	43	1644605318561416493	helloworld.pb.h	e72216a72abda87b
+0	43	1644605318561416493	helloworld.grpc.pb.h	e72216a72abda87b
 0	17	1644485676813600929	server.pb.h	b0ee4111ad1ad1f6
+0	43	1644605318561416493	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.cc	e72216a72abda87b
+0	43	1644605318561416493	helloworld.grpc.pb.cc	e72216a72abda87b
 0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.cc	b0ee4111ad1ad1f6
+0	25	1644605806566527148	helloworld.pb.cc	92a7e9fa81108ab5
+0	25	1644605806566527148	helloworld.pb.h	92a7e9fa81108ab5
+0	25	1644605806566527148	helloworld.grpc.pb.cc	92a7e9fa81108ab5
+0	25	1644605806566527148	helloworld.grpc.pb.h	92a7e9fa81108ab5
+0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.cc	92a7e9fa81108ab5
+0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.h	92a7e9fa81108ab5
+0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.cc	92a7e9fa81108ab5
+0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.h	92a7e9fa81108ab5
+25	1461	1644605807998529935	CMakeFiles/hw_grpc_proto.dir/helloworld.pb.cc.o	fcb5e3bf4f9875d9
+26	2565	1644605809102532082	CMakeFiles/greeter_client.dir/greeter_client.cc.o	f5592938ac5fda6f
+25	3045	1644605809582533015	CMakeFiles/hw_grpc_proto.dir/helloworld.grpc.pb.cc.o	b46ee5f8f1e0536b
+3045	3098	1644605809638533124	libhw_grpc_proto.a	25bf7bb37ab00a07
+3098	6161	1644605812686539045	greeter_client	941f5caa1adfa7fc
+3	2304	1644605843830599048	CMakeFiles/greeter_server.dir/greeter_server.cc.o	7d8e619e8d7371cc
+2305	5699	1644605847202605492	greeter_server	1a70adb9c614f3a9
