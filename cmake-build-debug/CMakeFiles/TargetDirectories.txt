@@ -1,0 +1,3 @@
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/hw_grpc_proto.dir
