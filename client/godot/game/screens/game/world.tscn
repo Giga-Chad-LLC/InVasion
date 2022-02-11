@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=2]
+[gd_scene load_steps=58 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://screens/game/images/cliff_tileset.png" type="Texture" id=4]
 [ext_resource path="res://screens/game/images/grass_background.png" type="Texture" id=5]
 [ext_resource path="res://screens/game/images/dirt_tileset.png" type="Texture" id=6]
+[ext_resource path="res://models/gun/gun.tscn" type="PackedScene" id=7]
+[ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -482,18 +484,20 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 0/z_index = 0
 
 [node name="World" type="Node2D"]
+script = ExtResource( 8 )
 
 [node name="Background" type="Sprite" parent="."]
+position = Vector2( -288, -160 )
 texture = ExtResource( 5 )
 centered = false
 region_enabled = true
-region_rect = Rect2( 0, 0, 320, 180 )
+region_rect = Rect2( 0, 0, 932, 456 )
 
 [node name="DirtPathTileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 131074, 0, 0, 131075, 0, 1, 131076, 0, 1, 131077, 0, 1, 131078, 0, 1, 131079, 0, 2, 196610, 0, 65540, 196611, 0, 131073, 196612, 0, 131073, 196613, 0, 131073, 196614, 0, 131073, 196615, 0, 9, 196616, 0, 1, 196617, 0, 1, 196618, 0, 1, 196619, 0, 1, 196620, 0, 2, 262145, 0, 0, 262146, 0, 131079, 262151, 0, 131072, 262152, 0, 131073, 262153, 0, 131073, 262154, 0, 131073, 262155, 0, 131073, 262156, 0, 9, 262157, 0, 1, 262158, 0, 1, 262159, 0, 1, 262160, 0, 2, 327680, 0, 0, 327681, 0, 131078, 327682, 0, 131077, 327683, 0, 1, 327684, 0, 2, 327692, 0, 131072, 327693, 0, 131073, 327694, 0, 65542, 327695, 0, 65537, 327696, 0, 131077, 327697, 0, 1, 327698, 0, 1, 327699, 0, 2, 393216, 0, 131072, 393217, 0, 131073, 393218, 0, 131073, 393219, 0, 65542, 393220, 0, 131077, 393221, 0, 2, 393230, 0, 65536, 393231, 0, 65537, 393232, 0, 65541, 393233, 0, 131073, 393234, 0, 131073, 393235, 0, 131074, 458755, 0, 131072, 458756, 0, 131073, 458757, 0, 131074, 458765, 0, 0, 458766, 0, 131078, 458767, 0, 65541, 458768, 0, 131074, 524296, 0, 0, 524297, 0, 1, 524298, 0, 1, 524299, 0, 1, 524300, 0, 1, 524301, 0, 131078, 524302, 0, 65537, 524303, 0, 65538, 589832, 0, 65536, 589833, 0, 65537, 589834, 0, 65541, 589835, 0, 131073, 589836, 0, 131073, 589837, 0, 131073, 589838, 0, 131073, 589839, 0, 131074, 655368, 0, 65536, 655369, 0, 65537, 655370, 0, 65538, 720904, 0, 131072, 720905, 0, 131073, 720906, 0, 131074 )
+tile_data = PoolIntArray( 131074, 0, 0, 131075, 0, 1, 131076, 0, 1, 131077, 0, 1, 131078, 0, 1, 131079, 0, 2, 196610, 0, 65540, 196611, 0, 131073, 196612, 0, 131073, 196613, 0, 131073, 196614, 0, 131073, 196615, 0, 9, 196616, 0, 1, 196617, 0, 1, 196618, 0, 1, 196619, 0, 1, 196620, 0, 2, 262145, 0, 0, 262146, 0, 131079, 262151, 0, 131072, 262152, 0, 131073, 262153, 0, 131073, 262154, 0, 131073, 262155, 0, 131073, 262156, 0, 9, 262157, 0, 1, 262158, 0, 1, 262159, 0, 1, 262160, 0, 2, 393214, 0, 0, 393215, 0, 1, 327680, 0, 1, 327681, 0, 131078, 327682, 0, 131077, 327683, 0, 1, 327684, 0, 2, 327692, 0, 131072, 327693, 0, 131073, 327694, 0, 65542, 327695, 0, 65537, 327696, 0, 131077, 327697, 0, 1, 327698, 0, 1, 327699, 0, 2, 458750, 0, 131072, 458751, 0, 131073, 393216, 0, 131073, 393217, 0, 131073, 393218, 0, 131073, 393219, 0, 65542, 393220, 0, 131077, 393221, 0, 2, 393230, 0, 65536, 393231, 0, 65537, 393232, 0, 65541, 393233, 0, 131073, 393234, 0, 131073, 393235, 0, 131074, 458755, 0, 131072, 458756, 0, 131073, 458757, 0, 131074, 458765, 0, 0, 458766, 0, 131078, 458767, 0, 65541, 458768, 0, 131074, 524296, 0, 0, 524297, 0, 1, 524298, 0, 1, 524299, 0, 1, 524300, 0, 1, 524301, 0, 131078, 524302, 0, 65537, 524303, 0, 65538, 589832, 0, 65536, 589833, 0, 65537, 589834, 0, 65541, 589835, 0, 131073, 589836, 0, 131073, 589837, 0, 131073, 589838, 0, 131073, 589839, 0, 131074, 655368, 0, 65536, 655369, 0, 65537, 655370, 0, 65538, 720904, 0, 131072, 720905, 0, 131073, 720906, 0, 131074 )
 
 [node name="DirtCliffTileMap" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
@@ -507,13 +511,20 @@ tile_data = PoolIntArray( -1, 0, 0, -65536, 0, 1, -65535, 0, 1, -65534, 0, 1, -6
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
 position = Vector2( 120, 40 )
 
+[node name="Camera2D" type="Camera2D" parent="YSort/Player"]
+current = true
+smoothing_enabled = true
+
+[node name="Gun" parent="YSort/Player" instance=ExtResource( 7 )]
+position = Vector2( 5, -5 )
+
 [node name="Bushes" type="YSort" parent="YSort"]
 
 [node name="Bush" parent="YSort/Bushes" instance=ExtResource( 3 )]
 position = Vector2( 176, 104 )
 
 [node name="Bush2" parent="YSort/Bushes" instance=ExtResource( 3 )]
-position = Vector2( 144, 96 )
+position = Vector2( 144, 82 )
 
 [node name="Bush3" parent="YSort/Bushes" instance=ExtResource( 3 )]
 position = Vector2( 176, 16 )

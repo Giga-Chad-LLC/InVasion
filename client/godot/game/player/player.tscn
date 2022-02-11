@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://player/images/character_sprite.png" type="Texture" id=1]
 [ext_resource path="res://player/scripts/player.gd" type="Script" id=2]
@@ -466,10 +466,6 @@ blend_mode = 1
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=24]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=35]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=36]
-
 [sub_resource type="AnimationNodeStateMachine" id=11]
 states/Attack/node = SubResource( 34 )
 states/Attack/position = Vector2( 427, 64 )
@@ -477,7 +473,7 @@ states/Idle/node = SubResource( 17 )
 states/Idle/position = Vector2( 226, 215 )
 states/Run/node = SubResource( 22 )
 states/Run/position = Vector2( 674, 208 )
-transitions = [ "Idle", "Run", SubResource( 23 ), "Run", "Idle", SubResource( 24 ), "Idle", "Attack", SubResource( 35 ), "Attack", "Idle", SubResource( 36 ) ]
+transitions = [ "Idle", "Run", SubResource( 23 ), "Run", "Idle", SubResource( 24 ) ]
 start_node = "Idle"
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=12]

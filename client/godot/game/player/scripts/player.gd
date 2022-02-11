@@ -1,5 +1,8 @@
 extends KinematicBody2D
 
+
+
+
 export var ACCELERATION = 500
 export var MAX_SPEED = 100
 export var FRICTION = 500
@@ -8,7 +11,7 @@ var velocity = Vector2.ZERO
 enum {
 	MOVE, 
 	ROLL,
-	ATTACK
+#	ATTACK
 }
 
 var state = MOVE
@@ -20,17 +23,17 @@ func _ready():
 	animationTree.active = true
 
 
+
 func _physics_process(delta):
 	match state:
 		MOVE:
 			player_move(delta) # move the player
-		ATTACK:
-			player_attack(delta)	
-
-
-func player_attack(_delta):
-	animationState.travel("Attack")
-	
+#		ATTACK:
+#			player_attack(delta)	
+#
+#func player_attack(_delta):
+#	animationState.travel("Attack")
+#
 func attack_animation_finished():
 	velocity = Vector2.ZERO
 	state = MOVE
@@ -58,8 +61,8 @@ func player_move(delta):
 	velocity = move_and_slide(velocity)
 	
 	# check for melee attack
-	if (Input.is_action_just_pressed("melee_attack")):
-		state = ATTACK
+#	if (Input.is_action_just_pressed("melee_attack")):
+#		state = ATTACK
 	
 
 
