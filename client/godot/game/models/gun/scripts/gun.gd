@@ -1,27 +1,37 @@
 extends Node2D
 
-
-var gun_bullet = load("res://models/bullet/bullet.tscn")
-var is_reloading = false
+# Variables
+onready var bullet_model = load("res://models/bullet/bullet.tscn")
 onready var shoot_point = $ShootPoint
 onready var reload_timer = $ReloadTimer
-
-func _physics_process(_delta):
-	look_at(get_global_mouse_position())
-	
-	if (Input.is_action_pressed("shoot") and not is_reloading):
-		shoot_bullet()
+onready var bullet_spawning_node = get_tree().get_root().get_node("World/YSort/Bullets")
+var is_reloading = false
 
 
+# User-defined functions
 func instance_bullet():
-	var gun_bullet_instance = Global.instance_node_at_location(gun_bullet, get_tree().get_root(), shoot_point.global_position)
-#	gun_bullet_instance.name = "Bullet" + id
-	gun_bullet_instance.gun_rotation = rotation
+	var bullet_model_instance = Global.instance_node_at_location(bullet_model,
+							  bullet_spawning_node, shoot_point.global_position)
+	bullet_model_instance.initial_rotation = rotation
 
 func shoot_bullet():
 	instance_bullet()
+	print(bullet_spawning_node)
 	is_reloading = true
 	reload_timer.start()
 
 func _on_ReloadTimer_timeout():
 	is_reloading = false
+
+func rotate_gun_to_mouse_cursor():
+	look_at(get_global_mouse_position())
+
+
+# Built-in functions
+func _physics_process(_delta):
+	rotate_gun_to_mouse_cursor()
+	
+	if (Input.is_action_pressed("shoot") and not is_reloading):
+		shoot_bullet()
+
+

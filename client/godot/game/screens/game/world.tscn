@@ -518,6 +518,8 @@ smoothing_enabled = true
 [node name="Gun" parent="YSort/Player" instance=ExtResource( 7 )]
 position = Vector2( 5, -5 )
 
+[node name="Bullets" type="YSort" parent="YSort"]
+
 [node name="Bushes" type="YSort" parent="YSort"]
 
 [node name="Bush" parent="YSort/Bushes" instance=ExtResource( 3 )]
