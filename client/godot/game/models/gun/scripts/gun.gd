@@ -16,7 +16,6 @@ func instance_bullet():
 
 func shoot_bullet():
 	instance_bullet()
-	print(bullet_spawning_node)
 	is_reloading = true
 	reload_timer.start()
 
