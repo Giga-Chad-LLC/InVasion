@@ -1,5 +1,5 @@
-/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/hw_grpc_proto.dir
 /home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/greeter_server.dir
-/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/greeter_client.dir
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/hw_grpc_proto.dir
 /home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/client.dir
+/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/CMakeFiles/server.dir

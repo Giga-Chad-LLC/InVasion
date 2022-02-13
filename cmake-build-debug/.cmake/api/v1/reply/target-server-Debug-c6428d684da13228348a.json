@@ -1,0 +1,366 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "server"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 62,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 63,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 46,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"fragment" : "-std=gnu++11"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "CARES_STATICLIB"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "/home/nikolai/Рабочий стол/InVasion/cmake-build-debug"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "hw_grpc_proto::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "server::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "libhw_grpc_proto.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/lib/libgrpc++_reflection.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/lib/libgrpc++.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/lib/libprotobuf.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libgrpc.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libz.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libcares.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lnsl",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libaddress_sorting.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libre2.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_raw_hash_set.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_hashtablez_sampler.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_hash.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_city.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_low_level_hash.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_statusor.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_bad_variant_access.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libgpr.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libupb.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lm",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_status.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_cord.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_bad_optional_access.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_cordz_info.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_cord_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_cordz_functions.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_exponential_biased.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_cordz_handle.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_str_format_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_synchronization.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_stacktrace.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_symbolize.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_debugging_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_demangle_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_graphcycles_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_malloc_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_time.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_strings.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_throw_delegate.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_int128.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_strings_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_base.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_spinlock_wait.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lrt",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_raw_logging_internal.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_log_severity.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_civil_time.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libabsl_time_zone.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libssl.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "/lib/libcrypto.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-pthread",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "server",
+	"nameOnDisk" : "server",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "server.cc",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}
