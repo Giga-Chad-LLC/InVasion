@@ -2,6 +2,13 @@
 logs/*
 *.log
 
+# protobuf files
+*.grpc.pb.cc
+*.grpc.pb.h
+*.pb.cc
+*.pb.h
+*.a
+
 # Binaries
 *.o
 *.os
@@ -34,6 +41,7 @@ gmon.out
 *.includes
 *.cflags
 *.cxxflags
+*.json
 
 # Eclipse CDT files
 .cproject

@@ -7,7 +7,7 @@
 #ifdef BAZEL_BUILD
 #include "examples/protos/helloworld.grpc.pb.h"
 #else
-#include "helloworld.grpc.pb.h"
+#include "client-server.grpc.pb.h"
 #endif
 
 using grpc::Channel;
