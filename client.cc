@@ -23,6 +23,7 @@ public:
     Client(std::shared_ptr<Channel> channel)
             : stub_(Greeter::NewStub(channel)) {}
 
+
     std::string Message_to_server(const std::string& message) {
         Request request;
         request.set_text(message);

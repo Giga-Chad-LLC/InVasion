@@ -1,32 +1,22 @@
 # ninja log v5
 0	17	1644485676813600929	server.pb.cc	b0ee4111ad1ad1f6
-0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.cc	92a7e9fa81108ab5
-0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.h	92a7e9fa81108ab5
-3	2931	1644770731809418011	CMakeFiles/greeter_client.dir/greeter_client.cc.o	f5592938ac5fda6f
-3	2304	1644605843830599048	CMakeFiles/greeter_server.dir/greeter_server.cc.o	7d8e619e8d7371cc
-0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.h	92a7e9fa81108ab5
-25	1461	1644605807998529935	CMakeFiles/hw_grpc_proto.dir/helloworld.pb.cc.o	fcb5e3bf4f9875d9
-0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.h	b0ee4111ad1ad1f6
-0	25	1644605806566527148	helloworld.pb.cc	92a7e9fa81108ab5
-0	25	1644605806566527148	helloworld.pb.h	92a7e9fa81108ab5
-0	25	1644605806566527148	helloworld.grpc.pb.h	92a7e9fa81108ab5
-25	3045	1644605809582533015	CMakeFiles/hw_grpc_proto.dir/helloworld.grpc.pb.cc.o	b46ee5f8f1e0536b
-2932	6317	1644770735177534883	greeter_client	941f5caa1adfa7fc
-0	17	1644485676813600929	server.pb.h	b0ee4111ad1ad1f6
-0	25	1644605806566527148	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.cc	92a7e9fa81108ab5
-3045	3098	1644605809638533124	libhw_grpc_proto.a	25bf7bb37ab00a07
-0	25	1644605806566527148	helloworld.grpc.pb.cc	92a7e9fa81108ab5
-0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.cc	b0ee4111ad1ad1f6
-2305	5699	1644605847202605492	greeter_server	1a70adb9c614f3a9
-2	48	1644605794546503678	helloworld.pb.cc	a8155883ffde5ee0
-2	48	1644605794546503678	helloworld.pb.h	a8155883ffde5ee0
-2	48	1644605794546503678	helloworld.grpc.pb.cc	a8155883ffde5ee0
-2	48	1644605794546503678	helloworld.grpc.pb.h	a8155883ffde5ee0
-2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.cc	a8155883ffde5ee0
-2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.h	a8155883ffde5ee0
 2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.cc	a8155883ffde5ee0
 2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.grpc.pb.h	a8155883ffde5ee0
-3	2393	1644770924443441942	CMakeFiles/client.dir/client.cc.o	fa8158c2a92b3a81
-2393	5599	1644770927631531661	client	2eff831314366aa0
-3	2454	1644770935931763918	CMakeFiles/server.dir/server.cc.o	dcb45c2e7eaeab2b
-2455	6156	1644770939611866282	server	9c3fc237e4dfa018
+2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.h	a8155883ffde5ee0
+4	1462	1644771782149258658	CMakeFiles/hw_grpc_proto.dir/helloworld.pb.cc.o	fcb5e3bf4f9875d9
+3231	6215	1644771786889336739	client	2eff831314366aa0
+0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.h	b0ee4111ad1ad1f6
+2	48	1644605794546503678	helloworld.pb.cc	a8155883ffde5ee0
+2	48	1644605794546503678	helloworld.pb.h	a8155883ffde5ee0
+2	48	1644605794546503678	helloworld.grpc.pb.h	a8155883ffde5ee0
+4	3190	1644771783877287137	CMakeFiles/hw_grpc_proto.dir/helloworld.grpc.pb.cc.o	b46ee5f8f1e0536b
+0	17	1644485676813600929	server.pb.h	b0ee4111ad1ad1f6
+2	48	1644605794546503678	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/helloworld.pb.cc	a8155883ffde5ee0
+5	2927	1644771783617282852	CMakeFiles/client.dir/client.cc.o	fa8158c2a92b3a81
+2	2409	1644771796529495178	CMakeFiles/server.dir/server.cc.o	dcb45c2e7eaeab2b
+3190	3231	1644771783921287862	libhw_grpc_proto.a	25bf7bb37ab00a07
+2	48	1644605794546503678	helloworld.grpc.pb.cc	a8155883ffde5ee0
+0	17	1644485676813600929	/home/nikolai/Рабочий стол/InVasion/cmake-build-debug/server.pb.cc	b0ee4111ad1ad1f6
+2409	5532	1644771799637546158	server	9c3fc237e4dfa018
+3	2810	1644771912163361029	CMakeFiles/client.dir/client.cc.o	fa8158c2a92b3a81
+2810	5967	1644771915303410876	client	2eff831314366aa0

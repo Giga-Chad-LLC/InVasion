@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.5.1)
 
 project(InVasion)
 
-include(cmake-test/CMakeLists.txt)
+include(cmake-build-debug/common.cmake)
 
 # Proto file
 get_filename_component(hw_proto "proto/client-server.proto" ABSOLUTE)
