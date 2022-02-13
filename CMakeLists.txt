@@ -56,13 +56,15 @@ target_link_libraries(hw_grpc_proto
         ${_GRPC_GRPCPP}
         ${_PROTOBUF_LIBPROTOBUF})
 
-# Targets greeter_(client|server)
-foreach(_target
-        client server)
-    add_executable(${_target} "${_target}.cc")
-    target_link_libraries(${_target}
-            hw_grpc_proto
-            ${_REFLECTION}
+
+add_executable(client "client/client.cc")
+target_link_libraries(client hw_grpc_proto
+        ${_REFLECTION}
             ${_GRPC_GRPCPP}
             ${_PROTOBUF_LIBPROTOBUF})
-endforeach()
+
+add_executable(server "server/server.cc")
+target_link_libraries(server hw_grpc_proto
+        ${_REFLECTION}
+        ${_GRPC_GRPCPP}
+        ${_PROTOBUF_LIBPROTOBUF})
