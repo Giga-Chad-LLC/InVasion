@@ -24,7 +24,7 @@ project(InVasion)
 include(cmake-test/CMakeLists.txt)
 
 # Proto file
-get_filename_component(hw_proto "proto/helloworld.proto" ABSOLUTE)
+get_filename_component(hw_proto "proto/client-server.proto" ABSOLUTE)
 get_filename_component(hw_proto_path "${hw_proto}" PATH)
 
 # Generated sources
@@ -58,7 +58,7 @@ target_link_libraries(hw_grpc_proto
 
 # Targets greeter_(client|server)
 foreach(_target
-        greeter_client greeter_server)
+        client server)
     add_executable(${_target} "${_target}.cc")
     target_link_libraries(${_target}
             hw_grpc_proto
