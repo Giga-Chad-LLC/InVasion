@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+
+package stringreverse;
+
+// The string reversal service definition.
+service StringReverse {
+    // Function invoked to send the request
+    rpc sendRequest (StringRequest) returns (StringReply) {}
+}
+
+// The request message containing the original string
+message StringRequest {
+    string original = 1;
+}
+
+// The response message containing the reversed string
+message StringReply {
+    string reversed = 1;
+}
