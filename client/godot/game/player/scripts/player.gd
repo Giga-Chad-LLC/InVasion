@@ -92,7 +92,7 @@ func _physics_process(delta):
 #			player_move(delta, input_vector)
 	
 	var action = move_request_model.send_request()
-	yield(get_tree().create_timer(0.1), "timeout")
+#	yield(get_tree().create_timer(0.2), "timeout")
 	var input_vector = move_react_model.get_request(action)
 	player_move(delta, input_vector)
 
@@ -132,7 +132,7 @@ func player_move(delta, input_vector):
 #
 #	if (tcp_connection.is_connected_to_host()):
 #		print("Connected to host: ", tcp_server_host, ":", tcp_server_port)
-#		var string = "Hello for my nigger boiii\n"
+#		var string = "Hello for my boiii\n"
 #		tcp_connection.put_data(string.to_utf8())
 #
 #	else:
