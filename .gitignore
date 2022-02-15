@@ -1,3 +1,7 @@
+# Other
+.vscode
+cmake
+
 # Misc
 logs/*
 *.log
