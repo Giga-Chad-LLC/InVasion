@@ -1,10 +1,12 @@
 #include "gdexample.h"
 #include <iostream>
+#include <string>
 
 using namespace godot;
 
 void GDExample::_register_methods() {
 	register_method("_process", &GDExample::_process);
+	register_method("test_method", &GDExample::test_method);
 	register_property<GDExample, float>("amplitude", &GDExample::amplitude, 10.0);
 	register_property<GDExample, float>("speed", &GDExample::set_speed, &GDExample::get_speed, 1.0);
 
@@ -27,6 +29,11 @@ void GDExample::_init() {
 	std::cout << "GD Native Init" << std::endl;
 }
 
+void GDExample::test_method(godot::String data) {
+	// std::string str(data);
+	std::cout << "Got from you: " << data.utf8().get_data() << std::endl;
+}
+
 void GDExample::_process(float delta) {
 	time_passed += speed * delta;
 
@@ -38,7 +45,7 @@ void GDExample::_process(float delta) {
 	set_position(new_position);
 
 	time_emit += delta;
-	std::cout << "Time: " << time_emit << std::endl;
+	
 	if (time_emit > 1.0) {
 		emit_signal("position_changed", this, new_position);
 		

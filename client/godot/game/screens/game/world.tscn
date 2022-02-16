@@ -588,3 +588,5 @@ centered = false
 script = ExtResource( 10 )
 amplitude = 20.0
 speed = 3.0
+
+[connection signal="position_changed" from="TestOnly" to="." method="_on_TestOnly_position_changed"]

@@ -40,4 +40,16 @@ func test_godobuf():
 func _ready():
 	# Должно напечатать число Пи (по какой-то причине дважды, тут уже вопросы к методу _ready())
 	test_godobuf()
+	test_out_gdnative()
+	
 
+func test_out_gdnative():
+	# GDNative attached to another node
+	var node = get_tree().get_root().get_node("World/TestOnly")
+	print(node)
+	node.test_method("Hello from Dimechik!")
+	
+
+func _on_TestOnly_position_changed(node: Sprite, new_pos: Vector2):
+	print("New position: ", new_pos)
+	print("Node name: ", node.filename)

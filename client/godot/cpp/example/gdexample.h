@@ -23,6 +23,7 @@ public:
 
 	void _init(); // our initializer called by Godot
 
+	void test_method(godot::String data);
 	void _process(float delta);
 	void set_speed(float p_speed);
 	float get_speed();
