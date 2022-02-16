@@ -21,12 +21,13 @@ GDExample::~GDExample() {
 void GDExample::_init() {
 	// initialize any variables here
 	time_passed = 0.0;
+	time_emit = 0.0;
 	amplitude = 10.0;
 	speed = 1.0;
+	std::cout << "GD Native Init" << std::endl;
 }
 
 void GDExample::_process(float delta) {
-	std::cout << "ewkdjhewdhw" << std::endl;
 	time_passed += speed * delta;
 
 	Vector2 new_position = Vector2(
@@ -37,9 +38,10 @@ void GDExample::_process(float delta) {
 	set_position(new_position);
 
 	time_emit += delta;
+	std::cout << "Time: " << time_emit << std::endl;
 	if (time_emit > 1.0) {
 		emit_signal("position_changed", this, new_position);
-
+		
 		time_emit = 0.0;
 	}
 }

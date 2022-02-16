@@ -180,6 +180,7 @@ godot.creator.*
 compile_commands.json
 
 # Other
+client/godot-cpp/out
 win64
 win32
 osx
@@ -187,3 +188,5 @@ x11
 .vscode
 cmake
 !client/godot/game/bin
+
+servers/grpc/out

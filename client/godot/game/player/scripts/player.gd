@@ -141,9 +141,3 @@ func player_move(delta, input_vector):
 #	return tcp_connection
 
 
-
-
-
-
-
-
