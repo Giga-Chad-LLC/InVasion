@@ -80,7 +80,7 @@
 
 
 ### Linux
-Пока не собирал под Linux...
+Сам не собирал, но все должно быть так же, как для винды, только можно билдить из любого терминала. Также везде, где я писал `scons platform=windows` заменить на `scons platform=linux`. Остальные шаги должны остаться неизменными. Если будут какие-то ошибки, можно открыть файлы `/client/godot/SConstruct`, также `client/godot-cpp/SConsruct`, `client/godot-cpp/binding_generator.py`, `client/godot-cpp/CMakeLists.txt`.
 
 
 ## gRPC server
