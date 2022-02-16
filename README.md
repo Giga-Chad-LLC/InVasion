@@ -1,5 +1,5 @@
 # InVasion
-## Godobuf
+## Установка Godobuf
 Уже все должно быть настроено, вы просто стартуете игру и смотрите, что напечатано в консоли (должно вывести число Пи, сама функция для тестинга godobuf записана в файле `/client/godot/game/screens/game/scripts/world.gd`)
 Туториал, как пользоваться godobuf - [здесь](https://github.com/oniksan/godobuf).
 Пример проекта на godotbuf - [тут](https://habr.com/ru/post/540034/)
@@ -13,7 +13,7 @@
 Официальный туториал от Godot - [клик](https://docs.godotengine.org/en/stable/tutorials/scripting/gdnative/gdnative_cpp_example.html).
 1. **Создание байндинг (чтобы GDNative работал)**:
 	
-	Открываем Developer `Command Prompt for VS 2019 (или 2017) x86_x64` (важно! *x86_x64*), переходим в папку проекта `/client/godot-cpp`.
+	Открываем Developer `x86_x64 Cross Tools Command Prompt for VS 2019` (или VS 2017) (важно! *x86_x64*), переходим в папку проекта `/client/godot-cpp`.
 
 	В этой папке вводим:
 	```sh
@@ -83,9 +83,70 @@
 Сам не собирал, но все должно быть так же, как для винды, только можно билдить из любого терминала. Также везде, где я писал `scons platform=windows` заменить на `scons platform=linux`. Остальные шаги должны остаться неизменными. Если будут какие-то ошибки, можно открыть файлы `/client/godot/SConstruct`, также `client/godot-cpp/SConsruct`, `client/godot-cpp/binding_generator.py`, `client/godot-cpp/CMakeLists.txt`.
 
 
-## gRPC server
-**Если вы еще не установили grpc, то сперва прочитайте этот README**
+## Настраиваем gRPC локально
+**Если вы еще не установили grpc, то сперва прочитайте этот README.**
 
+### Windows
+Будет устанавливать через пакетный менеджер от Microsoft `vcpkg` (все это делао будет весить 10GB+ со всеми зависимостями, ужас просто, а они говорят про light-weight, bruh..). Можно паралельно следовать этому [туториалу](https://sanoj.in/2020/05/07/working-with-grpc-in-windows.html), но некоторые детали будут отличаться.
+
+1. **Устанавливаем `vcpkg`**:
+	
+	Переходим на github майков и следуем туториалу - https://github.com/microsoft/vcpkg#getting-started. Можно поступить как я и сделать на диске `C` папочку `dev` и склонировать репо `vcpkg` туда: 
+	```sh
+	cd /c
+	mkdir dev
+	cd dev/
+	git clone https://github.com/microsoft/vcpkg
+	./vcpkg/bootstrap-vcpkg.bat
+	```
+
+	Добавляем `C:\dev\vcpkg\vcpkg.exe` файл в PATH. Добавляем в переменные среды путь `C:\dev\vcpkg`, чтобы обновления вступили в действие, переоткрываем терминал.
+2. **Устанавливаем gPRC, Protobuf и их зависимости**:
+
+	```sh
+	vcpkg install grpc:x64-windows
+	```
+	```sh
+	vcpkg install protobuf protobuf:x64-windows
+	```
+	```sh
+	vcpkg integrate install
+	```
+
+	Теперь нужно добавить `protoc.exe` в PATH, чтобы мы могли вызывать команду из терминала. У меня он лежал в `C:\dev\vcpkg\packages\protobuf_x64-windows\tools\protobuf`, но может оказаться и в `C:\dev\vcpkg\packages\protobuf_x64-windows\bin`.
+
+	Весь процесс установки на общажном вайфае у меня занял порядка 40 минут.
+3. **Проверим, что у нас все работает**:
+	
+	Можно сделать тестовый минимпроект для проверки работоспособности установленных пакетов. Тут следуем этому [туториалу](https://sanoj.in/2020/05/07/working-with-grpc-in-windows.html).
+
+	В моменте билда `grpc` (не протобуф, а сразу после него), вместо 
+	```sh
+	protoc -I=. --grpc_out=. --plugin=protoc-gen-grpc="\c\dev\vcpkg\packages\grpc_x64-windows\tools\grpc\grpc_cpp_plugin.exe" helloworld.proto
+	```
+	Мне нужно было написать это (так как иначе ошибка была):
+	```sh
+	protoc -I. --grpc_out=. --plugin=protoc-gen-grpc="\c\dev\vcpkg\packages\grpc_x64-windows\tools\grpc\grpc_cpp_plugin.exe" helloworld.proto
+	```
+	PS. (Нужно было убрать знак `=` после `-I`) НО! Я мог тут неверно указать команду, которую я ввел, можно прогуглить, если что.
+
+	Когда дошли до момента с компиляцией (не протофайлов, а всего проекта), то можно использовать команду для VS 2019: вместо
+	```sh
+	cmake -G "Visual Studio 14 2015 Win64" ../ -DCMAKE_TOOLCHAIN_FILE=<vcpkg_install_path>/scripts/buildsystems/vcpkg.cmake
+	```  
+	Пишем
+	```sh
+	cmake -G "Visual Studio 16 2019" ../ -DCMAKE_TOOLCHAIN_FILE=/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake
+	```
+	Дефолтная платформа для сборки будет, кажется, `x64` (можно менять флагом `-A`, но про это надо погуглить).
+
+	Далее доделываем как в туториале, и все должно нормально работать. 
+	После всего этого нам предстоит подружить **GDNative** и **gRPC**. Готовимся к боли и молимся, что Бог нам поможет...
+	
+	PSS. Тут я не показал, как простестировать gRPC таким же образом, как для Линукса, так как было лень разбираться с настройками CMake. Займемся этим уже для связки c GDNative (интеграции с Godot).
+
+
+### Linux
 Проверьте папку `/servers/grpc`, вы должны найти там тестовый проект, основанный на этом [туториале](https://medium.com/@shradhasehgal/get-started-with-grpc-in-c-36f1f39367f4).
 
 ### Реквизиты
