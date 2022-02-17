@@ -122,16 +122,12 @@
 
 	Заходи в папку `/protoc` и компилируем файлы протобуфа:
 	```sh
-	protoc -I=. --cpp_out=. helloworld.proto
+	protoc -I. --cpp_out=. helloworld.proto
 	```
 
-	Далее, в моменте билда `grpc`, вместо 
+	Далее, в моменте билда `grpc`, нужно написать это:
 	```sh
-	protoc -I=. --grpc_out=. --plugin=protoc-gen-grpc="\c\dev\vcpkg\packages\grpc_x64-windows\tools\grpc\grpc_cpp_plugin.exe" helloworld.proto
-	```
-	Мне нужно было написать это (так как иначе ошибка была):
-	```sh
-	protoc -I. --grpc_out=. --plugin=protoc-gen-grpc="\c\dev\vcpkg\packages\grpc_x64-windows\tools\grpc\grpc_cpp_plugin.exe" helloworld.proto
+	protoc -I. --grpc_out=. --plugin=protoc-gen-grpc="C:/dev/vcpkg/packages/grpc_x64-windows/tools/grpc/grpc_cpp_plugin.exe" helloworld.proto
 	```
 	PS. (Нужно было убрать знак `=` после `-I`) НО! Я мог тут неверно указать команду, которую я ввел, можно прогуглить, если что.
 
