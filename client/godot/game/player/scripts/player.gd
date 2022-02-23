@@ -80,23 +80,23 @@ class MoveReactModel:
 onready var move_request_model = MoveRequestModel.new()
 onready var move_react_model = MoveReactModel.new()
 
+
+
 # Built-in functions
 func _ready():
 	animationTree.active = true
-
+	
 
 func _physics_process(delta):
 #	match state:
 #		MOVE:
 #			var input_vector = get_move_input_vector()
 #			player_move(delta, input_vector)
-	
 	var action = move_request_model.send_request()
 #	yield(get_tree().create_timer(0.2), "timeout")
 	var input_vector = move_react_model.get_request(action)
 	player_move(delta, input_vector)
-
-
+	
 
 func get_move_input_vector():
 	var input_vector = Vector2.ZERO
@@ -119,25 +119,4 @@ func player_move(delta, input_vector):
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	velocity = move_and_slide(velocity)
-
-
-
-# Test
-#func try_out_tcp_client_with_cpp_asion_server():
-#	var tcp_connection = StreamPeerTCP.new()
-#	# Try connecting to the C++ ping-pong server
-#	var tcp_server_host = "localhost"
-#	var tcp_server_port = 12345
-#	tcp_connection.connect_to_host(tcp_server_host, tcp_server_port)
-#
-#	if (tcp_connection.is_connected_to_host()):
-#		print("Connected to host: ", tcp_server_host, ":", tcp_server_port)
-#		var string = "Hello for my boiii\n"
-#		tcp_connection.put_data(string.to_utf8())
-#
-#	else:
-#		print("Failed to connect to: ", tcp_server_host, ":", tcp_server_port)
-#
-#	return tcp_connection
-
 
