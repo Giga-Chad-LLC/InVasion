@@ -2,18 +2,17 @@ cmake_minimum_required(VERSION 3.15)
 
 project(InVasionServers CXX)
 
-# setting executables
+# setting names for executables
 set(MULTIPLAYER-SERVER-TARGET multiplayer-server)
 
-add_executable("${MULTIPLAYER-SERVER-TARGET}"
-	src/multiplayer-server.cpp
-	game-models/Vector2D/vector2d.cpp
+
+# configuring MULTIPLAYER-SERVER-TARGET:
+add_executable(${MULTIPLAYER-SERVER-TARGET}
+	./src/multiplayer-server.cpp
+	./include/game-models/Vector2D/vector2d.cpp
 )
 
-
-target_include_directories(${MULTIPLAYER-SERVER-TARGET} PUBLIC 
-	game-models
-)
+target_include_directories(${MULTIPLAYER-SERVER-TARGET} PUBLIC ./include)
 
 target_compile_options(${MULTIPLAYER-SERVER-TARGET} PUBLIC
 	-Wall 
