@@ -188,5 +188,7 @@ x11
 .vscode
 cmake
 !client/godot/game/bin
+build
+cmake-build
 
 servers/grpc/out
