@@ -5,7 +5,7 @@
 #include <string>
 #include <thread>
 #include <utility>
-#include "./player_proto/player.pb.h"
+#include "player.pb.h"
 
 using boost::asio::ip::tcp;
 
@@ -27,14 +27,15 @@ int main(int argc, char *argv[]) {
 
 			client << "Hello from C++ server!\n";
 
+			// PlayerAction action;
+			// action.set_key_pressed(PlayerAction::Action::PlayerAction_Action_StartMovingLeft);
+
 			while (client) {
 				std::string msg;
-
 				if (!(client >> msg)) {
 					break;
 				}
-
-				client << "take it back: " << msg << std::endl;
+				// client << "take it back: " << msg << std::endl;
 				std::cout << "Received: " << msg << std::endl;
 			}
 

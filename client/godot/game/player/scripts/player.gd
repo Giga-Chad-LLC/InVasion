@@ -117,7 +117,7 @@ func _physics_process(delta):
 	if (previous_action != action.get_key_pressed() and
 		_client.is_connected_to_host()):
 		previous_action = action.get_key_pressed()
-#		_client.send(action)
+		_client.send(action.to_bytes())
 		print("Packed: ", action.to_bytes())
 		print("Send: action ", action.get_key_pressed())
 		pass
@@ -202,7 +202,12 @@ func _handle_client_connected() -> void:
 
 
 func _handle_client_receive_data(data: PoolByteArray) -> void:
-	print("Received data: ", data.get_string_from_utf8())
+	var unpacked_player_action = PlayerProto.PlayerAction.new()
+	var result_code = unpacked_player_action.from_bytes(data)
+	if (result_code == PlayerProto.PB_ERR.NO_ERRORS):
+		print("Received data: ", unpacked_player_action.get_key_pressed())
+	else:
+		print("Error when receive: ", "cannot unpack data")
 
 func _handle_client_disconnected() -> void:
 	print("Client disconnected from server.")
