@@ -1,9 +1,11 @@
 #include <iostream>
+#include <cassert>
 
 #include "vector2d.h"
 
-namespace invasion::game_models {
 
+namespace invasion::game_models {
+const Vector2D Vector2D::ZERO = Vector2D(0.0, 0.0);
 
 Vector2D::Vector2D(double x, double y)
 	: m_x(x), m_y(y) {}
@@ -45,6 +47,12 @@ Vector2D operator*(const Vector2D& vec, double value) {
 
 Vector2D operator*(double value, const Vector2D& vec) {
 	return Vector2D(vec.m_x * value, vec.m_y * value);
+}
+
+Vector2D operator/(const Vector2D& vec, double value) {
+	const double EPS = 1e-8; 
+	assert(value - EPS >= 0);
+	return Vector2D(vec.m_x / value, vec.m_y / value);
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector2D& vec) {

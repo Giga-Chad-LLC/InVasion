@@ -22,13 +22,15 @@ struct Vector2D {
 
 	friend Vector2D operator*(const Vector2D& vec, double value);
 	friend Vector2D operator*(double value, const Vector2D& vec);
+	friend Vector2D operator/(const Vector2D& vec, double value);
 	friend std::ostream& operator<<(std::ostream& os, const Vector2D& vec);
 
-private:
-	double m_x = 0.;
-	double m_y = 0.;
-};
+	const static Vector2D ZERO;
 
+private:
+	double m_x = 0.0;
+	double m_y = 0.0;
+};
 
 } // namespace invasion::game_models
 
