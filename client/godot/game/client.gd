@@ -4,13 +4,14 @@ extends Node
 
 # TCP Client
 signal connected      # Connected to server
-signal data           # Received data from server
+signal receive        # Received data from server
 signal disconnected   # Disconnected from server
 signal error          # Error with connection to server
 
 
 var _status: int = 0
 var _stream: StreamPeerTCP = StreamPeerTCP.new()
+
 
 func _ready() -> void:
 	_status = _stream.get_status()
@@ -43,9 +44,7 @@ func _process(_delta):
 				print("Error getting data from stream: ", data[0])
 				emit_signal("error")
 			else:
-				emit_signal("data", data[1])
-
-
+				emit_signal("receive", data[1])
 
 func connect_to_host(host: String, port: int) -> void:
 	print("Connecting to %s:%d" % [host, port])
@@ -54,6 +53,10 @@ func connect_to_host(host: String, port: int) -> void:
 	if _stream.connect_to_host(host, port) != OK:
 		print("Error connecting to host.")
 		emit_signal("error")
+
+
+func is_connected_to_host() -> bool:
+	return _status == _stream.STATUS_CONNECTED
 
 func send(data: PoolByteArray) -> bool:
 	if _status != _stream.STATUS_CONNECTED:
@@ -65,9 +68,6 @@ func send(data: PoolByteArray) -> bool:
 		return false
 	return true
 
-
-func run():
-	print("run")
 
 
 # Test

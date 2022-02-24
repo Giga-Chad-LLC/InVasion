@@ -660,25 +660,37 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
-class A:
+class PlayerAction:
 	func _init():
 		var service
 		
-		_f1 = PBField.new("f1", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		_key_pressed = PBField.new("key_pressed", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
 		service = PBServiceField.new()
-		service.field = _f1
-		data[_f1.tag] = service
+		service.field = _key_pressed
+		data[_key_pressed.tag] = service
 		
 	var data = {}
 	
-	var _f1: PBField
-	func get_f1() -> float:
-		return _f1.value
-	func clear_f1() -> void:
+	var _key_pressed: PBField
+	func get_key_pressed():
+		return _key_pressed.value
+	func clear_key_pressed() -> void:
 		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_f1.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
-	func set_f1(value : float) -> void:
-		_f1.value = value
+		_key_pressed.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
+	func set_key_pressed(value) -> void:
+		_key_pressed.value = value
+	
+	enum Action {
+		Idle = 0,
+		StartMovingUp = 1,
+		StartMovingRight = 2,
+		StartMovingDown = 3,
+		StartMovingLeft = 4,
+		StopMovingUp = 5,
+		StopMovingRight = 6,
+		StopMovingDown = 7,
+		StopMovingLeft = 8
+	}
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)

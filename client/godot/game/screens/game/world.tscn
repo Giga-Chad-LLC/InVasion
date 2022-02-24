@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -10,7 +10,6 @@
 [ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
 [ext_resource path="res://icon.png" type="Texture" id=9]
 [ext_resource path="res://bin/gdexample.gdns" type="Script" id=10]
-[ext_resource path="res://screens/game/tcpclient.gd" type="Script" id=11]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -589,6 +588,3 @@ centered = false
 script = ExtResource( 10 )
 amplitude = 20.0
 speed = 3.0
-
-[node name="TCPClient" type="Node" parent="."]
-script = ExtResource( 11 )
