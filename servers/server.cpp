@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include "./player_proto/player.pb.h"
 
 using boost::asio::ip::tcp;
 
