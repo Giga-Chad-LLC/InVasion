@@ -11,16 +11,22 @@ namespace invasion::game_models {
 
 struct KinematicObject : Object {
 
-	explicit KinematicObject(Vector2D collider_size, Vector2D initial_pos);
+	explicit KinematicObject(Vector2D collider_size, Vector2D initial_pos, double mass);
 
 	Vector2D getVelocity() const;
-	void setVelocity(Vector2D velocity);
 
-	Vector2D intentMove(double delta);
+	Vector2D getForce() const;
+	void setForce(Vector2D force);
+
+	Vector2D getAcceleration() const;
+
+	Vector2D intentMove(double dt);
 
 protected:
 	Vector2D m_velocity;
 	Vector2D m_acceleration;
+	Vector2D m_force;
+	double m_mass;
 	bool m_moving;
 };
 
