@@ -1,6 +1,7 @@
 #ifndef VECTOR2D_H_
 #define VECTOR2D_H_
 
+#include <iostream>
 
 namespace invasion::game_models {
 
@@ -14,6 +15,14 @@ struct Vector2D {
 
 	void setY(double y);
 	double getY() const;
+
+	// operators
+	Vector2D operator+(const Vector2D& other) const;
+	Vector2D& operator+=(const Vector2D& other);
+
+	friend Vector2D operator*(const Vector2D& vec, double value);
+	friend Vector2D operator*(double value, const Vector2D& vec);
+	friend std::ostream& operator<<(std::ostream& os, const Vector2D& vec);
 
 private:
 	double m_x = 0.;
