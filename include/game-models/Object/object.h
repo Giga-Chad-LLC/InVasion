@@ -12,8 +12,9 @@ struct Object {
 	explicit Object(Vector2D collider_size, Vector2D initial_pos);
 
 	Vector2D getPosition() const;
-
 	void setPosition(Vector2D pos);
+
+	bool collidesWith(const Object* const other) const;
 
 protected:
 	const BoxCollider m_collider;

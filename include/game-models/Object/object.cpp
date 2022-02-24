@@ -18,4 +18,8 @@ void Object::setPosition(Vector2D pos) {
 	m_position = std::move(pos);
 }
 
+bool Object::collidesWith(const Object* const other) const {
+	return m_collider.collidesWith(m_position, &(other->m_collider), other->m_position);
+}
+
 } // namespace invasion::game_models
