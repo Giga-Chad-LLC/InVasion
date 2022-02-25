@@ -14,19 +14,27 @@ struct KinematicObject : Object {
 	explicit KinematicObject(Vector2D collider_size, Vector2D initial_pos, double mass, double max_speed);
 
 	Vector2D getVelocity() const;
+	void setVelocity(Vector2D velocity);
 
-	Vector2D getForce() const;
-	void setForce(Vector2D force);
+	Vector2D getMovingForce() const;
+	void setMovingForce(Vector2D force);
+
+	Vector2D getResultForce() const;
+	void setResultForce(Vector2D force);
 
 	Vector2D getAcceleration() const;
 
 	Vector2D intentMove(double dt) const;
 	void makeMove(double dt);
 
+	void setMovingState(bool state);
+	bool isMoving() const;
+
 protected:
 	Vector2D m_velocity;
 	Vector2D m_acceleration;
-	Vector2D m_force;
+	Vector2D m_moving_force;
+	Vector2D m_result_force;
 	const double m_mass;
 	const double m_max_speed;
 	bool m_moving;

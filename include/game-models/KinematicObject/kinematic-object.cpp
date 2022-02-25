@@ -17,6 +17,31 @@ Vector2D KinematicObject::getVelocity() const {
 	return m_velocity;
 }
 
+void KinematicObject::setVelocity(Vector2D velocity) {
+	m_velocity = std::move(velocity);
+}
+
+Vector2D KinematicObject::getMovingForce() const {
+	return m_moving_force;
+}
+
+void KinematicObject::setMovingForce(Vector2D force) {
+	m_moving_force = std::move(force);
+}
+
+Vector2D KinematicObject::getResultForce() const {
+	return m_result_force;
+}
+
+void KinematicObject::setResultForce(Vector2D force) {
+	m_result_force = std::move(force);
+	m_acceleration = m_result_force / m_mass;
+}
+
+Vector2D KinematicObject::getAcceleration() const {
+	return m_acceleration;
+}
+
 Vector2D KinematicObject::intentMove(double dt) const {
 	return m_position + (m_velocity + m_acceleration * dt) * dt;
 }
@@ -32,17 +57,12 @@ void KinematicObject::makeMove(double dt) {
 	m_position += m_velocity * dt;
 }
 
-Vector2D KinematicObject::getForce() const {
-	return m_force;
+void KinematicObject::setMovingState(bool state) {
+	m_moving = state;
 }
 
-void KinematicObject::setForce(Vector2D force) {
-	m_force = std::move(force);
-	m_acceleration = m_force / m_mass;
-}
-
-Vector2D KinematicObject::getAcceleration() const {
-	return m_acceleration;
+bool KinematicObject::isMoving() const {
+	return m_moving;
 }
 
 
