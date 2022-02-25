@@ -16,7 +16,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # message(NOTICE "Proto Headers: " ${PROTO_HDRS})
 # message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ../proto/player.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/player.proto)
 
 add_executable(
 		server.out
