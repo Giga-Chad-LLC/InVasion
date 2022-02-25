@@ -31,6 +31,7 @@ enum {
 
 var input_vector = Vector2.ZERO
 var previous_action = Idle
+var current_move_event = Idle # makes the character move
 
 # Godobuf
 const PlayerProto = preload("res://player/scripts/player_proto.gd")
@@ -133,14 +134,17 @@ func _physics_process(delta):
 		_client.is_connected_to_host()):
 		previous_action = action.get_key_pressed()
 		var packed_data: PoolByteArray = pack(action.to_bytes())
-		var result = _client.send(packed_data)
-		if (result):
-			print("Sent: ", packed_data)
+
+		var result: bool = _client.send(packed_data)
+		if (!result):
+			print("Error while sending packet: ", packed_data)
+#		if (result):
+#			print("Sent: ", packed_data)
 #		print("Packed: ", action.to_bytes())
 #		print("Send: action ", action.get_key_pressed())
-
 #	yield(get_tree().create_timer(0.2), "timeout")
-	var input_vector = get_response(action.get_key_pressed())
+	var input_vector = get_response(current_move_event) # action.get_key_pressed()
+#	var input_vector = get_response(action.get_key_pressed())
 	player_move(delta, input_vector)
 
 
@@ -174,9 +178,11 @@ func _handle_client_receive_data(data: PoolByteArray) -> void:
 	var unpacked_player_action = PlayerProto.PlayerAction.new()
 	var result_code = unpacked_player_action.from_bytes(data)
 	if (result_code == PlayerProto.PB_ERR.NO_ERRORS):
-		print("Received data: ", unpacked_player_action.get_key_pressed())
+		current_move_event = unpacked_player_action.get_key_pressed()
+#		print("Received move event: ", current_move_event)
 	else:
 		print("Error when receive: ", "cannot unpack data")
+
 
 func _handle_client_disconnected() -> void:
 	print("Client disconnected from server.")
