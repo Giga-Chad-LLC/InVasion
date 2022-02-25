@@ -9,22 +9,45 @@ using namespace invasion::game_models;
 
 void MoveInteractor::execute(const MoveRequestModel& req, Player& player) const {
 	MoveRequestModel::MoveEvent event = req.getEvent();
-	
-	const double force_magnitude = 600;
 	Vector2D moving_force = player.getMovingForce();
 
 	switch (event) {
+		// starting
 		case MoveRequestModel::MoveEvent::StartMovingUp: {
-			moving_force += Vector2D::clampMagnitude(Vector2D(1, 0), force_magnitude);
-			player.setMovingForce(moving_force);
+			moving_force.setY(1);
 			player.setMovingState(true);
 			break;
-		}	
-		case MoveRequestModel::MoveEvent::StopMovingUp: {
-			player.setMovingForce(Vector2D::ZERO);
+		}
+		case MoveRequestModel::MoveEvent::StartMovingRight: {
+			moving_force.setX(1);
+			player.setMovingState(true);
+			break;
+		}
+		case MoveRequestModel::MoveEvent::StartMovingDown: {
+			moving_force.setY(-1);
+			player.setMovingState(true);
+			break;
+		}
+		case MoveRequestModel::MoveEvent::StartMovingLeft: {
+			moving_force.setX(-1);
+			player.setMovingState(true);
+			break;
+		}
+		// stopping
+		case MoveRequestModel::MoveEvent::StopMovingUp:
+		case MoveRequestModel::MoveEvent::StopMovingDown: {
+			moving_force.setY(0);
 			player.setMovingState(false);
+			break;
+		}
+		case MoveRequestModel::MoveEvent::StopMovingRight:
+		case MoveRequestModel::MoveEvent::StopMovingLeft: {
+			moving_force.setX(0);
+			player.setMovingState(false);			
 		}
 	}
+
+	player.setMovingForce(moving_force);
 }
 
 

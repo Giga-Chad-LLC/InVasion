@@ -22,14 +22,14 @@ struct MoveRequestModel {
 
 	enum class MoveEvent {
 		StartMovingUp,
-		// StartMovingRight,
-		// StartMovingDown,
-		// StartMovingLeft,
+		StartMovingRight,
+		StartMovingDown,
+		StartMovingLeft,
 
 		StopMovingUp,
-		// StopMovingRight,
-		// StopMovingDown,
-		// StopMovingLeft,
+		StopMovingRight,
+		StopMovingDown,
+		StopMovingLeft,
 	};
 
 private:
