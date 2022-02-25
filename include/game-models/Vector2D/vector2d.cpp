@@ -1,11 +1,13 @@
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 #include "vector2d.h"
 
 
 namespace invasion::game_models {
 const Vector2D Vector2D::ZERO = Vector2D(0.0, 0.0);
+const double Vector2D::EPS = 1e-8;
 
 Vector2D::Vector2D(double x, double y)
 	: m_x(x), m_y(y) {}
@@ -30,6 +32,26 @@ double Vector2D::getY() const {
 	return m_y;
 }
 
+double Vector2D::magnitude() const {
+	return std::sqrt(m_x * m_x + m_y * m_y);
+}
+
+Vector2D Vector2D::normalize() const {
+	const double magnitude = std::sqrt(m_x * m_x + m_y * m_y);
+	
+	if(magnitude < Vector2D::EPS) {
+		return Vector2D::ZERO;
+	}
+	
+	return *this / magnitude;
+}
+
+// static
+Vector2D Vector2D::clampMagnitude(const Vector2D& vec, const double magnitude) {
+	return vec.normalize() * magnitude;
+}
+
+
 // operators
 Vector2D Vector2D::operator+(const Vector2D& other) const {
 	return Vector2D(m_x + other.m_x, m_y + other.m_y);
@@ -50,8 +72,7 @@ Vector2D operator*(double value, const Vector2D& vec) {
 }
 
 Vector2D operator/(const Vector2D& vec, double value) {
-	const double EPS = 1e-8; 
-	assert(value - EPS >= 0);
+	assert(std::abs(value) > Vector2D::EPS);
 	return Vector2D(vec.m_x / value, vec.m_y / value);
 }
 

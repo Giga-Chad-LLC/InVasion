@@ -16,6 +16,13 @@ struct Vector2D {
 	void setY(double y);
 	double getY() const;
 
+	double magnitude() const;
+
+	Vector2D normalize() const;
+
+	// static methods
+	static Vector2D clampMagnitude(const Vector2D& vec1, const double limit);
+
 	// operators
 	Vector2D operator+(const Vector2D& other) const;
 	Vector2D& operator+=(const Vector2D& other);
@@ -28,6 +35,8 @@ struct Vector2D {
 	const static Vector2D ZERO;
 
 private:
+	static const double EPS;
+
 	double m_x = 0.0;
 	double m_y = 0.0;
 };
