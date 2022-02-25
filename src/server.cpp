@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
                 PlayerAction action;
                 action.ParseFromArray(arr, size);
-                // std::cout << "Action retrieve: " << action.key_pressed() << ", size in bytes: " << action.ByteSizeLong() << std::endl;
+                 std::cout << "Action retrieve: " << action.key_pressed() << ", size in bytes: " << action.ByteSizeLong() << std::endl;
                 char action_buffer[action.ByteSizeLong()];
                 action.SerializeToArray(action_buffer, action.ByteSizeLong());
 

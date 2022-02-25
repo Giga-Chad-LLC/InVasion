@@ -31,6 +31,7 @@ enum {
 
 var input_vector = Vector2.ZERO
 var previous_action = Idle
+var current_move_event = Idle # makes the character move
 
 # Godobuf
 const PlayerProto = preload("res://player/scripts/player_proto.gd")
@@ -43,9 +44,24 @@ const RECONNECT_TIMEOUT: float = 3.0
 const Client = preload("res://client.gd")
 var _client: Client = Client.new()
 
+
+# Appends data.size() to the front of data (little endian)
+func pack(data: PoolByteArray) -> PoolByteArray:
+	var bytes_encoder: StreamPeer = StreamPeerBuffer.new();
+	var bytes_array: PoolByteArray
+	bytes_encoder.put_32(data.size())
+
+#	print("Raw data: ", data)
+#	print("Size only: ", bytes_encoder.data_array)
+	bytes_array.append_array(bytes_encoder.data_array)
+	bytes_array.append_array(data)
+#	print("Total pack: ", bytes_array)
+
+	return bytes_array
+
 func get_packed_move_action() -> PlayerProto.PlayerAction:
 	var packed_player_action = PlayerProto.PlayerAction.new()
-	
+
 	if (Input.is_action_just_pressed("ui_up")):
 #		return StartMovingUp
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingUp)
@@ -58,14 +74,14 @@ func get_packed_move_action() -> PlayerProto.PlayerAction:
 	elif (Input.is_action_just_released("ui_right")):
 #		return StopMovingRight
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingRight)
-	
+
 	elif (Input.is_action_just_pressed("ui_down")):
 #		return StartMovingDown
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingDown)
 	elif (Input.is_action_just_released("ui_down")):
 #		return StopMovingDown
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingUp)
-	
+
 	elif (Input.is_action_just_pressed("ui_left")):
 #		return StartMovingLeft
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingLeft)
@@ -74,7 +90,7 @@ func get_packed_move_action() -> PlayerProto.PlayerAction:
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingLeft)
 	else:
 		packed_player_action.set_key_pressed(packed_player_action.Action.Idle)
-	
+
 	return packed_player_action
 
 func get_response(move_event):
@@ -82,22 +98,22 @@ func get_response(move_event):
 		input_vector.y = -1
 	if (move_event == StopMovingUp):
 		input_vector.y = 0
-	
+
 	if (move_event == StartMovingRight):
 		input_vector.x = 1
 	if (move_event == StopMovingRight):
 		input_vector.x = 0
-	
+
 	if (move_event == StartMovingDown):
 		input_vector.y = 1
 	if (move_event == StopMovingDown):
 		input_vector.y = 0
-	
+
 	if (move_event == StartMovingLeft):
 		input_vector.x = -1
 	if (move_event == StopMovingLeft):
 		input_vector.x = 0
-	
+
 	return input_vector
 
 
@@ -114,18 +130,70 @@ func _physics_process(delta):
 #			var input_vector = get_move_input_vector()
 #			player_move(delta, input_vector)
 	var action: PlayerProto.PlayerAction = get_packed_move_action()
-	if (previous_action != action.get_key_pressed() and
+	if (action.get_key_pressed() != Idle and previous_action != action.get_key_pressed() and
 		_client.is_connected_to_host()):
 		previous_action = action.get_key_pressed()
-#		_client.send(action)
-		print("Packed: ", action.to_bytes())
-		print("Send: action ", action.get_key_pressed())
-		pass
+		var packed_data: PoolByteArray = pack(action.to_bytes())
+
+		var result: bool = _client.send(packed_data)
+		if (!result):
+			print("Error while sending packet: ", packed_data)
+#		if (result):
+#			print("Sent: ", packed_data)
+#		print("Packed: ", action.to_bytes())
+#		print("Send: action ", action.get_key_pressed())
 #	yield(get_tree().create_timer(0.2), "timeout")
-	var input_vector = get_response(action.get_key_pressed())
+	var input_vector = get_response(current_move_event) # action.get_key_pressed()
+#	var input_vector = get_response(action.get_key_pressed())
 	player_move(delta, input_vector)
 
 
+# TCP Networking
+func init_network() -> void:
+	_client.connect("connected", self, "_handle_client_connected")
+	_client.connect("disconnected", self, "_handle_client_disconnected")
+	_client.connect("error", self, "_handle_client_error")
+	_client.connect("receive", self, "_handle_client_receive_data")
+	add_child(_client)
+	_client.connect_to_host(HOST, PORT)
+
+
+
+func _connect_after_timeout(timeout: float) -> void:
+	yield(get_tree().create_timer(timeout), "timeout") # Delay for timeout
+	_client.connect_to_host(HOST, PORT)
+
+
+func _handle_client_connected() -> void:
+	print("Client connected to server.")
+#
+#	var message: PoolByteArray = [104, 101, 108, 108, 111, 32, 102, 114,
+#								  111, 109, 32, 103, 111, 100, 111, 116, 32]
+#	var res = _client.send(message)
+#	print("Send message to server: ", message.get_string_from_ascii())
+
+
+
+func _handle_client_receive_data(data: PoolByteArray) -> void:
+	var unpacked_player_action = PlayerProto.PlayerAction.new()
+	var result_code = unpacked_player_action.from_bytes(data)
+	if (result_code == PlayerProto.PB_ERR.NO_ERRORS):
+		current_move_event = unpacked_player_action.get_key_pressed()
+#		print("Received move event: ", current_move_event)
+	else:
+		print("Error when receive: ", "cannot unpack data")
+
+
+func _handle_client_disconnected() -> void:
+	print("Client disconnected from server.")
+	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
+
+func _handle_client_error() -> void:
+	print("Client connection error.")
+	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
+
+
+# User-defined functions
 func get_move_input_vector():
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
@@ -133,20 +201,20 @@ func get_move_input_vector():
 	input_vector = input_vector.normalized()
 	return input_vector
 
-# User-defined functions
 func player_move(delta, input_vector):
 	if input_vector != Vector2.ZERO:
 		animationTree.set("parameters/Idle/blend_position", input_vector)
 		animationTree.set("parameters/Run/blend_position", input_vector)
 
 		animationState.travel("Run")
-		
+
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 	else:
 		animationState.travel("Idle")
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	velocity = move_and_slide(velocity)
+
 
 
 # Godobuf
@@ -174,43 +242,4 @@ func player_move(delta, input_vector):
 #	# Use class 'a' fields. Example, get field f1
 #	var f1 = b.get_f1()
 #	print("Deserialized: ", f1)
-
-# TCP Networking
-func init_network() -> void:
-	_client.connect("connected", self, "_handle_client_connected")
-	_client.connect("disconnected", self, "_handle_client_disconnected")
-	_client.connect("error", self, "_handle_client_error")
-	_client.connect("receive", self, "_handle_client_receive_data")
-	add_child(_client)
-	_client.connect_to_host(HOST, PORT)
-	
-
-
-func _connect_after_timeout(timeout: float) -> void:
-	yield(get_tree().create_timer(timeout), "timeout") # Delay for timeout
-	_client.connect_to_host(HOST, PORT)
-
-
-func _handle_client_connected() -> void:
-	print("Client connected to server.")
-#
-#	var message: PoolByteArray = [104, 101, 108, 108, 111, 32, 102, 114,
-#								  111, 109, 32, 103, 111, 100, 111, 116, 32]
-#	var res = _client.send(message)
-#	print("Send message to server: ", message.get_string_from_ascii())
-
-
-
-func _handle_client_receive_data(data: PoolByteArray) -> void:
-	print("Received data: ", data.get_string_from_utf8())
-
-func _handle_client_disconnected() -> void:
-	print("Client disconnected from server.")
-	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
-
-func _handle_client_error() -> void:
-	print("Client connection error.")
-	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
-
-
 
