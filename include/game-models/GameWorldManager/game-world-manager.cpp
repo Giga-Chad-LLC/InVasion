@@ -10,13 +10,15 @@ void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, doub
 	const double g = -9.81;
 	const double nu = 0.6;
 	const double friction_coef = -nu * Vector2D(0, Player::MASS * g).magnitude();
+	const double applied_force_magnitude = 600;
 
 	for(Player& player : players) {
 		// applying friction force
 		if(player.isMoving()) {
-			const Vector2D applied_force = player.getMovingForce();
+			const Vector2D applied_force = Vector2D::clampMagnitude(player.getMovingForce(), applied_force_magnitude);
 			const Vector2D friction_force = applied_force.normalize() * friction_coef;
 			
+			std::cout << "applied_force magnitude: " << applied_force.magnitude() << std::endl;
 			// std::cout << "friction_force magnitude: " << friction_force.magnitude() << std::endl;
 
 			Vector2D result_force = Vector2D::ZERO;
@@ -24,11 +26,12 @@ void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, doub
 			if(friction_force.magnitude() < applied_force.magnitude())
 				result_force = applied_force + friction_force;
 
-			// std::cout << "result_force: " << result_force << std::endl;
+			std::cout << "result_force: " << result_force << std::endl;
 			
 			player.setResultForce(result_force);
 		}
 		else {
+			// applying friction until player stops
 			const Vector2D cur_velocity = player.getVelocity();
 			const Vector2D friction_force = cur_velocity.normalize() * friction_coef;
 			const Vector2D acceleration = friction_force / Player::MASS;
