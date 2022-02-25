@@ -1,3 +1,5 @@
+
+
 # Misc
 logs/*
 *.log
@@ -176,3 +178,17 @@ godot.creator.*
 
 # compile commands (https://clang.llvm.org/docs/JSONCompilationDatabase.html)
 compile_commands.json
+
+# Other
+client/godot-cpp/out
+win64
+win32
+osx
+x11
+.vscode
+cmake
+!client/godot/game/bin
+build
+cmake-build
+
+src/grpc/out
