@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,6 +10,13 @@
 
 using boost::asio::ip::tcp;
 
+
+std::string make_string(boost::asio::streambuf& streambuf) {
+	return {
+		boost::asio::buffers_begin(streambuf.data()), 
+		boost::asio::buffers_end(streambuf.data())
+	};
+}
 
 // NOLINTNEXTLINE
 int main(int argc, char *argv[]) {
@@ -31,12 +39,19 @@ int main(int argc, char *argv[]) {
 			// action.set_key_pressed(PlayerAction::Action::PlayerAction_Action_StartMovingLeft);
 
 			while (client) {
-				std::string msg;
-				if (!(client >> msg)) {
-					break;
-				}
-				// client << "take it back: " << msg << std::endl;
-				std::cout << "Received: " << msg << std::endl;
+				// std::string msg;
+				// if (!(client >> msg)) {
+				// 	break;
+				// }
+				// // client << "take it back: " << msg << std::endl;
+				// std::cout << "Received: " << msg << std::endl;
+				// std::size_t n = 4;
+				// boost::asio::streambuf streambuf(n);
+				// boost::asio::read(socket, streambuf, boost::asio::transfer_exactly(n));
+				// std::cout << make_string(streambuf) << std::endl;
+				std::uint32_t u32;
+				client >> u32;
+				std::cout << "Data: " << u32 << std::endl;
 			}
 
 			std::cout << "Disconnected" << std::endl;

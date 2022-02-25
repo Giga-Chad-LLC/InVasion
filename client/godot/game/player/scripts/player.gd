@@ -43,6 +43,21 @@ const RECONNECT_TIMEOUT: float = 3.0
 const Client = preload("res://client.gd")
 var _client: Client = Client.new()
 
+
+# Appends data.size() to the front of data (little endian)
+func pack(data: PoolByteArray) -> PoolByteArray:
+	var bytes_encoder: StreamPeer = StreamPeerBuffer.new();
+	var bytes_array: PoolByteArray
+	bytes_encoder.put_32(data.size())
+
+#	print("Raw data: ", data)
+#	print("Size only: ", bytes_encoder.data_array)
+	bytes_array.append_array(bytes_encoder.data_array)
+	bytes_array.append_array(data)
+#	print("Total pack: ", bytes_array)
+	
+	return bytes_array
+
 func get_packed_move_action() -> PlayerProto.PlayerAction:
 	var packed_player_action = PlayerProto.PlayerAction.new()
 	
@@ -114,66 +129,20 @@ func _physics_process(delta):
 #			var input_vector = get_move_input_vector()
 #			player_move(delta, input_vector)
 	var action: PlayerProto.PlayerAction = get_packed_move_action()
-	if (previous_action != action.get_key_pressed() and
+	if (action.get_key_pressed() != Idle and previous_action != action.get_key_pressed() and
 		_client.is_connected_to_host()):
 		previous_action = action.get_key_pressed()
-		_client.send(action.to_bytes())
-		print("Packed: ", action.to_bytes())
-		print("Send: action ", action.get_key_pressed())
-		pass
+		var packed_data: PoolByteArray = pack(action.to_bytes())
+		var result = _client.send(packed_data)
+		if (result):
+			print("Sent: ", packed_data)
+#		print("Packed: ", action.to_bytes())
+#		print("Send: action ", action.get_key_pressed())
+
 #	yield(get_tree().create_timer(0.2), "timeout")
 	var input_vector = get_response(action.get_key_pressed())
 	player_move(delta, input_vector)
 
-
-func get_move_input_vector():
-	var input_vector = Vector2.ZERO
-	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
-	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
-	input_vector = input_vector.normalized()
-	return input_vector
-
-# User-defined functions
-func player_move(delta, input_vector):
-	if input_vector != Vector2.ZERO:
-		animationTree.set("parameters/Idle/blend_position", input_vector)
-		animationTree.set("parameters/Run/blend_position", input_vector)
-
-		animationState.travel("Run")
-		
-		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
-	else:
-		animationState.travel("Idle")
-		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
-
-	velocity = move_and_slide(velocity)
-
-
-# Godobuf
-#func godobuf(action):
-#	# Create packed class (message)
-#	var a = TestProto.A.new()
-#	# Example, set field f1
-#	a.set_f1(3.14159)
-#	# Pack message A
-#	# Use to_bytes() method, it's return PoolByteArray
-#	var packed_bytes = a.to_bytes()
-#	print("Serialized: ", packed_bytes)
-#
-#	# Create unpacked class (message)
-#	var b = TestProto.A.new()
-#	# Unpack byte sequence to class (message) A.
-#	# Use from_bytes(PoolByteArray my_byte_sequence) method
-#	var result_code = b.from_bytes(packed_bytes)
-#	# result_code must be checked (see Unpack result codes section)
-#	if result_code == TestProto.PB_ERR.NO_ERRORS:
-#		print("OK")
-#	else:
-#		print("Failed")
-#		return
-#	# Use class 'a' fields. Example, get field f1
-#	var f1 = b.get_f1()
-#	print("Deserialized: ", f1)
 
 # TCP Networking
 func init_network() -> void:
@@ -218,4 +187,53 @@ func _handle_client_error() -> void:
 	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
 
 
+# User-defined functions
+func get_move_input_vector():
+	var input_vector = Vector2.ZERO
+	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
+	input_vector = input_vector.normalized()
+	return input_vector
+
+func player_move(delta, input_vector):
+	if input_vector != Vector2.ZERO:
+		animationTree.set("parameters/Idle/blend_position", input_vector)
+		animationTree.set("parameters/Run/blend_position", input_vector)
+
+		animationState.travel("Run")
+		
+		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
+	else:
+		animationState.travel("Idle")
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+
+	velocity = move_and_slide(velocity)
+
+
+
+# Godobuf
+#func godobuf(action):
+#	# Create packed class (message)
+#	var a = TestProto.A.new()
+#	# Example, set field f1
+#	a.set_f1(3.14159)
+#	# Pack message A
+#	# Use to_bytes() method, it's return PoolByteArray
+#	var packed_bytes = a.to_bytes()
+#	print("Serialized: ", packed_bytes)
+#
+#	# Create unpacked class (message)
+#	var b = TestProto.A.new()
+#	# Unpack byte sequence to class (message) A.
+#	# Use from_bytes(PoolByteArray my_byte_sequence) method
+#	var result_code = b.from_bytes(packed_bytes)
+#	# result_code must be checked (see Unpack result codes section)
+#	if result_code == TestProto.PB_ERR.NO_ERRORS:
+#		print("OK")
+#	else:
+#		print("Failed")
+#		return
+#	# Use class 'a' fields. Example, get field f1
+#	var f1 = b.get_f1()
+#	print("Deserialized: ", f1)
 
