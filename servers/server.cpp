@@ -29,29 +29,43 @@ int main(int argc, char *argv[]) {
 	while (true) {
 		tcp::socket s = acceptor.accept();
 		
-		std::thread([s = std::move(s)]() mutable {
-			std::cout << "Connected client: " << s.remote_endpoint() << " --> " << s.local_endpoint() << std::endl;
-			tcp::iostream client(std::move(s));
+		std::thread([socket = std::move(s)]() mutable {
+			std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint() << std::endl;
+			tcp::iostream client(std::move(socket));
+			
 
-			client << "Hello from C++ server!\n";
+			client << "Hello from C++ server!" << std::endl;			
 
-			// PlayerAction action;
-			// action.set_key_pressed(PlayerAction::Action::PlayerAction_Action_StartMovingLeft);
+			// boost::asio::streambuf write_buffer;
+  		// std::ostream output(&write_buffer);
+
+			// output << "Hello, it is buffered data!";
+			// std::cout << "Send to client: " << make_string(write_buffer) << std::endl;
+			// boost::asio::write(socket, write_buffer);
+
 
 			while (client) {
-				// std::string msg;
-				// if (!(client >> msg)) {
-				// 	break;
-				// }
-				// // client << "take it back: " << msg << std::endl;
-				// std::cout << "Received: " << msg << std::endl;
-				// std::size_t n = 4;
-				// boost::asio::streambuf streambuf(n);
-				// boost::asio::read(socket, streambuf, boost::asio::transfer_exactly(n));
-				// std::cout << make_string(streambuf) << std::endl;
-				std::uint32_t u32;
-				client >> u32;
-				std::cout << "Data: " << u32 << std::endl;
+				// get the message data length in bytes
+				std::uint32_t size;
+				client.read(reinterpret_cast<char*> (&size), sizeof(size));
+				// std::cout << "Msg size: " << size << std::endl;
+
+				char arr[size];
+				client.read(reinterpret_cast<char*> (&arr), size);
+
+				PlayerAction action;
+				action.ParseFromArray(arr, size);
+				// std::cout << "Action retrieve: " << action.key_pressed() << ", size in bytes: " << action.ByteSizeLong() << std::endl;
+				char action_buffer[action.ByteSizeLong()];
+				action.SerializeToArray(action_buffer, action.ByteSizeLong());
+
+				// std::cout << "Data should be " << data_expected_size << " bytes in length" << std::endl;
+				// void *buffer = malloc(size);
+				// address_book.SerializeToArray(buffer, size);
+				// char action_buffer[];
+				// action.SerializeToArray
+
+				client.write(action_buffer, action.ByteSizeLong());
 			}
 
 			std::cout << "Disconnected" << std::endl;
