@@ -18,7 +18,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/player.proto)
 
 add_executable(
 		server.out
-		server_src/server.cpp
+		server_src/main.cpp
 		${PROTO_SRCS}
 		${PROTO_HDRS}
 )
