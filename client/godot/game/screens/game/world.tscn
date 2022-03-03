@@ -586,5 +586,3 @@ scale = Vector2( 0.328125, 0.328125 )
 texture = ExtResource( 9 )
 centered = false
 script = ExtResource( 10 )
-amplitude = 20.0
-speed = 3.0
