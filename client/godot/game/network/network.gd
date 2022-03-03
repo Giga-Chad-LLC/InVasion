@@ -1,7 +1,5 @@
 extends Node
 
-
-
 # TCP Client
 signal connected      # Connected to server
 signal receive        # Received data from server
