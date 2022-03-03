@@ -7,19 +7,19 @@
 
 using boost::asio::ip::tcp;
 
-class user {
+class User {
 private:
     tcp::iostream chanel;
-    SafeQueue<PlayerAction> queue_send;
+    SafeQueue<PlayerAction> queueSend;
 
-    friend class receiver;
+    friend class Receiver;
 
-    friend class sender;
+    friend class Sender;
 
     friend void handler(SafeQueue<PlayerAction> *q);
 
 public:
-    explicit user(tcp::socket &&socket) : chanel(std::move(socket)) {
+    explicit User(tcp::socket &&socket) : chanel(std::move(socket)) {
         chanel << "Hello from C++ server!" << std::endl;
     }
 };

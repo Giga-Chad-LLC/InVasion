@@ -15,27 +15,27 @@ class SafeQueue {
     std::mutex mtx;
     std::condition_variable cv;
 
-    std::condition_variable sync_wait;
-    bool finish_processing = false;
-    int sync_counter = 0;
+    std::condition_variable syncWait;
+    bool finishProcessing = false;
+    int syncCounter = 0;
 
-    void DecreaseSyncCounter() {
-        if (--sync_counter == 0) {
-            sync_wait.notify_one();
+    void decreaseSyncCounter() {
+        if (--syncCounter == 0) {
+            syncWait.notify_one();
         }
     }
 
 public:
 
-    typedef typename std::queue<T>::size_type size_type;
+    typedef typename std::queue<T>::size_type sizeType;
 
     SafeQueue() {}
 
     ~SafeQueue() {
-        Finish();
+        finish();
     }
 
-    void Produce(T &&item) {
+    void produce(T &&item) {
 
         std::lock_guard<std::mutex> lock(mtx);
 
@@ -44,7 +44,7 @@ public:
 
     }
 
-    size_type Size() {
+    sizeType size() {
 
         std::lock_guard<std::mutex> lock(mtx);
 
@@ -53,7 +53,7 @@ public:
     }
 
     [[nodiscard]]
-    bool Consume(T &item) {
+    bool consume(T &item) {
 
         std::lock_guard<std::mutex> lock(mtx);
 
@@ -69,41 +69,41 @@ public:
     }
 
     [[nodiscard]]
-    bool ConsumeSync(T &item) {
+    bool consumeSync(T &item) {
 
         std::unique_lock<std::mutex> lock(mtx);
 
-        sync_counter++;
+        syncCounter++;
 
         cv.wait(lock, [&] {
-            return !q.empty() || finish_processing;
+            return !q.empty() || finishProcessing;
         });
 
         if (q.empty()) {
-            DecreaseSyncCounter();
+            decreaseSyncCounter();
             return false;
         }
 
         item = std::move(q.front());
         q.pop();
 
-        DecreaseSyncCounter();
+        decreaseSyncCounter();
         return true;
 
     }
 
-    void Finish() {
+    void finish() {
 
         std::unique_lock<std::mutex> lock(mtx);
 
-        finish_processing = true;
+        finishProcessing = true;
         cv.notify_all();
 
-        sync_wait.wait(lock, [&]() {
-            return sync_counter == 0;
+        syncWait.wait(lock, [&]() {
+            return syncCounter == 0;
         });
 
-        finish_processing = false;
+        finishProcessing = false;
 
     }
 

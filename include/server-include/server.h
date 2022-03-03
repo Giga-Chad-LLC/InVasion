@@ -11,23 +11,23 @@
 #include <string>
 #include <thread>
 #include <utility>
-#include "user.h"
+#include "User.h"
 #include "receiver.h"
 #include "sender.h"
 
 using boost::asio::ip::tcp;
 
-inline std::vector<std::shared_ptr<user>> base_clients;
+inline std::vector<std::shared_ptr<User>> baseСlients;
 
 inline void handler(SafeQueue<PlayerAction> *q) {
     while (true) {
         PlayerAction cur;
-        if (q->Consume(cur)) {
-            for (auto cur_client: base_clients) {
+        if (q->consume(cur)) {
+            for (auto cur_client: baseСlients) {
                 // пока никакой обработки
                 // просто имитируем ее
                 PlayerAction tmp = cur;
-                cur_client->queue_send.Produce(std::move(tmp));
+                cur_client->queueSend.produce(std::move(tmp));
             }
         }
     }
@@ -35,18 +35,18 @@ inline void handler(SafeQueue<PlayerAction> *q) {
 
 class server {
 private:
-    boost::asio::io_context io_context;
+    boost::asio::io_context ioСontext;
     tcp::acceptor acceptor;
     const size_t NUMBER_OF_TEAM = 1;
-    bool handler_implemented = false;
+    bool handlerImplemented = false;
 public:
-    SafeQueue<PlayerAction> queue_receive;
+    SafeQueue<PlayerAction> queueReceive;
 
     explicit server();
 
-    void make_handler();
+    void makeHandler();
 
-    void wait_new_client();
+    void waitNewClient();
 };
 
 

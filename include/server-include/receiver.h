@@ -3,14 +3,14 @@
 #define INVASION_SERVER_RECEIVER_H
 
 #include <thread>
-#include "user.h"
+#include "User.h"
 #include "safe-queue.h"
 #include <player.pb.h>
 
-class receiver {
+class Receiver {
 
 public:
-    receiver(std::shared_ptr<user> cur_client, SafeQueue<PlayerAction> *queue) {
+    Receiver(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queue) {
         std::thread([client = std::move(cur_client), q = queue]() {
             while (client->chanel) {
 
@@ -21,7 +21,7 @@ public:
 
                 PlayerAction action;
                 action.ParseFromArray(arr, size);
-                q->Produce(std::move(action));
+                q->produce(std::move(action));
                 // на данном этапе в очереди хранятся уже готовые PlayerAction, дальше
                 // я буду переделывать, чтобы у нас поддерживались не только шаги
             }

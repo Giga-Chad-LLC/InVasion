@@ -2,17 +2,17 @@
 #ifndef INVASION_SERVER_SENDER_H
 #define INVASION_SERVER_SENDER_H
 
-#include "user.h"
+#include "User.h"
 #include "player.pb.h"
 #include <thread>
 
-class sender {
+class Sender {
 public:
-    sender(std::shared_ptr<user> cur_client) {
-        std::thread([client = cur_client]() {
+    Sender(std::shared_ptr<User> curClient) {
+        std::thread([client = curClient]() {
             while (true) {
                 PlayerAction action;
-                if (client->queue_send.Consume(action)) {
+                if (client->queueSend.consume(action)) {
                     char action_buffer[action.ByteSizeLong()];
                     action.SerializeToArray(action_buffer, action.ByteSizeLong());
 
