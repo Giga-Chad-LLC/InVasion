@@ -14,6 +14,31 @@
 #include <utility>
 using boost::asio::ip::tcp;
 
+void return_client(tcp::socket && socket){
+        std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
+                  << std::endl;
+        tcp::iostream client(std::move(socket));
+        client << "Hello from C++ server!" << std::endl;
+
+        while (client) {
+
+            std::uint32_t size;  // get the message data length in bytes
+            client.read(reinterpret_cast<char *> (&size), sizeof(size));
+            char arr[size];
+            client.read(reinterpret_cast<char *> (&arr), size);
+
+            PlayerAction action;
+            action.ParseFromArray(arr, size);
+            std::cout << "Action retrieve: " << action.key_pressed() << ", size in bytes: " << action.ByteSizeLong() << std::endl;
+            char action_buffer[action.ByteSizeLong()];
+            action.SerializeToArray(action_buffer, action.ByteSizeLong());
+
+            client.write(action_buffer, action.ByteSizeLong());
+        }
+        std::cout << "Client disconnected" << std::endl;
+
+}
+
 class server {
 private:
     SafeQueue<PlayerAction> queue_receive;
@@ -31,29 +56,7 @@ public:
         while (true) {
             tcp::socket s = acceptor.accept();
 
-            std::thread([socket = std::move(s)]() mutable {
-                std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
-                          << std::endl;
-                tcp::iostream client(std::move(socket));
-                client << "Hello from C++ server!" << std::endl;
-
-                while (client) {
-
-                    std::uint32_t size;  // get the message data length in bytes
-                    client.read(reinterpret_cast<char *> (&size), sizeof(size));
-                    char arr[size];
-                    client.read(reinterpret_cast<char *> (&arr), size);
-
-                    PlayerAction action;
-                    action.ParseFromArray(arr, size);
-                    std::cout << "Action retrieve: " << action.key_pressed() << ", size in bytes: " << action.ByteSizeLong() << std::endl;
-                    char action_buffer[action.ByteSizeLong()];
-                    action.SerializeToArray(action_buffer, action.ByteSizeLong());
-
-                    client.write(action_buffer, action.ByteSizeLong());
-                }
-                std::cout << "Client disconnected" << std::endl;
-            }).detach();
+            std::thread(return_client, std::move(s)).detach();
         }
     }
 };
