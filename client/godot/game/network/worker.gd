@@ -13,7 +13,6 @@ const PlayerProto = preload("res://player/scripts/player_proto.gd")
 # The thread will start here.
 func init(function: FuncRef):
 	thread.start(self, "_worker_function", function)
-	pass
 
 func _worker_function(function: FuncRef):
 	if (function):
