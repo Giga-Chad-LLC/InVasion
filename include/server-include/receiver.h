@@ -3,8 +3,8 @@
 #define INVASION_SERVER_RECEIVER_H
 
 #include <thread>
-#include "User.h"
-#include "SafeQueue.h"
+#include "user.h"
+#include "safe-queue.h"
 #include <player.pb.h>
 
 class Receiver {

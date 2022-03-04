@@ -3,7 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <utility>
-#include "../../include/server-include/Server.h"
+#include "../../include/server-include/server.h"
 
 using boost::asio::ip::tcp;
 

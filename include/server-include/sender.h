@@ -2,7 +2,7 @@
 #ifndef INVASION_SERVER_SENDER_H
 #define INVASION_SERVER_SENDER_H
 
-#include "User.h"
+#include "user.h"
 #include "player.pb.h"
 #include <thread>
 

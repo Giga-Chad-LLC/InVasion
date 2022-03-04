@@ -2,7 +2,7 @@
 #ifndef INVASION_SERVER_SERVER_H
 #define INVASION_SERVER_SERVER_H
 
-#include "../../include/server-include/SafeQueue.h"
+#include "../../include/server-include/safe-queue.h"
 #include "player.pb.h"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -11,9 +11,9 @@
 #include <string>
 #include <thread>
 #include <utility>
-#include "User.h"
-#include "Receiver.h"
-#include "Sender.h"
+#include "user.h"
+#include "receiver.h"
+#include "sender.h"
 
 using boost::asio::ip::tcp;
 
