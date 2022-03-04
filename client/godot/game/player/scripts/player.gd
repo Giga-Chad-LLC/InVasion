@@ -114,7 +114,7 @@ func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
 # Work with data
 func get_packed_move_action() -> PlayerProto.PlayerAction:
 	var packed_player_action = PlayerProto.PlayerAction.new()
-	
+
 	if (Input.is_action_just_pressed("ui_up")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingUp)
 	elif (Input.is_action_just_released("ui_up")):
@@ -123,19 +123,19 @@ func get_packed_move_action() -> PlayerProto.PlayerAction:
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingRight)
 	elif (Input.is_action_just_released("ui_right")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingRight)
-	
+
 	elif (Input.is_action_just_pressed("ui_down")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingDown)
 	elif (Input.is_action_just_released("ui_down")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingUp)
-	
+
 	elif (Input.is_action_just_pressed("ui_left")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingLeft)
 	elif (Input.is_action_just_released("ui_left")):
 		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingLeft)
 	else:
 		packed_player_action.set_key_pressed(packed_player_action.Action.Idle)
-	
+
 	return packed_player_action
 
 func get_move_vector_by_event(move_event):
@@ -143,22 +143,22 @@ func get_move_vector_by_event(move_event):
 		input_vector.y = -1
 	if (move_event == StopMovingUp):
 		input_vector.y = 0
-	
+
 	if (move_event == StartMovingRight):
 		input_vector.x = 1
 	if (move_event == StopMovingRight):
 		input_vector.x = 0
-	
+
 	if (move_event == StartMovingDown):
 		input_vector.y = 1
 	if (move_event == StopMovingDown):
 		input_vector.y = 0
-	
+
 	if (move_event == StartMovingLeft):
 		input_vector.x = -1
 	if (move_event == StopMovingLeft):
 		input_vector.x = 0
-	
+
 	return input_vector
 
 # Move player
@@ -168,7 +168,7 @@ func player_move(delta, input_vector):
 		animationTree.set("parameters/Run/blend_position", input_vector)
 
 		animationState.travel("Run")
-		
+
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 	else:
 		animationState.travel("Idle")
