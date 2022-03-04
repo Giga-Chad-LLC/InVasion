@@ -26,7 +26,7 @@ Player& GameSession::getPlayer(const int playerId) {
 			break;
 		}
 	}
-	assert(player_ptr);
+	assert(player_ptr != nullptr);
 	return *player_ptr;
 }
 
