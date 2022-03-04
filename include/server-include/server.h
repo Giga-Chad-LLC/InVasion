@@ -37,7 +37,7 @@ namespace inVasion::session {
         boost::asio::io_context ioContext;
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
-        bool handlerImplemented = false;
+        bool ImplementedSenderEachUser = false;
         SafeQueue<PlayerAction> queueReceive;
         SafeQueue<PlayerAction> queueSend;
     public:

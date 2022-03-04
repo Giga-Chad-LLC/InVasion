@@ -26,10 +26,10 @@ namespace inVasion::session {
             [[maybe_unused]] auto receiverOnThisUser = Receiver(pointerOnUser,
                                                                 &queueReceive); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = Sender(pointerOnUser);
-            if (!handlerImplemented && baseUsers.size() ==
-                                       NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
+            if (!ImplementedSenderEachUser && baseUsers.size() ==
+                                              NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "team are full\n";
-                handlerImplemented = false;
+                ImplementedSenderEachUser = false;
                 makeSenderUsers();
             }
         }
