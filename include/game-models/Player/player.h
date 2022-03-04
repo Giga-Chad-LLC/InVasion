@@ -9,12 +9,15 @@ namespace invasion::game_models {
 	
 
 struct Player : KinematicObject {
-	explicit Player(Vector2D initial_pos);
+	explicit Player(Vector2D initial_pos, int playerId);
+
+	int getId() const;
 
 	static const double MAX_SPEED;
 	static const double MASS;
 private:
 	static const Vector2D COLLIDER_SIZE;
+	const int m_id;
 };
 
 

@@ -8,14 +8,16 @@ const double Player::MASS = 60.0;
 const Vector2D Player::COLLIDER_SIZE(20, 20);
 
 	
-Player::Player(Vector2D initial_pos)
+Player::Player(Vector2D initial_pos, const int playerId)
 	: KinematicObject(
 		Player::COLLIDER_SIZE, 
 		std::move(initial_pos), 
 		Player::MASS,
 		Player::MAX_SPEED
-	) {}
+	), m_id(playerId) {}
 
-
+int Player::getId() const {
+	return m_id;
+}
 
 } // namespace invasion::game_models

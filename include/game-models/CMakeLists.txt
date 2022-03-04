@@ -9,6 +9,8 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/KinematicObject/kinematic-object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldManager/game-world-manager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldStorage/game-world-storage.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GameSession/game-session.cpp
 	
 	PARENT_SCOPE
 )

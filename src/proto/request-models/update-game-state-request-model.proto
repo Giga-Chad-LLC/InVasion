@@ -3,5 +3,5 @@ syntax = "proto3";
 package request_models;
 
 message UpdateGameStateRequestModel {
-	int32 sessionId = 1;
+	int32 session_id = 1;
 }
