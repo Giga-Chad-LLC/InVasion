@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package request_models;
+
 message MoveRequestModel {
 	enum MoveEvent {
 		StartMovingUp = 0;
