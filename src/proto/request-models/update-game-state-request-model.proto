@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package request_models;
+
 message UpdateGameStateRequestModel {
 	int32 session_id = 1;
 }
