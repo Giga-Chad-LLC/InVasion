@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(InVasionServers CXX)
 
-#### enable C++17
-set(CMAKE_CXX_STANDARD 17)
-
-
 #### adding subdirs
 add_subdirectory(./include/)
 add_subdirectory(./tests/)
@@ -21,56 +17,37 @@ set(GAME_TARGET game)
 set(GAME_MODELS_TESTS_TARGET game-models-tests)
 set(SERVER_TARGET server)
 
-
+#### setting global props
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 
 #### Protobuf | Need to run only once to generate protobuf cpp-files
-
 # this set is required for Windows, if protobuf installed as vcpkg dependency
 # set(Protobuf_PREFIX_PATH
 #     "C:/dev/vcpkg/packages/protobuf_x64-windows")
 # list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
 
-find_package(Protobuf REQUIRED)
+# find_package(Protobuf REQUIRED)
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
+# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
-
-message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
-message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
-message	(NOTICE "Proto Source: " ${PROTO_SRCS})
-message(NOTICE "Proto Headers: " ${PROTO_HDRS})
-message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
-
+# message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
+# message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
+# message	(NOTICE "Proto Source: " ${PROTO_SRCS})
+# message(NOTICE "Proto Headers: " ${PROTO_HDRS})
+# message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 
 
-
-
-
-
-#### configuring GAME_TARGET:
-
-# add_executable(${GAME_TARGET} 
-# 	src/game.cpp 
-# 	${GAME-MODEL-SRCS}
-# )
-
-# target_include_directories(${GAME_TARGET} PUBLIC 
-# 	./include
-# )
-
-# target_compile_options(${GAME_TARGET} PRIVATE
-#   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-#   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
-# )
-
-# set_target_properties(${GAME_TARGET} PROPERTIES
-# 	CXX_STANDARD 17
-#   CXX_STANDARD_REQUIRED ON
-# )
-
-
+#### compile options for all targets
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0 /W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -Werror)
+endif()
 
 
 
@@ -93,18 +70,8 @@ target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_compile_options(${GAME_MODELS_TESTS_TARGET} PRIVATE
-	# suppressing warnings on protobuf files
-	$<$<CXX_COMPILER_ID:MSVC>:/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0 /W4 /WX>
-	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
-)
+target_link_libraries(${GAME_MODELS_TESTS_TARGET} ${Protobuf_LIBRARIES})
 
-target_link_libraries(${GAME_MODELS_TESTS_TARGET} PRIVATE ${Protobuf_LIBRARIES})
-
-# set_target_properties(${GAME_MODELS_TESTS_TARGET} PROPERTIES
-# 	CXX_STANDARD 17
-# 	CXX_STANDARD_REQUIRED ON
-# )
 
 
 
