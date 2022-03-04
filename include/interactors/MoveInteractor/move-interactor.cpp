@@ -6,6 +6,7 @@
 
 namespace invasion::interactors {
 using namespace invasion::game_models;
+using namespace request_models;
 
 void MoveInteractor::execute(const MoveRequestModel& req, GameSession& session) const {
 	const MoveRequestModel::MoveEvent event = req.current_event();
