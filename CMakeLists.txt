@@ -29,21 +29,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #     "C:/dev/vcpkg/packages/protobuf_x64-windows")
 # list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
 
-# find_package(Protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
-# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
-# message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
-# message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
-# message	(NOTICE "Proto Source: " ${PROTO_SRCS})
-# message(NOTICE "Proto Headers: " ${PROTO_HDRS})
-# message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
-
+message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
+message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
+message	(NOTICE "Proto Source: " ${PROTO_SRCS})
+message(NOTICE "Proto Headers: " ${PROTO_HDRS})
+message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 
 #### compile options for all targets
 if (MSVC)
     # warning level 4 and all warnings as errors
-    add_compile_options(/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0 /W4 /WX)
+    add_compile_options(
+		/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0
+		/W4 /WX)
 else()
     # lots of warnings and all warnings as errors
     add_compile_options(-Wall -Wextra -Werror)
