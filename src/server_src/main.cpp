@@ -1,6 +1,6 @@
-#include "../../include/server-include/server.h"
+#include "../../include/server-include/Server.h"
 
 int main() {
-    server curServer;
-    curServer.waitNewClient();
+    Server curServer;
+    curServer.waitNewUser();
 }

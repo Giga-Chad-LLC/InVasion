@@ -12,7 +12,7 @@ public:
         std::thread([client = curClient]() {
             while (true) {
                 PlayerAction action;
-                if (client->queueSend.consume(action)) {
+                if (client->queueForSend.consume(action)) {
                     char action_buffer[action.ByteSizeLong()];
                     action.SerializeToArray(action_buffer, action.ByteSizeLong());
 

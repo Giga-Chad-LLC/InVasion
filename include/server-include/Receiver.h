@@ -4,14 +4,14 @@
 
 #include <thread>
 #include "User.h"
-#include "safe-queue.h"
+#include "SafeQueue.h"
 #include <player.pb.h>
 
 class Receiver {
 
 public:
-    Receiver(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queue) {
-        std::thread([client = std::move(cur_client), q = queue]() {
+    Receiver(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
+        std::thread([client = std::move(cur_client), q = queueOnReceive]() {
             while (client->chanel) {
 
                 std::uint32_t size;  // get the message data length in bytes
