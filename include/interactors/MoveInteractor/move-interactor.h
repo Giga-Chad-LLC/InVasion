@@ -1,11 +1,13 @@
 #ifndef INTERACTOR_H_
 #define INTERACTOR_H_
 
-#include "game-models/Player/player.h"
+#include "game-models/GameSession/game-session.h"
+#include "move-request-model.pb.h"
 
 namespace invasion::interactors {
 	
 
+/*
 struct MoveRequestModel {
 	enum class MoveEvent;
 
@@ -36,9 +38,10 @@ private:
 	MoveEvent m_event;
 };
 
+*/
 
 struct MoveInteractor {
-	void execute(const MoveRequestModel& req, game_models::Player& player) const;
+	void execute(const MoveRequestModel& req, game_models::GameSession& session) const;
 };
 
 } // namespace invasion::interactors
