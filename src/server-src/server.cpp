@@ -8,12 +8,12 @@
 using boost::asio::ip::tcp;
 namespace inVasion::session {
     Server::Server() : acceptor(ioContext, tcp::endpoint(tcp::v4(), 8000)) {
-        makeEngine(queueReceive, queueSend);
+        makeEngine(queueToEngine, queueFromEngine);
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
     void Server::makeSenderUsers() {
-        std::thread(dispatcherEachSender, &queueReceive).detach();
+        std::thread(dispatcherEachSender, &queueToEngine).detach();
     }
 
     void Server::waitNewUser() {
@@ -24,7 +24,7 @@ namespace inVasion::session {
             auto pointerOnUser = std::make_shared<User>(std::move(socket));
             baseUsers.push_back(pointerOnUser);
             [[maybe_unused]] auto receiverOnThisUser = ReceiverFromUser(pointerOnUser,
-                                                                        &queueReceive); // создание двух потоков на каждого клиента
+                                                                        &queueToEngine); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = SenderUser(pointerOnUser);
             if (!ImplementedDispatherEachSender && baseUsers.size() ==
                                                    NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка

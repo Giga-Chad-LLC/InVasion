@@ -38,8 +38,8 @@ namespace inVasion::session {
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
         bool ImplementedDispatherEachSender = false;
-        SafeQueue<PlayerAction> queueReceive;
-        SafeQueue<PlayerAction> queueSend;
+        SafeQueue<PlayerAction> queueToEngine;
+        SafeQueue<PlayerAction> queueFromEngine;
     public:
 
         explicit Server();
