@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <future>
+#include <iostream>
 
 namespace invasion::controllers {
 	
@@ -18,12 +19,17 @@ struct PhysicsTickController {
 		m_cancelToken.store(true);
 		auto callback = std::bind(std::forward<Func>(f), std::forward<Args>(args)...);
 		
-		std::async(std::launch::async, [callback, m_interval_ms, &m_cancelToken]() mutable {
-			while (m_cancelToken.load()) {
-				callback();
-				std::this_thread::sleep_for(std::chrono::milliseconds(m_interval_ms));
-			}
-		});
+		std::cout << "outer address: " << &m_cancelToken << std::endl;
+
+		static_cast<void>(
+			std::async(std::launch::async, [callback, this]() mutable {
+				while (m_cancelToken.load()) {
+					callback();
+					std::cout << "inner address: " << &m_cancelToken << std::endl;
+					std::this_thread::sleep_for(std::chrono::milliseconds(m_interval_ms));
+				}
+			})
+		);
 	}
 
 	void stop();
