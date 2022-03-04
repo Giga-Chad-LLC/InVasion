@@ -66,9 +66,6 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
 
 
-
-
-
 #### configuring GAME_MODELS_TESTS_TARGET:
 add_executable(${GAME_MODELS_TESTS_TARGET}
 	src/doctest_main.cpp
@@ -86,6 +83,13 @@ target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
 	${Protobuf_INCLUDE_DIR} 
 	${CMAKE_CURRENT_BINARY_DIR}
 )
+
+if(WIN32 AND NOT MSVC AND NOT BORLAND)
+	target_link_libraries(${GAME_MODELS_TESTS_TARGET} ws2_32 ${Protobuf_LIBRARIES})
+else()
+	find_package(Threads REQUIRED)
+	target_link_libraries(${GAME_MODELS_TESTS_TARGET} PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
+endif()
 
 target_compile_options(${GAME_MODELS_TESTS_TARGET} PRIVATE
 	# suppressing warnings on protobuf files
@@ -106,14 +110,14 @@ set_target_properties(${GAME_MODELS_TESTS_TARGET} PROPERTIES
 
 # add_executable( ${SERVER_TARGET}
 # 	src/server.cpp
-	# ${PROTO_SRCS}
-	# ${PROTO_HDRS}
+# 	${PROTO_SRCS}
+# 	${PROTO_HDRS}
 # )
 
 # # including Protobuf dirs to server target
 # target_include_directories(${SERVER_TARGET} PUBLIC
-	# ${Protobuf_INCLUDE_DIR} 
-	# ${CMAKE_CURRENT_BINARY_DIR}
+# 	${Protobuf_INCLUDE_DIR} 
+# 	${CMAKE_CURRENT_BINARY_DIR}
 # )
 
 # # including thread libs for Linux and Windows GCC Compiler
