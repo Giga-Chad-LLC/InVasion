@@ -2,67 +2,104 @@ cmake_minimum_required(VERSION 3.15)
 
 project(InVasionServers CXX)
 
-# adding subdirs
+#### adding subdirs
 add_subdirectory(./include/)
 add_subdirectory(./tests/)
 
-# variables propagations
+#### variables propagations
 # GAME-MODEL-SRCS - propagated from ./include/game-models
 # INTERACTORS-SRCS - propagated from ./include/interactors
-
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 
 
-# setting names for executables
-set(GAME-TARGET game)
-set(GAME-MODELS-TESTS-TARGET game-models-tests)
+#### setting names for executables
+set(GAME_TARGET game)
+set(GAME_MODELS_TESTS_TARGET game-models-tests)
+set(SERVER_TARGET server)
 
-
-# configuring GAME-TARGET:
-
-# add_executable(${GAME-TARGET} 
-# 	src/game.cpp 
-# 	${GAME-MODEL-SRCS}
-# )
-
-# target_include_directories(${GAME-TARGET} PUBLIC 
-# 	./include
-# )
-
-# target_compile_options(${GAME-TARGET} PUBLIC
-# 	-Wall 
-# 	-Wextra 
-# 	-Werror
-# )
-
-# set_target_properties(${GAME-TARGET} PROPERTIES
-# 	CXX_STANDARD 17
-#     CXX_STANDARD_REQUIRED ON
-# )
+#### setting global props
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 
-# configuring GAME-MODELS-TESTS-TARGET:
+#### Protobuf | Need to run only once to generate protobuf cpp-files
+# this set is required for Windows, if protobuf installed as vcpkg dependency
+# set(Protobuf_PREFIX_PATH
+#     "C:/dev/vcpkg/packages/protobuf_x64-windows")
+# list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
 
-add_executable(${GAME-MODELS-TESTS-TARGET}
+find_package(Protobuf REQUIRED)
+
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
+
+message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
+message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
+message	(NOTICE "Proto Source: " ${PROTO_SRCS})
+message(NOTICE "Proto Headers: " ${PROTO_HDRS})
+message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
+
+
+#### compile options for all targets
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0 /W4 /WX)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -Werror)
+endif()
+
+
+
+
+#### configuring GAME_MODELS_TESTS_TARGET:
+add_executable(${GAME_MODELS_TESTS_TARGET}
 	src/doctest_main.cpp
 	${GAME-MODELS-TESTS-SRCS}
 	${GAME-MODEL-SRCS}
 	${INTERACTORS-SRCS}
+
+	${PROTO_SRCS}
+	${PROTO_HDRS}
 )
 
-target_include_directories(${GAME-MODELS-TESTS-TARGET} PUBLIC 
+target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC 
 	./doctest
 	./include
+	${Protobuf_INCLUDE_DIR} 
+	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_compile_options(${GAME-MODELS-TESTS-TARGET} PUBLIC
-	-Wall
-	-Wextra
-	-Werror
+target_link_libraries(${GAME_MODELS_TESTS_TARGET} ${Protobuf_LIBRARIES})
+
+
+
+
+#### configuring SERVER_TARGET:
+
+add_executable( ${SERVER_TARGET}
+	src/server-src/main.cpp
+	src/server-src/server.cpp
+	${PROTO_SRCS}
+	${PROTO_HDRS}
 )
 
-set_target_properties(${GAME-MODELS-TESTS-TARGET} PROPERTIES
-	CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON
+# including Protobuf dirs to server target
+target_include_directories(${SERVER_TARGET} PUBLIC
+	${Protobuf_INCLUDE_DIR} 
+	${CMAKE_CURRENT_BINARY_DIR}
 )
+
+# including thread libs for Linux and Windows GCC Compiler
+if(WIN32 AND NOT MSVC AND NOT BORLAND)
+	target_link_libraries(${SERVER_TARGET} 
+		ws2_32 
+		${Protobuf_LIBRARIES}
+	)
+else()
+	find_package(Threads REQUIRED)
+	target_link_libraries(${SERVER_TARGET} PRIVATE
+		Threads::Threads 
+		${Protobuf_LIBRARIES}
+	)
+endif()
