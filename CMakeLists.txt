@@ -13,7 +13,6 @@ add_subdirectory(./tests/)
 
 
 #### setting names for executables
-set(GAME_TARGET game)
 set(GAME_MODELS_TESTS_TARGET game-models-tests)
 set(SERVER_TARGET server)
 
