@@ -5,23 +5,24 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-using boost::asio::ip::tcp;
+namespace inVasion::session {
+    using boost::asio::ip::tcp;
 
-class User {
-private:
-    tcp::iostream chanel;
-    SafeQueue<PlayerAction> queueForSend;
+    class User {
+    private:
+        tcp::iostream channel;
+        SafeQueue<PlayerAction> queueForSend;
 
-    friend class Receiver;
+        friend class Receiver;
 
-    friend class Sender;
+        friend class Sender;
 
-    friend void handler(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void sendEachUser(SafeQueue<PlayerAction> *queueOnReceive);
 
-public:
-    explicit User(tcp::socket &&socket) : chanel(std::move(socket)) {
-        chanel << "Hello from C++ server!" << std::endl;
-    }
-};
-
+    public:
+        explicit User(tcp::socket &&socket) : channel(std::move(socket)) {
+            channel << "Hello from C++ server!" << std::endl;
+        }
+    };
+}
 #endif //INVASION_SERVER_USER_H
