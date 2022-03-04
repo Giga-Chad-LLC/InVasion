@@ -17,13 +17,13 @@
 
 using boost::asio::ip::tcp;
 
-inline std::vector<std::shared_ptr<User>> baseСlients;
+inline std::vector<std::shared_ptr<User>> baseClients;
 
 inline void handler(SafeQueue<PlayerAction> *q) {
     while (true) {
         PlayerAction cur;
         if (q->consume(cur)) {
-            for (auto cur_client: baseСlients) {
+            for (auto cur_client: baseClients) {
                 // пока никакой обработки
                 // просто имитируем ее
                 PlayerAction tmp = cur;
@@ -35,7 +35,7 @@ inline void handler(SafeQueue<PlayerAction> *q) {
 
 class server {
 private:
-    boost::asio::io_context ioСontext;
+    boost::asio::io_context ioContext;
     tcp::acceptor acceptor;
     const size_t NUMBER_OF_TEAM = 1;
     bool handlerImplemented = false;
