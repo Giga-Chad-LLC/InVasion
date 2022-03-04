@@ -31,13 +31,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # find_package(Protobuf REQUIRED)
 
+# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
+
 # message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
 # message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
 # message	(NOTICE "Proto Source: " ${PROTO_SRCS})
 # message(NOTICE "Proto Headers: " ${PROTO_HDRS})
 # message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
-
-# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
 
 #### compile options for all targets
