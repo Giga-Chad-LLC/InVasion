@@ -7,7 +7,7 @@ add_subdirectory(./include/)
 add_subdirectory(./tests/)
 
 #### variables propagations
-# GAME-MODEL-SRCS - propagated from ./include/game-models
+# GAME-MODELS-SRCS - propagated from ./include/game-models
 # INTERACTORS-SRCS - propagated from ./include/interactors
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 
@@ -56,7 +56,7 @@ endif()
 add_executable(${GAME_MODELS_TESTS_TARGET}
 	src/doctest_main.cpp
 	${GAME-MODELS-TESTS-SRCS}
-	${GAME-MODEL-SRCS}
+	${GAME-MODELS-SRCS}
 	${INTERACTORS-SRCS}
 
 	${PROTO_SRCS}

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(InVasionGameModels CXX)
 
-set(GAME-MODEL-SRCS
+set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Vector2D/vector2d.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BoxCollider/box-collider.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Object/object.cpp
