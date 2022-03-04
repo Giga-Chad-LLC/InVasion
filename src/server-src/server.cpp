@@ -7,25 +7,25 @@
 
 using boost::asio::ip::tcp;
 
-server::server(): acceptor(this->ioContext, tcp::endpoint(tcp::v4(), 8000)) {
+Server::Server() : acceptor(ioContext, tcp::endpoint(tcp::v4(), 8000)) {
     std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
 }
 
-void server::makeHandler() {
+void Server::makeHandler() {
     std::thread(handler, &queueReceive).detach();
 }
 
-void server::waitNewClient() {
+void Server::waitNewUser() {
     while (true) {
         tcp::socket socket = acceptor.accept();
         std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                   << std::endl;
         auto pointerOnUser = std::make_shared<User>(std::move(socket));
-        baseClients.push_back(pointerOnUser);
-        auto receiverOnThisUser = Receiver(pointerOnUser, &queueReceive); // создание двух потоков на каждого клиента
-        auto senderOnThisUser = Sender(pointerOnUser);
-        if (baseClients.size() == NUMBER_OF_TEAM &&
-            !handlerImplemented) { // создание обработчика, если комманда собралась пока что handler - заглушка
+        baseUsers.push_back(pointerOnUser);
+        [[maybe_unused]] auto receiverOnThisUser = Receiver(pointerOnUser,
+                                                            &queueReceive); // создание двух потоков на каждого клиента
+        [[maybe_unused]] auto senderOnThisUser = Sender(pointerOnUser);
+        if (!handlerImplemented && baseUsers.size() == NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
             std::cout << "team are full\n";
             handlerImplemented = false;
             makeHandler();

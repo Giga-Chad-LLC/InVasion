@@ -10,13 +10,13 @@ using boost::asio::ip::tcp;
 class User {
 private:
     tcp::iostream chanel;
-    SafeQueue<PlayerAction> queueSend;
+    SafeQueue<PlayerAction> queueForSend;
 
     friend class Receiver;
 
     friend class Sender;
 
-    friend void handler(SafeQueue<PlayerAction> *q);
+    friend void handler(SafeQueue<PlayerAction> *queueOnReceive);
 
 public:
     explicit User(tcp::socket &&socket) : chanel(std::move(socket)) {

@@ -11,29 +11,27 @@
 #include <string>
 #include <thread>
 #include <utility>
-#include "User.h"
+#include "user.h"
 #include "receiver.h"
 #include "sender.h"
 
 using boost::asio::ip::tcp;
 
-inline std::vector<std::shared_ptr<User>> baseClients;
+inline std::vector<std::shared_ptr<User>> baseUsers;
 
-inline void handler(SafeQueue<PlayerAction> *q) {
+inline void handler(SafeQueue<PlayerAction> *queueOnReceive) {
     while (true) {
         PlayerAction cur;
-        if (q->consume(cur)) {
-            for (auto cur_client: baseClients) {
-                // пока никакой обработки
-                // просто имитируем ее
+        if (queueOnReceive->consume(cur)) {
+            for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
                 PlayerAction tmp = cur;
-                cur_client->queueSend.produce(std::move(tmp));
+                cur_client->queueForSend.produce(std::move(tmp));
             }
         }
     }
 }
 
-class server {
+class Server {
 private:
     boost::asio::io_context ioContext;
     tcp::acceptor acceptor;
@@ -42,11 +40,11 @@ private:
 public:
     SafeQueue<PlayerAction> queueReceive;
 
-    explicit server();
+    explicit Server();
 
     void makeHandler();
 
-    void waitNewClient();
+    void waitNewUser();
 };
 
 

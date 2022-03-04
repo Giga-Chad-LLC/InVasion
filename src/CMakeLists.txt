@@ -17,7 +17,7 @@ message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/player.proto)
 
 add_executable(
-        server.out
+        Server.out
         server-src/main.cpp
         server-src/server.cpp
         ${PROTO_SRCS}
@@ -28,5 +28,5 @@ if (WIN32 AND NOT MSVC AND NOT BORLAND)
     target_link_libraries(main ws2_32 ${Protobuf_LIBRARIES})
 else ()
     find_package(Threads REQUIRED)
-    target_link_libraries(server.out PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
+    target_link_libraries(Server.out PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
 endif ()
