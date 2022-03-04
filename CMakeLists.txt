@@ -24,19 +24,19 @@ set(SERVER_TARGET server)
 #### Protobuf | Need to run only once to generate protobuf cpp-files
 
 # this set is required for Windows, if protobuf installed as vcpkg dependency
-# set(Protobuf_PREFIX_PATH
-#     "C:/dev/vcpkg/packages/protobuf_x64-windows")
-# list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
+set(Protobuf_PREFIX_PATH
+    "C:/dev/vcpkg/packages/protobuf_x64-windows")
+list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
 
-# find_package(Protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
-# message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
-# message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
-# message	(NOTICE "Proto Source: " ${PROTO_SRCS})
-# message(NOTICE "Proto Headers: " ${PROTO_HDRS})
-# message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
+message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
+message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
+message	(NOTICE "Proto Source: " ${PROTO_SRCS})
+message(NOTICE "Proto Headers: " ${PROTO_HDRS})
+message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 
-# protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
 
 
@@ -71,11 +71,18 @@ set(SERVER_TARGET server)
 
 #### configuring GAME_MODELS_TESTS_TARGET:
 
+message(SRCs ${PROTO_SRCS})
+message(HDRs ${PROTO_HDRS})
+
+
 add_executable(${GAME_MODELS_TESTS_TARGET}
 	src/doctest_main.cpp
 	${GAME-MODELS-TESTS-SRCS}
 	${GAME-MODEL-SRCS}
 	${INTERACTORS-SRCS}
+
+	${PROTO_SRCS}
+	${PROTO_HDRS}
 )
 
 target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC 
@@ -103,8 +110,8 @@ set_target_properties(${GAME_MODELS_TESTS_TARGET} PROPERTIES
 
 # add_executable( ${SERVER_TARGET}
 # 	src/server.cpp
-# 	${PROTO_SRCS}
-# 	${PROTO_HDRS}
+	# ${PROTO_SRCS}
+	# ${PROTO_HDRS}
 # )
 
 # # including Protobuf dirs to server target
