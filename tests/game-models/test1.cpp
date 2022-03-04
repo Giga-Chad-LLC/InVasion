@@ -3,6 +3,7 @@
 
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/GameSession/game-session.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
 
 #include "interactors/MoveInteractor/move-interactor.h"
@@ -11,7 +12,6 @@
 
 
 namespace doctest {
-
 
 TEST_CASE("creating physics") {
 	using namespace invasion::game_models;
@@ -23,32 +23,32 @@ TEST_CASE("creating physics") {
     int dt = 1;
 
 	MoveInteractor interactor;
-	GameWorldManager manager;
-	MoveRequestModel req(MoveRequestModel::MoveEvent::StartMovingUp);
-	
-	vector<Player> players = { 
-		Player(Vector2D::ZERO)
-	};
+	GameSession session;
+	Player& player = session.getPlayer(session.addPlayer());
+
+	// creating request
+	MoveRequestModel req;
+	req.set_player_id(player.getId());
+	req.set_current_event(MoveRequestModel::StartMovingUp);
 
 	// start moving
-	interactor.execute(req, players[0]);
+	interactor.execute(req, session);
 
 	while(currentTime < totalSimulationTime) {
-		cout << "time: " << currentTime << " velocity: " << players[0].getVelocity() << endl;
+		cout << "time: " << currentTime << " velocity: " << player.getVelocity() << endl;
 
 		// stop event
-		if(currentTime == 10) {
+		if(currentTime == 20) {
 			std::cout << "start stopping..." << std::endl;
-			req.setEvent(MoveRequestModel::MoveEvent::StopMovingUp);
-			interactor.execute(req, players[0]);
+			req.set_current_event(MoveRequestModel::StopMovingUp);
+			interactor.execute(req, session);
 		}
 
-		manager.updatePlayersPositions(players, dt);
-
+		session.updateGameState();
 		currentTime += dt;
 	}
 
-	cout << "time: " << currentTime << " velocity: " << players[0].getVelocity() << endl;
+	cout << "time: " << currentTime << " velocity: " << player.getVelocity() << endl;
 }
 
 
