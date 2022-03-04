@@ -13,11 +13,11 @@ namespace inVasion::session {
         tcp::iostream channel;
         SafeQueue<PlayerAction> queueForSend;
 
-        friend class Receiver;
+        friend class ReceiverFromUser;
 
-        friend class Sender;
+        friend class SenderUser;
 
-        friend void sendEachUser(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
 
     public:
         explicit User(tcp::socket &&socket) : channel(std::move(socket)) {

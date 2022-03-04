@@ -7,9 +7,9 @@
 #include <thread>
 
 namespace inVasion::session {
-    class Sender {
+    class SenderUser {
     public:
-        Sender(std::shared_ptr<User> curClient) {
+        SenderUser(std::shared_ptr<User> curClient) {
             std::thread([client = curClient]() {
                 while (true) {
                     PlayerAction action;

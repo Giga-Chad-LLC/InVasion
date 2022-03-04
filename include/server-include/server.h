@@ -20,7 +20,7 @@ using boost::asio::ip::tcp;
 namespace inVasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
 
-    inline void sendEachUser(SafeQueue<PlayerAction> *queueOnReceive) {
+    inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive) {
         while (true) {
             PlayerAction cur;
             if (queueOnReceive->consume(cur)) {
@@ -37,7 +37,7 @@ namespace inVasion::session {
         boost::asio::io_context ioContext;
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
-        bool ImplementedSenderEachUser = false;
+        bool ImplementedDispatherEachSender = false;
         SafeQueue<PlayerAction> queueReceive;
         SafeQueue<PlayerAction> queueSend;
     public:
@@ -50,9 +50,9 @@ namespace inVasion::session {
 
         friend void makeEngine(SafeQueue<PlayerAction> &queueReceive, SafeQueue<PlayerAction> &queueSend);
 
-        friend class Receiver;
+        friend class ReceiverFromUser;
 
-        friend void sendEachUser(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
     };
 
 }

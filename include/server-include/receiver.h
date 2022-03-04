@@ -8,10 +8,10 @@
 #include <player.pb.h>
 
 namespace inVasion::session {
-    class Receiver {
+    class ReceiverFromUser {
 
     public:
-        Receiver(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
+        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
             std::thread([client = std::move(cur_client), q = queueOnReceive]() {
                 while (client->channel) {
 

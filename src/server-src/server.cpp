@@ -13,7 +13,7 @@ namespace inVasion::session {
     }
 
     void Server::makeSenderUsers() {
-        std::thread(sendEachUser, &queueReceive).detach();
+        std::thread(dispatcherEachSender, &queueReceive).detach();
     }
 
     void Server::waitNewUser() {
@@ -23,13 +23,13 @@ namespace inVasion::session {
                       << std::endl;
             auto pointerOnUser = std::make_shared<User>(std::move(socket));
             baseUsers.push_back(pointerOnUser);
-            [[maybe_unused]] auto receiverOnThisUser = Receiver(pointerOnUser,
-                                                                &queueReceive); // создание двух потоков на каждого клиента
-            [[maybe_unused]] auto senderOnThisUser = Sender(pointerOnUser);
-            if (!ImplementedSenderEachUser && baseUsers.size() ==
-                                              NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
+            [[maybe_unused]] auto receiverOnThisUser = ReceiverFromUser(pointerOnUser,
+                                                                        &queueReceive); // создание двух потоков на каждого клиента
+            [[maybe_unused]] auto senderOnThisUser = SenderUser(pointerOnUser);
+            if (!ImplementedDispatherEachSender && baseUsers.size() ==
+                                                   NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "team are full\n";
-                ImplementedSenderEachUser = false;
+                ImplementedDispatherEachSender = false;
                 makeSenderUsers();
             }
         }
