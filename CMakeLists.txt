@@ -70,11 +70,6 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ./src/proto/player.proto)
 
 
 #### configuring GAME_MODELS_TESTS_TARGET:
-
-message(SRCs ${PROTO_SRCS})
-message(HDRs ${PROTO_HDRS})
-
-
 add_executable(${GAME_MODELS_TESTS_TARGET}
 	src/doctest_main.cpp
 	${GAME-MODELS-TESTS-SRCS}
@@ -93,8 +88,9 @@ target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
 )
 
 target_compile_options(${GAME_MODELS_TESTS_TARGET} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
+	# suppressing warnings on protobuf files
+	$<$<CXX_COMPILER_ID:MSVC>:/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0 /W4 /WX>
+	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
 )
 
 set_target_properties(${GAME_MODELS_TESTS_TARGET} PROPERTIES
