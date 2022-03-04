@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message MoveRequestModel {
+	enum MoveEvent {
+		StartMovingUp = 0;
+		StartMovingRight = 1;
+		StartMovingDown = 2;
+		StartMovingLeft = 3;
+		
+		StopMovingUp = 4;
+		StopMovingRight = 5;
+		StopMovingDown = 6;
+		StopMovingLeft = 7;
+	}
+
+	int32 sessionId = 1;
+	int32 playerId = 2;
+	MoveEvent currentEvent = 3;
+}
