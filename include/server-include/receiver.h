@@ -6,6 +6,7 @@
 #include "user.h"
 #include "safe-queue.h"
 #include <player.pb.h>
+#include "player-position-response-model.pb.h"
 
 class Receiver {
 
@@ -13,9 +14,10 @@ public:
     Receiver(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
         std::thread([client = std::move(cur_client), q = queueOnReceive]() {
             while (client->chanel) {
-
                 std::uint32_t size;  // get the message data length in bytes
                 client->chanel.read(reinterpret_cast<char *> (&size), sizeof(size));
+                std::uint32_t type = 0;
+                client->chanel.read(reinterpret_cast<char *> (&type), sizeof(type));
                 char arr[size];
                 client->chanel.read(reinterpret_cast<char *> (&arr), size);
 

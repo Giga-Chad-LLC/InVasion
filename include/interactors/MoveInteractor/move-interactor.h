@@ -41,7 +41,7 @@ private:
 */
 
 struct MoveInteractor {
-	void execute(const MoveRequestModel& req, game_models::GameSession& session) const;
+	void execute(const request_models::MoveRequestModel& req, game_models::GameSession& session) const;
 };
 
 } // namespace invasion::interactors
