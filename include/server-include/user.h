@@ -17,7 +17,7 @@ namespace inVasion::session {
 
         friend class SenderUser;
 
-        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueToEngine);
 
     public:
         explicit User(tcp::socket &&socket) : channel(std::move(socket)) {

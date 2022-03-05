@@ -11,8 +11,8 @@ namespace inVasion::session {
     class ReceiverFromUser {
 
     public:
-        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
-            std::thread([client = std::move(cur_client), q = queueOnReceive]() {
+        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueToEngine) {
+            std::thread([client = std::move(cur_client), q = queueToEngine]() {
                 while (client->channel) {
 
                     std::uint32_t size;  // get the message data length in bytes
