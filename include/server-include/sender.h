@@ -5,6 +5,7 @@
 #include "user.h"
 #include "player.pb.h"
 #include <thread>
+#include <cstring>
 
 namespace inVasion::session {
     class SenderUser {
@@ -14,9 +15,17 @@ namespace inVasion::session {
                 while (true) {
                     PlayerAction action;
                     if (client->queueForSend.consume(action)) {
-                        char action_buffer[action.ByteSizeLong()];
-                        action.SerializeToArray(action_buffer, action.ByteSizeLong());
-                        client->channel.write(action_buffer, action.ByteSizeLong());
+                        std::uint32_t type = 1002;
+                        char action_buffer[action.ByteSizeLong() + sizeof(type)];
+                        std::memcpy(&action_buffer, reinterpret_cast<char*> (&type), sizeof(type));
+
+                        action.SerializeToArray(action_buffer + sizeof(type), action.ByteSizeLong());
+                        std::cout << "Sending bytes:" << std::endl;
+                        for (int byte : action_buffer) {
+                            std::cout << byte << ' ';
+                        }
+                        std::cout << std::endl;
+                        client->channel.write(action_buffer, action.ByteSizeLong() + sizeof(type));
                     }
                 }
             }).detach();

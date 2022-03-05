@@ -4,6 +4,8 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <cassert>
+#include <functional>
 
 namespace invasion::controllers {
 	
