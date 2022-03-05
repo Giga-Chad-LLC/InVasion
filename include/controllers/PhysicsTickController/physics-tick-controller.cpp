@@ -4,7 +4,7 @@
 namespace invasion::controllers {
 
 PhysicsTickController::PhysicsTickController()
-	: m_cancelToken(false), m_interval_ms(1000) {}
+	: m_cancelToken(false), m_interval_ms(8) {}
 
 void PhysicsTickController::stop() {
 	m_cancelToken.store(false);
