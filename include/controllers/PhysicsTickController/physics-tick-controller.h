@@ -4,8 +4,6 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
-#include <future>
-#include <iostream>
 
 namespace invasion::controllers {
 	
@@ -16,20 +14,20 @@ struct PhysicsTickController {
 
 	template <class Func, class... Args>
 	void start(Func&& f, Args&&... args) {
+		// calling start without finishing previous call is not allowed
+		assert(!m_cancelToken.load());
+
 		m_cancelToken.store(true);
 		auto callback = std::bind(std::forward<Func>(f), std::forward<Args>(args)...);
-		
-		std::cout << "outer address: " << &m_cancelToken << std::endl;
 
-		static_cast<void>(
-			std::async(std::launch::async, [callback, this]() mutable {
+		m_startedThread = std::move(std::thread(
+			[callback, this]() mutable {
 				while (m_cancelToken.load()) {
 					callback();
-					std::cout << "inner address: " << &m_cancelToken << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(m_interval_ms));
 				}
-			})
-		);
+			}
+		));
 	}
 
 	void stop();
@@ -37,6 +35,7 @@ struct PhysicsTickController {
 private:
 	std::atomic_bool m_cancelToken;
 	const std::size_t m_interval_ms;
+	std::thread m_startedThread;
 };
 
 } // namespace invasion::controllers
