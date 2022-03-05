@@ -14,38 +14,46 @@
 #include "user.h"
 #include "receiver.h"
 #include "sender.h"
+#include "engine.h"
 
 using boost::asio::ip::tcp;
+namespace inVasion::session {
+    inline std::vector<std::shared_ptr<User>> baseUsers;
 
-inline std::vector<std::shared_ptr<User>> baseUsers;
-
-inline void handler(SafeQueue<PlayerAction> *queueOnReceive) {
-    while (true) {
-        PlayerAction cur;
-        if (queueOnReceive->consume(cur)) {
-            for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
-                PlayerAction tmp = cur;
-                cur_client->queueForSend.produce(std::move(tmp));
+    inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive) {
+        while (true) {
+            PlayerAction cur;
+            if (queueOnReceive->consume(cur)) {
+                for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
+                    PlayerAction tmp = cur;
+                    cur_client->queueForSend.produce(std::move(tmp));
+                }
             }
         }
     }
+
+    class Server {
+    private:
+        boost::asio::io_context ioContext;
+        tcp::acceptor acceptor;
+        const size_t NUMBER_OF_TEAM = 1;
+        bool ImplementedDispatherEachSender = false;
+        SafeQueue<PlayerAction> queueToEngine;
+        SafeQueue<PlayerAction> queueFromEngine;
+    public:
+
+        explicit Server();
+
+        void makeSenderUsers();
+
+        void waitNewUser();
+
+        friend void makeEngine(SafeQueue<PlayerAction> &queueReceive, SafeQueue<PlayerAction> &queueSend);
+
+        friend class ReceiverFromUser;
+
+        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
+    };
+
 }
-
-class Server {
-private:
-    boost::asio::io_context ioContext;
-    tcp::acceptor acceptor;
-    const size_t NUMBER_OF_TEAM = 1;
-    bool handlerImplemented = false;
-public:
-    SafeQueue<PlayerAction> queueReceive;
-
-    explicit Server();
-
-    void makeHandler();
-
-    void waitNewUser();
-};
-
-
 #endif //INVASION_SERVER_SERVER_H

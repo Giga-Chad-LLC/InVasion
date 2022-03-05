@@ -9,6 +9,7 @@ add_subdirectory(./tests/)
 #### variables propagations
 # GAME-MODELS-SRCS - propagated from ./include/game-models
 # INTERACTORS-SRCS - propagated from ./include/interactors
+# CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 
 
@@ -65,6 +66,7 @@ add_executable(${GAME_MODELS_TESTS_TARGET}
 	${GAME-MODELS-TESTS-SRCS}
 	${GAME-MODELS-SRCS}
 	${INTERACTORS-SRCS}
+	${CONTROLLERS-SRCS}
 
 	${PROTO_SRCS}
 	${PROTO_HDRS}
@@ -77,8 +79,12 @@ target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(${GAME_MODELS_TESTS_TARGET} ${Protobuf_LIBRARIES})
-
+if(WIN32 AND NOT MSVC AND NOT BORLAND)
+	target_link_libraries(${GAME_MODELS_TESTS_TARGET} ws2_32 ${Protobuf_LIBRARIES})
+else()
+	find_package(Threads REQUIRED)
+	target_link_libraries(${GAME_MODELS_TESTS_TARGET} PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
+endif()
 
 
 #### configuring SERVER_TARGET:
