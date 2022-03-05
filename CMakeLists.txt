@@ -23,12 +23,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 
-#### Protobuf | Need to run only once to generate protobuf cpp-files
-# this set is required for Windows, if protobuf installed as vcpkg dependency
-# set(Protobuf_PREFIX_PATH
-#     "C:/dev/vcpkg/packages/protobuf_x64-windows")
-# list(APPEND CMAKE_PREFIX_PATH "${Protobuf_PREFIX_PATH}")
-
+#### Protobuf
 find_package(Protobuf REQUIRED)
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
@@ -87,31 +82,35 @@ else()
 endif()
 
 
+
+
+
 #### configuring SERVER_TARGET:
 
-add_executable( ${SERVER_TARGET}
-	src/server-src/main.cpp
-	src/server-src/server.cpp
-	${PROTO_SRCS}
-	${PROTO_HDRS}
-)
+# add_executable(${SERVER_TARGET}
+# 	src/server-src/main.cpp
+# 	src/server-src/server.cpp
+# 	${PROTO_SRCS}
+# 	${PROTO_HDRS}
+# )
 
-# including Protobuf dirs to server target
-target_include_directories(${SERVER_TARGET} PUBLIC
-	${Protobuf_INCLUDE_DIR} 
-	${CMAKE_CURRENT_BINARY_DIR}
-)
+# # including Protobuf dirs to server target
+# target_include_directories(${SERVER_TARGET} PUBLIC
+# 	${Protobuf_INCLUDE_DIR} 
+# 	${CMAKE_CURRENT_BINARY_DIR}
+# )
 
 # including thread libs for Linux and Windows GCC Compiler
-if(WIN32 AND NOT MSVC AND NOT BORLAND)
-	target_link_libraries(${SERVER_TARGET} 
-		ws2_32 
-		${Protobuf_LIBRARIES}
-	)
-else()
-	find_package(Threads REQUIRED)
-	target_link_libraries(${SERVER_TARGET} PRIVATE
-		Threads::Threads 
-		${Protobuf_LIBRARIES}
-	)
-endif()
+# if(MSVC) # WIN32 AND NOT MSVC AND NOT BORLAND
+# 	target_compile_definitions(${SERVER_TARGET} PRIVATE -D_WIN32_WINNT=0x0A00)
+# 	target_link_libraries(${SERVER_TARGET} PRIVATE
+# 		# ws2_32 
+# 		${Protobuf_LIBRARIES}
+# 	)
+# else()
+# 	find_package(Threads REQUIRED)
+# 	target_link_libraries(${SERVER_TARGET} PRIVATE
+# 		Threads::Threads 
+# 		${Protobuf_LIBRARIES}
+# 	)
+# endif()
