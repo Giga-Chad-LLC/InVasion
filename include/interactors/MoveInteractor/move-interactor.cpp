@@ -8,45 +8,49 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 using namespace request_models;
 
-void MoveInteractor::execute(const MoveRequestModel& req, GameSession& session) const {
-	const MoveRequestModel::MoveEvent event = req.current_event();
+void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSession& session) const {
+	const request_models::MoveRequestModel::MoveEvent event = req.current_event();
 	Player& player = session.getPlayer(req.player_id());
 
 	Vector2D moving_force = player.getMovingForce();
 
 	switch (event) {
 		// starting
-		case MoveRequestModel::StartMovingUp: {
+		case request_models::MoveRequestModel::StartMovingUp: {
 			moving_force.setY(1);
 			player.setMovingState(true);
 			break;
 		}
-		case MoveRequestModel::StartMovingRight: {
+		case request_models::MoveRequestModel::StartMovingRight: {
 			moving_force.setX(1);
 			player.setMovingState(true);
 			break;
 		}
-		case MoveRequestModel::StartMovingDown: {
+		case request_models::MoveRequestModel::StartMovingDown: {
 			moving_force.setY(-1);
 			player.setMovingState(true);
 			break;
 		}
-		case MoveRequestModel::StartMovingLeft: {
+		case request_models::MoveRequestModel::StartMovingLeft: {
 			moving_force.setX(-1);
 			player.setMovingState(true);
 			break;
 		}
 		// stopping
-		case MoveRequestModel::StopMovingUp:
-		case MoveRequestModel::StopMovingDown: {
+		case request_models::MoveRequestModel::StopMovingUp:
+		case request_models::MoveRequestModel::StopMovingDown: {
 			moving_force.setY(0);
 			player.setMovingState(false);
 			break;
 		}
-		case MoveRequestModel::StopMovingRight:
-		case MoveRequestModel::StopMovingLeft: {
+		case request_models::MoveRequestModel::StopMovingRight:
+		case request_models::MoveRequestModel::StopMovingLeft: {
 			moving_force.setX(0);
 			player.setMovingState(false);			
+			break;
+		}
+		default: {
+			break;
 		}
 	}
 
