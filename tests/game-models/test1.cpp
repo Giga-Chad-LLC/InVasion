@@ -27,9 +27,9 @@ TEST_CASE("creating physics") {
 	Player& player = session.getPlayer(session.addPlayer());
 
 	// creating request
-	MoveRequestModel req;
+	request_models::MoveRequestModel req;
 	req.set_player_id(player.getId());
-	req.set_current_event(MoveRequestModel::StartMovingUp);
+	req.set_current_event(request_models::MoveRequestModel::StartMovingUp);
 
 	// start moving
 	interactor.execute(req, session);
@@ -40,7 +40,7 @@ TEST_CASE("creating physics") {
 		// stop event
 		if(currentTime == 20) {
 			std::cout << "start stopping..." << std::endl;
-			req.set_current_event(MoveRequestModel::StopMovingUp);
+			req.set_current_event(request_models::MoveRequestModel::StopMovingUp);
 			interactor.execute(req, session);
 		}
 
