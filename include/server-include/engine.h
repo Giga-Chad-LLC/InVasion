@@ -15,7 +15,7 @@ namespace inVasion::session {
                 if (queueReceive->consumeSync(removedElement)) {
 
                     // work with this object;
-
+                //TODO: i catch bug, when i do a+s || a+w, player dont stop
 
                     queueSend->produce(std::move(removedElement));
                 }
