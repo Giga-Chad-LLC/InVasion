@@ -23,7 +23,7 @@ namespace inVasion::session {
     inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive) {
         while (true) {
             PlayerAction cur;
-            if (queueOnReceive->consume(cur)) {
+            if (queueOnReceive->consumeSync(cur)) {
                 for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
                     PlayerAction tmp = cur;
                     cur_client->queueForSend.produce(std::move(tmp));
