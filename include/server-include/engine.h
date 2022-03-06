@@ -10,11 +10,9 @@
 namespace inVasion::session {
     inline void makeEngine(SafeQueue<PlayerAction> &queueToEngine, SafeQueue<PlayerAction> &queueFromEngine) {
         std::thread([queueToEngine = &queueToEngine, queueFromEngine = &queueFromEngine]() {
-            int imitatorTickController = 0;
             while (true) {
                 PlayerAction removedElement;
-                imitatorTickController++;
-                if (imitatorTickController % 100000 == 0 && queueToEngine->consume(removedElement)) {
+                if (queueToEngine->consume(removedElement)) {
 
                     // work with this object;
 
