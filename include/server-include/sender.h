@@ -13,7 +13,7 @@ namespace inVasion::session {
             std::thread([client = curClient]() {
                 while (true) {
                     PlayerAction action;
-                    if (client->queueForSend.consumeSync(action)) {
+                    if (client->queueToClientPrivate.consumeSync(action)) {
                         char action_buffer[action.ByteSizeLong()];
                         action.SerializeToArray(action_buffer, action.ByteSizeLong());
                         client->channel.write(action_buffer, action.ByteSizeLong());

@@ -8,16 +8,16 @@
 #include "player.pb.h"
 
 namespace inVasion::session {
-    inline void makeEngine(SafeQueue<PlayerAction> &queueToEngine, SafeQueue<PlayerAction> &queueFromEngine) {
-        std::thread([queueToEngine = &queueToEngine, queueFromEngine = &queueFromEngine]() {
+    inline void makeEngine(SafeQueue<PlayerAction> &queueServerFromClients, SafeQueue<PlayerAction> &queueClientsFromServer) {
+        std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer]() {
             while (true) {
                 PlayerAction removedElement;
-                if (queueToEngine->consume(removedElement)) {
+                if (queueServerFromClients->consumeSync(removedElement)) {
 
                     // work with this object;
 
 
-                    queueFromEngine->produce(std::move(removedElement));
+                    queueClientsFromServer->produce(std::move(removedElement));
                 }
             }
         }).detach();

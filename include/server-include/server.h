@@ -20,13 +20,13 @@ using boost::asio::ip::tcp;
 namespace inVasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
 
-    inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueFromEngine) {
+    inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueClientsFromServer) {
         while (true) {
             PlayerAction cur;
-            if (queueFromEngine->consumeSync(cur)) {
+            if (queueClientsFromServer->consumeSync(cur)) {
                 for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
                     PlayerAction tmp = cur;
-                    cur_client->queueForSend.produce(std::move(tmp));
+                    cur_client->queueToClientPrivate.produce(std::move(tmp));
                 }
             }
         }
@@ -36,10 +36,10 @@ namespace inVasion::session {
     private:
         boost::asio::io_context ioContext;
         tcp::acceptor acceptor;
-        const size_t NUMBER_OF_TEAM = 2;
+        const size_t NUMBER_OF_TEAM = 1;
         bool ImplementedDispatherEachSender = false;
-        SafeQueue<PlayerAction> queueToEngine;
-        SafeQueue<PlayerAction> queueFromEngine;
+        SafeQueue<PlayerAction> queueServerFromClients;
+        SafeQueue<PlayerAction> queueClientsFromServer;
     public:
 
         explicit Server();
@@ -48,11 +48,11 @@ namespace inVasion::session {
 
         void waitNewUser();
 
-        friend void makeEngine(SafeQueue<PlayerAction> &queueToEngine, SafeQueue<PlayerAction> &queueFromEngine);
+        friend void makeEngine(SafeQueue<PlayerAction> &queueServerFromClients, SafeQueue<PlayerAction> &queueClientsFromServer);
 
         friend class ReceiverFromUser;
 
-        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueFromEngine);
+        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueClientsFromServer);
     };
 
 }
