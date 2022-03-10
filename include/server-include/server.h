@@ -15,17 +15,18 @@
 #include "receiver.h"
 #include "sender.h"
 #include "engine.h"
+#include "network_packet.h"
 
 using boost::asio::ip::tcp;
-namespace inVasion::session {
+namespace invasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
 
-    inline void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive) {
+    inline void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive) {
         while (true) {
-            PlayerAction cur;
+            NetworkPacketResponse cur;
             if (queueOnReceive->consume(cur)) {
                 for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
-                    PlayerAction tmp = cur;
+                    NetworkPacketResponse tmp = cur;
                     cur_client->queueForSend.produce(std::move(tmp));
                 }
             }
@@ -38,8 +39,8 @@ namespace inVasion::session {
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
         bool ImplementedDispatherEachSender = false;
-        SafeQueue<PlayerAction> queueToEngine;
-        SafeQueue<PlayerAction> queueFromEngine;
+        SafeQueue<NetworkPacketRequest> queueToEngine;
+        SafeQueue<NetworkPacketResponse> queueFromEngine;
     public:
 
         explicit Server();
@@ -48,11 +49,11 @@ namespace inVasion::session {
 
         void waitNewUser();
 
-        friend void makeEngine(SafeQueue<PlayerAction> &queueReceive, SafeQueue<PlayerAction> &queueSend);
+        friend void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend);
 
         friend class ReceiverFromUser;
 
-        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive);
     };
 
 }
