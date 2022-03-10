@@ -6,18 +6,18 @@
 #include <memory>
 #include "safe-queue.h"
 #include "player.pb.h"
-
+#include "request-response.h"
 namespace inVasion::session {
-    inline void makeEngine(SafeQueue<PlayerAction> &queueReceive, SafeQueue<PlayerAction> &queueSend) {
-        std::thread([queueReceive = &queueReceive, queueSend = &queueSend]() {
+    inline void makeEngine(SafeQueue<RequestObject> &queueServerFromClients, SafeQueue<ResponseObject> &queueClientsFromServer) {
+        std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer]() {
             while (true) {
-                PlayerAction removedElement;
-                if (queueReceive->consumeSync(removedElement)) {
+                RequestObject removedElement;
+                if (queueServerFromClients->consumeSync(removedElement)) {
 
                     // work with this object;
-                //TODO: i catch bug, when i do a+s || a+w, player dont stop
-
-                    queueSend->produce(std::move(removedElement));
+                    ResponseObject response;
+                    response.arrBytes = removedElement.arrBytes;
+                    queueClientsFromServer->produce(std::move(response));
                 }
             }
         }).detach();

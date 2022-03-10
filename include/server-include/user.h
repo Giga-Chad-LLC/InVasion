@@ -4,20 +4,20 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
-
+#include "request-response.h"
 namespace inVasion::session {
     using boost::asio::ip::tcp;
 
     class User {
     private:
         tcp::iostream channel;
-        SafeQueue<PlayerAction> queueForSend;
+        SafeQueue<ResponseObject> queueToClientPrivate;
 
         friend class ReceiverFromUser;
 
         friend class SenderUser;
 
-        friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<ResponseObject> *queueClientsFromServer);
 
     public:
         explicit User(tcp::socket &&socket) : channel(std::move(socket)) {}
