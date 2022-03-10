@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "NetworkPacket",
+"language": "GDScript",
+"path": "res://network/data_types.gd"
+} ]
+_global_script_class_icons={
+"NetworkPacket": ""
+}
+
 [application]
 
 config/name="InVasion"

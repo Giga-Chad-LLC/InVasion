@@ -13,7 +13,7 @@ namespace inVasion::session {
     }
 
     void Server::makeSenderUsers() {
-        std::thread(dispatcherEachSender, &queueToEngine).detach();
+        std::thread(dispatcherEachSender, &queueFromEngine).detach();
     }
 
     void Server::waitNewUser() {

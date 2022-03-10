@@ -13,8 +13,8 @@ namespace inVasion::session {
             int imitatorTickController = 0;
             while (true) {
                 PlayerAction removedElement;
-                imitatorTickController++;
-                if (imitatorTickController % 100000 == 0 && queueReceive->consume(removedElement)) {
+                imitatorTickController++; 
+                if (queueReceive->consume(removedElement)) {
 
                     // work with this object;
 
