@@ -87,30 +87,30 @@ endif()
 
 #### configuring SERVER_TARGET:
 
-# add_executable(${SERVER_TARGET}
-# 	src/server-src/main.cpp
-# 	src/server-src/server.cpp
-# 	${PROTO_SRCS}
-# 	${PROTO_HDRS}
-# )
+add_executable(${SERVER_TARGET}
+	src/server-src/main.cpp
+	src/server-src/server.cpp
+	${PROTO_SRCS}
+	${PROTO_HDRS}
+)
 
-# # including Protobuf dirs to server target
-# target_include_directories(${SERVER_TARGET} PUBLIC
-# 	${Protobuf_INCLUDE_DIR} 
-# 	${CMAKE_CURRENT_BINARY_DIR}
-# )
+# including Protobuf dirs to server target
+target_include_directories(${SERVER_TARGET} PUBLIC
+	${Protobuf_INCLUDE_DIR} 
+	${CMAKE_CURRENT_BINARY_DIR}
+)
 
 # including thread libs for Linux and Windows GCC Compiler
-# if(MSVC) # WIN32 AND NOT MSVC AND NOT BORLAND
-# 	target_compile_definitions(${SERVER_TARGET} PRIVATE -D_WIN32_WINNT=0x0A00)
-# 	target_link_libraries(${SERVER_TARGET} PRIVATE
-# 		# ws2_32 
-# 		${Protobuf_LIBRARIES}
-# 	)
-# else()
-# 	find_package(Threads REQUIRED)
-# 	target_link_libraries(${SERVER_TARGET} PRIVATE
-# 		Threads::Threads 
-# 		${Protobuf_LIBRARIES}
-# 	)
-# endif()
+if(MSVC) # WIN32 AND NOT MSVC AND NOT BORLAND
+	target_compile_definitions(${SERVER_TARGET} PRIVATE -D_WIN32_WINNT=0x0A00)
+	target_link_libraries(${SERVER_TARGET} PRIVATE
+		# ws2_32 
+		${Protobuf_LIBRARIES}
+	)
+else()
+	find_package(Threads REQUIRED)
+	target_link_libraries(${SERVER_TARGET} PRIVATE
+		Threads::Threads 
+		${Protobuf_LIBRARIES}
+	)
+endif()
