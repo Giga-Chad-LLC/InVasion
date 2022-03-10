@@ -23,16 +23,16 @@ using namespace std;
 
 
 
-TEST_CASE("Set interval test") {
-	PhysicsTickController controller;
+// TEST_CASE("Set interval test") {
+// 	PhysicsTickController controller;
 
-	controller.start([]() {
-		std::cout << "Hello World!" << std::endl;
-	});
+// 	controller.start([]() {
+// 		std::cout << "Hello World!" << std::endl;
+// 	});
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	controller.stop();
-}
+// 	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+// 	controller.stop();
+// }
 
 
 // TEST_CASE("Player moving test") {
