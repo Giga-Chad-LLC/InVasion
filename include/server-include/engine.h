@@ -6,18 +6,18 @@
 #include <memory>
 #include "safe-queue.h"
 #include "player.pb.h"
-
+#include "request-response.h"
 namespace inVasion::session {
-    inline void makeEngine(SafeQueue<PlayerAction> &queueServerFromClients, SafeQueue<PlayerAction> &queueClientsFromServer) {
+    inline void makeEngine(SafeQueue<RequestObject> &queueServerFromClients, SafeQueue<ResponseObject> &queueClientsFromServer) {
         std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer]() {
             while (true) {
-                PlayerAction removedElement;
+                RequestObject removedElement;
                 if (queueServerFromClients->consumeSync(removedElement)) {
 
                     // work with this object;
-
-
-                    queueClientsFromServer->produce(std::move(removedElement));
+                    ResponseObject response;
+                    response.arrBytes = removedElement.arrBytes;
+                    queueClientsFromServer->produce(std::move(response));
                 }
             }
         }).detach();

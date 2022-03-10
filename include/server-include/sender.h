@@ -12,11 +12,10 @@ namespace inVasion::session {
         SenderUser(std::shared_ptr<User> curClient) {
             std::thread([client = curClient]() {
                 while (true) {
-                    PlayerAction action;
+                    ResponseObject action;
                     if (client->queueToClientPrivate.consumeSync(action)) {
-                        char action_buffer[action.ByteSizeLong()];
-                        action.SerializeToArray(action_buffer, action.ByteSizeLong());
-                        client->channel.write(action_buffer, action.ByteSizeLong());
+                        std::cerr << "ok";
+                        client->channel.write(&action.arrBytes, action.sizeMessage);
                     }
                 }
             }).detach();
