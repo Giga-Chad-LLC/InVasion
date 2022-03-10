@@ -73,6 +73,7 @@ func _physics_process(delta):
 			var result_code = unpacked_player_action.from_bytes(received_packet.get_bytes())
 			if (result_code == PlayerProto.PB_ERR.NO_ERRORS):
 				current_move_event = unpacked_player_action.get_key_pressed()
+				print("Action from server: ", current_move_event)
 			else:
 				print("Error while receiving: ", "cannot unpack player action")
 		else:
