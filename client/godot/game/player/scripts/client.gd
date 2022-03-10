@@ -7,8 +7,8 @@ const PORT: int = 8000
 const RECONNECT_TIMEOUT: float = 3.0
 
 const Network = preload("res://network/network.gd")
+const NetworkPacket = preload("res://network/data_types.gd")
 var connection: Network = Network.new()
-
 
 func init_network() -> void:
 	add_child(connection)
@@ -21,7 +21,7 @@ func init_network() -> void:
 func is_connected_to_host() -> bool:
 	return connection.is_connected_to_host()
 
-func send_packed_data(data: PoolByteArray) -> bool:
+func send_packed_data(data: NetworkPacket) -> bool:
 	return connection.send(_pack_data(data))
 
 func send_raw_data(data: PoolByteArray) -> bool:
@@ -29,15 +29,37 @@ func send_raw_data(data: PoolByteArray) -> bool:
 
 
 # Appends metadata to the front of `data` array (little endian)
-func _pack_data(data: PoolByteArray) -> PoolByteArray:
-	var bytes_encoder: StreamPeer = StreamPeerBuffer.new();
+# [length: 4 bytes][type: 4 bytes][message: `length` bytes]'
+const PlayerProto = preload("res://player/scripts/player_proto.gd")
+
+func _pack_data(data: NetworkPacket) -> PoolByteArray:
+	var bytes_encoder: StreamPeer = StreamPeerBuffer.new()
 	var bytes_array: PoolByteArray
+	var action = PlayerProto.PlayerAction.new()
+	action.from_bytes(data.bytes)
+	print("Send key: ", action.get_key_pressed())
 #	Append `data` length to the first 4 bytes of the payload
-	bytes_encoder.put_32(data.size())
+	bytes_encoder.put_32(data.bytes.size())
+#	Append `message_type` to the second 4 bytes of the payload
+	bytes_encoder.put_32(data.message_type)
 
 	bytes_array.append_array(bytes_encoder.data_array)
-	bytes_array.append_array(data)
+	bytes_array.append_array(data.get_bytes())
 	return bytes_array
+
+func _unpack_data(data: PoolByteArray) -> NetworkPacket:
+	var byte_encoder: StreamPeer = StreamPeerBuffer.new()
+	var network_packet: NetworkPacket = NetworkPacket.new()
+	byte_encoder.data_array = data
+	var message_type = byte_encoder.get_32()
+	byte_encoder.seek(4)
+	var bytes: PoolByteArray = byte_encoder.get_data(data.size() - 4)[1]
+	
+#	print("Data: ", byte_encoder.data_array)
+#	print("Type: ", message_type)
+#	print("Bytes: ", bytes)
+	network_packet.set_data(bytes, message_type)
+	return network_packet
 
 
 

@@ -18,13 +18,19 @@ namespace inVasion::session {
 
                     std::uint32_t size;  // get the message data length in bytes
                     client->channel.read(reinterpret_cast<char *> (&size), sizeof(size));
+                    std::uint32_t type;
+                    client->channel.read(reinterpret_cast<char *> (&type), sizeof(type));
                     char arr[size];
                     client->channel.read(reinterpret_cast<char *> (&arr), size);
 
-                    PlayerAction action;
-                    action.ParseFromArray(arr, size);
-                    q->produce(std::move(action));
-
+                    if (type == 2) {
+                        PlayerAction action;
+                        action.ParseFromArray(arr, size);
+                        q->produce(std::move(action));    
+                    }
+                    else {
+                        std::cout << "Unknown type: " << type << std::endl;
+                    }
                 }
                 std::cout << "Client disconnected" << std::endl;
             }).detach();

@@ -11,3 +11,19 @@ func instance_node(node: Object, parent: Object) -> Object:
 	var node_instance = node.instance()
 	parent.add_child(node_instance)
 	return node_instance
+
+
+# Proto files ids
+# Client sends to server
+enum RequestModels {
+	MoveRequestModel = 0,
+	UpdateGameStateRequestModel = 1,
+	PlayerActionRequestModel = 2
+}
+# Server sends to client
+enum ResponseModels {
+	PlayerPositionResponseModel = 1000,
+	PlayerActionResponseModel = 1002
+}
+
+

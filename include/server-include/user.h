@@ -20,9 +20,7 @@ namespace inVasion::session {
         friend void dispatcherEachSender(SafeQueue<PlayerAction> *queueOnReceive);
 
     public:
-        explicit User(tcp::socket &&socket) : channel(std::move(socket)) {
-            channel << "Hello from C++ server!" << std::endl;
-        }
+        explicit User(tcp::socket &&socket) : channel(std::move(socket)) {}
     };
 }
 #endif //INVASION_SERVER_USER_H

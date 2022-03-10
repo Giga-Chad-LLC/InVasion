@@ -35,11 +35,11 @@ export(int) var down_bound = 1000
 #	var f1 = b.get_f1()
 #	print("Deserialized: ", f1)
 
-func _ready():
-	# Должно напечатать число Пи (по какой-то причине дважды, тут уже вопросы к методу _ready())
-#	test_godobuf()
-#	test_out_gdnative()
-	pass
+#func _ready():
+#	# Должно напечатать число Пи (по какой-то причине дважды, тут уже вопросы к методу _ready())
+##	test_godobuf()
+##	test_out_gdnative()
+#	pass
 
 #func test_out_gdnative():
 #	# GDNative attached to another node
