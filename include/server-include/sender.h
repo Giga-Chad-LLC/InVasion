@@ -20,11 +20,7 @@ namespace inVasion::session {
                         std::memcpy(&action_buffer, reinterpret_cast<char*> (&type), sizeof(type));
 
                         action.SerializeToArray(action_buffer + sizeof(type), action.ByteSizeLong());
-                        std::cout << "Sending bytes:" << std::endl;
-                        for (int byte : action_buffer) {
-                            std::cout << byte << ' ';
-                        }
-                        std::cout << std::endl;
+                        // std::cout << "Send action: " << action.key_pressed() << std::endl;
                         client->channel.write(action_buffer, action.ByteSizeLong() + sizeof(type));
                     }
                 }
