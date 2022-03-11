@@ -4,13 +4,20 @@
 #include "game-models/GameWorldStorage/game-world-storage.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Player/player.h"
+#include "game-models/Bullet/bullet.h"
 
 namespace invasion::game_models {
 	
 
 struct GameSession {
-	int addPlayer();
+	int addPlayer(); // TODO: rename to 'createPlayerAndReturnId'
+	
+	int addBullet(Bullet bullet);
+	int createIdForNewBullet();
+
 	Player& getPlayer(int playerId);
+	Bullet& getBullet(int bulletId);
+
 	void updateGameState();
 
 private:
