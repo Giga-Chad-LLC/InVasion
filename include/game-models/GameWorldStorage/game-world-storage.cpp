@@ -11,4 +11,8 @@ std::vector<Player>& GameWorldStorage::getPlayers() {
 	return m_players;
 }
 
+std::vector<Bullet>& GameWorldStorage::getBullets() {
+	return m_bullets;
+}
+
 } // namespace invasion::game_models
