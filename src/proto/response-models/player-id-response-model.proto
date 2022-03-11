@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package response_models;
+
+message PlayerIdResponseModel {
+	int32 playerId = 1;
+}

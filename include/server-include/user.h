@@ -18,6 +18,8 @@ namespace invasion::session {
 
         friend class SenderUser;
 
+        friend class Server;
+
         friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer);
 
     public:
