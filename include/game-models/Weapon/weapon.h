@@ -16,13 +16,14 @@ struct Weapon {
 	bool isAbleToShoot() const;
 	void reload();
 	bool isReloading() const;
-	void setDirection(Vector2D dir);
+	void setDirection(const Vector2D& dir);
 	void reset();
 
 	// getters
 	int getLeftMagazine() const;
 	int getLeftAmmo() const;
 	long long getReloadingStartTimestamp_ms() const;
+	Vector2D getDirection() const;
 
 private:
 	static long long getCurrentTime_ms();

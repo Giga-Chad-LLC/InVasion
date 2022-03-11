@@ -78,8 +78,8 @@ void Weapon::reload() {
 }
 
 
-void Weapon::setDirection(Vector2D dir) {
-	m_direction = std::move(dir);
+void Weapon::setDirection(const Vector2D& dir) {
+	m_direction = std::move(dir.normalize());
 }
 
 
@@ -111,6 +111,11 @@ int Weapon::getLeftAmmo() const {
 
 long long Weapon::getReloadingStartTimestamp_ms() const {
 	return m_reloadingStartTimestamp_ms;
+}
+
+
+Vector2D Weapon::getDirection() const {
+	return m_direction;
 }
 
 
