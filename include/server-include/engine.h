@@ -23,13 +23,13 @@ namespace invasion::session {
                 if (queueReceive->consume(request)) {
                     // work with this object
                     switch (request.getMessageType()) {
-                        case RequestModel_t::PlayerActionRequestModel: {
-//                            PlayerAction action;
+                        case RequestModel_t::MoveRequestModel: {
+                            // PlayerAction action;
                             // do engine-stuff here
                             request_models::MoveRequestModel action;
                             action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
                             interactors::MoveInteractor interactor;
-                            action.set_player_id(request.getPlayerId());
+                            // action.set_player_id(request.getPlayerId());
                             interactor.execute(action, *gameSession);
 
 
@@ -49,7 +49,7 @@ namespace invasion::session {
                             interactors::UpdateGameStateInteractor updaterGame;
                             auto responseFromInteractor = updaterGame.execute(*gameSession);
                             char *buffer = new char[request.bytesSize()];
-//                            std::memcpy(buffer, request.getStoredBytes(), request.bytesSize());
+                            // std::memcpy(buffer, request.getStoredBytes(), request.bytesSize());
                             responseFromInteractor.SerializeToArray(buffer, request.bytesSize());
                             NetworkPacketResponse response(std::move(std::unique_ptr<char>(buffer)),
                                                            ResponseModel_t::PlayerActionResponseModel,
@@ -57,10 +57,28 @@ namespace invasion::session {
                             queueSend->produce(std::move(response));
                             break;
                         }
-//                        case
+                        case RequestModel_t::PlayerActionRequestModel: { //  leave it for now, then we will delete this request/response-model
+                            PlayerAction action; // buttons
+                            action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+
+                            std::cout << "Action button: " << action.key_pressed() << std::endl;
+                            std::unique_ptr<char> bytes_ptr = request.getPureBytes();
+                            NetworkPacketResponse response(std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
+                            
+                            queueSend->produce(std::move(response));
+                            break;
+                        }
+                        // case
                         default: {
                             std::cout << "Unknown message type: " << static_cast<int> (request.getMessageType())
                                       << std::endl;
+                            std::cout << "Length: " << request.bytesSize() << std::endl;
+                            std::unique_ptr<char> start = request.getPureBytes();
+
+                            // for (int i = 0; i < request.bytesSize(); i++) {
+                            //     std::cout << static_cast<int> (start.get()[i]) << ' ';
+                            // }
+                            // std::cout << std::endl;
                             break;
                         }
                     }

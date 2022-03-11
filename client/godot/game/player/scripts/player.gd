@@ -29,11 +29,12 @@ var current_move_event = Idle # makes the character move
 enum { MOVE }
 var state = MOVE
 var velocity = Vector2.ZERO
-var player_id = 1
+var player_id
 
 
 # Godobuf
 const PlayerProto = preload("res://player/scripts/player_proto.gd")
+const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
 # Network
 const Connection = preload("res://player/scripts/client.gd")
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -76,6 +77,11 @@ func _physics_process(delta):
 				print("Action from server: ", current_move_event)
 			else:
 				print("Error while receiving: ", "cannot unpack player action")
+		elif (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
+			set_player_id(received_packet)
+			print(player_id)
+		elif (received_packet.message_type == Global.ResponseModels.PlayerPositionResponseModel):
+			print("Update my position with velocity and direction from server")
 		else:
 			print("Unknown type from server!")
 
@@ -199,3 +205,17 @@ func player_move(delta, input_vector):
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	velocity = move_and_slide(velocity)
+
+# Set player id retrieved from server
+func set_player_id(packet: NetworkPacket) -> void:
+	print("Set my id in a game session")
+	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
+	player_id = player_id_model.get_playerId()
+
+
+
+
+
+
+
+

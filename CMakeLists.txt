@@ -32,6 +32,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 
         ./src/proto/utils/vector2d.proto
         ./src/proto/response-models/player-position-response-model.proto
+        ./src/proto/response-models/player-id-response-model.proto
         )
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
