@@ -33,8 +33,8 @@ namespace invasion::session {
                             interactor.execute(action, *gameSession);
 
                             //on each request from user we send answer from server
-                            interactors::UpdateGameStateInteractor aboba;
-                            auto responseFromInteractor = aboba.execute(*gameSession);
+                            interactors::UpdateGameStateInteractor updaterGame;
+                            auto responseFromInteractor = updaterGame.execute(*gameSession);
                             char *buffer = new char[request.bytesSize()];
 //                            std::memcpy(buffer, request.getStoredBytes(), request.bytesSize());
                             responseFromInteractor.SerializeToArray(buffer, request.bytesSize());
