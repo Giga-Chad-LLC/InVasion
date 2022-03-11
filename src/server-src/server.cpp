@@ -8,7 +8,7 @@
 using boost::asio::ip::tcp;
 namespace invasion::session {
     Server::Server() : acceptor(ioContext, tcp::endpoint(tcp::v4(), 8000)) {
-        makeEngine(queueServerFromClients, queueClientsFromServer);
+        makeEngine(queueServerFromClients, queueClientsFromServer, curGameSession);
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
@@ -19,9 +19,10 @@ namespace invasion::session {
     void Server::waitNewUser() {
         while (true) {
             tcp::socket socket = acceptor.accept();
+
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
-            auto pointerOnUser = std::make_shared<User>(std::move(socket));
+            auto pointerOnUser = std::make_shared<User>(std::move(socket), curGameSession.addPlayer());
             baseUsers.push_back(pointerOnUser);
             [[maybe_unused]] auto receiverOnThisUser = ReceiverFromUser(pointerOnUser,
                                                                         &queueServerFromClients); // создание двух потоков на каждого клиента

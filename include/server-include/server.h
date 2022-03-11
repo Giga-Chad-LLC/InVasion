@@ -16,7 +16,7 @@
 #include "sender.h"
 #include "engine.h"
 #include "network_packet.h"
-
+#include "game-models/GameSession/game-session.h"
 using boost::asio::ip::tcp;
 namespace invasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
@@ -41,6 +41,7 @@ namespace invasion::session {
         bool ImplementedDispatherEachSender = false;
         SafeQueue<NetworkPacketRequest> queueServerFromClients;
         SafeQueue<NetworkPacketResponse> queueClientsFromServer;
+        game_models::GameSession curGameSession;
     public:
 
         explicit Server();

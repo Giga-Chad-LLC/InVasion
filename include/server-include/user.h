@@ -13,7 +13,7 @@ namespace invasion::session {
     private:
         tcp::iostream channel;
         SafeQueue<NetworkPacketResponse> queueForSend;
-
+        int idClientInSession;
         friend class ReceiverFromUser;
 
         friend class SenderUser;
@@ -21,7 +21,10 @@ namespace invasion::session {
         friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer);
 
     public:
-        explicit User(tcp::socket &&socket) : channel(std::move(socket)) {}
+        int getIdClient() const noexcept{
+            return idClientInSession;
+        }
+        explicit User(tcp::socket &&socket, int id) : channel(std::move(socket)), idClientInSession(id) {}
     };
 }
 #endif //INVASION_SERVER_USER_H
