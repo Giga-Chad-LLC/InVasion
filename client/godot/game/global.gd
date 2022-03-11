@@ -23,7 +23,8 @@ enum RequestModels {
 # Server sends to client
 enum ResponseModels {
 	PlayerPositionResponseModel = 1000,
-	PlayerActionResponseModel = 1002
+	PlayerActionResponseModel = 1002,
+	PlayerIdResponseModel = 1003
 }
 
 
