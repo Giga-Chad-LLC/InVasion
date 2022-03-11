@@ -18,7 +18,7 @@ namespace invasion::session {
 
         friend class SenderUser;
 
-        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer);
 
     public:
         explicit User(tcp::socket &&socket) : channel(std::move(socket)) {}

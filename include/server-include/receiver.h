@@ -14,8 +14,8 @@ namespace invasion::session {
     class ReceiverFromUser {
 
     public:
-        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<NetworkPacketRequest> *queueOnReceive) {
-            std::thread([client = std::move(cur_client), q = queueOnReceive]() {
+        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<NetworkPacketRequest> *queueServerFromClients) {
+            std::thread([client = std::move(cur_client), q = queueServerFromClients]() {
                 while (client->channel) {
                     // get data from client
                     std::uint32_t size;  // get the message data length in bytes

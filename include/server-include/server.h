@@ -21,10 +21,10 @@ using boost::asio::ip::tcp;
 namespace invasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
 
-    inline void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive) {
+    inline void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer) {
         while (true) {
             NetworkPacketResponse cur;
-            if (queueOnReceive->consume(cur)) {
+            if (queueClientsFromServer->consume(cur)) {
                 for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
                     NetworkPacketResponse tmp = cur;
                     cur_client->queueForSend.produce(std::move(tmp));
@@ -39,8 +39,8 @@ namespace invasion::session {
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
         bool ImplementedDispatherEachSender = false;
-        SafeQueue<NetworkPacketRequest> queueToEngine;
-        SafeQueue<NetworkPacketResponse> queueFromEngine;
+        SafeQueue<NetworkPacketRequest> queueServerFromClients;
+        SafeQueue<NetworkPacketResponse> queueClientsFromServer;
     public:
 
         explicit Server();
@@ -53,7 +53,7 @@ namespace invasion::session {
 
         friend class ReceiverFromUser;
 
-        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive);
+        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer);
     };
 
 }
