@@ -32,6 +32,19 @@ namespace invasion::session {
                             action.set_player_id(request.getPlayerId());
                             interactor.execute(action, *gameSession);
 
+
+                            /*
+                             *
+                             * controller(100); // ms
+                             *
+                             * controller.start([]() {
+                             * ...
+                             * });
+                             *
+                             *
+                             *
+                             *
+                             * */
                             //on each request from user we send answer from server
                             interactors::UpdateGameStateInteractor updaterGame;
                             auto responseFromInteractor = updaterGame.execute(*gameSession);
