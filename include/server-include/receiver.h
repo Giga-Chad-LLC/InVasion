@@ -15,7 +15,7 @@ namespace invasion::session {
     private:
         std::shared_ptr<User> clientPointer;
 
-        NetworkPacketRequest readClient() {
+        NetworkPacketRequest readFromClient() {
             std::uint32_t size;  // get the message data length in bytes
             clientPointer->channel.read(reinterpret_cast<char *> (&size), sizeof(size));
             std::uint32_t messageType; // get the message type
@@ -35,7 +35,7 @@ namespace invasion::session {
             std::thread([client = std::move(cur_client), q = queueServerFromClients, this]() {
                 while (client->channel) {
                     // get data from client
-                    auto packet = readClient();
+                    auto packet = readFromClient();
                     q->produce(std::move(packet));
                 }
                 std::cout << "Client disconnected" << std::endl;
