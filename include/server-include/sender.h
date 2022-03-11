@@ -15,24 +15,12 @@ namespace invasion::session {
     class SenderUser {
     public:
         SenderUser(std::shared_ptr<User> curClient) {
-            std::thread([client = curClient, this]() {
+            std::thread([client = curClient]() {
                 while (true) {
-
                     NetworkPacketResponse response;
                     if (client->queueForSend.consumeSync(response)) {
-                        // switch (response.getMessageType()) {
-                        //     case ResponseModel_t::PlayerActionResponseModel: {
-                        //         std::uint32_t type = static_cast<std::uint32_t> (response.getMessageType());
-                        //         std::uint32_t totalBytesLength = response.bytesSize() + sizeof(type);
-                        //         std::shared_ptr<char> responseFromServer = response.serializeToByteArray();
-                        //         client->channel.write(responseFromServer.get(), totalBytesLength);
-                        //         break;
-                        //     }
-                        //     default: {
-                        //         break;
-                        //     }
-                        // }
-                        client->channel.write(response.serializeToByteArray().get(),
+                        std::shared_ptr<char> buffer = response.serializeToByteArray(); 
+                        client->channel.write(buffer.get(),
                                             response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())));
                     }
                 }

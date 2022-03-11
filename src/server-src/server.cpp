@@ -30,18 +30,18 @@ namespace invasion::session {
                                                                         &queueServerFromClients); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = SenderUser(pointerOnUser);
             // send to user his generated ID
-            {
-                response_models::PlayerIdResponseModel playerIdResponse;
-                playerIdResponse.set_playerid(pointerOnUser->getIdClient());
-                std::unique_ptr<char> buffer_ptr(new char[playerIdResponse.ByteSizeLong()]);
-                playerIdResponse.SerializeToArray(buffer_ptr.get(), playerIdResponse.ByteSizeLong());
-                pointerOnUser->queueForSend.produce(std::move(NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, playerIdResponse.ByteSizeLong())));
-            }
+            // {
+            //     response_models::PlayerIdResponseModel playerIdResponse;
+            //     playerIdResponse.set_playerid(pointerOnUser->getIdClient());
+            //     std::unique_ptr<char> buffer_ptr(new char[playerIdResponse.ByteSizeLong()]);
+            //     playerIdResponse.SerializeToArray(buffer_ptr.get(), playerIdResponse.ByteSizeLong());
+            //     pointerOnUser->queueForSend.produce(std::move(NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, playerIdResponse.ByteSizeLong())));
+            // }
 
             if (!ImplementedDispatherEachSender && baseUsers.size() ==
                                                    NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "team are full\n";
-                ImplementedDispatherEachSender = false;
+                ImplementedDispatherEachSender = true;
                 makeSenderUsers();
             }
         }

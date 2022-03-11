@@ -36,7 +36,6 @@ public:
     }
 
     void produce(T &&item) {
-
         std::lock_guard<std::mutex> lock(mtx);
 
         q.push(std::move(item));
