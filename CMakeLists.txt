@@ -29,6 +29,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/request-models/player.proto
         ./src/proto/request-models/move-request-model.proto
         ./src/proto/request-models/update-game-state-request-model.proto
+		./src/proto/request-models/rotate-weapon-request-model.proto
 
         ./src/proto/utils/vector2d.proto
         ./src/proto/response-models/player-position-response-model.proto
