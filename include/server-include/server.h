@@ -50,7 +50,7 @@ namespace invasion::session {
 
         void waitNewUser();
 
-        friend void makeEngine(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer);
+        friend void HandlerQueues(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer);
 
         friend class ReceiverFromUser;
 

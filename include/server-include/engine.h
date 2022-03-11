@@ -13,8 +13,8 @@
 #include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
 
 namespace invasion::session {
-    inline void makeEngine(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer,
-                           game_models::GameSession &curGameSession) {
+    inline void HandlerQueues(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer,
+                              game_models::GameSession &curGameSession) {
         std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer, gameSession = &curGameSession]() {
             while (true) {
                 NetworkPacketRequest request;
