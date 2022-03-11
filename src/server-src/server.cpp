@@ -24,7 +24,7 @@ namespace invasion::session {
 
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
-            auto pointerOnUser = std::make_shared<User>(std::move(socket));
+            auto pointerOnUser = std::make_shared<User>(std::move(socket), curGameSession.addPlayer());
             baseUsers.push_back(pointerOnUser);
             [[maybe_unused]] auto receiverOnThisUser = ReceiverFromUser(pointerOnUser,
                                                                         &queueServerFromClients); // создание двух потоков на каждого клиента
@@ -36,7 +36,7 @@ namespace invasion::session {
                 playerIdResponse.set_playerid(pointerOnUser->getIdClient());
                 std::unique_ptr<char> buffer_ptr(new char[playerIdResponse.ByteSizeLong()]);
                 playerIdResponse.SerializeToArray(buffer_ptr.get(), playerIdResponse.ByteSizeLong());
-                pointerOnUser->queueForSend.produce(std::move(NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, playerIdResponse.ByteSizeLong())));
+                pointerOnUser->queueClientPrivate.produce(std::move(NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, playerIdResponse.ByteSizeLong())));
             }
 
             if (!ImplementedDispatherEachSender && baseUsers.size() ==

@@ -22,19 +22,18 @@ namespace invasion::session {
                     // work with this object
                     switch (request.getMessageType()) {
                         case RequestModel_t::MoveRequestModel: {
-                            // PlayerAction action;
                             // do engine-stuff here
-                            request_models::MoveRequestModel action;
-                            action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+                            request_models::MoveRequestModel move;
+                            move.ParseFromArray(request.getStoredBytes(), request.bytesSize());
                             interactors::MoveInteractor interactor;
-                            interactor.execute(action, *gameSession);
+                            interactor.execute(move, *gameSession);
 
                             //on each request from user we send answer from server
-                            interactors::UpdateGameStateInteractor updaterGame;
-                            auto responseFromInteractor = updaterGame.execute(*gameSession);
+                            interactors::UpdateGameStateInteractor gameUpdateInteractor;
+                            response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
                             std::unique_ptr<char> buffer_ptr(new char[request.bytesSize()]);
                             
-                            responseFromInteractor.SerializeToArray(buffer_ptr.get(), request.bytesSize());
+                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), request.bytesSize());
                             NetworkPacketResponse response(std::move(buffer_ptr),
                                                            ResponseModel_t::PlayerPositionResponseModel,
                                                            request.bytesSize());
