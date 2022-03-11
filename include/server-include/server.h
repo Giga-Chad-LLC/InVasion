@@ -15,18 +15,19 @@
 #include "receiver.h"
 #include "sender.h"
 #include "engine.h"
-#include "request-response.h"
+#include "network_packet.h"
+
 using boost::asio::ip::tcp;
-namespace inVasion::session {
+namespace invasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
 
-    inline void dispatcherEachSender(SafeQueue<ResponseObject> *queueClientsFromServer) {
+    inline void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive) {
         while (true) {
-            ResponseObject cur;
-            if (queueClientsFromServer->consumeSync(cur)) {
+            NetworkPacketResponse cur;
+            if (queueOnReceive->consume(cur)) {
                 for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
-                    ResponseObject tmp = cur;
-                    cur_client->queueToClientPrivate.produce(std::move(tmp));
+                    NetworkPacketResponse tmp = cur;
+                    cur_client->queueForSend.produce(std::move(tmp));
                 }
             }
         }
@@ -38,8 +39,8 @@ namespace inVasion::session {
         tcp::acceptor acceptor;
         const size_t NUMBER_OF_TEAM = 1;
         bool ImplementedDispatherEachSender = false;
-        SafeQueue<RequestObject> queueServerFromClients;
-        SafeQueue<ResponseObject> queueClientsFromServer;
+        SafeQueue<NetworkPacketRequest> queueToEngine;
+        SafeQueue<NetworkPacketResponse> queueFromEngine;
     public:
 
         explicit Server();
@@ -48,11 +49,11 @@ namespace inVasion::session {
 
         void waitNewUser();
 
-        friend void makeEngine(SafeQueue<RequestObject> &queueServerFromClients, SafeQueue<ResponseObject> &queueClientsFromServer);
+        friend void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend);
 
         friend class ReceiverFromUser;
 
-        friend void dispatcherEachSender(SafeQueue<ResponseObject> *queueClientsFromServer);
+        friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueOnReceive);
     };
 
 }

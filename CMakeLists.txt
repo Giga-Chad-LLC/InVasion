@@ -45,8 +45,8 @@ message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 if (MSVC)
     # warning level 4 and all warnings as errors
     add_compile_options(
-		/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0
-		/W4 /WX)
+		/experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0)
+		# /W4 /WX)
 else()
     # lots of warnings and all warnings as errors
     # add_compile_options(-Wall -Wextra -Werror)

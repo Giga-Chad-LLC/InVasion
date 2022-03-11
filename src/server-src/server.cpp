@@ -6,7 +6,7 @@
 #include "../../include/server-include/server.h"
 
 using boost::asio::ip::tcp;
-namespace inVasion::session {
+namespace invasion::session {
     Server::Server() : acceptor(ioContext, tcp::endpoint(tcp::v4(), 8000)) {
         makeEngine(queueServerFromClients, queueClientsFromServer);
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;

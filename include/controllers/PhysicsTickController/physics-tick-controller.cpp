@@ -3,8 +3,8 @@
 
 namespace invasion::controllers {
 
-PhysicsTickController::PhysicsTickController()
-	: m_cancelToken(false), m_interval_ms(8) {}
+PhysicsTickController::PhysicsTickController(const std::size_t interval)
+	: m_cancelToken(false), m_interval_ms(interval) {}
 
 void PhysicsTickController::stop() {
 	m_cancelToken.store(false);

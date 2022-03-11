@@ -6,18 +6,36 @@
 #include <memory>
 #include "safe-queue.h"
 #include "player.pb.h"
-#include "request-response.h"
-namespace inVasion::session {
-    inline void makeEngine(SafeQueue<RequestObject> &queueServerFromClients, SafeQueue<ResponseObject> &queueClientsFromServer) {
-        std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer]() {
-            while (true) {
-                RequestObject removedElement;
-                if (queueServerFromClients->consumeSync(removedElement)) {
+#include "network_packet.h"
 
-                    // work with this object;
-                    ResponseObject response;
-                    response.arrBytes = removedElement.arrBytes;
-                    queueClientsFromServer->produce(std::move(response));
+namespace invasion::session {
+    inline void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend) {
+        std::thread([queueReceive = &queueReceive, queueSend = &queueSend]() {
+            int imitatorTickController = 0;
+            while (true) {
+                NetworkPacketRequest request;
+                imitatorTickController++; 
+                if (queueReceive->consume(request)) {
+                    // work with this object
+
+                    switch (request.getMessageType()) {
+                        case RequestModel_t::PlayerActionRequestModel: {
+                            PlayerAction action;
+                            action.ParseFromArray(request.getStoredBytes(), request.bytesSize());  
+                            // do engine-stuff here
+                            
+                            char* buffer = new char[request.bytesSize()];
+                            std::memcpy(buffer, request.getStoredBytes(), request.bytesSize());
+                            
+                            NetworkPacketResponse response(std::move(std::unique_ptr<char> (buffer)), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
+                            queueSend->produce(std::move(response));
+                            break;
+                        }
+                        default: {
+                            std::cout << "Unknown message type: " << static_cast<int> (request.getMessageType()) << std::endl;
+                            break;
+                        }
+                    }
                 }
             }
         }).detach();
