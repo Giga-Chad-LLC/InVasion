@@ -24,10 +24,10 @@ namespace invasion::session {
     inline void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer) {
         while (true) {
             NetworkPacketResponse cur;
-            if (queueClientsFromServer->consume(cur)) {
-                for (auto cur_client: baseUsers) { // пока никакой обработки просто имитируем ее
+            if (queueClientsFromServer->consumeSync(cur)) {
+                for (auto curClient: baseUsers) { // пока никакой обработки просто имитируем ее
                     NetworkPacketResponse tmp = cur;
-                    cur_client->queueForSend.produce(std::move(tmp));
+                    curClient->queueClientPrivate.produce(std::move(tmp));
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace invasion::session {
 
         void waitNewUser();
 
-        friend void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend);
+        friend void makeEngine(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer);
 
         friend class ReceiverFromUser;
 

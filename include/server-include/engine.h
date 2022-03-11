@@ -13,12 +13,12 @@
 #include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
 
 namespace invasion::session {
-    inline void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend,
+    inline void makeEngine(SafeQueue<NetworkPacketRequest> &queueServerFromClients, SafeQueue<NetworkPacketResponse> &queueClientsFromServer,
                            game_models::GameSession &curGameSession) {
-        std::thread([queueReceive = &queueReceive, queueSend = &queueSend, gameSession = &curGameSession]() {
+        std::thread([queueServerFromClients = &queueServerFromClients, queueClientsFromServer = &queueClientsFromServer, gameSession = &curGameSession]() {
             while (true) {
                 NetworkPacketRequest request;
-                if (queueReceive->consume(request)) {
+                if (queueServerFromClients->consumeSync(request)) {
                     // work with this object
                     switch (request.getMessageType()) {
                         case RequestModel_t::MoveRequestModel: {
@@ -38,7 +38,7 @@ namespace invasion::session {
                             NetworkPacketResponse response(std::move(buffer_ptr),
                                                            ResponseModel_t::PlayerPositionResponseModel,
                                                            request.bytesSize());
-                            queueSend->produce(std::move(response));
+                            queueClientsFromServer->produce(std::move(response));
                             break;
                         }
                         case RequestModel_t::PlayerActionRequestModel: { //  leave it for now, then we will delete this request/response-model
@@ -49,7 +49,7 @@ namespace invasion::session {
                             std::unique_ptr<char> bytes_ptr = request.getPureBytes();
                             NetworkPacketResponse response(std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
                             
-                            queueSend->produce(std::move(response));
+                            queueClientsFromServer->produce(std::move(response));
                             break;
                         }
                         // case

@@ -18,7 +18,7 @@ namespace invasion::session {
             std::thread([client = curClient]() {
                 while (true) {
                     NetworkPacketResponse response;
-                    if (client->queueForSend.consumeSync(response)) {
+                    if (client->queueClientPrivate.consumeSync(response)) {
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 
                         client->channel.write(buffer.get(),
                                             response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())));

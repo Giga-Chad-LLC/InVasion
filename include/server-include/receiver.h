@@ -37,7 +37,7 @@ namespace invasion::session {
             std::thread([client = std::move(cur_client), q = queueServerFromClients]() {
                 while (client->channel) {
                     // get data from client
-                    std::optional<NetworkPacketRequest> request = ReceiverFromUser::readFromClient(client);
+                    auto request = ReceiverFromUser::readFromClient(client);
                     if (request.has_value()) {
                         q->produce(std::move(request.value()));
                     }
