@@ -6,20 +6,51 @@
 #include <memory>
 #include "safe-queue.h"
 #include "player.pb.h"
+#include "network_packet.h"
+#include "game-models/GameSession/game-session.h"
+#include "move-request-model.pb.h"
+#include "interactors/MoveInteractor/move-interactor.h"
+#include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
 
-namespace inVasion::session {
-    inline void makeEngine(SafeQueue<PlayerAction> &queueReceive, SafeQueue<PlayerAction> &queueSend) {
-        std::thread([queueReceive = &queueReceive, queueSend = &queueSend]() {
+namespace invasion::session {
+    inline void makeEngine(SafeQueue<NetworkPacketRequest> &queueReceive, SafeQueue<NetworkPacketResponse> &queueSend,
+                           game_models::GameSession &curGameSession) {
+        std::thread([queueReceive = &queueReceive, queueSend = &queueSend, gameSession = &curGameSession]() {
             int imitatorTickController = 0;
             while (true) {
-                PlayerAction removedElement;
-                imitatorTickController++; 
-                if (queueReceive->consume(removedElement)) {
+                NetworkPacketRequest request;
+                imitatorTickController++;
+                if (queueReceive->consume(request)) {
+                    // work with this object
+                    switch (request.getMessageType()) {
+                        case RequestModel_t::PlayerActionRequestModel: {
+//                            PlayerAction action;
+                            // do engine-stuff here
+                            request_models::MoveRequestModel action;
+                            action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+                            interactors::MoveInteractor interactor;
+                            action.set_player_id(request.getPlayerId());
+                            interactor.execute(action, *gameSession);
 
-                    // work with this object;
-
-
-                    queueSend->produce(std::move(removedElement));
+                            //on each request from user we send answer from server
+                            interactors::UpdateGameStateInteractor aboba;
+                            auto responseFromInteractor = aboba.execute(*gameSession);
+                            char *buffer = new char[request.bytesSize()];
+//                            std::memcpy(buffer, request.getStoredBytes(), request.bytesSize());
+                            responseFromInteractor.SerializeToArray(buffer, request.bytesSize());
+                            NetworkPacketResponse response(std::move(std::unique_ptr<char>(buffer)),
+                                                           ResponseModel_t::PlayerActionResponseModel,
+                                                           request.bytesSize());
+                            queueSend->produce(std::move(response));
+                            break;
+                        }
+//                        case
+                        default: {
+                            std::cout << "Unknown message type: " << static_cast<int> (request.getMessageType())
+                                      << std::endl;
+                            break;
+                        }
+                    }
                 }
             }
         }).detach();

@@ -6,31 +6,29 @@
 #include "user.h"
 #include "safe-queue.h"
 #include <player.pb.h>
+#include <memory>
+#include "network_packet.h"
 #include "player-position-response-model.pb.h"
 
-namespace inVasion::session {
+namespace invasion::session {
     class ReceiverFromUser {
 
     public:
-        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<PlayerAction> *queueOnReceive) {
-            std::thread([client = std::move(cur_client), q = queueOnReceive]() {
+        ReceiverFromUser(std::shared_ptr<User> cur_client, SafeQueue<NetworkPacketRequest> *queueServerFromClients) {
+            std::thread([client = std::move(cur_client), q = queueServerFromClients]() {
                 while (client->channel) {
-
+                    // get data from client
                     std::uint32_t size;  // get the message data length in bytes
                     client->channel.read(reinterpret_cast<char *> (&size), sizeof(size));
-                    std::uint32_t type;
-                    client->channel.read(reinterpret_cast<char *> (&type), sizeof(type));
-                    char arr[size];
-                    client->channel.read(reinterpret_cast<char *> (&arr), size);
+                    std::uint32_t messageType; // get the message type
+                    client->channel.read(reinterpret_cast<char *> (&messageType), sizeof(messageType));
+                    
+                    std::unique_ptr <char> buffer_ptr(new char[size]);
+                    NetworkPacketRequest packet(std::move(buffer_ptr), NetworkPacketRequest::getMessageTypeById(messageType), size);
+                    packet.setPlayerId(client->getIdClient()); //set idPlayer
+                    client->channel.read(reinterpret_cast<char*> (packet.getStoredBytes()), size);
 
-                    if (type == 2) {
-                        PlayerAction action;
-                        action.ParseFromArray(arr, size);
-                        q->produce(std::move(action));    
-                    }
-                    else {
-                        std::cout << "Unknown type: " << type << std::endl;
-                    }
+                    q->produce(std::move(packet));
                 }
                 std::cout << "Client disconnected" << std::endl;
             }).detach();
