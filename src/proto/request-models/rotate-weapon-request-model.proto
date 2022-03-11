@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package request_models;
+import "vector2d.proto";
+
+message RotateWeaponRequestModel {
+	int32 session_id = 1;
+	int32 player_id = 2;
+	util_models.Vector2D direction = 3;
+}
