@@ -25,7 +25,7 @@ namespace invasion::session {
                     
                     std::unique_ptr <char> buffer_ptr(new char[size]);
                     NetworkPacketRequest packet(std::move(buffer_ptr), NetworkPacketRequest::getMessageTypeById(messageType), size);
-
+                    packet.setPlayerId(client->getIdClient()); //set idPlayer
                     client->channel.read(reinterpret_cast<char*> (packet.getStoredBytes()), size);
 
                     q->produce(std::move(packet));

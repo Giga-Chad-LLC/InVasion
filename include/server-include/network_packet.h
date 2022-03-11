@@ -18,6 +18,7 @@ namespace invasion::session {
 
     class NetworkPacket {
     protected:
+        int playerId;
         std::unique_ptr<char> bytes;
         std::uint32_t bytesLength;
         NetworkPacket(std::unique_ptr<char> &&bytes_, std::uint32_t bytesLength_): bytes(std::move(bytes_)), bytesLength(bytesLength_) {}
@@ -27,7 +28,9 @@ namespace invasion::session {
         char* getStoredBytes() const {
             return bytes.get();
         }
-
+        int getPlayerId() const noexcept{
+            return playerId;
+        }
         std::uint32_t bytesSize() const {
             return bytesLength;
         }
@@ -40,7 +43,9 @@ namespace invasion::session {
         NetworkPacketRequest(std::unique_ptr<char> &&bytes_ptr,
             RequestModel_t messageType_, std::uint32_t bytesLength_): NetworkPacket(std::move(bytes_ptr), bytesLength_), messageType(messageType_) {}
         NetworkPacketRequest(): NetworkPacket(), messageType(RequestModel_t::UnknownRequestModel) {}
-
+        void setPlayerId(int id) noexcept{
+            playerId = id;
+        }
         RequestModel_t getMessageType() const {
             return messageType;
         }

@@ -87,6 +87,7 @@ add_executable(${SERVER_TARGET}
         ${GAME-MODELS-SRCS}
         ${PROTO_SRCS}
         ${PROTO_HDRS}
+        ${INTERACTORS-SRCS}
         )
 
 # including Protobuf dirs to server target
