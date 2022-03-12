@@ -90,7 +90,7 @@ func _process(delta):
 		else:
 			print("Unknown message type!")
 	
-	player_move_by_coordinates(delta)
+	player_move_by_coordinates()
 
 func update_player_position(packet: NetworkPacket):
 	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
@@ -103,9 +103,10 @@ func update_player_position(packet: NetworkPacket):
 	position.x = player_position_model.get_position().get_x()
 	position.y = player_position_model.get_position().get_y()
 #	global_position.linear_interpolate(position, 0.001)
+#	global_position = position
 	
 
-func player_move_by_coordinates(delta):
+func player_move_by_coordinates():
 	#	Move the player	
 	if velocity != Vector2.ZERO:
 		animationTree.set("parameters/Idle/blend_position", velocity)
@@ -115,8 +116,8 @@ func player_move_by_coordinates(delta):
 	else:
 		animationState.travel("Idle")
 
-#	velocity = move_and_slide(velocity)
-	global_position += velocity
+	velocity = move_and_slide(velocity)
+#	global_position += velocity
 	
 
 

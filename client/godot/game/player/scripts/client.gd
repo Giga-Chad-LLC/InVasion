@@ -30,14 +30,10 @@ func send_raw_data(data: PoolByteArray) -> bool:
 
 # Appends metadata to the front of `data` array (little endian)
 # [length: 4 bytes][type: 4 bytes][message: `length` bytes]'
-const PlayerProto = preload("res://player/scripts/player_proto.gd")
-
 func _pack_data(data: NetworkPacket) -> PoolByteArray:
 	var bytes_encoder: StreamPeer = StreamPeerBuffer.new()
 	var bytes_array: PoolByteArray
-	var action = PlayerProto.PlayerAction.new()
-	action.from_bytes(data.bytes)
-	print("Send key: ", action.get_key_pressed())
+	
 #	Append `data` length to the first 4 bytes of the payload
 	bytes_encoder.put_32(data.bytes.size())
 #	Append `message_type` to the second 4 bytes of the payload
