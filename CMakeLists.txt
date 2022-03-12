@@ -88,10 +88,11 @@ endif ()
 add_executable(${SERVER_TARGET}
         src/server-src/main.cpp
         src/server-src/server.cpp
-        ${GAME-MODELS-SRCS}
         ${PROTO_SRCS}
         ${PROTO_HDRS}
+        ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
+        ${CONTROLLERS-SRCS}
         )
 
 # including Protobuf dirs to server target
