@@ -86,7 +86,7 @@ func _process(delta):
 			print(player_id)
 		elif (received_packet.message_type == Global.ResponseModels.PlayerPositionResponseModel):
 			update_player_position(received_packet)
-			
+		
 		else:
 			print("Unknown message type!")
 	
@@ -95,14 +95,14 @@ func _process(delta):
 func update_player_position(packet: NetworkPacket):
 	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
 	player_position_model.from_bytes(packet.get_bytes())
-	print("Velocity: ", player_position_model.get_velocity().get_x(), " ", player_position_model.get_velocity().get_y())
-	print("Position: ", player_position_model.get_position().get_x(), " ", player_position_model.get_position().get_y())
-	print("Id: ", player_position_model.get_playerId())
+#	print("Velocity: ", player_position_model.get_velocity().get_x(), " ", player_position_model.get_velocity().get_y())
+#	print("Position: ", player_position_model.get_position().get_x(), " ", player_position_model.get_position().get_y())
+#	print("Id: ", player_position_model.get_playerId())
 	velocity.x = player_position_model.get_velocity().get_x()
 	velocity.y = player_position_model.get_velocity().get_y()
 	position.x = player_position_model.get_position().get_x()
 	position.y = player_position_model.get_position().get_y()
-	global_position.linear_interpolate(position, 0.001)
+#	global_position.linear_interpolate(position, 0.001)
 	
 
 func player_move_by_coordinates(delta):
@@ -168,7 +168,7 @@ func _handle_client_connected() -> void:
 	producer.init(funcref(self, "_produce"))
 
 func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
-	print("Recieved data: ", data)
+#	print("Recieved data: ", data)
 	var network_packet: NetworkPacket = client._unpack_data(data)
 	worker.push_data(network_packet)
 
