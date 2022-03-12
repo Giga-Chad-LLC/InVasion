@@ -31,12 +31,15 @@ namespace invasion::session {
                             //on each request from user we send answer from server
                             interactors::UpdateGameStateInteractor gameUpdateInteractor;
                             response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
-                            std::unique_ptr<char> buffer_ptr(new char[request.bytesSize()]);
+                            std::unique_ptr<char> buffer_ptr(new char[playerPositionResponse.ByteSizeLong()]);
                             
-                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), request.bytesSize());
+                            std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
+                            std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
+
+                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), playerPositionResponse.ByteSizeLong());
                             NetworkPacketResponse response(std::move(buffer_ptr),
                                                            ResponseModel_t::PlayerPositionResponseModel,
-                                                           request.bytesSize());
+                                                           playerPositionResponse.ByteSizeLong());
                             queueClientsFromServer->produce(std::move(response));
                             break;
                         }

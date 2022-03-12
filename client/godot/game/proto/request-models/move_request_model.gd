@@ -664,59 +664,60 @@ class MoveRequestModel:
 	func _init():
 		var service
 		
-		_sessionId = PBField.new("sessionId", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		_session_id = PBField.new("session_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
-		service.field = _sessionId
-		data[_sessionId.tag] = service
+		service.field = _session_id
+		data[_session_id.tag] = service
 		
-		_playerId = PBField.new("playerId", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
-		service.field = _playerId
-		data[_playerId.tag] = service
+		service.field = _player_id
+		data[_player_id.tag] = service
 		
-		_currentEvent = PBField.new("currentEvent", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
+		_current_event = PBField.new("current_event", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
 		service = PBServiceField.new()
-		service.field = _currentEvent
-		data[_currentEvent.tag] = service
+		service.field = _current_event
+		data[_current_event.tag] = service
 		
 	var data = {}
 	
-	var _sessionId: PBField
-	func get_sessionId() -> int:
-		return _sessionId.value
-	func clear_sessionId() -> void:
+	var _session_id: PBField
+	func get_session_id() -> int:
+		return _session_id.value
+	func clear_session_id() -> void:
 		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_sessionId.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_sessionId(value : int) -> void:
-		_sessionId.value = value
+		_session_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_session_id(value : int) -> void:
+		_session_id.value = value
 	
-	var _playerId: PBField
-	func get_playerId() -> int:
-		return _playerId.value
-	func clear_playerId() -> void:
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
 		data[2].state = PB_SERVICE_STATE.UNFILLED
-		_playerId.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_playerId(value : int) -> void:
-		_playerId.value = value
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
 	
-	var _currentEvent: PBField
-	func get_currentEvent():
-		return _currentEvent.value
-	func clear_currentEvent() -> void:
+	var _current_event: PBField
+	func get_current_event():
+		return _current_event.value
+	func clear_current_event() -> void:
 		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_currentEvent.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-	func set_currentEvent(value) -> void:
-		_currentEvent.value = value
+		_current_event.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
+	func set_current_event(value) -> void:
+		_current_event.value = value
 	
 	enum MoveEvent {
-		StartMovingUp = 0,
-		StartMovingRight = 1,
-		StartMovingDown = 2,
-		StartMovingLeft = 3,
-		StopMovingUp = 4,
-		StopMovingRight = 5,
-		StopMovingDown = 6,
-		StopMovingLeft = 7
+		Idle = 0,
+		StartMovingUp = 1,
+		StartMovingRight = 2,
+		StartMovingDown = 3,
+		StartMovingLeft = 4,
+		StopMovingUp = 5,
+		StopMovingRight = 6,
+		StopMovingDown = 7,
+		StopMovingLeft = 8
 	}
 	
 	func to_string() -> String:

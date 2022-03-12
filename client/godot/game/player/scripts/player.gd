@@ -23,18 +23,22 @@ enum {
 	StopMovingLeft = 8
 }
 
-var input_vector = Vector2.ZERO
 var previous_action = Idle
 var current_move_event = Idle # makes the character move
 enum { MOVE }
 var state = MOVE
 var velocity = Vector2.ZERO
-var player_id
+var current_position = Vector2.ZERO
+var player_id: int = -1
 
 
 # Godobuf
 const PlayerProto = preload("res://player/scripts/player_proto.gd")
+const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
+
+const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
+
 # Network
 const Connection = preload("res://player/scripts/client.gd")
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -55,19 +59,19 @@ func _ready():
 	add_child(consumer)
 
 
-func _physics_process(delta):
+func _process(delta):
 #	Send data to server
-	var action: PlayerProto.PlayerAction = get_packed_move_action()
-	if (action.get_key_pressed() != Idle and previous_action != action.get_key_pressed() and
-		client.is_connected_to_host()):
-		previous_action = action.get_key_pressed()
-		var network_packet = NetworkPacket.new()
-		network_packet.set_data(action.to_bytes(), Global.RequestModels.PlayerActionRequestModel)
-		producer.push_data(network_packet)
+	if (player_id != -1): # means that we have made sucessfull handshake with the server
+		var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
+		if (action.get_current_event() != Idle and previous_action != action.get_current_event() and
+			client.is_connected_to_host()):
+			previous_action = action.get_current_event()
+			var network_packet = NetworkPacket.new()
+			network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
+			producer.push_data(network_packet)
 	
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data()
-
 	if (received_packet != null):
 		if (received_packet.message_type == Global.ResponseModels.PlayerActionResponseModel):
 			var unpacked_player_action = PlayerProto.PlayerAction.new()
@@ -81,14 +85,77 @@ func _physics_process(delta):
 			set_player_id(received_packet)
 			print(player_id)
 		elif (received_packet.message_type == Global.ResponseModels.PlayerPositionResponseModel):
-			print("Update my position with velocity and direction from server")
+			update_player_position(received_packet)
+			
 		else:
-			print("Unknown type from server!")
+			print("Unknown message type!")
+	
+	player_move_by_coordinates(delta)
 
-#	Move the player
-	var input_vector = get_move_vector_by_event(current_move_event)
-	player_move(delta, input_vector)
+func update_player_position(packet: NetworkPacket):
+	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
+	player_position_model.from_bytes(packet.get_bytes())
+	print("Velocity: ", player_position_model.get_velocity().get_x(), " ", player_position_model.get_velocity().get_y())
+	print("Position: ", player_position_model.get_position().get_x(), " ", player_position_model.get_position().get_y())
+	print("Id: ", player_position_model.get_playerId())
+	velocity.x = player_position_model.get_velocity().get_x()
+	velocity.y = player_position_model.get_velocity().get_y()
+	position.x = player_position_model.get_position().get_x()
+	position.y = player_position_model.get_position().get_y()
+	global_position.linear_interpolate(position, 0.001)
+	
 
+func player_move_by_coordinates(delta):
+	#	Move the player	
+	if velocity != Vector2.ZERO:
+		animationTree.set("parameters/Idle/blend_position", velocity)
+		animationTree.set("parameters/Run/blend_position", velocity)
+
+		animationState.travel("Run")
+	else:
+		animationState.travel("Idle")
+
+#	velocity = move_and_slide(velocity)
+	global_position += velocity
+	
+
+
+
+
+# save pressed key to the model object
+func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
+	var packed_player_action = MoveRequestModel.MoveRequestModel.new()
+	packed_player_action.set_player_id(player_id)
+	packed_player_action.set_session_id(0) # dummy session ID, will be removed in the future probably 
+
+	if (Input.is_action_just_pressed("ui_up")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingUp)
+	elif (Input.is_action_just_released("ui_up")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingUp)
+	elif (Input.is_action_just_pressed("ui_right")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingRight)
+	elif (Input.is_action_just_released("ui_right")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingRight)
+
+	elif (Input.is_action_just_pressed("ui_down")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingDown)
+	elif (Input.is_action_just_released("ui_down")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingUp)
+
+	elif (Input.is_action_just_pressed("ui_left")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingLeft)
+	elif (Input.is_action_just_released("ui_left")):
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingLeft)
+	else:
+		packed_player_action.set_current_event(packed_player_action.MoveEvent.Idle)
+	
+	return packed_player_action
+
+# Set player id retrieved from server
+func set_player_id(packet: NetworkPacket) -> void:
+	print("Set my id in a game session")
+	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
+	player_id = player_id_model.get_playerId()
 
 
 # Networking
@@ -97,6 +164,16 @@ func init_network() -> void:
 	add_child(client)
 	client.init_network()
 
+func _handle_client_connected() -> void:
+	producer.init(funcref(self, "_produce"))
+
+func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
+	print("Recieved data: ", data)
+	var network_packet: NetworkPacket = client._unpack_data(data)
+	worker.push_data(network_packet)
+
+
+# Producer and consumer queues
 func _produce(worker: Worker) -> void:
 	while true:
 		if (worker.queue.is_empty()):
@@ -113,62 +190,14 @@ func _produce(worker: Worker) -> void:
 		if (!client.send_packed_data(network_packet)):
 			print("Error while sending packet: ", network_packet.get_bytes())
 
-
 func _consumer_receive_data(worker: Worker):
 	client.connection.connect("receive", self, "_handle_client_receive_data", [worker])
 
-#const Model = preload("res://proto/response-models/player_position_response_model.gd")
-func _handle_client_connected() -> void:
-#	var m = Model.PlayerPositionResponseModel.new()
-#	var v = m.new_velocity()
-#	v.set_x(10.5)
-#	v.set_y(32.3213)
-#	m.set_playerId(10)
-#
-#	var p = m.new_position()
-#	p.set_x(1000)
-#	p.set_y(-100.3213)
-#
-#	print(m.to_string())
-#	print(m.to_bytes())
-#	client.send_packed_data(m.to_bytes(), Global.ResponseModels.PlayerPositionResponseModel)
-	# Run producer (thread that sends data to server)
-	producer.init(funcref(self, "_produce"))
 
-func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
-	print("Recieved data: ", data)
-	var network_packet: NetworkPacket = client._unpack_data(data)
-	worker.push_data(network_packet)
-
-
-# Work with data
-func get_packed_move_action() -> PlayerProto.PlayerAction:
-	var packed_player_action = PlayerProto.PlayerAction.new()
-
-	if (Input.is_action_just_pressed("ui_up")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingUp)
-	elif (Input.is_action_just_released("ui_up")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingUp)
-	elif (Input.is_action_just_pressed("ui_right")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingRight)
-	elif (Input.is_action_just_released("ui_right")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingRight)
-
-	elif (Input.is_action_just_pressed("ui_down")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingDown)
-	elif (Input.is_action_just_released("ui_down")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingUp)
-
-	elif (Input.is_action_just_pressed("ui_left")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StartMovingLeft)
-	elif (Input.is_action_just_released("ui_left")):
-		packed_player_action.set_key_pressed(packed_player_action.Action.StopMovingLeft)
-	else:
-		packed_player_action.set_key_pressed(packed_player_action.Action.Idle)
-	
-	return packed_player_action
-
+# Move player by key action
 func get_move_vector_by_event(move_event):
+	var input_vector = Vector2.ZERO
+	
 	if (move_event == StartMovingUp):
 		input_vector.y = -1
 	if (move_event == StopMovingUp):
@@ -190,10 +219,11 @@ func get_move_vector_by_event(move_event):
 		input_vector.x = 0
 
 	return input_vector
-
-# Move player
-func player_move(delta, input_vector):
-	if input_vector != Vector2.ZERO:
+func player_move_by_key_action(delta):
+	#	Move the player
+	var input_vector = get_move_vector_by_event(current_move_event)
+	
+	if velocity != Vector2.ZERO:
 		animationTree.set("parameters/Idle/blend_position", input_vector)
 		animationTree.set("parameters/Run/blend_position", input_vector)
 
@@ -205,12 +235,6 @@ func player_move(delta, input_vector):
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	velocity = move_and_slide(velocity)
-
-# Set player id retrieved from server
-func set_player_id(packet: NetworkPacket) -> void:
-	print("Set my id in a game session")
-	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
-	player_id = player_id_model.get_playerId()
 
 
 

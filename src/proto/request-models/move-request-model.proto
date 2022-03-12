@@ -4,15 +4,17 @@ package request_models;
 
 message MoveRequestModel {
 	enum MoveEvent {
-		StartMovingUp = 0;
-		StartMovingRight = 1;
-		StartMovingDown = 2;
-		StartMovingLeft = 3;
+		Idle = 0;
 		
-		StopMovingUp = 4;
-		StopMovingRight = 5;
-		StopMovingDown = 6;
-		StopMovingLeft = 7;
+		StartMovingUp = 1;
+		StartMovingRight = 2;
+		StartMovingDown = 3;
+		StartMovingLeft = 4;
+		
+		StopMovingUp = 5;
+		StopMovingRight = 6;
+		StopMovingDown = 7;
+		StopMovingLeft = 8;
 	}
 
 	int32 session_id = 1;
