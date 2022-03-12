@@ -17,7 +17,7 @@ void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSe
 	switch (event) {
 		// starting
 		case request_models::MoveRequestModel::StartMovingUp: {
-			moving_force.setY(1);
+			moving_force.setY(-1);
 			player.setMovingState(true);
 			break;
 		}
@@ -27,7 +27,7 @@ void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSe
 			break;
 		}
 		case request_models::MoveRequestModel::StartMovingDown: {
-			moving_force.setY(-1);
+			moving_force.setY(1);
 			player.setMovingState(true);
 			break;
 		}

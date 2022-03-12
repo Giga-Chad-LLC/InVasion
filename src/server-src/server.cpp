@@ -6,6 +6,7 @@
 #include "../../include/server-include/server.h"
 #include "../../include/server-include/network_packet.h"
 #include "player-id-response-model.pb.h"
+#include "update-game-state-request-model.pb.h"
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
@@ -41,9 +42,14 @@ namespace invasion::session {
 
             if (!ImplementedDispatherEachSender && baseUsers.size() ==
                                                    NUMBER_OF_TEAM) { // создание обработчика, если комманда собралась пока что handler - заглушка
-                std::cout << "team are full" << std::endl;
+                std::cout << "Maximum players count reached. Starting the game..." << std::endl;
                 ImplementedDispatherEachSender = true;
                 makeSenderUsers();
+                // start tick controller
+                tickController.start([this]() mutable {
+                    NetworkPacketRequest request(nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
+                    queueServerFromClients.produce(std::move(request));
+                });
             }
         }
     }

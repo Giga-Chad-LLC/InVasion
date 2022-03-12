@@ -17,6 +17,9 @@
 #include "engine.h"
 #include "network_packet.h"
 #include "game-models/GameSession/game-session.h"
+#include "controllers/PhysicsTickController/physics-tick-controller.h"
+
+
 using boost::asio::ip::tcp;
 namespace invasion::session {
     inline std::vector<std::shared_ptr<User>> baseUsers;
@@ -42,6 +45,7 @@ namespace invasion::session {
         SafeQueue<NetworkPacketRequest> queueServerFromClients;
         SafeQueue<NetworkPacketResponse> queueClientsFromServer;
         game_models::GameSession curGameSession;
+        controllers::PhysicsTickController tickController = controllers::PhysicsTickController(30); // 60 updates per second => every 1000/60 milliseconds update the game
     public:
 
         explicit Server();

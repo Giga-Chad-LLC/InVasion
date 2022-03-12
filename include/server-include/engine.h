@@ -21,6 +21,23 @@ namespace invasion::session {
                 if (queueServerFromClients->consumeSync(request)) {
                     // work with this object
                     switch (request.getMessageType()) {
+                        case RequestModel_t::UpdateGameStateRequestModel: {
+                            interactors::UpdateGameStateInteractor gameUpdateInteractor;
+                            response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
+
+                            std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
+                            // std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
+
+                            // serialize
+                            std::unique_ptr<char> buffer_ptr(new char[playerPositionResponse.ByteSizeLong()]);
+                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), playerPositionResponse.ByteSizeLong());
+                            NetworkPacketResponse response(std::move(buffer_ptr),
+                                                           ResponseModel_t::PlayerPositionResponseModel,
+                                                           playerPositionResponse.ByteSizeLong());
+
+                            queueClientsFromServer->produce(std::move(response));
+                            break;
+                        }
                         case RequestModel_t::MoveRequestModel: {
                             // do engine-stuff here
                             request_models::MoveRequestModel move;
@@ -29,18 +46,18 @@ namespace invasion::session {
                             interactor.execute(move, *gameSession);
 
                             //on each request from user we send answer from server
-                            interactors::UpdateGameStateInteractor gameUpdateInteractor;
-                            response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
-                            std::unique_ptr<char> buffer_ptr(new char[playerPositionResponse.ByteSizeLong()]);
+                            // interactors::UpdateGameStateInteractor gameUpdateInteractor;
+                            // response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
+                            // std::unique_ptr<char> buffer_ptr(new char[playerPositionResponse.ByteSizeLong()]);
                             
-                            std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
-                            std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
+                            // std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
+                            // std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
 
-                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), playerPositionResponse.ByteSizeLong());
-                            NetworkPacketResponse response(std::move(buffer_ptr),
-                                                           ResponseModel_t::PlayerPositionResponseModel,
-                                                           playerPositionResponse.ByteSizeLong());
-                            queueClientsFromServer->produce(std::move(response));
+                            // playerPositionResponse.SerializeToArray(buffer_ptr.get(), playerPositionResponse.ByteSizeLong());
+                            // NetworkPacketResponse response(std::move(buffer_ptr),
+                            //                                ResponseModel_t::PlayerPositionResponseModel,
+                            //                                playerPositionResponse.ByteSizeLong());
+                            // queueClientsFromServer->produce(std::move(response));
                             break;
                         }
                         case RequestModel_t::PlayerActionRequestModel: { //  leave it for now, then we will delete this request/response-model

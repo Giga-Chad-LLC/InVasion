@@ -1,6 +1,8 @@
 #ifndef GAME_SESSION_H_
 #define GAME_SESSION_H_
 
+#include <chrono>
+
 #include "game-models/GameWorldStorage/game-world-storage.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Player/player.h"
@@ -10,6 +12,11 @@ namespace invasion::game_models {
 	
 
 struct GameSession {
+	GameSession() {
+		lastGameStateUpdate_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::high_resolution_clock::now().time_since_epoch()
+		).count();
+	}
 	int addPlayer(); // TODO: rename to 'createPlayerAndReturnId'
 	
 	int addBullet(Bullet bullet);
@@ -21,6 +28,7 @@ struct GameSession {
 	void updateGameState();
 
 private:
+	long long lastGameStateUpdate_ms;
 	GameWorldStorage m_storage;
 	GameWorldManager m_manager;
 };
