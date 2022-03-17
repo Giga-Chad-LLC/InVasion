@@ -3,11 +3,11 @@
 #include <iostream>
 #include <thread>
 #include <utility>
-#include "../../include/server-include/server.h"
-#include "../../include/server-include/network_packet.h"
+#include "server-include/server.h"
+#include "server-include/network_packet.h"
 #include "player-id-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
-#include "../../include/interactors/InitialStateResponseInteractor/initial-state-response-interactor.h"
+#include "interactors/InitialStateResponseInteractor/initial-state-response-interactor.h"
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
@@ -25,7 +25,7 @@ namespace invasion::session {
     }
 
 
-    Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.201"),
+    Server::Server() : acceptor(ioContext, tcp::endpoint(tcp::v4(),
                                                          8000)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
         HandlerQueues(queueServerFromClients, queueClientsFromServer, curGameSession);
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
