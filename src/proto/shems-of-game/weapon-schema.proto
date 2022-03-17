@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package game_schemes;
-import "vector2d.proto.proto";
+import "vector2d.proto";
 
 message WeaponSchema{
   int32 leftCapacity = 1;
   int32 totalAmmo = 2;
-  utils.vector2d direction = 3;
+  util_models.Vector2D direction = 3;
   bool reloading = 4;
 }

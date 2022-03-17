@@ -41,6 +41,9 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/shems-of-game/session-state-schema.proto
         ./src/proto/shems-of-game/game-state-schema.proto
         ./src/proto/shems-of-game/initial-state-response-schema.proto
+        ./src/proto/shems-of-game/bullet-schema.proto
+        ./src/proto/shems-of-game/player-game-session-statistic-schema.proto
+        ./src/proto/shems-of-game/weapon-schema.proto
         )
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

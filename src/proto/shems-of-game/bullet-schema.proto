@@ -1,10 +1,10 @@
 syntax = "proto3";
 
 package game_schemes;
-import "vector2d.proto.proto";
+import "vector2d.proto";
 
 message BulletSchema{
   int32 id = 1;
   int32 playerId = 2;
-  utils.vector2d position = 3;
+  util_models.Vector2D position = 3;
 }
