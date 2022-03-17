@@ -11,4 +11,9 @@ void PhysicsTickController::stop() {
 	m_startedThread.join();
 }
 
+PhysicsTickController::~PhysicsTickController() {
+	// calling stop() to finish created thread
+	stop();
+}
+
 } // namespace invasion::controllers

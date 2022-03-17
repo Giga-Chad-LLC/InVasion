@@ -34,6 +34,7 @@ struct PhysicsTickController {
 	}
 
 	void stop();
+	~PhysicsTickController();
 
 private:
 	std::atomic_bool m_cancelToken;
