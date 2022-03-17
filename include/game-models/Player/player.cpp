@@ -3,7 +3,7 @@
 #include "game-models/Vector2D/vector2d.h"
 
 namespace invasion::game_models {
-const double Player::MAX_SPEED = Vector2D(2, 0).magnitude();
+const double Player::MAX_SPEED = 100; // Vector2D(100, 0).magnitude();
 const double Player::MASS = 60.0;
 const int Player::INITIAL_AMMO = 180;
 const double Player::DAMAGE = 15.0;
