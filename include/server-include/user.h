@@ -5,6 +5,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include "network_packet.h"
+#include "game-models/GameSession/game-session.h"
 
 namespace invasion::session {
     using boost::asio::ip::tcp;
@@ -14,6 +15,7 @@ namespace invasion::session {
         tcp::iostream channel;
         SafeQueue<NetworkPacketResponse> queueClientPrivate;
         int idClientInSession;
+
         friend class ReceiverFromUser;
 
         friend class SenderUser;
@@ -22,10 +24,13 @@ namespace invasion::session {
 
         friend void dispatcherEachSender(SafeQueue<NetworkPacketResponse> *queueClientsFromServer);
 
+        friend void initializeUserForFrontend(game_models::GameSession &session, std::shared_ptr<User> user);
+
     public:
-       int getIdClient() const noexcept{
-           return idClientInSession;
-       }
+        int getIdClient() const noexcept {
+            return idClientInSession;
+        }
+
         explicit User(tcp::socket &&socket, int id) : channel(std::move(socket)), idClientInSession(id) {}
     };
 }
