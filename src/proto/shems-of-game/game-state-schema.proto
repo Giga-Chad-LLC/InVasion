@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package game_schemes;
+import "player-schema.proto";
+
+message GameStateSchema{
+  repeated PlayerSchema teammates = 1;
+  repeated PlayerSchema enemies = 2;
+//  repeated BulletSchema bullets = 3;
+}

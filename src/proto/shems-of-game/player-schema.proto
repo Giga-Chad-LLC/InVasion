@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package game_schemes;
+import "vector2d.proto";
+
+message PlayerSchema{
+  int32 id = 1;
+  string username = 2;
+  int32 hitPoints = 3;
+//  WeaponSchema weapon
+//  PlayerGameSessionStatisticSchema sessionStats
+  bool dead = 4;
+  util_models.Vector2D position = 5;
+}
