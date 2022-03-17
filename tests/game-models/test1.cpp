@@ -18,6 +18,10 @@
 #include "controllers/PhysicsTickController/physics-tick-controller.h"
 // request-models
 #include "shoot-request-model.pb.h"
+#include "move-request-model.pb.h"
+#include "update-game-state-request-model.pb.h"
+// response-models
+#include "player-position-response-model.pb.h"
 
 
 #include "doctest.h"
