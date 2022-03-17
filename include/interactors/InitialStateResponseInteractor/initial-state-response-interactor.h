@@ -1,7 +1,7 @@
 #ifndef INITIAL_STATE_RESPONSE_INTERACTOR_H
 #define INITIAL_STATE_RESPONSE_INTERACTOR_H
 
-#include "../../../cmake-build-debug/initial-state-response-schema.pb.h"
+#include "initial-state-response-schema.pb.h"
 #include "game-models/GameSession/game-session.h"
 
 namespace invasion::interactors {
