@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package game_schemes;
+
+message PlayerGameSessionStatisticSchema{
+  int32 playerId = 1;
+  int32 deaths = 2;
+  int32 kills = 3;
+  int32 score = 4;
+}
