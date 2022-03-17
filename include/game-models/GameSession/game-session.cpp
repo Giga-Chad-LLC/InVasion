@@ -9,6 +9,10 @@
 
 namespace invasion::game_models {
 
+GameSession::GameSession() {
+	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
+}
+
 // returns id of created player
 int GameSession::addPlayer() {
 	auto& players = m_storage.getPlayers();
@@ -67,13 +71,18 @@ void GameSession::updateGameState() {
 	// deleting objects (killing players, deleting bullets) if needed: TODO
 	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
 
-	long long dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::high_resolution_clock::now().time_since_epoch()
-	).count() - lastGameStateUpdate_ms;
+	long long dt = GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms;
 
 	auto& players = m_storage.getPlayers();
 	m_manager.updatePlayersPositions(players, dt / 1000.0);
+
+	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }
 
+long long GameSession::getCurrentTime_ms() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::high_resolution_clock::now().time_since_epoch()
+	).count();
+}
 
 } // namespace invasion::game_models
