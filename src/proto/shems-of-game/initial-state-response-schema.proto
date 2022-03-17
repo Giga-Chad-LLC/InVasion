@@ -5,6 +5,7 @@ import "game-state-schema.proto";
 import "session-state-schema.proto";
 
 message InitialStateResponseSchema{
-  SessionStateSchema sessionState = 1;
-  GameStateSchema gameState = 2;
+  int32 playerId = 1;
+  game_schemes.SessionStateSchema sessionState = 2;
+  game_schemes.GameStateSchema gameState = 3;
 }
