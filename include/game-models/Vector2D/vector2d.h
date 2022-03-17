@@ -32,11 +32,11 @@ struct Vector2D {
 	friend Vector2D operator/(const Vector2D& vec, double value);
 	friend std::ostream& operator<<(std::ostream& os, const Vector2D& vec);
 
+	// static members
 	const static Vector2D ZERO;
-
-private:
 	static const double EPS;
 
+private:
 	double m_x = 0.0;
 	double m_y = 0.0;
 };

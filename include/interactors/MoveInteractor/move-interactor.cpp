@@ -40,18 +40,21 @@ void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSe
 		case request_models::MoveRequestModel::StopMovingUp:
 		case request_models::MoveRequestModel::StopMovingDown: {
 			moving_force.setY(0);
-			player.setMovingState(false);
 			break;
 		}
 		case request_models::MoveRequestModel::StopMovingRight:
 		case request_models::MoveRequestModel::StopMovingLeft: {
 			moving_force.setX(0);
-			player.setMovingState(false);			
 			break;
 		}
 		default: {
 			break;
 		}
+	}
+	
+	// if both components are zeros
+	if(moving_force.magnitude() < Vector2D::EPS) {
+		player.setMovingState(false);
 	}
 
 	player.setMovingForce(moving_force);

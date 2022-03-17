@@ -20,6 +20,7 @@ struct PhysicsTickController {
 		// calling start without finishing previous call is not allowed
 		assert(!m_cancelToken.load());
 
+		m_isThreadActive.store(true);
 		m_cancelToken.store(true);
 		auto callback = std::bind(std::forward<Func>(f), std::forward<Args>(args)...);
 
@@ -34,9 +35,11 @@ struct PhysicsTickController {
 	}
 
 	void stop();
+	~PhysicsTickController();
 
 private:
 	std::atomic_bool m_cancelToken;
+	std::atomic_bool m_isThreadActive;
 	const std::size_t m_interval_ms;
 	std::thread m_startedThread;
 };
