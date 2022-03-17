@@ -36,6 +36,11 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/response-models/player-position-response-model.proto
         ./src/proto/response-models/shooting-state-response-model.proto
         ./src/proto/response-models/player-id-response-model.proto
+
+        ./src/proto/shems-of-game/player-schema.proto
+        ./src/proto/shems-of-game/session-state-schema.proto
+        ./src/proto/shems-of-game/game-state-schema.proto
+        ./src/proto/shems-of-game/initial-state-response-schema.proto
         )
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package game_schemes;
+import "game-state-schema.proto";
+import "session-state-schema.proto";
+
+message InitialStateResponseSchema{
+  SessionStateSchema sessionState = 1;
+  GameStateSchema gameState = 2;
+}
