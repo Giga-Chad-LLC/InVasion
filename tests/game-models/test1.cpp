@@ -42,7 +42,7 @@ TEST_CASE("ShootInteractor test") {
 	PhysicsTickController controller(10);
 	ShootInteractor shoot_interactor;
 	GameSession session;
-	Player& player = session.getPlayer(session.addPlayer());
+	Player& player = session.getPlayer(session.createPlayerAndReturnId());
 
 	ShootRequestModel req;
 	req.set_player_id(player.getId());
@@ -80,7 +80,7 @@ TEST_CASE("RotateWeaponInteractor test") {
 	PhysicsTickController controller(100);
 	RotateWeaponInteractor interactor;
 	GameSession session;
-	Player& player = session.getPlayer(session.addPlayer());
+	Player& player = session.getPlayer(session.createPlayerAndReturnId());
 
 	RotateWeaponRequestModel req;
 	req.set_player_id(player.getId());
@@ -184,7 +184,7 @@ TEST_CASE("Player moving test") {
 	UpdateGameStateInteractor update_interactor;
 
 	GameSession session;
-	Player& player = session.getPlayer(session.addPlayer());
+	Player& player = session.getPlayer(session.createPlayerAndReturnId());
 
 	// creating request
 	MoveRequestModel req;

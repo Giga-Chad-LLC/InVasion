@@ -94,8 +94,8 @@ endif ()
 #### configuring SERVER_TARGET:
 
 add_executable(${SERVER_TARGET}
-        src/server-src/main.cpp
-        src/server-src/server.cpp
+        src/main.cpp
+        src/server.cpp
         ${PROTO_SRCS}
         ${PROTO_HDRS}
         ${GAME-MODELS-SRCS}

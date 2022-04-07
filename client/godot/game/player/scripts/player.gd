@@ -147,6 +147,7 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 func set_player_id(packet: NetworkPacket) -> void:
 	print("Set my id in a game session")
 	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
+	player_id_model.from_bytes(packet.get_bytes())
 	player_id = player_id_model.get_playerId()
 
 

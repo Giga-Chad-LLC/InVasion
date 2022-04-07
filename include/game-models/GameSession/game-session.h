@@ -14,7 +14,7 @@ namespace invasion::game_models {
 struct GameSession {
 	GameSession();
 
-	int addPlayer(); // TODO: rename to 'createPlayerAndReturnId'
+	int createPlayerAndReturnId(); // TODO: rename to 'createPlayerAndReturnId'
 	
 	int addBullet(Bullet bullet);
 	int createIdForNewBullet();
