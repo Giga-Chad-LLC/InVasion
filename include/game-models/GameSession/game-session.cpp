@@ -14,7 +14,7 @@ GameSession::GameSession() {
 }
 
 // returns id of created player
-int GameSession::addPlayer() {
+int GameSession::createPlayerAndReturnId() {
 	auto& players = m_storage.getPlayers();
 	const int playerId = static_cast<int>(players.size());
 
