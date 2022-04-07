@@ -28,7 +28,6 @@ var current_move_event = Idle # makes the character move
 enum { MOVE }
 var state = MOVE
 var velocity = Vector2.ZERO
-var current_position = Vector2.ZERO
 var player_id: int = -1
 
 
@@ -63,7 +62,8 @@ func _process(delta):
 #	Send data to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
 		var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
-		if (action.get_current_event() != Idle and previous_action != action.get_current_event() and
+		if (action.get_current_event() != MoveRequestModel.MoveRequestModel.MoveEvent.Idle
+			and previous_action != action.get_current_event() and
 			client.is_connected_to_host()):
 			previous_action = action.get_current_event()
 			var network_packet = NetworkPacket.new()
@@ -90,24 +90,19 @@ func _process(delta):
 		else:
 			print("Unknown message type!")
 	
-	player_move_by_coordinates()
+	animate_player()
 
 func update_player_position(packet: NetworkPacket):
 	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
 	player_position_model.from_bytes(packet.get_bytes())
-#	print("Velocity: ", player_position_model.get_velocity().get_x(), " ", player_position_model.get_velocity().get_y())
-#	print("Position: ", player_position_model.get_position().get_x(), " ", player_position_model.get_position().get_y())
-#	print("Id: ", player_position_model.get_playerId())
 	velocity.x = player_position_model.get_velocity().get_x()
 	velocity.y = player_position_model.get_velocity().get_y()
-	position.x = player_position_model.get_position().get_x()
-	position.y = player_position_model.get_position().get_y()
-#	global_position.linear_interpolate(position, 0.001)
-#	global_position = position
 	
+	global_position.x = player_position_model.get_position().get_x()
+	global_position.y = player_position_model.get_position().get_y()
 
-func player_move_by_coordinates():
-	#	Move the player	
+func animate_player():
+	#	Move the player
 	if velocity != Vector2.ZERO:
 		animationTree.set("parameters/Idle/blend_position", velocity)
 		animationTree.set("parameters/Run/blend_position", velocity)
@@ -115,11 +110,7 @@ func player_move_by_coordinates():
 		animationState.travel("Run")
 	else:
 		animationState.travel("Idle")
-
-	velocity = move_and_slide(velocity)
-#	global_position += velocity
-	
-
+	move_and_slide(velocity)
 
 
 

@@ -512,6 +512,7 @@ tile_data = PoolIntArray( -2, 0, 0, -1, 0, 1, -65536, 0, 1, -65535, 0, 1, -65534
 
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
 position = Vector2( 120, 40 )
+collision_mask = 0
 
 [node name="Camera2D" type="Camera2D" parent="YSort/Player"]
 current = true
