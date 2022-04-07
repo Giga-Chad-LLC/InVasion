@@ -4,6 +4,7 @@
 
 #include "client.h"
 #include "player.pb.h"
+#include "player-id-response-model.pb.h"
 #include <thread>
 #include <cstring>
 #include <vector>
@@ -20,6 +21,12 @@ namespace invasion::session {
                 while (true) {
                     NetworkPacketResponse response;
                     if (client->m_clientResponseQueue.consumeSync(response)) {
+                        if (response.getMessageType() == ResponseModel_t::PlayerIdResponseModel) {
+                            response_models::PlayerIdResponseModel model;
+                            model.ParseFromArray(response.getStoredBytes(), response.bytesSize());
+                            std::cout << "Client ID in session: " << model.playerid() << std::endl;
+                        }
+
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 
                         client->m_channel.write(buffer.get(), response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())));
                     }

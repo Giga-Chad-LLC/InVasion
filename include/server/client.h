@@ -14,21 +14,16 @@ namespace invasion::session {
     private:
         tcp::iostream m_channel;
         SafeQueue<NetworkPacketResponse> m_clientResponseQueue;
-        int m_clientIdInSession;
 
         friend class ClientRequestsReceiver;
         friend class ClientResponsesSender;
         friend class Server;
 
         friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
-        friend void registerClientInSession(game_models::GameSession &session, std::shared_ptr<Client> client);
+        friend void registerClientInSession(std::shared_ptr<Client> client, int playerId);
 
     public:
-        int getClientId() const noexcept {
-            return m_clientIdInSession;
-        }
-
-        explicit Client(tcp::socket &&socket, int id) : m_channel(std::move(socket)), m_clientIdInSession(id) {}
+        explicit Client(tcp::socket &&socket) : m_channel(std::move(socket)) {}
     };
 }
 #endif //INVASION_SERVER_USER_H

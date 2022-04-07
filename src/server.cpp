@@ -11,15 +11,16 @@
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    void registerClientInSession(game_models::GameSession &session, std::shared_ptr<Client> client) {
+    void registerClientInSession(std::shared_ptr<Client> client, int playerId) {
         // send to client his ID
-        std::cout << "Send client his ID: " << client->getClientId() << std::endl;
-        auto responseFromInteractor = invasion::interactors::InitialStateResponseInteractor::execute(session, client->getClientId());
-        auto messageSize = responseFromInteractor.ByteSizeLong();
-        std::unique_ptr<char> buffer_ptr(new char[messageSize]);
-        responseFromInteractor.SerializeToArray(buffer_ptr.get(), messageSize);
-        auto responseInBytes = NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel,
-                                                     messageSize);
+        std::cout << "Send client his ID: " << playerId << std::endl;
+        response_models::PlayerIdResponseModel response;
+        response.set_playerid(playerId);
+
+        auto size = response.ByteSizeLong();
+        std::unique_ptr<char> buffer_ptr(new char[size]);
+        response.SerializeToArray(buffer_ptr.get(), size);
+        auto responseInBytes = NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
         client->m_clientResponseQueue.produce(std::move(responseInBytes));
     }
 
@@ -35,13 +36,14 @@ namespace invasion::session {
 
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
-            auto client = std::make_shared<Client>(std::move(socket), m_gameSession.createPlayerAndReturnId());
+            int playerId = m_gameSession.createPlayerAndReturnId();
+            auto client = std::make_shared<Client>(std::move(socket));
 
             m_connectedClients.push_back(client);
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client, &m_requestQueue); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = ClientResponsesSender(client);
 
-            registerClientInSession(m_gameSession, client);
+            registerClientInSession(client, playerId);
 
             if (!m_isSessionActive && m_connectedClients.size() == m_requiredClientsCountInSession) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "Maximum players count reached. Starting the game..." << std::endl;
