@@ -11,6 +11,7 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 
 response_models::PlayerPositionResponseModel UpdateGameStateInteractor::execute(GameSession& session) const {
+	
 	session.updateGameState();
 	
 	// hardcoding exactly one player

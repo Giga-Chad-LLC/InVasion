@@ -15,7 +15,7 @@ void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSe
 	Vector2D moving_force = player.getMovingForce();
 
 	switch (event) {
-		// starting
+		// starti moving
 		case request_models::MoveRequestModel::StartMovingUp: {
 			moving_force.setY(-1);
 			player.setMovingState(true);
@@ -36,7 +36,7 @@ void MoveInteractor::execute(const request_models::MoveRequestModel& req, GameSe
 			player.setMovingState(true);
 			break;
 		}
-		// stopping
+		// stop moving
 		case request_models::MoveRequestModel::StopMovingUp:
 		case request_models::MoveRequestModel::StopMovingDown: {
 			moving_force.setY(0);
