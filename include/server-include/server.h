@@ -40,7 +40,7 @@ namespace invasion::session {
     private:
         boost::asio::io_context ioContext;
         tcp::acceptor acceptor;
-        const size_t NUMBER_OF_TEAM = 1;
+        const size_t TOTAL_CLIENTS_COUNT_IN_SESSION = 2;
         bool ImplementedDispatherEachSender = false;
         SafeQueue<NetworkPacketRequest> queueServerFromClients;
         SafeQueue<NetworkPacketResponse> queueClientsFromServer;

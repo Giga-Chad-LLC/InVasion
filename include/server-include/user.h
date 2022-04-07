@@ -14,7 +14,7 @@ namespace invasion::session {
     private:
         tcp::iostream channel;
         SafeQueue<NetworkPacketResponse> queueClientPrivate;
-        int idClientInSession;
+        int clientIdInSession;
 
         friend class ReceiverFromUser;
 
@@ -27,11 +27,11 @@ namespace invasion::session {
         friend void initializeUserForFrontend(game_models::GameSession &session, std::shared_ptr<User> user);
 
     public:
-        int getIdClient() const noexcept {
-            return idClientInSession;
+        int getClientId() const noexcept {
+            return clientIdInSession;
         }
 
-        explicit User(tcp::socket &&socket, int id) : channel(std::move(socket)), idClientInSession(id) {}
+        explicit User(tcp::socket &&socket, int id) : channel(std::move(socket)), clientIdInSession(id) {}
     };
 }
 #endif //INVASION_SERVER_USER_H

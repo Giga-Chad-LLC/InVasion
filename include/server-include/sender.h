@@ -19,6 +19,7 @@ namespace invasion::session {
                 while (true) {
                     NetworkPacketResponse response;
                     if (client->queueClientPrivate.consumeSync(response)) {
+                        
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 
                         client->channel.write(buffer.get(),
                                             response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())));

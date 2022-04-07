@@ -25,7 +25,7 @@ namespace invasion::session {
                             interactors::UpdateGameStateInteractor gameUpdateInteractor;
                             response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
 
-                            std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
+                            //std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
                             // std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
 
                             // serialize
