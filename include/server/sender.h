@@ -26,7 +26,17 @@ namespace invasion::session {
                         if (response.getMessageType() == ResponseModel_t::PlayerIdResponseModel) {
                             response_models::PlayerIdResponseModel model;
                             model.ParseFromArray(response.getStoredBytes(), response.bytesSize());
-                            std::cout << "Client ID in session: " << model.playerid() << std::endl;
+                            std::cout << "Client ID in session: " << model.playerid() << ", length: " << response.bytesSize() << std::endl;
+                            
+                            
+                            std::shared_ptr<char> buffer = response.serializeToByteArray();
+                            char* arr = new char[response.bytesSize() + 4];
+                            std::memcpy(arr, buffer.get(), response.bytesSize() + 4);
+
+                            for (int i = 0; i < response.bytesSize() + 4; i++) {
+                                std::cout << (int)(arr[i]) << ' ';
+                            }
+                            std::cout << std::endl;
                         }
                         else if (response.getMessageType() == ResponseModel_t::PlayersPositionsResponseModel) {
                             // std::cout << "Array bytes length: " << response.bytesSize() << std::endl;
@@ -37,6 +47,7 @@ namespace invasion::session {
                             // for (auto& item : players) {
                             //     std::cout << item.playerid() << std::endl;
                             // }
+                            // std::cout << "PP: " << response.bytesSize() << std::endl;
                         }
 
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 

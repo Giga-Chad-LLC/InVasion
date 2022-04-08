@@ -15,7 +15,7 @@ namespace invasion::game_models {
 struct GameSession {
 	GameSession();
 
-	int createPlayerAndReturnId();
+	uint32_t createPlayerAndReturnId();
 	
 	int addBullet(Bullet bullet);
 	int createIdForNewBullet();
