@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <cmath>
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
@@ -35,6 +36,45 @@ using namespace invasion::controllers;
 using namespace request_models;
 using namespace response_models;
 using namespace std;
+
+
+TEST_CASE("Team assigning") {
+	GameSession session;
+	int id1 = session.createPlayerAndReturnId();
+	int id2 = session.createPlayerAndReturnId();
+
+	Player player1 = session.getPlayer(id1);
+	Player player2 = session.getPlayer(id2);
+
+	int teamId1 = player1.getTeamId() == Player::TeamId::SecondTeam;
+	int teamId2 = player2.getTeamId() == Player::TeamId::SecondTeam;
+
+	CHECK(player1.getTeamId() != player2.getTeamId());
+
+	// std::cout << "playerId: " << id1 << " | team id: " << teamId1 << std::endl;
+	// std::cout << "playerId: " << id2 << " | team id: " << teamId2 << std::endl;
+
+	int cnt1 = 1;
+	int cnt2 = 1;
+
+	for(int i = 0; i < 10'000; i++) {
+		int id = session.createPlayerAndReturnId();
+		Player player = session.getPlayer(id);
+		int teamId = player.getTeamId() == Player::TeamId::SecondTeam;
+
+		if(teamId == 1) cnt2++;
+		else cnt1++;
+
+		if(i % 2 == 0) {
+			CHECK(std::abs(cnt1 - cnt2) == 1);
+		}
+		else {
+			CHECK(cnt1 == cnt2);
+		}
+
+		// std::cout << "playerId: " << id << " | team id: " << teamId << std::endl;
+	}
+}
 
 
 /*
