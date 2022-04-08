@@ -32,7 +32,7 @@ namespace invasion::session {
                         case RequestModel_t::UpdateGameStateRequestModel: {
                             interactors::UpdateGameStateInteractor interactor;
                             response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
-
+                            // std::cout << gameSession->getPlayers().size() << std::endl;
                             // std::cout << "position: " << responseModel.position().x() << ' ' << responseModel.position().y() << std::endl;
                             // std::cout << "velocity: " << responseModel.velocity().x() << ' ' << responseModel.velocity().y() << std::endl;
 
@@ -43,7 +43,7 @@ namespace invasion::session {
 							NetworkPacketResponse response(std::move(buffer_ptr),
                                                            ResponseModel_t::PlayersPositionsResponseModel,
                                                            responseModel.ByteSizeLong());
-
+                            // std::cout << responseModel.players().size() << std::endl;
                             responseQueue->produce(std::move(response));
                             break;
                         }
