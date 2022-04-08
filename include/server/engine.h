@@ -1,16 +1,24 @@
-
 #ifndef INVASION_SERVER_ENGINE_H
 #define INVASION_SERVER_ENGINE_H
 
 #include <thread>
 #include <memory>
+// server
 #include "safe-queue.h"
-#include "player.pb.h"
 #include "network-packet.h"
+// game-models
 #include "game-models/GameSession/game-session.h"
-#include "move-request-model.pb.h"
+// interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
+// request-models
+#include "move-request-model.pb.h"
+#include "player.pb.h"
+// response-models
+#include "player-position-response-model.pb.h"
+#include "players-positions-response-model.pb.h"
+
+
 
 namespace invasion::session {
     inline void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue,
@@ -22,18 +30,19 @@ namespace invasion::session {
                     // work with this object
                     switch (request.getMessageType()) {
                         case RequestModel_t::UpdateGameStateRequestModel: {
-                            interactors::UpdateGameStateInteractor gameUpdateInteractor;
-                            response_models::PlayerPositionResponseModel playerPositionResponse = gameUpdateInteractor.execute(*gameSession);
+                            interactors::UpdateGameStateInteractor interactor;
+                            response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
 
-                            // std::cout << "position: " << playerPositionResponse.position().x() << ' ' << playerPositionResponse.position().y() << std::endl;
-                            // std::cout << "velocity: " << playerPositionResponse.velocity().x() << ' ' << playerPositionResponse.velocity().y() << std::endl;
+                            // std::cout << "position: " << responseModel.position().x() << ' ' << responseModel.position().y() << std::endl;
+                            // std::cout << "velocity: " << responseModel.velocity().x() << ' ' << responseModel.velocity().y() << std::endl;
 
                             // serialize
-                            std::unique_ptr<char> buffer_ptr(new char[playerPositionResponse.ByteSizeLong()]);
-                            playerPositionResponse.SerializeToArray(buffer_ptr.get(), playerPositionResponse.ByteSizeLong());
-                            NetworkPacketResponse response(std::move(buffer_ptr),
-                                                           ResponseModel_t::PlayerPositionResponseModel,
-                                                           playerPositionResponse.ByteSizeLong());
+                            std::unique_ptr<char> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+                            
+							NetworkPacketResponse response(std::move(buffer_ptr),
+                                                           ResponseModel_t::PlayersPositionsResponseModel,
+                                                           responseModel.ByteSizeLong());
 
                             responseQueue->produce(std::move(response));
                             break;

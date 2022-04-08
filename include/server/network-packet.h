@@ -14,6 +14,7 @@ namespace invasion::session {
         PlayerPositionResponseModel = 1000,
         PlayerActionResponseModel = 1002,
         PlayerIdResponseModel = 1003,
+		PlayersPositionsResponseModel = 1004,
         UnknownResponseModel
     };
 
