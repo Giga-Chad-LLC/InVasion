@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 #include "game-world-manager.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -9,40 +10,44 @@ namespace invasion::game_models {
 void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, double dt) const {
 	const double g = -9.81;
 	const double nu = 0.9;
-	const double friction_coef = -nu * Vector2D(0, Player::MASS * g).magnitude();
-	const double applied_force_magnitude = 31'0000;
+	const double frictionCoef = -nu * Player::MASS * std::abs(g);
+	const double appliedForceMagnitude = 31'0000;
+
 
 	for(Player& player : players) {
 		// applying friction force
 		if(player.isMoving()) {
-			const Vector2D applied_force = Vector2D::clampMagnitude(player.getMovingForce(), applied_force_magnitude);
-			const Vector2D friction_force = 500.0 * applied_force.normalize() * friction_coef;
+			const Vector2D appliedForce = Vector2D::clampMagnitude(player.getMovingForce(), appliedForceMagnitude);
+			const Vector2D frictionForce = 500.0 * frictionCoef * appliedForce.normalize();
 
-			//std::cout << "applied_force magnitude: " << applied_force.magnitude() << std::endl;
-			//std::cout << "friction_force magnitude: " << friction_force.magnitude() << std::endl;
+			//std::cout << "appliedForce magnitude: " << appliedForce.magnitude() << std::endl;
+			//std::cout << "frictionForce magnitude: " << frictionForce.magnitude() << std::endl;
 
-			Vector2D result_force = Vector2D::ZERO;
+			Vector2D resultForce = Vector2D::ZERO;
 		
-			if(friction_force.magnitude() < applied_force.magnitude())
-				result_force = applied_force + friction_force;
+			if(frictionForce.magnitude() < appliedForce.magnitude()) {
+				resultForce = appliedForce + frictionForce;
+			}
 
-			//std::cout << "result_force: " << result_force << std::endl;			
-			player.setResultForce(result_force);
+			player.setResultForce(resultForce);
+
+			//std::cout << "resultForce: " << resultForce << std::endl;			
 		}
 		else {
 			// applying friction until player stops
-			const Vector2D cur_velocity = player.getVelocity();
-			const Vector2D friction_force = 70.0 * cur_velocity.normalize() * friction_coef;
-			const Vector2D acceleration = friction_force / Player::MASS;
+			const Vector2D velocity = player.getVelocity();
+			const Vector2D frictionForce = 70.0 * frictionCoef * velocity.normalize();
+			const Vector2D acceleration = frictionForce / Player::MASS;
 
-			// std::cout << "friction_force magnitude: " << friction_force.magnitude() << std::endl;
+			const Vector2D integratedAcceleration = acceleration * dt;
+			// std::cout << "frictionForce magnitude: " << frictionForce.magnitude() << std::endl;
 
-			if((acceleration * dt).magnitude() >= cur_velocity.magnitude()) {
+			if(integratedAcceleration.magnitude() >= velocity.magnitude()) {
 				player.setResultForce(Vector2D::ZERO);
 				player.setVelocity(Vector2D::ZERO);
 			}
 			else {
-				player.setResultForce(friction_force);
+				player.setResultForce(frictionForce);
 			}
 		}
 
