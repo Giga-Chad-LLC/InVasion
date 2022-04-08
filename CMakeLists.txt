@@ -26,17 +26,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Protobuf REQUIRED)
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
+		# request-models
         ./src/proto/request-models/player.proto
         ./src/proto/request-models/move-request-model.proto
         ./src/proto/request-models/update-game-state-request-model.proto
 		./src/proto/request-models/rotate-weapon-request-model.proto
 		./src/proto/request-models/shoot-request-model.proto
-
+		
+		# utils
         ./src/proto/utils/vector2d.proto
+
+		# response-models
         ./src/proto/response-models/player-position-response-model.proto
         ./src/proto/response-models/shooting-state-response-model.proto
         ./src/proto/response-models/player-id-response-model.proto
+		./src/proto/response-models/players-positions-response-model.proto
 
+		# schemas
         ./src/proto/shems-of-game/player-schema.proto
         ./src/proto/shems-of-game/session-state-schema.proto
         ./src/proto/shems-of-game/game-state-schema.proto
@@ -44,7 +50,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/shems-of-game/bullet-schema.proto
         ./src/proto/shems-of-game/player-game-session-statistic-schema.proto
         ./src/proto/shems-of-game/weapon-schema.proto
-        )
+		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
 message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
