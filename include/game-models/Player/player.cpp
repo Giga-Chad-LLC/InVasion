@@ -10,7 +10,7 @@ const double Player::DAMAGE = 15.0;
 const Vector2D Player::COLLIDER_SIZE(20, 20);
 
 	
-Player::Player(Vector2D initial_pos, const int playerId)
+Player::Player(Vector2D initial_pos, const int playerId, const Player::TeamId teamId)
 	: KinematicObject(
 		Player::COLLIDER_SIZE, 
 		std::move(initial_pos), 
@@ -18,11 +18,19 @@ Player::Player(Vector2D initial_pos, const int playerId)
 		Player::MAX_SPEED
 	), 
 	m_id(playerId),
+	m_teamId(teamId),
 	m_weapon(playerId, Player::INITIAL_AMMO, Player::DAMAGE) {}
+
 
 int Player::getId() const {
 	return m_id;
 }
+
+
+Player::TeamId Player::getTeamId() const {
+	return m_teamId;
+}
+
 
 Weapon& Player::getWeapon() {
 	return m_weapon;
