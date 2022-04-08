@@ -86,6 +86,11 @@ Player& GameSession::getPlayer(const int playerId) {
 }
 
 
+std::vector<Player>& GameSession::getPlayers() {
+	return m_storage.getPlayers();
+}
+
+
 Bullet& GameSession::getBullet(int bulletId) {
 	auto& bullets = m_storage.getBullets();
 	Bullet* bullet_ptr = nullptr;

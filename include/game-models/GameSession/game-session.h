@@ -2,6 +2,7 @@
 #define GAME_SESSION_H_
 
 #include <chrono>
+#include <vector>
 
 #include "game-models/GameWorldStorage/game-world-storage.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
@@ -21,6 +22,8 @@ struct GameSession {
 
 	Player& getPlayer(int playerId);
 	Bullet& getBullet(int bulletId);
+
+	std::vector<Player>& GameSession::getPlayers();
 
 	void updateGameState();
 
