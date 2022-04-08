@@ -5,6 +5,8 @@
 #include "client.h"
 #include "player.pb.h"
 #include "player-id-response-model.pb.h"
+#include "players-positions-response-model.pb.h"
+#include "player-position-response-model.pb.h"
 #include <thread>
 #include <cstring>
 #include <vector>
@@ -25,6 +27,16 @@ namespace invasion::session {
                             response_models::PlayerIdResponseModel model;
                             model.ParseFromArray(response.getStoredBytes(), response.bytesSize());
                             std::cout << "Client ID in session: " << model.playerid() << std::endl;
+                        }
+                        else if (response.getMessageType() == ResponseModel_t::PlayersPositionsResponseModel) {
+                            // std::cout << "Array bytes length: " << response.bytesSize() << std::endl;
+                            // response_models::PlayersPositionsResponseModel model;
+                            // model.ParseFromArray(response.getStoredBytes(), response.bytesSize());
+
+                            // auto players = model.players();
+                            // for (auto& item : players) {
+                            //     std::cout << item.playerid() << std::endl;
+                            // }
                         }
 
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 

@@ -36,6 +36,7 @@ const PlayerProto = preload("res://player/scripts/player_proto.gd")
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
+const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
 
 # Network
@@ -57,7 +58,7 @@ func _ready():
 	add_child(producer)
 	add_child(consumer)
 
-
+var should_print = true
 func _process(delta):
 #	Send data to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
@@ -83,18 +84,21 @@ func _process(delta):
 				print("Error while receiving: ", "cannot unpack player action")
 		elif (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
 			set_player_id(received_packet)
-			print(player_id)
-		elif (received_packet.message_type == Global.ResponseModels.PlayerPositionResponseModel):
-			update_player_position(received_packet)
-		
+		elif (received_packet.message_type == Global.ResponseModels.PlayersPositionsResponseModel):
+			var players_positions = PlayersPositionsResponseModel.PlayersPositionsResponseModel.new()
+			players_positions.from_bytes(received_packet.get_bytes())
+			for i in range(0, players_positions.get_players().size()):
+				var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions.get_players()[i]
+				if (model.get_playerId() == player_id):
+					update_player_position(model)
 		else:
 			print("Unknown message type!")
 	
 	animate_player()
 
-func update_player_position(packet: NetworkPacket):
-	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
-	player_position_model.from_bytes(packet.get_bytes())
+func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
+#	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
+#	player_position_model.from_bytes(packet.get_bytes())
 	velocity.x = player_position_model.get_velocity().get_x()
 	velocity.y = player_position_model.get_velocity().get_y()
 	
@@ -145,11 +149,10 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 
 # Set player id retrieved from server
 func set_player_id(packet: NetworkPacket) -> void:
-	print("Set my id in a game session")
 	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
 	player_id_model.from_bytes(packet.get_bytes())
 	player_id = player_id_model.get_playerId()
-
+	print("Set my id in a game session: ", player_id)
 
 # Networking
 func init_network() -> void:
@@ -187,7 +190,7 @@ func _consumer_receive_data(worker: Worker):
 	client.connection.connect("receive", self, "_handle_client_receive_data", [worker])
 
 
-# Move player by key action
+# Move player by key action (obsolete, used when buttons were used to travel around the map)
 func get_move_vector_by_event(move_event):
 	var input_vector = Vector2.ZERO
 	
