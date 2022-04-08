@@ -23,6 +23,7 @@
 #include "update-game-state-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
+#include "players-positions-response-model.pb.h"
 
 
 #include "doctest.h"
@@ -38,6 +39,44 @@ using namespace response_models;
 using namespace std;
 
 
+TEST_CASE("Testing players positions response model") {
+	GameSession session;
+	std::vector<Player> players;
+
+	for(int i = 0; i < 100; i++) {
+		int id = session.createPlayerAndReturnId();
+		auto player = session.getPlayer(id);
+		players.push_back(player);
+	}
+
+	PlayersPositionsResponseModel res;
+
+	for(int i = 0; i < players.size(); i++) {
+		PlayerPositionResponseModel* playerModel = res.add_players();
+		
+		const int id = players[i].getId();
+		const int vel_x = players[i].getVelocity().getX();
+		const int vel_y = players[i].getVelocity().getY();
+		const int pos_x = players[i].getPosition().getX();
+		const int pos_y = players[i].getPosition().getY();
+
+		playerModel->set_playerid(id);
+		
+		playerModel->mutable_velocity()->set_x(vel_x);
+		playerModel->mutable_velocity()->set_y(vel_y);
+
+		playerModel->mutable_position()->set_x(pos_x);
+		playerModel->mutable_position()->set_y(pos_y);
+	}
+
+	for(const auto player : res.players()) {
+		const int id = player.playerid();
+		std::cout << id << std::endl;
+	} 
+}
+
+
+/*
 TEST_CASE("Team assigning") {
 	GameSession session;
 	int id1 = session.createPlayerAndReturnId();
@@ -75,6 +114,7 @@ TEST_CASE("Team assigning") {
 		// std::cout << "playerId: " << id << " | team id: " << teamId << std::endl;
 	}
 }
+*/
 
 
 /*
