@@ -77,7 +77,7 @@ Vector2D operator/(const Vector2D& vec, double value) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector2D& vec) {
-	os << "Vector2D (" << vec.m_x << ", " << vec.m_y << ")" << std::endl;
+	os << "Vector2D (" << vec.m_x << ", " << vec.m_y << ")";
 	return os;
 }
 
