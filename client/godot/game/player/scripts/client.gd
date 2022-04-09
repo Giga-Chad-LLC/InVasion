@@ -29,7 +29,7 @@ func send_raw_data(data: PoolByteArray) -> bool:
 
 
 # Appends metadata to the front of `data` array (little endian)
-# [length: 4 bytes][type: 4 bytes][message: `length` bytes]'
+# [length: 4 bytes][type: 4 bytes][message: `length` bytes]
 func _pack_data(data: NetworkPacket) -> PoolByteArray:
 	var bytes_encoder: StreamPeer = StreamPeerBuffer.new()
 	var bytes_array: PoolByteArray
@@ -43,6 +43,8 @@ func _pack_data(data: NetworkPacket) -> PoolByteArray:
 	bytes_array.append_array(data.get_bytes())
 	return bytes_array
 
+# Data format: little endian
+# Message comes in format: [length: 4 bytes][type: 4 bytes][message: `length` bytes]
 func _unpack_data(data: PoolByteArray) -> NetworkPacket:
 	var byte_encoder: StreamPeer = StreamPeerBuffer.new()
 	var network_packet: NetworkPacket = NetworkPacket.new()

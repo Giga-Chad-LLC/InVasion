@@ -6,8 +6,8 @@ export(int) var up_bound = -1000
 export(int) var down_bound = 1000
 
 var player_scene = preload("res://player/player_template.tscn")
+# Godobuf
 const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
-
 
 func spawn_new_player(player_id, location):
 	var parent = get_tree().get_root().get_node("World/YSort/OtherPlayers")
@@ -25,7 +25,7 @@ func update_game_state(game_state: Array):
 		var player: PlayersPositionsResponseModel.PlayerPositionResponseModel = game_state[i]
 		if (parent_node.has_node(str(player.get_playerId()))): 
 #			animate and move the player
-			parent_node.get_node(str(player.get_playerId())).move_and_animate(player)
+			parent_node.get_node(str(player.get_playerId())).update_player_position(player)
 		else:
 			spawn_new_player(player.get_playerId(),
 				Vector2(player.get_position().get_x(), player.get_position().get_y()))
