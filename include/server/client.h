@@ -20,7 +20,7 @@ namespace invasion::session {
         friend class Server;
 
         friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
-        friend void registerClientInSession(std::shared_ptr<Client> client, int playerId);
+        friend void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId);
 
     public:
         explicit Client(tcp::socket &&socket) : m_channel(std::move(socket)) {}

@@ -70,7 +70,7 @@ func _process(delta):
 			var network_packet = NetworkPacket.new()
 			network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
 			producer.push_data(network_packet)
-	
+
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data()
 	if (received_packet != null):
@@ -86,11 +86,15 @@ func _process(delta):
 			set_player_id(received_packet)
 		elif (received_packet.message_type == Global.ResponseModels.PlayersPositionsResponseModel):
 			var players_positions = PlayersPositionsResponseModel.PlayersPositionsResponseModel.new()
-			players_positions.from_bytes(received_packet.get_bytes())
-			for i in range(0, players_positions.get_players().size()):
-				var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions.get_players()[i]
-				if (model.get_playerId() == player_id):
-					update_player_position(model)
+#			print("PP: ", received_packet.get_bytes().size())
+			var result_code = players_positions.from_bytes(received_packet.get_bytes())
+			if (result_code != PlayersPositionsResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack players positions")
+			else:
+				for i in range(0, players_positions.get_players().size()):
+					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions.get_players()[i]
+					if (model.get_playerId() == player_id):
+						update_player_position(model)
 		else:
 			print("Unknown message type!")
 	
@@ -150,9 +154,13 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 # Set player id retrieved from server
 func set_player_id(packet: NetworkPacket) -> void:
 	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
-	player_id_model.from_bytes(packet.get_bytes())
-	player_id = player_id_model.get_playerId()
-	print("Set my id in a game session: ", player_id)
+	print("Handshake bytes length: ", packet.get_bytes().size(), ", bytes: ", packet.get_bytes())
+	var result_code = player_id_model.from_bytes(packet.get_bytes())
+	if (result_code != PlayerIdResponseModel.PB_ERR.NO_ERRORS):
+		print("Error while receiving: ", "cannot unpack player id")
+	else:
+		player_id = player_id_model.get_playerId()
+		print("Set my id in a game session: ", player_id)
 
 # Networking
 func init_network() -> void:

@@ -27,9 +27,9 @@ namespace invasion::session {
         while (true) {
             NetworkPacketResponse response;
             if (responseQueue->consumeSync(response)) {
-                for (auto curClient: m_connectedClients) { // пока никакой обработки просто имитируем ее
-                    NetworkPacketResponse tmp = response;
-                    curClient->m_clientResponseQueue.produce(std::move(tmp));
+                for (auto client: m_connectedClients) { // пока никакой обработки просто имитируем ее
+                    NetworkPacketResponse packet = response;
+                    client->m_clientResponseQueue.produce(std::move(packet));
                 }
             }
         }

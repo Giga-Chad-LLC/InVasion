@@ -11,17 +11,18 @@
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    void registerClientInSession(std::shared_ptr<Client> client, int playerId) {
+    void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId) {
         // send to client his ID
         std::cout << "Send client his ID: " << playerId << std::endl;
         response_models::PlayerIdResponseModel response;
         response.set_playerid(playerId);
 
-        auto size = response.ByteSizeLong();
+        uint32_t size = response.ByteSizeLong();
+        std::cout << "player id msg length: " << size << std::endl;
         std::unique_ptr<char> buffer_ptr(new char[size]);
         response.SerializeToArray(buffer_ptr.get(), size);
-        auto responseInBytes = NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
-        client->m_clientResponseQueue.produce(std::move(responseInBytes));
+        NetworkPacketResponse packet(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
+        client->m_clientResponseQueue.produce(std::move(packet));
     }
 
     Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.201"),
@@ -36,7 +37,7 @@ namespace invasion::session {
 
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
-            int playerId = m_gameSession.createPlayerAndReturnId();
+            uint32_t playerId = m_gameSession.createPlayerAndReturnId();
             auto client = std::make_shared<Client>(std::move(socket));
 
             m_connectedClients.push_back(client);
