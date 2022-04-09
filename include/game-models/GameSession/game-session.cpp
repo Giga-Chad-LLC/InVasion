@@ -20,7 +20,7 @@ GameSession::GameSession() {
 // returns id of created player
 uint32_t GameSession::createPlayerAndReturnId() {
 	auto& players = m_storage.getPlayers();
-	const int playerId = static_cast<uint32_t>(players.size() + 1);
+	const auto playerId = static_cast<int>(players.size());
 
 	int firstTeamPlayersCount = 0;
 	int secondTeamPlayersCount = 0;

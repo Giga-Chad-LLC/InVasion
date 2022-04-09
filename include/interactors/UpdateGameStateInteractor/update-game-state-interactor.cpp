@@ -46,24 +46,6 @@ response_models::PlayersPositionsResponseModel UpdateGameStateInteractor::execut
 		playerModel->mutable_position()->set_y(position.getY());
 	}
 
-	/*
-	
-	// hardcoding exactly one player
-	const int playerId = 0;
-	[[maybe_unused]] const Player& player = session.getPlayer(playerId);
-
-	response_models::PlayerPositionResponseModel response;
-	
-	response.set_playerid(playerId);
-	// setting position
-	response.mutable_position()->set_x(player.getPosition().getX());
-	response.mutable_position()->set_y(player.getPosition().getY());
-	// setting velocity
-	response.mutable_velocity()->set_x(player.getVelocity().getX());
-	response.mutable_velocity()->set_y(player.getVelocity().getY());
-
-	*/
-
 	return response;
 }
 
