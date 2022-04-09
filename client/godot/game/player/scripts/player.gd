@@ -70,7 +70,7 @@ func _process(delta):
 			var network_packet = NetworkPacket.new()
 			network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
 			producer.push_data(network_packet)
-	
+
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data()
 	if (received_packet != null):

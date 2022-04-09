@@ -50,6 +50,8 @@ namespace invasion::session {
                             // std::cout << "PP: " << response.bytesSize() << std::endl;
                         }
 
+                        // std::cout << "Size: " << response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())) << std::endl;
+                        std::cout << response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())) << std::endl;
                         std::shared_ptr<char> buffer = response.serializeToByteArray(); 
                         client->m_channel.write(buffer.get(), response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())));
                     }

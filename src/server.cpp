@@ -17,7 +17,7 @@ namespace invasion::session {
         response_models::PlayerIdResponseModel response;
         response.set_playerid(playerId);
 
-        auto size = response.ByteSizeLong();
+        uint32_t size = response.ByteSizeLong();
         std::cout << "player id msg length: " << size << std::endl;
         std::unique_ptr<char> buffer_ptr(new char[size]);
         response.SerializeToArray(buffer_ptr.get(), size);

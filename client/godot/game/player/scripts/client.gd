@@ -48,6 +48,9 @@ func _unpack_data(data: PoolByteArray) -> NetworkPacket:
 	var network_packet: NetworkPacket = NetworkPacket.new()
 	byte_encoder.data_array = data
 	var message_type = byte_encoder.get_32()
+	print(data.size())
+	if (message_type == 1003):
+		print(data)
 	byte_encoder.seek(4)
 	var bytes: PoolByteArray = byte_encoder.get_data(data.size() - 4)[1]
 	
