@@ -5,49 +5,27 @@ export(int) var right_bound = 1000
 export(int) var up_bound = -1000
 export(int) var down_bound = 1000
 
+var player_scene = preload("res://player/player_template.tscn")
+const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 
 
-# Test out godobuf functionality
-#const TestProto = preload("res://test_proto.gd")
-#
-#func test_godobuf():
-#	# Create packed class (message)
-#	var a = TestProto.A.new()
-#	# Example, set field f1
-#	a.set_f1(3.14159)
-#	# Pack message A
-#	# Use to_bytes() method, it's return PoolByteArray
-#	var packed_bytes = a.to_bytes()
-#	print("Serialized: ", packed_bytes)
-#
-#	# Create unpacked class (message)
-#	var b = TestProto.A.new()
-#	# Unpack byte sequence to class (message) A.
-#	# Use from_bytes(PoolByteArray my_byte_sequence) method
-#	var result_code = b.from_bytes(packed_bytes)
-#	# result_code must be checked (see Unpack result codes section)
-#	if result_code == TestProto.PB_ERR.NO_ERRORS:
-#		print("OK")
-#	else:
-#		print("Failed")
-#		return
-#	# Use class 'a' fields. Example, get field f1
-#	var f1 = b.get_f1()
-#	print("Deserialized: ", f1)
+func spawn_new_player(player_id, location):
+	var parent = get_tree().get_root().get_node("World/YSort/OtherPlayers")
+	var spawned_player = Global.instance_node_at_location(player_scene, parent, location)
+	spawned_player.name = str(player_id)
 
-#func _ready():
-#	# Должно напечатать число Пи (по какой-то причине дважды, тут уже вопросы к методу _ready())
-##	test_godobuf()
-##	test_out_gdnative()
-#	pass
+func despawn_player(player_id):
+	get_tree().get_root().get_node("World/YSort/OtherPlayers/" + str(player_id)).queue_free()
 
-#func test_out_gdnative():
-#	# GDNative attached to another node
-#	var node = get_tree().get_root().get_node("World/TestOnly")
-#	print(node)
-#	node.test_method("Hello from Dimechik!")
-#
-#
-#func _on_TestOnly_position_changed(node: Sprite, new_pos: Vector2):
-#	print("New position: ", new_pos)
-#	print("Node name: ", node.filename)
+
+func update_game_state(game_state: Array):
+	var parent_node = get_tree().get_root().get_node("World/YSort/OtherPlayers")
+	
+	for i in range(0, game_state.size()):
+		var player: PlayersPositionsResponseModel.PlayerPositionResponseModel = game_state[i]
+		if (parent_node.has_node(str(player.get_playerId()))): 
+#			animate and move the player
+			parent_node.get_node(str(player.get_playerId())).move_and_animate(player)
+		else:
+			spawn_new_player(player.get_playerId(),
+				Vector2(player.get_position().get_x(), player.get_position().get_y()))

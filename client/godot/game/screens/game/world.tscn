@@ -581,6 +581,8 @@ position = Vector2( 216, 16 )
 [node name="Grass7" parent="YSort/Grass" instance=ExtResource( 2 )]
 position = Vector2( 272, 32 )
 
+[node name="OtherPlayers" type="YSort" parent="YSort"]
+
 [node name="TestOnly" type="Sprite" parent="."]
 position = Vector2( -32, 5 )
 scale = Vector2( 0.328125, 0.328125 )
