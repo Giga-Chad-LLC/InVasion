@@ -81,6 +81,11 @@ Player& GameSession::getPlayer(const int playerId) {
 			break;
 		}
 	}
+	
+	if(player_ptr == nullptr) {
+		std::cout << "Cannot find player with id: " << playerId << " in GameSession::getPlayer" << std::endl;
+	}
+
 	assert(player_ptr != nullptr);
 	return *player_ptr;
 }
