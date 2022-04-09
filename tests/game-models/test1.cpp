@@ -40,7 +40,70 @@ using namespace std;
 
 
 
+TEST_CASE("Testing collision checking in GameWorldManager | moving diagonal top-right") {
+	GameSession session;
+	const int id1 = session.createPlayerAndReturnId();
+	const int id2 = session.createPlayerAndReturnId();
 
+	Player& player1 = session.getPlayer(id1);
+	Player& player2 = session.getPlayer(id2);
+
+	player2.setPosition(Vector2D(100, 100));
+
+	
+	MoveInteractor moveInteractor;
+
+	MoveRequestModel req;
+	req.set_player_id(id1);
+
+	req.set_current_event(MoveRequestModel::StartMovingRight);
+	moveInteractor.execute(req, session);
+
+	req.set_current_event(MoveRequestModel::StartMovingDown);
+	moveInteractor.execute(req, session);
+
+	UpdateGameStateInteractor updateInteractor;
+
+	PhysicsTickController controller(100);
+	controller.start([&]() mutable {
+		// std::cout << "position of player #" << id1 << ": " << player1.getPosition() << std::endl; 
+		updateInteractor.execute(session);
+	});
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+}
+
+
+/*
+TEST_CASE("Testing collision checking in GameWorldManager | moving straight right") {
+	GameSession session;
+	const int id1 = session.createPlayerAndReturnId();
+	const int id2 = session.createPlayerAndReturnId();
+
+	Player& player1 = session.getPlayer(id1);
+	Player& player2 = session.getPlayer(id2);
+
+	player2.setPosition(Vector2D(100, 0));
+
+	
+	MoveRequestModel req;
+	req.set_player_id(id1);
+	req.set_current_event(MoveRequestModel::StartMovingRight);
+
+	MoveInteractor moveInteractor;
+	moveInteractor.execute(req, session);
+
+	UpdateGameStateInteractor updateInteractor;
+
+	PhysicsTickController controller(100);
+	controller.start([&]() mutable {
+		// std::cout << "position of player #" << id1 << ": " << player1.getPosition() << std::endl; 
+		updateInteractor.execute(session);
+	});
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+}
+*/
 
 /*
 TEST_CASE("Testing players positions response model") {
