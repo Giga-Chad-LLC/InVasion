@@ -91,23 +91,24 @@ func _process(delta):
 			if (result_code != PlayersPositionsResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack players positions")
 			else:
-				for i in range(0, players_positions.get_players().size()):
-					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions.get_players()[i]
+#				Find ourselves and update position
+				players_positions = players_positions.get_players()
+				for i in range(0, players_positions.size()):
+					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions[i]
 					if (model.get_playerId() == player_id):
 						update_player_position(model)
+						players_positions.erase(model) # erase ourselves
+						break
+				# update other players
+				GameWorld.update_game_state(players_positions)
 		else:
 			print("Unknown message type!")
 	
 	animate_player()
 
 func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
-#	var player_position_model = PlayerPositionResponseModel.PlayerPositionResponseModel.new()
-#	player_position_model.from_bytes(packet.get_bytes())
-	velocity.x = player_position_model.get_velocity().get_x()
-	velocity.y = player_position_model.get_velocity().get_y()
-	
-	global_position.x = player_position_model.get_position().get_x()
-	global_position.y = player_position_model.get_position().get_y()
+	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
+	global_position = Vector2(player_position_model.get_position().get_x(), player_position_model.get_position().get_y())
 
 func animate_player():
 	#	Move the player
@@ -154,7 +155,6 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 # Set player id retrieved from server
 func set_player_id(packet: NetworkPacket) -> void:
 	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
-	print("Handshake bytes length: ", packet.get_bytes().size(), ", bytes: ", packet.get_bytes())
 	var result_code = player_id_model.from_bytes(packet.get_bytes())
 	if (result_code != PlayerIdResponseModel.PB_ERR.NO_ERRORS):
 		print("Error while receiving: ", "cannot unpack player id")
