@@ -39,6 +39,10 @@ using namespace response_models;
 using namespace std;
 
 
+
+
+
+/*
 TEST_CASE("Testing players positions response model") {
 	GameSession session;
 	std::vector<Player> players;
@@ -73,7 +77,7 @@ TEST_CASE("Testing players positions response model") {
 		const int id = player.playerid();
 		std::cout << id << std::endl;
 	} 
-}
+}*/
 
 
 /*
