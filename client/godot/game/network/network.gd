@@ -66,21 +66,3 @@ func send(data: PoolByteArray) -> bool:
 		return false
 	return true
 
-
-
-# Test
-#func try_out_tcp_client_with_cpp_asion_server():
-#	var tcp_connection = StreamPeerTCP.new()
-#	# Try connecting to the C++ ping-pong server
-#	var tcp_server_host = "localhost"
-#	var tcp_server_port = 8000
-#	tcp_connection.connect_to_host(tcp_server_host, tcp_server_port)
-#
-#	if (tcp_connection.is_connected_to_host()):
-#		print("Connected to host: ", tcp_server_host, ":", tcp_server_port)
-#		var string = "Hello for my boiii\n"
-#		tcp_connection.put_data(string.to_utf8())
-#	else:
-#		print("Failed to connect to: ", tcp_server_host, ":", tcp_server_port)
-#
-#	return tcp_connection

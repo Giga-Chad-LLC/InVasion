@@ -6,6 +6,7 @@ onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 var velocity = Vector2.ZERO
 
+# Godobuf
 const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 
 
@@ -21,7 +22,7 @@ func animate_player():
 	move_and_slide(velocity)
 
 
-func move_and_animate(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
+func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
 	global_position = Vector2(player_position_model.get_position().get_x(), player_position_model.get_position().get_y())
 

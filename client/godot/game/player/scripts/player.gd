@@ -1,40 +1,18 @@
 extends KinematicBody2D
 
-# Physics
-export var ACCELERATION = 500
-export var MAX_SPEED = 100
-export var FRICTION = 500
 # Animations
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 
-# Moves
-enum {
-	Idle = 0,
-	StartMovingUp = 1,
-	StartMovingRight = 2,
-	StartMovingDown = 3,
-	StartMovingLeft = 4,
-	
-	StopMovingUp = 5,
-	StopMovingRight = 6,
-	StopMovingDown = 7,
-	StopMovingLeft = 8
-}
-
-var previous_action = Idle
-var current_move_event = Idle # makes the character move
-enum { MOVE }
-var state = MOVE
+# Parameters
+var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var velocity = Vector2.ZERO
 var player_id: int = -1
 
 
 # Godobuf
-const PlayerProto = preload("res://player/scripts/player_proto.gd")
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
-
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
@@ -58,7 +36,6 @@ func _ready():
 	add_child(producer)
 	add_child(consumer)
 
-var should_print = true
 func _process(delta):
 #	Send data to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
@@ -74,15 +51,7 @@ func _process(delta):
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data()
 	if (received_packet != null):
-		if (received_packet.message_type == Global.ResponseModels.PlayerActionResponseModel):
-			var unpacked_player_action = PlayerProto.PlayerAction.new()
-			var result_code = unpacked_player_action.from_bytes(received_packet.get_bytes())
-			if (result_code == PlayerProto.PB_ERR.NO_ERRORS):
-				current_move_event = unpacked_player_action.get_key_pressed()
-				print("Action from server: ", current_move_event)
-			else:
-				print("Error while receiving: ", "cannot unpack player action")
-		elif (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
+		if (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
 			set_player_id(received_packet)
 		elif (received_packet.message_type == Global.ResponseModels.PlayersPositionsResponseModel):
 			var players_positions = PlayersPositionsResponseModel.PlayersPositionsResponseModel.new()
@@ -196,52 +165,6 @@ func _produce(worker: Worker) -> void:
 
 func _consumer_receive_data(worker: Worker):
 	client.connection.connect("receive", self, "_handle_client_receive_data", [worker])
-
-
-# Move player by key action (obsolete, used when buttons were used to travel around the map)
-func get_move_vector_by_event(move_event):
-	var input_vector = Vector2.ZERO
-	
-	if (move_event == StartMovingUp):
-		input_vector.y = -1
-	if (move_event == StopMovingUp):
-		input_vector.y = 0
-
-	if (move_event == StartMovingRight):
-		input_vector.x = 1
-	if (move_event == StopMovingRight):
-		input_vector.x = 0
-
-	if (move_event == StartMovingDown):
-		input_vector.y = 1
-	if (move_event == StopMovingDown):
-		input_vector.y = 0
-
-	if (move_event == StartMovingLeft):
-		input_vector.x = -1
-	if (move_event == StopMovingLeft):
-		input_vector.x = 0
-
-	return input_vector
-func player_move_by_key_action(delta):
-	#	Move the player
-	var input_vector = get_move_vector_by_event(current_move_event)
-	
-	if velocity != Vector2.ZERO:
-		animationTree.set("parameters/Idle/blend_position", input_vector)
-		animationTree.set("parameters/Run/blend_position", input_vector)
-
-		animationState.travel("Run")
-
-		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
-	else:
-		animationState.travel("Idle")
-		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
-
-	velocity = move_and_slide(velocity)
-
-
-
 
 
 
