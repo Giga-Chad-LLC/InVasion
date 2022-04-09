@@ -14,6 +14,7 @@
 namespace invasion::session {
     class ClientRequestsReceiver {
     private:
+        // reads data from clients in format: [4 bytes: message length in bytes][4 bytes: uint32_t message type][length bytes: data itself in byte representation]
         inline static std::optional<NetworkPacketRequest> getRequestFromClient(std::shared_ptr<Client> client) {
             std::uint32_t size;  // get the message data length in bytes
             client->m_channel.read(reinterpret_cast<char *> (&size), sizeof(size));

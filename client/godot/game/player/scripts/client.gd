@@ -47,17 +47,32 @@ func _unpack_data(data: PoolByteArray) -> NetworkPacket:
 	var byte_encoder: StreamPeer = StreamPeerBuffer.new()
 	var network_packet: NetworkPacket = NetworkPacket.new()
 	byte_encoder.data_array = data
-	var message_type = byte_encoder.get_32()
-	print(data.size())
-	if (message_type == 1003):
-		print(data)
+#	invalid message
+	if (data.size() < 8):
+		print("Data size is less than: ", 8)
+		return null;
+#	message length
+	var message_length = byte_encoder.get_32();
 	byte_encoder.seek(4)
-	var bytes: PoolByteArray = byte_encoder.get_data(data.size() - 4)[1]
+#	message type
+	var message_type = byte_encoder.get_32()
+	byte_encoder.seek(8)
+#	invalid message
+	if (data.size() - 8 < message_length):
+		print("Data size in less than: ", message_length + 8)
+		return null
 	
-#	print("Data: ", byte_encoder.data_array)
+	var data_object = byte_encoder.get_data(message_length)
+#	Non-OK error code
+	if (data_object[0] != 0):
+		print("Error code when unpacking: ", data_object[0])
+		return null
+	var bytes: PoolByteArray = data_object[1]
+	network_packet.set_data(bytes, message_type)
+#	print("Length: ", message_length)
 #	print("Type: ", message_type)
 #	print("Bytes: ", bytes)
-	network_packet.set_data(bytes, message_type)
+#	print("Data: ", data.subarray(0, 8 + message_length - 1))
 	return network_packet
 
 
