@@ -45,7 +45,37 @@ void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, doub
 			player.setResultForce(resultForce);
 		}
 
-		
+		// checking collisions with other players
+		{
+			Vector2D curPosition = player.getPosition();
+
+			// imitating player's move
+			Vector2D nextPosition = player.intentMove(dt);
+			std::cout << "#" << player.getId() << ": next: " << nextPosition << std::endl;
+			player.setPosition(nextPosition);
+
+			bool inCollision = false;
+			int otherId = -1;
+
+			for(Player& other : players) {
+				if(player.getId() == other.getId())  continue;
+
+				inCollision = player.collidesWith(&other);
+				if(inCollision) {
+					otherId = other.getId();
+					break;
+				}
+			}
+
+			player.setPosition(curPosition);
+
+			if(inCollision) {
+				std::cout << "#" << player.getId() << " collides with #" << otherId << std::endl;
+				player.setResultForce(Vector2D::ZERO);
+				player.setVelocity(Vector2D::ZERO);
+				// TODO: make binary search to find nearest position where objects do not collide and set player to that position
+			}
+		}
 
 		player.makeMove(dt);
 	}
