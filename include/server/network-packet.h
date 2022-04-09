@@ -4,13 +4,13 @@
 #include <memory>
 
 namespace invasion::session {
-    enum class RequestModel_t : std::uint32_t {
+    enum class RequestModel_t : uint32_t {
         MoveRequestModel = 0,
         UpdateGameStateRequestModel = 1,
         PlayerActionRequestModel = 2,
         UnknownRequestModel
     };
-    enum class ResponseModel_t : std::uint32_t {
+    enum class ResponseModel_t : uint32_t {
         PlayerPositionResponseModel = 1000,
         PlayerActionResponseModel = 1002,
         PlayerIdResponseModel = 1003,
@@ -21,9 +21,9 @@ namespace invasion::session {
     class NetworkPacket {
     protected:
         std::unique_ptr<char> bytes;
-        std::uint32_t bytesLength;
+        uint32_t bytesLength;
 
-        NetworkPacket(std::unique_ptr<char> &&bytes_, std::uint32_t bytesLength_) : bytes(std::move(bytes_)),
+        NetworkPacket(std::unique_ptr<char> &&bytes_, uint32_t bytesLength_) : bytes(std::move(bytes_)),
                                                                                     bytesLength(bytesLength_) {}
 
         NetworkPacket() : bytes(nullptr), bytesLength(0U) {}
@@ -43,7 +43,7 @@ namespace invasion::session {
         }
 
         // returns bytes data length
-        std::uint32_t bytesSize() const {
+        uint32_t bytesSize() const {
             return bytesLength;
         }
     };
@@ -53,7 +53,7 @@ namespace invasion::session {
 
     public:
         NetworkPacketRequest(std::unique_ptr<char> &&bytes_ptr,
-                             RequestModel_t messageType_, std::uint32_t bytesLength_) : NetworkPacket(
+                             RequestModel_t messageType_, uint32_t bytesLength_) : NetworkPacket(
                 std::move(bytes_ptr), bytesLength_), messageType(messageType_) {}
 
         NetworkPacketRequest() : NetworkPacket(), messageType(RequestModel_t::UnknownRequestModel) {}
@@ -63,11 +63,11 @@ namespace invasion::session {
             return messageType;
         }
 
-        // returns message type enum object by its `std::uint32_t` representation
-        inline static RequestModel_t getMessageTypeById(std::uint32_t type) {
-            if (type == static_cast<std::uint32_t> (RequestModel_t::PlayerActionRequestModel)) {
+        // returns message type enum object by its `uint32_t` representation
+        inline static RequestModel_t getMessageTypeById(uint32_t type) {
+            if (type == static_cast<uint32_t> (RequestModel_t::PlayerActionRequestModel)) {
                 return RequestModel_t::PlayerActionRequestModel;
-            } else if (type == static_cast<std::uint32_t> (RequestModel_t::MoveRequestModel)) {
+            } else if (type == static_cast<uint32_t> (RequestModel_t::MoveRequestModel)) {
                 return RequestModel_t::MoveRequestModel;
             }
 
@@ -76,7 +76,7 @@ namespace invasion::session {
 
         // performs the serialization for Network Packet request-protocol: [4 bytes: length][4 bytes: type][`length` bytes: bytes] 
         std::shared_ptr<char> serializeToByteArray() {
-            std::uint32_t type = static_cast<std::uint32_t> (messageType);
+            uint32_t type = static_cast<uint32_t> (messageType);
 
             char *buffer = new char[bytesLength + sizeof(type) + sizeof(bytesLength)];
             std::shared_ptr<char> buffer_ptr(buffer);
@@ -93,7 +93,7 @@ namespace invasion::session {
 
     public:
         NetworkPacketResponse(std::unique_ptr<char> &&bytes_ptr,
-                              ResponseModel_t messageType_, std::uint32_t bytesLength_) : NetworkPacket(
+                              ResponseModel_t messageType_, uint32_t bytesLength_) : NetworkPacket(
                 std::move(bytes_ptr), bytesLength_), messageType(messageType_) {}
 
         NetworkPacketResponse() : NetworkPacket(nullptr, 0U), messageType(ResponseModel_t::UnknownResponseModel) {}
@@ -125,15 +125,17 @@ namespace invasion::session {
             return *this;
         }
 
-        // performs the serialization for Network Packet response-protocol: [4 bytes: message_type][bytes] 
+        // performs the serialization for Network Packet response-protocol: [4 bytes: bytes length][4 bytes: message_type][bytes] 
         std::shared_ptr<char> serializeToByteArray() {
-            std::uint32_t type = static_cast<std::uint32_t> (messageType);
-            
-            char *buffer = new char[bytesSize() + sizeof(type)];
-            std::shared_ptr<char> buffer_ptr(buffer);
+            uint32_t type = static_cast<uint32_t> (messageType);
+            uint32_t length = bytesSize();
 
-            std::memcpy(buffer_ptr.get(), reinterpret_cast<char *> (&type), sizeof(type));
-            std::memcpy(buffer_ptr.get() + static_cast<int> (sizeof(type)), getStoredBytes(), bytesLength);
+            char *buffer = new char[length + sizeof(type) + sizeof(length)];
+            std::shared_ptr<char> buffer_ptr(buffer);
+            
+            std::memcpy(buffer_ptr.get(), reinterpret_cast<char *> (&length), sizeof(length)); // [4 bytes: length]
+            std::memcpy(buffer_ptr.get() + sizeof(length), reinterpret_cast<char *> (&type), sizeof(type)); // [4 bytes: type]
+            std::memcpy(buffer_ptr.get() + static_cast<int> (sizeof(length)) + static_cast<int> (sizeof(type)), getStoredBytes(), bytesLength); // [length bytes: data]
 
             return buffer_ptr;
         }
@@ -143,11 +145,11 @@ namespace invasion::session {
             return messageType;
         }
 
-        // returns message type enum object by its `std::uint32_t` representation
-        inline static ResponseModel_t getMessageTypeById(std::uint32_t type) {
-            if (type == static_cast<std::uint32_t> (ResponseModel_t::PlayerActionResponseModel)) {
+        // returns message type enum object by its `uint32_t` representation
+        inline static ResponseModel_t getMessageTypeById(uint32_t type) {
+            if (type == static_cast<uint32_t> (ResponseModel_t::PlayerActionResponseModel)) {
                 return ResponseModel_t::PlayerActionResponseModel;
-            } else if (type == static_cast<std::uint32_t> (ResponseModel_t::PlayerPositionResponseModel)) {
+            } else if (type == static_cast<uint32_t> (ResponseModel_t::PlayerPositionResponseModel)) {
                 return ResponseModel_t::PlayerPositionResponseModel;
             }
 
