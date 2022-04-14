@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 #include "game-world-manager.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -17,47 +18,47 @@ void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, doub
 }
 
 void GameWorldManager::updateBulletsPositions(
-	std::vector<Bullet>& bullets, 
+	std::vector<std::shared_ptr<Bullet>>& bullets, 
 	std::vector<Player>& players, 
 	double dt
 ) const {
 	const double appliedForceMagnitude = 1'000;
 
-	for(Bullet &bullet : bullets) {
+	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
 		// TODO: do not update result force on every update request because the result force is never changing
-		const Vector2D resultForce = Vector2D::clampMagnitude(bullet.getMovingForce(), appliedForceMagnitude);
-		bullet.setResultForce(resultForce);
+		const Vector2D resultForce = Vector2D::clampMagnitude(bullet_ptr->getMovingForce(), appliedForceMagnitude);
+		bullet_ptr->setResultForce(resultForce);
 
 
 		// checking collisions
 		Player* collidedPlayer = nullptr;
 
-		const Vector2D curPosition = bullet.getPosition();
-		const Vector2D nextPosition = bullet.intentMove(dt);
+		const Vector2D curPosition = bullet_ptr->getPosition();
+		const Vector2D nextPosition = bullet_ptr->intentMove(dt);
 
-		bullet.setPosition(nextPosition);
+		bullet_ptr->setPosition(nextPosition);
 
 		// searching for collided player
 		for(Player& player : players) {
-			if(player.getId() != bullet.getPlayerId() && player.collidesWith(&bullet)) {
+			if(player.getId() != bullet_ptr->getPlayerId() && player.collidesWith(bullet_ptr.get())) {
 				collidedPlayer = &player;
 				break;
 			}
 		}
 
-		bullet.setPosition(curPosition);
+		bullet_ptr->setPosition(curPosition);
 
 		if(collidedPlayer != nullptr) {
 			// std::cout << collidedPlayer->getId() << std::endl;
-			// std::cout << "bullet " << bullet.getId() << " damaged player " << collidedPlayer->getId() << std::endl; 
-			collidedPlayer->applyDamage(bullet.getDamage());
-			bullet.setCrushedState(true);
+			// std::cout << "bullet " << bullet_ptr->getId() << " damaged player " << collidedPlayer->getId() << std::endl; 
+			collidedPlayer->applyDamage(bullet_ptr->getDamage());
+			bullet_ptr->setCrushedState(true);
 		}
 		else {
-			bullet.makeMove(dt);
+			bullet_ptr->makeMove(dt);
 		}
 
-		std::cout << "bullet " << bullet.getId() << ", crushed: " << bullet.isInCrushedState() << " pos: " << bullet.getPosition() << std::endl;
+		std::cout << "bullet " << bullet_ptr->getId() << ", crushed: " << bullet_ptr->isInCrushedState() << " pos: " << bullet_ptr->getPosition() << std::endl;
 	}
 }
 
