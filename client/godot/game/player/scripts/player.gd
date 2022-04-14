@@ -14,6 +14,8 @@ var player_id: int = -1
 
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
+const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
+
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
@@ -24,30 +26,28 @@ const NetworkPacket = preload("res://network/data_types.gd")
 var client: Connection = Connection.new()
 
 const Worker = preload("res://network/worker.gd")
-var producer: Worker = Worker.new() 
-var consumer: Worker = Worker.new()
+var producer: Worker = Worker.new() # thread that stores events from client
+var consumer: Worker = Worker.new() # thread that stores events from server
 
 
 # Built-in functions
 func _ready():
+	# Activate animation for the character
 	animationTree.active = true
+	# Establish connection to server
 	init_network()
 	# Run consumer (thread that reads data from server)
 	consumer.init(funcref(self, "_consumer_receive_data"))
 	add_child(producer)
 	add_child(consumer)
 
-func _physics_process(delta):
-#	Send data to server
+func _physics_process(_delta):
+#	Send player movements to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
-		var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
-		if (action.get_current_event() != MoveRequestModel.MoveRequestModel.MoveEvent.Idle
-			and previous_action != action.get_current_event() and
-			client.is_connected_to_host()):
-			previous_action = action.get_current_event()
-			var network_packet = NetworkPacket.new()
-			network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
-			producer.push_data(network_packet)
+		# Moving logic
+		send_player_move_request()
+		# Shooting logic
+		send_player_shoot_request()
 
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data()
@@ -70,12 +70,37 @@ func _physics_process(delta):
 						players_positions.erase(model) # erase ourselves
 						break
 				# update other players
-				GameWorld.update_game_state(players_positions)
+				GameWorld.update_players_states(players_positions)
+		elif (received_packet.message_type == Global.ResponseModels.ShootingStateResponseModel):
+			print("We shot a bullet!")
 		else:
 			print("Unknown message type!")
-	
+
+#	Client logic methods
 	animate_player()
 	player_gun.animate_gun()
+
+func send_player_move_request():
+	var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
+	if (action.get_current_event() != MoveRequestModel.MoveRequestModel.MoveEvent.Idle
+		and previous_action != action.get_current_event() and
+		client.is_connected_to_host()):
+		previous_action = action.get_current_event()
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
+		producer.push_data(network_packet)
+
+func send_player_shoot_request():
+	if (Input.is_action_pressed("shoot") and not player_gun.is_reloading):
+		player_gun.shoot_bullet(player_gun.global_rotation)
+		var action = ShootRequestModel.ShootRequestModel.new()
+		action.set_player_id(player_id)
+		action.new_weapon_direction()
+		action.get_weapon_direction().set_x(cos(player_gun.global_rotation))
+		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
+		producer.push_data(network_packet)
 
 func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
@@ -91,8 +116,6 @@ func animate_player():
 	else:
 		animationState.travel("Idle")
 	move_and_slide(velocity)
-
-
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:

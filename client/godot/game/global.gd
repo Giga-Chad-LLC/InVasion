@@ -17,12 +17,16 @@ func instance_node(node: Object, parent: Object) -> Object:
 enum RequestModels {
 	MoveRequestModel = 0,
 	UpdateGameStateRequestModel = 1,
-	PlayerActionRequestModel = 2
+	ShootRequestModel = 2,
+	PlayerActionRequestModel = 100,
+	UnknownRequestModel
 }
 # Server sends to client
 enum ResponseModels {
 	PlayerPositionResponseModel = 1000,
 	PlayerActionResponseModel = 1002,
 	PlayerIdResponseModel = 1003,
-	PlayersPositionsResponseModel = 1004
+	PlayersPositionsResponseModel = 1004,
+	ShootingStateResponseModel = 1005,
+	UnknownResponseModel
 }
