@@ -4,10 +4,12 @@
 #include <memory>
 
 namespace invasion::session {
+    // When adding new message type, update `NetworkPacketRequest::getMessageTypeById` method
     enum class RequestModel_t : uint32_t {
         MoveRequestModel = 0,
         UpdateGameStateRequestModel = 1,
-        PlayerActionRequestModel = 2,
+        ShootRequestModel = 2,
+        PlayerActionRequestModel = 100,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {
@@ -15,6 +17,7 @@ namespace invasion::session {
         PlayerActionResponseModel = 1002,
         PlayerIdResponseModel = 1003,
 		PlayersPositionsResponseModel = 1004,
+        ShootingStateResponseModel = 1005,
         UnknownResponseModel
     };
 
@@ -67,8 +70,15 @@ namespace invasion::session {
         inline static RequestModel_t getMessageTypeById(uint32_t type) {
             if (type == static_cast<uint32_t> (RequestModel_t::PlayerActionRequestModel)) {
                 return RequestModel_t::PlayerActionRequestModel;
-            } else if (type == static_cast<uint32_t> (RequestModel_t::MoveRequestModel)) {
+            }
+            else if (type == static_cast<uint32_t> (RequestModel_t::MoveRequestModel)) {
                 return RequestModel_t::MoveRequestModel;
+            }
+            else if (type == static_cast<uint32_t> (RequestModel_t::ShootRequestModel)) {
+                return RequestModel_t::ShootRequestModel;
+            }
+            else if (type == static_cast<uint32_t> (RequestModel_t::UpdateGameStateRequestModel)) {
+                return RequestModel_t::UpdateGameStateRequestModel;
             }
 
             return RequestModel_t::UnknownRequestModel;
@@ -143,17 +153,6 @@ namespace invasion::session {
         // returns message type 
         ResponseModel_t getMessageType() const {
             return messageType;
-        }
-
-        // returns message type enum object by its `uint32_t` representation
-        inline static ResponseModel_t getMessageTypeById(uint32_t type) {
-            if (type == static_cast<uint32_t> (ResponseModel_t::PlayerActionResponseModel)) {
-                return ResponseModel_t::PlayerActionResponseModel;
-            } else if (type == static_cast<uint32_t> (ResponseModel_t::PlayerPositionResponseModel)) {
-                return ResponseModel_t::PlayerPositionResponseModel;
-            }
-
-            return ResponseModel_t::UnknownResponseModel;
         }
     };
 }

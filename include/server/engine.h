@@ -11,8 +11,10 @@
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
+#include "interactors/ShootInteractor/shoot-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
+#include "shoot-request-model.pb.h"
 #include "player.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
@@ -32,9 +34,6 @@ namespace invasion::session {
                         case RequestModel_t::UpdateGameStateRequestModel: {
                             interactors::UpdateGameStateInteractor interactor;
                             response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
-                            // std::cout << gameSession->getPlayers().size() << std::endl;
-                            // std::cout << "position: " << responseModel.position().x() << ' ' << responseModel.position().y() << std::endl;
-                            // std::cout << "velocity: " << responseModel.velocity().x() << ' ' << responseModel.velocity().y() << std::endl;
 
                             // serialize
                             std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
@@ -43,7 +42,7 @@ namespace invasion::session {
 							NetworkPacketResponse response(std::move(buffer_ptr),
                                                            ResponseModel_t::PlayersPositionsResponseModel,
                                                            responseModel.ByteSizeLong());
-                            // std::cout << responseModel.players().size() << std::endl;
+                            
                             responseQueue->produce(std::move(response));
                             break;
                         }
@@ -61,6 +60,24 @@ namespace invasion::session {
                             std::cout << "Action button: " << action.key_pressed() << std::endl;
                             std::unique_ptr<char[]> bytes_ptr = request.getPureBytes();
                             NetworkPacketResponse response(std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
+                            
+                            responseQueue->produce(std::move(response));
+                            break;
+                        }
+                        case RequestModel_t::ShootRequestModel: {
+                            request_models::ShootRequestModel shootAction;
+                            shootAction.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+
+                            interactors::ShootInteractor interactor;
+                            response_models::ShootingStateResponse responseModel = interactor.execute(shootAction, *gameSession);
+                            
+                            // serialize
+                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+
+                            NetworkPacketResponse response(std::move(buffer_ptr),
+                                                           ResponseModel_t::ShootingStateResponseModel,
+                                                           responseModel.ByteSizeLong());
                             
                             responseQueue->produce(std::move(response));
                             break;
