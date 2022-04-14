@@ -20,10 +20,10 @@ namespace invasion::session {
         friend class ClientRequestsReceiver;
         friend class ClientResponsesSender;
         friend class Server;
+        friend class RequestQueueManager;
 
         friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
         friend void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId);
-        friend inline void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession);
 
     public:
         Client() = default;

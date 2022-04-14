@@ -12,10 +12,21 @@
 #include "players-positions-response-model.pb.h"
 
 
-namespace invasion::session {
+namespace invasion::session { 
+// finds client by its player id in a game session (returns `nullptr`, if not found)
+std::shared_ptr<Client> RequestQueueManager::getConnectedClientByPlayerId(const std::vector <std::shared_ptr<Client>> &connectedClients, uint32_t playerId) {
+    for (auto &client : connectedClients) {
+        if (client->m_clientIdInGameSession == playerId) {
+            return client;
+        }
+    }
 
-void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession) {
-    std::thread([requestQueue = &requestQueue, responseQueue = &responseQueue, gameSession = &gameSession]() {
+    return nullptr;
+}
+
+
+void RequestQueueManager::manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession, const std::vector <std::shared_ptr<Client>> &connectedClients) {
+    std::thread([requestQueue = &requestQueue, responseQueue = &responseQueue, gameSession = &gameSession, connectedClients = &connectedClients]() {
         while (true) {
             NetworkPacketRequest request;
             if (requestQueue->consumeSync(request)) {
@@ -69,11 +80,11 @@ void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue
                                                         ResponseModel_t::ShootingStateResponseModel,
                                                         responseModel.ByteSizeLong());
                         
-                        responseQueue->produce(std::move(response));
-                        // std::shared_ptr<Client> client = server->getConnectedClientByPlayerId(responseModel.player_id());
-                        // if (client) {
-                        //     client->m_clientResponseQueue.produce(std::move(response));
-                        // }
+                        // responseQueue->produce(std::move(response));
+                        std::shared_ptr<Client> client = RequestQueueManager::getConnectedClientByPlayerId(*connectedClients, responseModel.player_id());
+                        if (client) {
+                            client->m_clientResponseQueue.produce(std::move(response));
+                        }
 
                         break;
                     }

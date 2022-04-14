@@ -26,7 +26,7 @@ namespace invasion::session {
 
     Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.201"),
                                                          8000)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
-        manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession);
+        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession, m_connectedClients);
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
@@ -59,16 +59,5 @@ namespace invasion::session {
                 });
             }
         }
-    }
-
-    // finds client by its player id in a game session (returns `nullptr`, if not found)
-    std::shared_ptr<Client> Server::getConnectedClientByPlayerId(uint32_t playerId) const {
-        for (auto &client : m_connectedClients) {
-            if (client->m_clientIdInGameSession == playerId) {
-                return client;
-            }
-        }
-
-        return nullptr;
     }
 }
