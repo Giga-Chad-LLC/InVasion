@@ -6,6 +6,7 @@
 #include <ctime> 
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -61,9 +62,9 @@ int GameSession::createPlayerAndReturnId() {
 }
 
 
-int GameSession::addBullet(Bullet bullet) {
-	const int id = bullet.getId();
-	m_storage.getBullets().push_back(std::move(bullet));	
+int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
+	const int id = bullet->getId();
+	m_storage.getBullets().push_back(bullet);	
 	return id;
 }
 
@@ -96,24 +97,24 @@ std::vector<Player>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
 
-std::vector<Bullet>& GameSession::getBullets() {
+std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 	return m_storage.getBullets();
 }
 
 
-Bullet& GameSession::getBullet(int bulletId) {
+std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 	auto& bullets = m_storage.getBullets();
-	Bullet* bullet_ptr = nullptr;
+	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
-	for(Bullet& bullet : bullets) {
-		if(bulletId == bullet.getId()) {
-			bullet_ptr = &bullet;
+	for(std::shared_ptr<Bullet> bullet : bullets) {
+		if(bulletId == bullet->getId()) {
+			bullet_ptr = bullet;
 			break;
 		}
 	}
 
 	assert(bullet_ptr != nullptr);
-	return *bullet_ptr;
+	return bullet_ptr;
 }
 
 
@@ -136,13 +137,25 @@ void GameSession::updateGameState() {
 	m_manager.updateBulletsPositions(bullets, players, dt_s);
 
 	// TODO: delete crushed bullets
-	// for(auto& b : bullets) {
-	// 	std::cout << b.getId() << " ";
-	// }
-	// std::cout << std::endl;
+	std::cout << "bullets before deletion: " << std::endl;
+	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
+		std::cout << bullet_ptr->getId() << " ";
+	}
+	std::cout << std::endl;
+
+	bullets.erase(
+		std::remove_if(
+			std::begin(bullets),
+			std::end(bullets), 
+			[](const std::shared_ptr<Bullet>& bullet_ptr) {
+				return bullet_ptr->isInCrushedState();
+			}
+		),
+		std::end(bullets)
+	);
 
 	// for(auto itr = bullets.begin(); itr != bullets.end();) {
-	// 	if(itr->isInCrushedState()) {
+	// 	if((*itr)->isInCrushedState()) {
 	// 		itr = bullets.erase(itr);
 	// 	}
 	// 	else {
@@ -150,10 +163,11 @@ void GameSession::updateGameState() {
 	// 	}
 	// }
 
-	// for(auto& b : bullets) {
-	// 	std::cout << b.getId() << " ";
-	// }
-	// std::cout << std::endl;
+	std::cout << "bullets after deletion: " << std::endl;
+	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
+		std::cout << bullet_ptr->getId() << " ";
+	}
+	std::cout << std::endl;
 
 	// TODO: respawn dead players
 

@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <vector>
+#include <memory>
 
 #include "game-models/GameWorldStorage/game-world-storage.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
@@ -17,14 +18,14 @@ struct GameSession {
 
 	int createPlayerAndReturnId();
 	
-	int addBullet(Bullet bullet);
+	int addBullet(std::shared_ptr<Bullet> bullet);
 	int createIdForNewBullet();
 
 	Player& getPlayer(int playerId);
-	Bullet& getBullet(int bulletId);
+	std::shared_ptr<Bullet> getBullet(int bulletId);
 
 	std::vector<Player>& getPlayers();
-	std::vector<Bullet>& getBullets();
+	std::vector<std::shared_ptr<Bullet>>& getBullets();
 
 	void updateGameState();
 
