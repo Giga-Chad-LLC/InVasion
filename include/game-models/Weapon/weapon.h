@@ -2,6 +2,7 @@
 #define WEAPON_H_
 
 #include <chrono>
+#include <memory>
 
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -12,7 +13,7 @@ namespace invasion::game_models {
 struct Weapon {
 	Weapon(int playerId, int ammo, double damage);
 
-	Bullet shoot(Vector2D playerPos, int bulletId);
+	std::shared_ptr<Bullet> shoot(Vector2D playerPos, int bulletId);
 	bool isAbleToShoot() const;
 	void reload();
 	bool isReloading() const;
