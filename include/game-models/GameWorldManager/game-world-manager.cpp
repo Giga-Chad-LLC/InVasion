@@ -24,7 +24,7 @@ void GameWorldManager::updateBulletsPositions(
 ) const {
 	const double appliedForceMagnitude = 1'000;
 
-	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
+	for(const std::shared_ptr<Bullet>& bullet_ptr : bullets) {
 		// TODO: do not update result force on every update request because the result force is never changing
 		const Vector2D resultForce = Vector2D::clampMagnitude(bullet_ptr->getMovingForce(), appliedForceMagnitude);
 		bullet_ptr->setResultForce(resultForce);
@@ -58,7 +58,7 @@ void GameWorldManager::updateBulletsPositions(
 			bullet_ptr->makeMove(dt);
 		}
 
-		std::cout << "bullet " << bullet_ptr->getId() << ", crushed: " << bullet_ptr->isInCrushedState() << " pos: " << bullet_ptr->getPosition() << std::endl;
+		// std::cout << "bullet " << bullet_ptr->getId() << ", crushed: " << bullet_ptr->isInCrushedState() << " pos: " << bullet_ptr->getPosition() << std::endl;
 	}
 }
 
