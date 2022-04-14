@@ -37,7 +37,7 @@ namespace invasion::session {
                             // std::cout << "velocity: " << responseModel.velocity().x() << ' ' << responseModel.velocity().y() << std::endl;
 
                             // serialize
-                            std::unique_ptr<char> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
                             responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
                             
 							NetworkPacketResponse response(std::move(buffer_ptr),
@@ -59,7 +59,7 @@ namespace invasion::session {
                             action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
 
                             std::cout << "Action button: " << action.key_pressed() << std::endl;
-                            std::unique_ptr<char> bytes_ptr = request.getPureBytes();
+                            std::unique_ptr<char[]> bytes_ptr = request.getPureBytes();
                             NetworkPacketResponse response(std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
                             
                             responseQueue->produce(std::move(response));

@@ -21,7 +21,7 @@ namespace invasion::session {
             std::uint32_t messageType; // get the message type
             client->m_channel.read(reinterpret_cast<char *> (&messageType), sizeof(messageType));
 
-            std::unique_ptr<char> buffer_ptr(new char[size]);
+            std::unique_ptr<char[]> buffer_ptr(new char[size]);
             NetworkPacketRequest packet(std::move(buffer_ptr), NetworkPacketRequest::getMessageTypeById(messageType),
                                         size);
             client->m_channel.read(reinterpret_cast<char *> (packet.getStoredBytes()), size);
