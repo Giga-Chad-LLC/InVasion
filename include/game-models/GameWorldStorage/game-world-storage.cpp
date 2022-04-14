@@ -11,7 +11,7 @@ std::vector<Player>& GameWorldStorage::getPlayers() {
 	return m_players;
 }
 
-std::vector<Bullet>& GameWorldStorage::getBullets() {
+std::vector<std::shared_ptr<Bullet>>& GameWorldStorage::getBullets() {
 	return m_bullets;
 }
 
