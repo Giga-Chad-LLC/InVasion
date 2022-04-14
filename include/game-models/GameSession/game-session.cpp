@@ -7,6 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <cmath>
 
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -135,19 +136,24 @@ void GameSession::updateGameState() {
 	m_manager.updatePlayersPositions(players, dt_s);
 	m_manager.updateBulletsPositions(bullets, players, dt_s);
 
-	// deleting crushed bullets
+	// deleting crushed or went out of bounds bullets
 	bullets.erase(
 		std::remove_if(
 			std::begin(bullets),
 			std::end(bullets), 
 			[](const std::shared_ptr<Bullet>& bullet_ptr) {
-				return bullet_ptr->isInCrushedState();
+				const Vector2D pos = bullet_ptr->getPosition();
+				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
+
+				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
 			}
 		),
 		std::end(bullets)
 	);
 
-	// TODO: respawn dead players
+	// std::cout << bullets.size() << std::endl;
+
+	// --------------- TODO: respawn dead players --------------- //
 
 	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }
