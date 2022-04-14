@@ -131,18 +131,11 @@ void GameSession::updateGameState() {
 	auto& players = m_storage.getPlayers();
 	auto& bullets = m_storage.getBullets();
 
-	// std::cout << bullets.size() << std::endl;
 
 	m_manager.updatePlayersPositions(players, dt_s);
 	m_manager.updateBulletsPositions(bullets, players, dt_s);
 
-	// TODO: delete crushed bullets
-	std::cout << "bullets before deletion: " << std::endl;
-	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
-		std::cout << bullet_ptr->getId() << " ";
-	}
-	std::cout << std::endl;
-
+	// deleting crushed bullets
 	bullets.erase(
 		std::remove_if(
 			std::begin(bullets),
@@ -154,24 +147,7 @@ void GameSession::updateGameState() {
 		std::end(bullets)
 	);
 
-	// for(auto itr = bullets.begin(); itr != bullets.end();) {
-	// 	if((*itr)->isInCrushedState()) {
-	// 		itr = bullets.erase(itr);
-	// 	}
-	// 	else {
-	// 		++itr;
-	// 	}
-	// }
-
-	std::cout << "bullets after deletion: " << std::endl;
-	for(std::shared_ptr<Bullet> bullet_ptr : bullets) {
-		std::cout << bullet_ptr->getId() << " ";
-	}
-	std::cout << std::endl;
-
 	// TODO: respawn dead players
-
-
 
 	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }
