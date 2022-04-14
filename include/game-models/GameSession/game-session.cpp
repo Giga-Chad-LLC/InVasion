@@ -5,6 +5,9 @@
 #include <chrono>
 #include <ctime> 
 #include <iostream>
+#include <algorithm>
+#include <memory>
+#include <cmath>
 
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -18,7 +21,7 @@ GameSession::GameSession() {
 }
 
 // returns id of created player
-uint32_t GameSession::createPlayerAndReturnId() {
+int GameSession::createPlayerAndReturnId() {
 	auto& players = m_storage.getPlayers();
 	const auto playerId = static_cast<int>(players.size());
 
@@ -60,9 +63,9 @@ uint32_t GameSession::createPlayerAndReturnId() {
 }
 
 
-int GameSession::addBullet(Bullet bullet) {
-	const int id = bullet.getId();
-	m_storage.getBullets().push_back(std::move(bullet));	
+int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
+	const int id = bullet->getId();
+	m_storage.getBullets().push_back(bullet);	
 	return id;
 }
 
@@ -95,21 +98,27 @@ std::vector<Player>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
 
+std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
+	return m_storage.getBullets();
+}
 
-Bullet& GameSession::getBullet(int bulletId) {
+
+std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 	auto& bullets = m_storage.getBullets();
-	Bullet* bullet_ptr = nullptr;
+	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
-	for(Bullet& bullet : bullets) {
-		if(bulletId == bullet.getId()) {
-			bullet_ptr = &bullet;
+	for(std::shared_ptr<Bullet> bullet : bullets) {
+		if(bulletId == bullet->getId()) {
+			bullet_ptr = bullet;
 			break;
 		}
 	}
 
 	assert(bullet_ptr != nullptr);
-	return *bullet_ptr;
+	return bullet_ptr;
 }
+
+
 
 
 void GameSession::updateGameState() {
@@ -118,10 +127,33 @@ void GameSession::updateGameState() {
 	// deleting objects (killing players, deleting bullets) if needed: TODO
 	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
 
-	long long dt = GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms;
+	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
-	m_manager.updatePlayersPositions(players, dt / 1000.0);
+	auto& bullets = m_storage.getBullets();
+
+
+	m_manager.updatePlayersPositions(players, dt_s);
+	m_manager.updateBulletsPositions(bullets, players, dt_s);
+
+	// deleting crushed or went out of bounds bullets
+	bullets.erase(
+		std::remove_if(
+			std::begin(bullets),
+			std::end(bullets), 
+			[](const std::shared_ptr<Bullet>& bullet_ptr) {
+				const Vector2D pos = bullet_ptr->getPosition();
+				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
+
+				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
+			}
+		),
+		std::end(bullets)
+	);
+
+	// std::cout << bullets.size() << std::endl;
+
+	// --------------- TODO: respawn dead players --------------- //
 
 	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }

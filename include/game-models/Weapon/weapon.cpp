@@ -1,6 +1,7 @@
 #include <utility>
 #include <cassert>
 #include <chrono>
+#include <memory>
 
 #include "weapon.h"
 
@@ -35,18 +36,23 @@ Weapon::Weapon(int playerId, int ammo, double damage)
 
 
 // Weapon::shoot may be called only if gun is able to shoot
-Bullet Weapon::shoot(const Vector2D playerPos, const int bulletId) {
+std::shared_ptr<Bullet> Weapon::shoot(const Vector2D initialPos, const int bulletId) {
 	assert(isAbleToShoot());
 	
 	m_leftMagazine--;
 	// m_lastShotTimestamp_ms = Weapon::getCurrentTime_ms();
 
-	Bullet bullet(std::move(playerPos), bulletId, m_playerId, m_damage);
+	std::shared_ptr<Bullet> bullet_ptr = std::make_shared<Bullet>(
+		std::move(initialPos), 
+		bulletId, 
+		m_playerId, 
+		m_damage
+	);
 
-	bullet.setMovingForce(m_direction);
-	bullet.setMovingState(true);
+	bullet_ptr->setMovingForce(m_direction);
+	bullet_ptr->setMovingState(true);
 
-	return bullet;
+	return bullet_ptr;
 }
 
 
