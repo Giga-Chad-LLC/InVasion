@@ -23,7 +23,7 @@ struct GameSession {
 	Player& getPlayer(int playerId);
 	Bullet& getBullet(int bulletId);
 
-	std::vector<Player>& GameSession::getPlayers();
+	std::vector<Player>& getPlayers();
 
 	void updateGameState();
 
