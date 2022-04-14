@@ -13,7 +13,9 @@ namespace invasion::game_models {
 
 struct GameWorldManager {
 	void updatePlayersPositions(std::vector<Player>& players, double dt) const;
-	Vector2D tryUpdatePosition(KinematicObject* object, double dt) const;
+
+private:
+	void applyFrictionAndSetResultForceOnPlayer(Player& player, double dt) const;
 };
 
 
