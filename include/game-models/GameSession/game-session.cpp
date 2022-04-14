@@ -5,6 +5,7 @@
 #include <chrono>
 #include <ctime> 
 #include <iostream>
+#include <algorithm>
 
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -18,7 +19,7 @@ GameSession::GameSession() {
 }
 
 // returns id of created player
-uint32_t GameSession::createPlayerAndReturnId() {
+int GameSession::createPlayerAndReturnId() {
 	auto& players = m_storage.getPlayers();
 	const auto playerId = static_cast<int>(players.size());
 
@@ -95,6 +96,10 @@ std::vector<Player>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
 
+std::vector<Bullet>& GameSession::getBullets() {
+	return m_storage.getBullets();
+}
+
 
 Bullet& GameSession::getBullet(int bulletId) {
 	auto& bullets = m_storage.getBullets();
@@ -112,16 +117,47 @@ Bullet& GameSession::getBullet(int bulletId) {
 }
 
 
+
+
 void GameSession::updateGameState() {
 	// trying update players/bullets positions: manager.tryUpdatePosition(...): TODO
 	// checking collisions: TODO
 	// deleting objects (killing players, deleting bullets) if needed: TODO
 	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
 
-	long long dt = GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms;
+	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
-	m_manager.updatePlayersPositions(players, dt / 1000.0);
+	auto& bullets = m_storage.getBullets();
+
+	// std::cout << bullets.size() << std::endl;
+
+	m_manager.updatePlayersPositions(players, dt_s);
+	m_manager.updateBulletsPositions(bullets, players, dt_s);
+
+	// TODO: delete crushed bullets
+	// for(auto& b : bullets) {
+	// 	std::cout << b.getId() << " ";
+	// }
+	// std::cout << std::endl;
+
+	// for(auto itr = bullets.begin(); itr != bullets.end();) {
+	// 	if(itr->isInCrushedState()) {
+	// 		itr = bullets.erase(itr);
+	// 	}
+	// 	else {
+	// 		++itr;
+	// 	}
+	// }
+
+	// for(auto& b : bullets) {
+	// 	std::cout << b.getId() << " ";
+	// }
+	// std::cout << std::endl;
+
+	// TODO: respawn dead players
+
+
 
 	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }

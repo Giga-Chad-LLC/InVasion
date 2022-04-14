@@ -15,7 +15,7 @@ namespace invasion::game_models {
 struct GameSession {
 	GameSession();
 
-	uint32_t createPlayerAndReturnId();
+	int createPlayerAndReturnId();
 	
 	int addBullet(Bullet bullet);
 	int createIdForNewBullet();
@@ -23,7 +23,8 @@ struct GameSession {
 	Player& getPlayer(int playerId);
 	Bullet& getBullet(int bulletId);
 
-	std::vector<Player>& GameSession::getPlayers();
+	std::vector<Player>& getPlayers();
+	std::vector<Bullet>& getBullets();
 
 	void updateGameState();
 
