@@ -29,5 +29,5 @@ func update_player_position(player_position_model: PlayersPositionsResponseModel
 func _ready():
 	animationTree.active = true
 
-func _process(delta):
+func _process(_delta):
 	animate_player()

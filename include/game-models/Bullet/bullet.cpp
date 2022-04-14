@@ -19,7 +19,9 @@ Bullet::Bullet(Vector2D initialPos, int bulletId, int playerId, double damage)
 	), 
 	m_id(bulletId),
 	m_playerId(playerId),
-	m_damage(damage) {}
+	m_damage(damage),
+	m_isCrushed(false) {}
+
 
 int Bullet::getId() const {
 	return m_id;
@@ -27,6 +29,19 @@ int Bullet::getId() const {
 
 int Bullet::getPlayerId() const {
 	return m_playerId;
+}
+
+double Bullet::getDamage() const {
+	return m_damage;
+}
+
+
+bool Bullet::isInCrushedState() const {
+	return m_isCrushed; 
+}
+
+void Bullet::setCrushedState(const bool state) {
+	m_isCrushed = state;
 }
 
 

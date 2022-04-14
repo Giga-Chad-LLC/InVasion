@@ -2,6 +2,7 @@
 #define GAME_WORLD_STORAGE_H_
 
 #include <vector>
+#include <memory>
 
 #include "game-models/Player/player.h"
 #include "game-models/Bullet/bullet.h"
@@ -12,11 +13,11 @@ namespace invasion::game_models {
 struct GameWorldStorage {
 	
 	std::vector<Player>& getPlayers();
-	std::vector<Bullet>& getBullets();
+	std::vector<std::shared_ptr<Bullet>>& getBullets();
 
 private:
 	std::vector<Player> m_players;
-	std::vector<Bullet> m_bullets;
+	std::vector<std::shared_ptr<Bullet>> m_bullets;
 };
 
 

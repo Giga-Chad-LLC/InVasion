@@ -30,7 +30,7 @@ struct KinematicObject : Object {
 	void setMovingState(bool state);
 	bool isMoving() const;
 
-protected:
+private:
 	Vector2D m_velocity;
 	Vector2D m_acceleration;
 	Vector2D m_moving_force;

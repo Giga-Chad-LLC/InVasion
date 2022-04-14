@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 #include "game-world-manager.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -7,19 +8,62 @@
 
 namespace invasion::game_models {
 	
+// public:
 void GameWorldManager::updatePlayersPositions(std::vector<Player>& players, double dt) const {
-
 	for(Player& player : players) {
-
 		this->applyFrictionAndSetResultForceOnPlayer(player, dt);
 		this->updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(players, player, dt);
-		
 		player.makeMove(dt);
 	}
 }
 
+void GameWorldManager::updateBulletsPositions(
+	std::vector<std::shared_ptr<Bullet>>& bullets, 
+	std::vector<Player>& players, 
+	double dt
+) const {
+	const double appliedForceMagnitude = 1'000;
+
+	for(const std::shared_ptr<Bullet>& bullet_ptr : bullets) {
+		// TODO: do not update result force on every update request because the result force is never changing
+		const Vector2D resultForce = Vector2D::clampMagnitude(bullet_ptr->getMovingForce(), appliedForceMagnitude);
+		bullet_ptr->setResultForce(resultForce);
 
 
+		// checking collisions
+		Player* collidedPlayer = nullptr;
+
+		const Vector2D curPosition = bullet_ptr->getPosition();
+		const Vector2D nextPosition = bullet_ptr->intentMove(dt);
+
+		bullet_ptr->setPosition(nextPosition);
+
+		// searching for collided player
+		for(Player& player : players) {
+			if(player.getId() != bullet_ptr->getPlayerId() && player.collidesWith(bullet_ptr.get())) {
+				collidedPlayer = &player;
+				break;
+			}
+		}
+
+		bullet_ptr->setPosition(curPosition);
+
+		if(collidedPlayer != nullptr) {
+			// std::cout << collidedPlayer->getId() << std::endl;
+			// std::cout << "bullet " << bullet_ptr->getId() << " damaged player " << collidedPlayer->getId() << std::endl; 
+			collidedPlayer->applyDamage(bullet_ptr->getDamage());
+			bullet_ptr->setCrushedState(true);
+		}
+		else {
+			bullet_ptr->makeMove(dt);
+		}
+
+		// std::cout << "bullet " << bullet_ptr->getId() << ", crushed: " << bullet_ptr->isInCrushedState() << " pos: " << bullet_ptr->getPosition() << std::endl;
+	}
+}
+
+
+// private:
 void GameWorldManager::applyFrictionAndSetResultForceOnPlayer(Player& player, const double dt) const {
 	const double g = -9.81;
 	const double nu = 0.9;
@@ -54,7 +98,6 @@ void GameWorldManager::applyFrictionAndSetResultForceOnPlayer(Player& player, co
 	
 	player.setResultForce(resultForce);
 }
-
 
 
 void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(

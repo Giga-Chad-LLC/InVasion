@@ -4,7 +4,7 @@
 #include <thread>
 #include <utility>
 #include "server/server.h"
-#include "server/network-packet.h"
+#include "server/NetworkPacket/network-packet.h"
 #include "player-id-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
 #include "interactors/InitialStateResponseInteractor/initial-state-response-interactor.h"
@@ -37,7 +37,7 @@ namespace invasion::session {
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
             uint32_t playerId = m_gameSession.createPlayerAndReturnId();
-            auto client = std::make_shared<Client>(std::move(socket));
+            auto client = std::make_shared<Client>(std::move(socket), playerId);
 
             m_connectedClients.push_back(client);
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client, &m_requestQueue); // создание двух потоков на каждого клиента
@@ -59,5 +59,16 @@ namespace invasion::session {
                 });
             }
         }
+    }
+
+    // finds client by its player id in a game session (returns `nullptr`, if not found)
+    std::shared_ptr<Client> Server::getConnectedClientByPlayerId(uint32_t playerId) const {
+        for (auto &client : m_connectedClients) {
+            if (client->m_clientIdInGameSession == playerId) {
+                return client;
+            }
+        }
+
+        return nullptr;
     }
 }
