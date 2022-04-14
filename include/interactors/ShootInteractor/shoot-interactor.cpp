@@ -1,4 +1,5 @@
 #include <utility>
+#include <memory>
 
 #include "shoot-interactor.h"
 // response-models
@@ -33,9 +34,12 @@ response_models::ShootingStateResponseSchema ShootInteractor::execute(
 	response.mutable_weapon_direction()->set_y(direction.getY());
 
 	if(weapon.isAbleToShoot()) {
-		game_models::Bullet bullet = weapon.shoot(player.getPosition(), session.createIdForNewBullet());
+		const game_models::Vector2D position = player.getPosition();
+		const int bulletId = session.createIdForNewBullet();
+
+		std::shared_ptr<game_models::Bullet> bullet = weapon.shoot(position, bulletId);
 		// adding bullet in session storage
-		session.addBullet(std::move(bullet));
+		session.addBullet(bullet);
 	}
 	else if(weapon.isReloading()) {
 		response.set_is_reloading(true);
