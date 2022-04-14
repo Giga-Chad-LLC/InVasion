@@ -25,15 +25,11 @@ struct Player : KinematicObject {
 	explicit Player(Vector2D initial_pos, int playerId, Player::TeamId teamId);
 
 	int getId() const;
-<<<<<<< HEAD
 	Player::TeamId Player::getTeamId() const;
 	double getHitPoints() const;
 	void applyDamage(double damage);
 	bool isInDeadState() const;
 	void respawn(Vector2D position);
-=======
-	Player::TeamId getTeamId() const;
->>>>>>> d8e9207e49fb07c02e80a07b0223a7ecb26b2c04
 	Weapon& getWeapon();
 
 private:

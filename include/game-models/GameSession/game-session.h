@@ -25,10 +25,7 @@ struct GameSession {
 	std::shared_ptr<Bullet> getBullet(int bulletId);
 
 	std::vector<Player>& getPlayers();
-<<<<<<< HEAD
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
-=======
->>>>>>> d8e9207e49fb07c02e80a07b0223a7ecb26b2c04
 
 	void updateGameState();
 
