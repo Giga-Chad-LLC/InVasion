@@ -4,6 +4,7 @@ extends KinematicBody2D
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
+onready var player_gun = $Gun
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -36,7 +37,7 @@ func _ready():
 	add_child(producer)
 	add_child(consumer)
 
-func _process(delta):
+func _physics_process(delta):
 #	Send data to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
 		var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
@@ -74,6 +75,7 @@ func _process(delta):
 			print("Unknown message type!")
 	
 	animate_player()
+	player_gun.animate_gun()
 
 func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())

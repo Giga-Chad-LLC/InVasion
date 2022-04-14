@@ -12,7 +12,7 @@ var is_reloading = false
 func instance_bullet():
 	var bullet_model_instance = Global.instance_node_at_location(bullet_model,
 							  bullet_spawning_node, shoot_point.global_position)
-	bullet_model_instance.initial_rotation = rotation
+	bullet_model_instance.initial_rotation = global_rotation
 
 func shoot_bullet():
 	instance_bullet()
@@ -25,12 +25,8 @@ func _on_ReloadTimer_timeout():
 func rotate_gun_to_mouse_cursor():
 	look_at(get_global_mouse_position())
 
-
-# Built-in functions
-func _physics_process(_delta):
+func animate_gun():
 	rotate_gun_to_mouse_cursor()
 	
 	if (Input.is_action_pressed("shoot") and not is_reloading):
 		shoot_bullet()
-
-
