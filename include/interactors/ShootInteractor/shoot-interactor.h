@@ -15,7 +15,7 @@ namespace invasion::interactors {
 	
 
 struct ShootInteractor {
-	response_models::ShootingStateResponseSchema execute(
+	response_models::ShootingStateResponse execute(
 		const request_models::ShootRequestModel& req, 
 		game_models::GameSession& session
 	) const;
