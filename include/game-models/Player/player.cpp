@@ -7,7 +7,7 @@ const double Player::MAX_SPEED = 100;
 const double Player::MASS = 60.0;
 const int Player::INITIAL_AMMO = 180;
 const double Player::DAMAGE = 15.0;
-const Vector2D Player::COLLIDER_SIZE(20, 20);
+const Vector2D Player::COLLIDER_SIZE(12, 6);
 
 	
 Player::Player(Vector2D initial_pos, const int playerId, const Player::TeamId teamId)
