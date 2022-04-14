@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=59 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://screens/game/images/cliff_tileset.png" type="Texture" id=4]
 [ext_resource path="res://screens/game/images/grass_background.png" type="Texture" id=5]
 [ext_resource path="res://screens/game/images/dirt_tileset.png" type="Texture" id=6]
-[ext_resource path="res://models/gun/gun.tscn" type="PackedScene" id=7]
 [ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
 [ext_resource path="res://icon.png" type="Texture" id=9]
 [ext_resource path="res://bin/gdexample.gdns" type="Script" id=10]
@@ -517,9 +516,6 @@ collision_mask = 0
 [node name="Camera2D" type="Camera2D" parent="YSort/Player"]
 current = true
 smoothing_enabled = true
-
-[node name="Gun" parent="YSort/Player" instance=ExtResource( 7 )]
-position = Vector2( 5, -5 )
 
 [node name="Bullets" type="YSort" parent="YSort"]
 
