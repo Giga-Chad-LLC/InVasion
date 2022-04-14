@@ -18,7 +18,7 @@ namespace invasion::session {
         response.set_playerid(playerId);
         
         uint32_t size = response.ByteSizeLong();
-        std::unique_ptr<char> buffer_ptr(new char[size]);
+        std::unique_ptr<char[]> buffer_ptr(new char[size]);
         response.SerializeToArray(buffer_ptr.get(), size);
         NetworkPacketResponse packet(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
         client->m_clientResponseQueue.produce(std::move(packet));

@@ -18,7 +18,7 @@ func despawn_player(player_id):
 	get_tree().get_root().get_node("World/YSort/OtherPlayers/" + str(player_id)).queue_free()
 
 
-func update_game_state(game_state: Array):
+func update_players_states(game_state: Array):
 	var parent_node = get_tree().get_root().get_node("World/YSort/OtherPlayers")
 	
 	for i in range(0, game_state.size()):

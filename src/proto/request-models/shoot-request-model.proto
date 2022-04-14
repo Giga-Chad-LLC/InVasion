@@ -4,7 +4,6 @@ package request_models;
 import "vector2d.proto";
 
 message ShootRequestModel {
-	int32 session_id = 1;
-	int32 player_id = 2;
-	util_models.Vector2D weapon_direction = 3;
+	int32 player_id = 1;
+	util_models.Vector2D weapon_direction = 2;
 }

@@ -14,7 +14,7 @@
 
 namespace invasion::interactors {
 	
-response_models::ShootingStateResponseSchema ShootInteractor::execute(
+response_models::ShootingStateResponse ShootInteractor::execute(
 	const request_models::ShootRequestModel& req, 
 	game_models::GameSession& session
 ) const {
@@ -24,7 +24,7 @@ response_models::ShootingStateResponseSchema ShootInteractor::execute(
 	game_models::Vector2D direction(req.weapon_direction().x(), req.weapon_direction().y());
 	weapon.setDirection(std::move(direction));
 	
-	response_models::ShootingStateResponseSchema response;
+	response_models::ShootingStateResponse response;
 	
 	response.set_player_id(player.getId());
 	// default values for reloading related state
