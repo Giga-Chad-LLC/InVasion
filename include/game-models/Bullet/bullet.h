@@ -12,15 +12,20 @@ struct Bullet : KinematicObject {
 
 	int getId() const;
 	int getPlayerId() const;
+	double getDamage() const;
+	bool isInCrushedState() const;
+	void setCrushedState(bool state);
 
 	static const double MAX_SPEED;
 	static const double MASS;
+
 private:
 	static const Vector2D COLLIDER_SIZE;
 
 	const int m_id;
 	const int m_playerId;
 	const double m_damage;
+	bool m_isCrushed;
 };
 
 
