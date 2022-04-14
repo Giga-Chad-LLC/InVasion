@@ -16,6 +16,12 @@ struct GameWorldManager {
 
 private:
 	void applyFrictionAndSetResultForceOnPlayer(Player& player, double dt) const;
+	
+	void updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(
+		std::vector<Player>& players, 
+		Player& consideredPlayer, 
+		double dt
+	) const;
 };
 
 
