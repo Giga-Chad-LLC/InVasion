@@ -1,7 +1,7 @@
 #include "engine.h"
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
-#include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
+#include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
 #include "interactors/ShootInteractor/shoot-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
@@ -33,7 +33,9 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<NetworkPacketRequest> &re
                 // work with this object
                 switch (request.getMessageType()) {
                     case RequestModel_t::UpdateGameStateRequestModel: {
-                        interactors::UpdateGameStateInteractor interactor;
+						gameSession->updateGameState();
+
+                        interactors::PlayersPositionsResponseInteractor interactor;
                         response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
 
                         // serialize
