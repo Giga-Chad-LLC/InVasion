@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package response_models;
+import "vector2d.proto";
+
+
+message BulletPositionResponseModel {
+  int32 bullet_id = 1;
+  int32 player_id = 2;
+  util_models.Vector2D position = 3;
+  util_models.Vector2D velocity = 4;
+}

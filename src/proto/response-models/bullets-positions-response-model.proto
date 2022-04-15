@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package response_models;
+import "bullet-position-response-model.proto";
+
+
+// PlayerPositionResponseModel
+message BulletsPositionsResponseModel {
+	repeated response_models.BulletPositionResponseModel bullets = 1;
+}
