@@ -11,6 +11,7 @@ add_subdirectory(./tests/)
 # INTERACTORS-SRCS - propagated from ./include/interactors
 # CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
+# GAME-SERVER-SRCS - propagated from ./include/server
 
 
 #### setting names for executables
@@ -109,6 +110,7 @@ add_executable(${SERVER_TARGET}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
+        ${GAME-SERVER-SRCS}
         )
 
 # including Protobuf dirs to server target

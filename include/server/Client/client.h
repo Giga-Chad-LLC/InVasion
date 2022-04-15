@@ -4,7 +4,8 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
-#include "network-packet.h"
+#include "server/NetworkPacket/network-packet.h"
+#include "server/safe-queue.h"
 #include "game-models/GameSession/game-session.h"
 
 namespace invasion::session {
@@ -12,18 +13,21 @@ namespace invasion::session {
 
     class Client {
     private:
+        uint32_t m_clientIdInGameSession;
         tcp::iostream m_channel;
         SafeQueue<NetworkPacketResponse> m_clientResponseQueue;
 
         friend class ClientRequestsReceiver;
         friend class ClientResponsesSender;
         friend class Server;
+        friend class RequestQueueManager;
 
         friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
         friend void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId);
 
     public:
-        explicit Client(tcp::socket &&socket) : m_channel(std::move(socket)) {}
+        Client() = default;
+        explicit Client(tcp::socket &&socket, uint32_t playerId);
     };
 }
 #endif //INVASION_SERVER_USER_H

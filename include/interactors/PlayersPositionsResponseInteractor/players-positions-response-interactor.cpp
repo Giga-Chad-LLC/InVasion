@@ -28,7 +28,7 @@ response_models::PlayersPositionsResponseModel PlayersPositionsResponseInteracto
 	for(const auto& player : players) {
 		response_models::PlayerPositionResponseModel* playerModel = response.add_players();
 
-		playerModel->set_playerid(player.getId());
+		playerModel->set_player_id(player.getId());
 		
 		if(player.getTeamId() == Player::TeamId::FirstTeam) {
 			playerModel->set_team_id(response_models::PlayerPositionResponseModel::FirstTeam);

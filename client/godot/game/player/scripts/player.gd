@@ -65,7 +65,7 @@ func _physics_process(_delta):
 				players_positions = players_positions.get_players()
 				for i in range(0, players_positions.size()):
 					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions[i]
-					if (model.get_playerId() == player_id):
+					if (model.get_player_id() == player_id):
 						update_player_position(model)
 						players_positions.erase(model) # erase ourselves
 						break
@@ -153,7 +153,7 @@ func set_player_id(packet: NetworkPacket) -> void:
 	if (result_code != PlayerIdResponseModel.PB_ERR.NO_ERRORS):
 		print("Error while receiving: ", "cannot unpack player id")
 	else:
-		player_id = player_id_model.get_playerId()
+		player_id = player_id_model.get_player_id()
 		print("Set my id in a game session: ", player_id)
 
 # Networking
