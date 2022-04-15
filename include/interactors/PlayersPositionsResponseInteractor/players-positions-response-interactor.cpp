@@ -18,9 +18,6 @@ using namespace invasion::game_models;
 
 
 response_models::PlayersPositionsResponseModel PlayersPositionsResponseInteractor::execute(GameSession& session) const {
-	// // updating game
-	// session.updateGameState();
-
 	response_models::PlayersPositionsResponseModel response;
 	
 	const std::vector<Player>& players = session.getPlayers();
