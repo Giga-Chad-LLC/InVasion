@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "update-game-state-interactor.h"
+#include "players-positions-response-interactor.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player.h"
@@ -17,9 +17,9 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 
 
-response_models::PlayersPositionsResponseModel UpdateGameStateInteractor::execute(GameSession& session) const {
-	// updating game
-	session.updateGameState();
+response_models::PlayersPositionsResponseModel PlayersPositionsResponseInteractor::execute(GameSession& session) const {
+	// // updating game
+	// session.updateGameState();
 
 	response_models::PlayersPositionsResponseModel response;
 	
