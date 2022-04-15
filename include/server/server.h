@@ -48,10 +48,9 @@ namespace invasion::session {
     public:
         explicit Server();
         void awaitNewConnections();
-        std::shared_ptr<Client> getConnectedClientByPlayerId(uint32_t playerId) const;
 
-        friend void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession);
         friend class ClientRequestsReceiver;
+        friend class RequestQueueManager;
         // puts each response packet from main response queue to client specific response queues
         friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
     };

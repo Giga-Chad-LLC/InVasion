@@ -5,13 +5,20 @@
 #include <memory>
 // server
 #include "server/NetworkPacket/network-packet.h"
+#include "server/Client/client.h"
 #include "server/safe-queue.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 
 
+class Server;
 
 namespace invasion::session {
-    void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession); 
+    class RequestQueueManager {
+    private:
+        static std::shared_ptr<Client> getConnectedClientByPlayerId(const std::vector <std::shared_ptr<Client>> &connectedClients, uint32_t playerId);
+    public:
+        static void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession, const std::vector <std::shared_ptr<Client>> &connectedClients);
+    }; 
 }
 #endif //INVASION_SERVER_ENGINE_H
