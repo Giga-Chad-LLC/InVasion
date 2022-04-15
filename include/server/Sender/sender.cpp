@@ -6,6 +6,7 @@
 #include "player-position-response-model.pb.h"
 #include <thread>
 #include <cstring>
+#include <utility>
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -16,12 +17,12 @@
 
 namespace invasion::session {
 ClientResponsesSender::ClientResponsesSender(std::shared_ptr<Client> client) {
-    std::thread([client = client]() {
+    std::thread([client = std::move(client)]() {
         while (true) {
-            NetworkPacketResponse response;
+            std::shared_ptr<NetworkPacketResponse> response;
             if (client->m_clientResponseQueue.consumeSync(response)) {
-                uint32_t messageLength = response.bytesSize() + sizeof(static_cast<std::uint32_t> (response.getMessageType())) + sizeof(response.bytesSize());
-                std::shared_ptr<char[]> buffer = response.serializeToByteArray();
+                uint32_t messageLength = response->bytesSize() + sizeof(static_cast<std::uint32_t> (response->getMessageType())) + sizeof(response->bytesSize());
+                std::shared_ptr<char[]> buffer = response->serializeToByteArray();
                 client->m_channel.write(buffer.get(), messageLength);
 
                 // Print bytes (for debug only)

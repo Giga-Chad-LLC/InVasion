@@ -5,7 +5,7 @@
 #include <memory>
 // server
 #include "safe-queue.h"
-#include "network-packet.h"
+#include "NetworkPacket/network-packet.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 // interactors
@@ -23,14 +23,14 @@
 
 
 namespace invasion::session {
-    inline void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue,
+    inline void manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPacketRequest>> &requestQueue, SafeQueue<std::shared_ptr<NetworkPacketResponse>> &responseQueue,
                               game_models::GameSession &gameSession) {
         std::thread([requestQueue = &requestQueue, responseQueue = &responseQueue, gameSession = &gameSession]() {
             while (true) {
-                NetworkPacketRequest request;
+                std::shared_ptr<NetworkPacketRequest> request;
                 if (requestQueue->consumeSync(request)) {
                     // work with this object
-                    switch (request.getMessageType()) {
+                    switch (request->getMessageType()) {
                         case RequestModel_t::UpdateGameStateRequestModel: {
 							// updating session's game state
 							gameSession->updateGameState();
@@ -42,7 +42,7 @@ namespace invasion::session {
                             std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
                             responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
                             
-							NetworkPacketResponse response(std::move(buffer_ptr),
+							auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
                                                            ResponseModel_t::PlayersPositionsResponseModel,
                                                            responseModel.ByteSizeLong());
                             
@@ -51,25 +51,25 @@ namespace invasion::session {
                         }
                         case RequestModel_t::MoveRequestModel: {
                             request_models::MoveRequestModel move;
-                            move.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+                            move.ParseFromArray(request->getStoredBytes(), request->bytesSize());
                             interactors::MoveInteractor interactor;
                             interactor.execute(move, *gameSession);
                             break;
                         }
                         case RequestModel_t::PlayerActionRequestModel: { //  leave it for now, then we will delete this request/response-model
                             PlayerAction action; // buttons
-                            action.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+                            action.ParseFromArray(request->getStoredBytes(), request->bytesSize());
 
                             std::cout << "Action button: " << action.key_pressed() << std::endl;
-                            std::unique_ptr<char[]> bytes_ptr = request.getPureBytes();
-                            NetworkPacketResponse response(std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request.bytesSize());
+                            std::unique_ptr<char[]> bytes_ptr = request->getPureBytes();
+                            auto response = std::make_shared<NetworkPacketResponse> (std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request->bytesSize());
                             
                             responseQueue->produce(std::move(response));
                             break;
                         }
                         case RequestModel_t::ShootRequestModel: {
                             request_models::ShootRequestModel shootAction;
-                            shootAction.ParseFromArray(request.getStoredBytes(), request.bytesSize());
+                            shootAction.ParseFromArray(request->getStoredBytes(), request->bytesSize());
 
                             interactors::ShootInteractor interactor;
                             response_models::ShootingStateResponse responseModel = interactor.execute(shootAction, *gameSession);
@@ -78,7 +78,7 @@ namespace invasion::session {
                             std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
                             responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
 
-                            NetworkPacketResponse response(std::move(buffer_ptr),
+                            auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
                                                            ResponseModel_t::ShootingStateResponseModel,
                                                            responseModel.ByteSizeLong());
                             

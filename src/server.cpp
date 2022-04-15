@@ -20,7 +20,7 @@ namespace invasion::session {
         uint32_t size = response.ByteSizeLong();
         std::unique_ptr<char[]> buffer_ptr(new char[size]);
         response.SerializeToArray(buffer_ptr.get(), size);
-        NetworkPacketResponse packet(std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
+        auto packet = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
         client->m_clientResponseQueue.produce(std::move(packet));
     }
 
@@ -54,7 +54,7 @@ namespace invasion::session {
                 
                 // start tick controller
                 m_tickController.start([this]() mutable {
-                    NetworkPacketRequest request(nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
+                    auto request = std::make_shared<NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
                     m_requestQueue.produce(std::move(request));
                 });
             }

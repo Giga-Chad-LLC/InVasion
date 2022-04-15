@@ -15,14 +15,14 @@ namespace invasion::session {
     private:
         uint32_t m_clientIdInGameSession;
         tcp::iostream m_channel;
-        SafeQueue<NetworkPacketResponse> m_clientResponseQueue;
+        SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_clientResponseQueue;
 
         friend class ClientRequestsReceiver;
         friend class ClientResponsesSender;
         friend class Server;
         friend class RequestQueueManager;
 
-        friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
+        friend void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue);
         friend void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId);
 
     public:

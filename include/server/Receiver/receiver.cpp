@@ -5,7 +5,7 @@
 
 
 namespace invasion::session {
-ClientRequestsReceiver::ClientRequestsReceiver(std::shared_ptr<Client> client, SafeQueue<NetworkPacketRequest> *requestQueue) {
+ClientRequestsReceiver::ClientRequestsReceiver(std::shared_ptr<Client> client, SafeQueue<std::shared_ptr<NetworkPacketRequest>> *requestQueue) {
     std::thread([client = std::move(client), q = requestQueue]() {
         while (client->m_channel) {
             // get data from client
@@ -19,16 +19,16 @@ ClientRequestsReceiver::ClientRequestsReceiver(std::shared_ptr<Client> client, S
 }
 
 
-std::optional<NetworkPacketRequest> ClientRequestsReceiver::getRequestFromClient(std::shared_ptr<Client> client) {
+std::optional<std::shared_ptr<NetworkPacketRequest>> ClientRequestsReceiver::getRequestFromClient(std::shared_ptr<Client> client) {
     std::uint32_t size;  // get the message data length in bytes
     client->m_channel.read(reinterpret_cast<char *> (&size), sizeof(size));
     std::uint32_t messageType; // get the message type
     client->m_channel.read(reinterpret_cast<char *> (&messageType), sizeof(messageType));
 
     std::unique_ptr<char[]> buffer_ptr(new char[size]);
-    NetworkPacketRequest packet(std::move(buffer_ptr), NetworkPacketRequest::getMessageTypeById(messageType),
+    auto packet = std::make_shared<NetworkPacketRequest> (std::move(buffer_ptr), NetworkPacketRequest::getMessageTypeById(messageType),
                                 size);
-    client->m_channel.read(reinterpret_cast<char *> (packet.getStoredBytes()), size);
+    client->m_channel.read(reinterpret_cast<char *> (packet->getStoredBytes()), size);
     
     if (!client->m_channel) {
         return {};
