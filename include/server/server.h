@@ -22,12 +22,12 @@
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    inline std::vector<std::shared_ptr<Client>> m_connectedClients;
+    inline std::vector<std::shared_ptr<Client>> connectedClients;
     inline void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue) {
         while (true) {
             NetworkPacketResponse response;
             if (responseQueue->consumeSync(response)) {
-                for (auto client: m_connectedClients) { // пока никакой обработки просто имитируем ее
+                for (auto client: connectedClients) {
                     NetworkPacketResponse packet = response;
                     client->m_clientResponseQueue.produce(std::move(packet));
                 }

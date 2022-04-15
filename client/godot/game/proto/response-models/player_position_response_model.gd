@@ -664,10 +664,10 @@ class PlayerPositionResponseModel:
 	func _init():
 		var service
 		
-		_playerId = PBField.new("playerId", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
-		service.field = _playerId
-		data[_playerId.tag] = service
+		service.field = _player_id
+		data[_player_id.tag] = service
 		
 		_team_id = PBField.new("team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
 		service = PBServiceField.new()
@@ -688,14 +688,14 @@ class PlayerPositionResponseModel:
 		
 	var data = {}
 	
-	var _playerId: PBField
-	func get_playerId() -> int:
-		return _playerId.value
-	func clear_playerId() -> void:
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
 		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_playerId.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_playerId(value : int) -> void:
-		_playerId.value = value
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
 	
 	var _team_id: PBField
 	func get_team_id():

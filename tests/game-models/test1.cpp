@@ -183,7 +183,7 @@ TEST_CASE("Testing players positions response model") {
 	}
 
 	for(const auto player : res.players()) {
-		const int id = player.playerid();
+		const int id = player.player_id();
 		std::cout << id << std::endl;
 	} 
 }*/

@@ -23,9 +23,9 @@ func update_players_states(game_state: Array):
 	
 	for i in range(0, game_state.size()):
 		var player: PlayersPositionsResponseModel.PlayerPositionResponseModel = game_state[i]
-		if (parent_node.has_node(str(player.get_playerId()))): 
+		if (parent_node.has_node(str(player.get_player_id()))): 
 #			animate and move the player
-			parent_node.get_node(str(player.get_playerId())).update_player_position(player)
+			parent_node.get_node(str(player.get_player_id())).update_player_position(player)
 		else:
-			spawn_new_player(player.get_playerId(),
+			spawn_new_player(player.get_player_id(),
 				Vector2(player.get_position().get_x(), player.get_position().get_y()))
