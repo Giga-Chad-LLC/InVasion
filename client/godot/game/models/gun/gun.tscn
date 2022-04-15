@@ -16,4 +16,4 @@ position = Vector2( 11, 0 )
 [node name="CooldownTimer" type="Timer" parent="."]
 wait_time = 0.15
 
-[connection signal="timeout" from="CooldownTimer" to="." method="_on_ReloadTimer_timeout"]
+[connection signal="timeout" from="CooldownTimer" to="." method="_on_CooldownTimer_timeout"]

@@ -19,6 +19,7 @@ const ShootRequestModel = preload("res://proto/request-models/shoot_request_mode
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
+const BulletsPositionsResponseModel = preload("res://proto/response-models/bullets_positions_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client.gd")
@@ -72,7 +73,10 @@ func _physics_process(_delta):
 				# update other players
 				GameWorld.update_players_states(players_positions)
 		elif (received_packet.message_type == Global.ResponseModels.ShootingStateResponseModel):
+			# Update our ammo count, gun reloading state
 			print("We shot a bullet!")
+		elif (received_packet.message_type == Global.ResponseModels.BulletsPositionsResponseModel):
+			print("Update bullets positions")
 		else:
 			print("Unknown message type!")
 
@@ -92,7 +96,7 @@ func send_player_move_request():
 
 func send_player_shoot_request():
 	if (Input.is_action_pressed("shoot") and not player_gun.is_reloading):
-		player_gun.shoot_bullet(player_gun.global_rotation)
+#		player_gun.shoot_bullet(player_gun.global_rotation)
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
 		action.new_weapon_direction()

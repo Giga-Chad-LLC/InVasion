@@ -5,7 +5,7 @@ onready var bullet_model = load("res://models/bullet/bullet.tscn")
 onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_tree().get_root().get_node("World/YSort/Bullets")
-var is_reloading = false
+var is_cooldown = false
 
 
 # User-defined functions
@@ -16,12 +16,16 @@ func instance_bullet(rotation: float):
 
 func shoot_bullet(rotation: float):
 	instance_bullet(rotation)
-	is_reloading = true
+	is_cooldown = true
 	cooldown_timer.start()
 #	emit_signal("shoot_weapon", Vector2(cos(global_rotation), sin(global_rotation)))
 
-func _on_ReloadTimer_timeout():
-	is_reloading = false
+
+func _on_CooldownTimer_timeout():
+	is_cooldown = false
+
 
 func animate_gun():
 	look_at(get_global_mouse_position())
+
+
