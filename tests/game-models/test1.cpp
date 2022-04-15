@@ -12,7 +12,7 @@
 #include "game-models/Weapon/weapon.h"
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
-#include "interactors/UpdateGameStateInteractor/update-game-state-interactor.h"
+#include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
 #include "interactors/RotateWeaponInteractor/rotate-weapon-interactor.h"
 #include "interactors/ShootInteractor/shoot-interactor.h"
 // controllers
@@ -108,7 +108,7 @@ TEST_CASE("Testing collision checking in GameWorldManager | moving diagonal top-
 	req.set_current_event(MoveRequestModel::StartMovingDown);
 	moveInteractor.execute(req, session);
 
-	UpdateGameStateInteractor updateInteractor;
+	PlayersPositionsResponseInteractor updateInteractor;
 
 	PhysicsTickController controller(100);
 	controller.start([&]() mutable {
@@ -139,7 +139,7 @@ TEST_CASE("Testing collision checking in GameWorldManager | moving straight righ
 	MoveInteractor moveInteractor;
 	moveInteractor.execute(req, session);
 
-	UpdateGameStateInteractor updateInteractor;
+	PlayersPositionsResponseInteractor updateInteractor;
 
 	PhysicsTickController controller(100);
 	controller.start([&]() mutable {
@@ -374,7 +374,7 @@ TEST_CASE("Player moving test") {
     int dt = 1;
 
 	MoveInteractor move_interactor;
-	UpdateGameStateInteractor update_interactor;
+	PlayersPositionsResponseInteractor update_interactor;
 
 	GameSession session;
 	Player& player = session.getPlayer(session.createPlayerAndReturnId());
