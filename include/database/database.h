@@ -1,17 +1,8 @@
 #ifndef INVASION_DATABASE_H
 #define INVASION_DATABASE_H
-
-#include <string>
 #include <sqlite3.h>
-#include "sqlite_orm.h"
-#include "../../src/bcrypt-for-password/include/bcrypt.h"
-#include "../../src/bcrypt-for-password/src/bcrypt_.h"
 
-#include "../../src/bcrypt-for-password/src/openbsd.h"
-#include "../../src/bcrypt-for-password/src/node_blf.h"
-
-#include "../../src/bcrypt-for-password/src/blowfish.h"
-#include "iostream"
+#include "common-header.h"
 
 struct User {
     int id;
@@ -20,9 +11,6 @@ struct User {
 };
 
 using namespace sqlite_orm;
-namespace {
-
-}
 
 class Database {
 private:
@@ -37,7 +25,7 @@ private:
     }
 
 public:
-    bool tryAddUser(std::string nickname, std::string password) {
+    bool tryAddUser(std::string nickname,const std::string &password) {
         static auto storage_ = getDatabase();
         storage_.sync_schema();
         try {
@@ -63,11 +51,11 @@ public:
     bool LoginUser(const std::string &nickname, const std::string &password) {
         static auto storage_ = getDatabase();
         storage_.sync_schema();
-        auto tmp = storage_.get_all_pointer<User>(where(c(&User::nickname) == nickname));
-        if (!tmp.size()) {
+        auto suitableUser = storage_.get_all_pointer<User>(where(c(&User::nickname) == nickname));
+        if (suitableUser.empty()) {
             return false;
         }
-        if (bcrypt::validatePassword(password, tmp[0]->password)) {
+        if (bcrypt::validatePassword(password, suitableUser[0]->password)) {
             return true;
         }
         return false;

@@ -1,3 +1,4 @@
+#include <cstring>
 #include "network-packet.h"
 
 namespace invasion::session {
