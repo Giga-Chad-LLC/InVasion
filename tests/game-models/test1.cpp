@@ -17,6 +17,8 @@
 #include "interactors/ShootInteractor/shoot-interactor.h"
 // controllers
 #include "controllers/PhysicsTickController/physics-tick-controller.h"
+
+
 // request-models
 #include "shoot-request-model.pb.h"
 #include "move-request-model.pb.h"
@@ -24,6 +26,7 @@
 // response-models
 #include "player-position-response-model.pb.h"
 #include "players-positions-response-model.pb.h"
+
 
 
 #include "doctest.h"
@@ -42,6 +45,7 @@ using namespace std;
 
 
 TEST_CASE("Testing players collisions with bullets") {
+
 	PhysicsTickController controller(10);
 	ShootInteractor shoot_interactor;
 	GameSession session;
