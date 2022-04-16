@@ -27,9 +27,12 @@ const NetworkPacket = preload("res://network/data_types.gd")
 var client: Connection = Connection.new()
 
 const Worker = preload("res://network/worker.gd")
+const ThreadSafeQueue = preload("res://network/thread_safe_queue.gd")
 var producer: Worker = Worker.new() # thread that stores events from client
-var consumer: Worker = Worker.new() # thread that stores events from server
-
+var consumer: Worker = Worker.new() # thread that will read data from the server into a buffer
+									# and put correct network packets to the thread-safe-queue
+var server_network_packet_queue: ThreadSafeQueue = ThreadSafeQueue.new() # thread that stores events from server
+var consumer_unpacking_thread: Thread = Thread.new()
 
 # Built-in functions
 func _ready():
@@ -51,7 +54,7 @@ func _physics_process(_delta):
 		send_player_shoot_request()
 
 #	Receive data from server
-	var received_packet: NetworkPacket = consumer.pop_data()
+	var received_packet: NetworkPacket = consumer.pop_data() # !!! 
 	if (received_packet != null):
 		if (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
 			set_player_id(received_packet)
@@ -76,7 +79,13 @@ func _physics_process(_delta):
 			# Update our ammo count, gun reloading state
 			print("We shot a bullet!")
 		elif (received_packet.message_type == Global.ResponseModels.BulletsPositionsResponseModel):
-			print("Update bullets positions")
+			var bullets_positions = BulletsPositionsResponseModel.BulletsPositionsResponseModel.new()
+			var result_code = bullets_positions.from_bytes(received_packet.get_bytes())
+			if (result_code != BulletsPositionsResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack bullets positions")
+			else:
+				# Update bullets
+				GameWorld.update_bullets_states(bullets_positions.get_bullets())
 		else:
 			print("Unknown message type!")
 
@@ -95,8 +104,8 @@ func send_player_move_request():
 		producer.push_data(network_packet)
 
 func send_player_shoot_request():
-	if (Input.is_action_pressed("shoot") and not player_gun.is_reloading):
-#		player_gun.shoot_bullet(player_gun.global_rotation)
+	if (Input.is_action_pressed("shoot") and not player_gun.is_cooldown):
+		player_gun.shoot_bullet(player_gun.global_rotation)
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
 		action.new_weapon_direction()
@@ -170,10 +179,16 @@ func _handle_client_connected() -> void:
 	producer.init(funcref(self, "_produce"))
 
 func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
-#	print("Recieved data: ", data)
-	var network_packet: NetworkPacket = client._unpack_data(data)
-	worker.push_data(network_packet)
-
+#	var network_packet: NetworkPacket = client._unpack_data(data)
+#	if (network_packet):
+#		worker.push_data(network_packet)
+	# store incoming data into a main bytes buffer
+	client.reader.add_data(data)
+	var chunk: Array = client.reader.get_next_packet_sequence()
+	while (!chunk.empty()):
+		worker.push_data(client._unpack_data(chunk))
+		chunk = client.reader.get_next_packet_sequence()
+	client.reader.flush()
 
 # Producer and consumer queues
 func _produce(worker: Worker) -> void:
@@ -194,8 +209,3 @@ func _produce(worker: Worker) -> void:
 
 func _consumer_receive_data(worker: Worker):
 	client.connection.connect("receive", self, "_handle_client_receive_data", [worker])
-
-
-
-
-

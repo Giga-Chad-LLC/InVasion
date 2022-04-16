@@ -40,7 +40,17 @@ public:
 
         q.push(std::move(item));
         cv.notify_one();
+    }
 
+    template<class ... Ts>
+    void produceSome(Ts&&... items) {
+        std::lock_guard<std::mutex> lock(mtx);
+        
+        ([&] (T && item) {
+            q.push(std::move(item));
+        } (std::forward<Ts>(items)), ...);
+
+        cv.notify_one();
     }
 
     sizeType size() {

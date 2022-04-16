@@ -2,13 +2,21 @@ extends Node
 
 
 # TCP Networking
-const HOST: String = "192.168.1.201" # 127.0.0.1 | 192.168.1.201
+const HOST: String = "127.0.0.1" # 127.0.0.1 | 192.168.1.201
 const PORT: int = 8000
 const RECONNECT_TIMEOUT: float = 3.0
 
 const Network = preload("res://network/network.gd")
 const NetworkPacket = preload("res://network/data_types.gd")
+const Worker = preload("res://network/worker.gd")
+const TCPStreamParser = preload("res://network/tcp_stream_parser.gd")
+
 var connection: Network = Network.new()
+var reader: TCPStreamParser = TCPStreamParser.new()
+
+
+
+
 
 func init_network() -> void:
 	add_child(connection)
@@ -78,6 +86,8 @@ func _unpack_data(data: PoolByteArray) -> NetworkPacket:
 	return network_packet
 
 
+func _process(delta):
+	pass
 
 # Default handlers
 func _connect_after_timeout(timeout: float) -> void:

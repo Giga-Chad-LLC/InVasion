@@ -3,6 +3,7 @@
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
 #include "interactors/ShootInteractor/shoot-interactor.h"
+#include "interactors/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -34,19 +35,40 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<NetworkPacketRequest> &re
                 switch (request.getMessageType()) {
                     case RequestModel_t::UpdateGameStateRequestModel: {
 						gameSession->updateGameState();
+                        NetworkPacketResponse playersPositionsResponse;
+                        NetworkPacketResponse bulletsPositionsResponse;
 
-                        interactors::PlayersPositionsResponseInteractor interactor;
-                        response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
+                        // send players positions 
+                        {
+                            interactors::PlayersPositionsResponseInteractor interactor;
+                            response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
 
-                        // serialize
-                        std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-                        responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-                        
-                        NetworkPacketResponse response(std::move(buffer_ptr),
-                                                        ResponseModel_t::PlayersPositionsResponseModel,
-                                                        responseModel.ByteSizeLong());
-                        
-                        responseQueue->produce(std::move(response));
+
+                            // serialize
+                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+                            
+                            playersPositionsResponse = NetworkPacketResponse(std::move(buffer_ptr),
+                                                            ResponseModel_t::PlayersPositionsResponseModel,
+                                                            responseModel.ByteSizeLong());
+                            
+                            // responseQueue->produce(std::move(response));
+                        }
+                        // send bullets positions
+                        {
+                            interactors::BulletsPositionsResponseInteractor interactor;
+                            response_models::BulletsPositionsResponseModel responseModel = interactor.execute(*gameSession);
+                            // std::cout << "Bullets: " << responseModel.bullets().size() << "\n";
+                            // serialize
+                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+
+                            bulletsPositionsResponse = NetworkPacketResponse(std::move(buffer_ptr), ResponseModel_t::BulletsPositionsResponseModel, responseModel.ByteSizeLong());
+                            // responseQueue->produce(std::move(response));
+                        }
+
+                        responseQueue->produceSome(std::move(playersPositionsResponse), std::move(bulletsPositionsResponse));
+
                         break;
                     }
                     case RequestModel_t::MoveRequestModel: {

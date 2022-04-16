@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "NetworkPacket",
 "language": "GDScript",
 "path": "res://network/data_types.gd"
+}, {
+"base": "Reference",
+"class": "TCPStreamParser",
+"language": "GDScript",
+"path": "res://network/tcp_stream_parser.gd"
 } ]
 _global_script_class_icons={
-"NetworkPacket": ""
+"NetworkPacket": "",
+"TCPStreamParser": ""
 }
 
 [application]

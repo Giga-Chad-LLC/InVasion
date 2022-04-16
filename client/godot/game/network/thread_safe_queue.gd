@@ -12,7 +12,7 @@ func size():
 func is_empty():
 	return queue.size() == 0
 
-func push(object: Object):
+func push(object):
 	mutex.lock()
 	queue.push_back(object)
 	mutex.unlock()
@@ -22,7 +22,7 @@ func pop():
 		return null
 		
 	mutex.lock()
-	var item: Object = queue.pop_front()
+	var item = queue.pop_front()
 	mutex.unlock()
 	return item
 

@@ -17,10 +17,13 @@ func init(function: FuncRef):
 func _worker_function(function: FuncRef):
 	if (function):
 		function.call_funcv([self])
+	else:
+		print("Worker didn't run the function: ", function)
 
 func push_data(data):
 	queue.push(data)
 	semaphore.post()
+
 
 func pop_data():
 	return queue.pop()
