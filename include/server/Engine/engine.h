@@ -18,7 +18,7 @@ namespace invasion::session {
     private:
         static std::shared_ptr<Client> getConnectedClientByPlayerId(const std::vector <std::shared_ptr<Client>> &connectedClients, uint32_t playerId);
     public:
-        static void manageRequestQueue(SafeQueue<NetworkPacketRequest> &requestQueue, SafeQueue<NetworkPacketResponse> &responseQueue, game_models::GameSession &gameSession, const std::vector <std::shared_ptr<Client>> &connectedClients);
+        static void manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPacketRequest>> &requestQueue, SafeQueue<std::shared_ptr<NetworkPacketResponse>> &responseQueue, game_models::GameSession &gameSession, const std::vector <std::shared_ptr<Client>> &connectedClients);
     }; 
 }
 #endif //INVASION_SERVER_ENGINE_H

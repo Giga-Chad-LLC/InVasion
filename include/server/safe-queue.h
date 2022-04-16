@@ -6,12 +6,13 @@
 
 #include <queue>
 #include <utility>
+#include "queue-logger.h"
 
 template<class T>
 class SafeQueue {
-
+    QueueLogger Logger;
     std::queue<T> q;
-
+    int64_t inf = 1;
     std::mutex mtx;
     std::condition_variable cv;
 
@@ -31,13 +32,17 @@ public:
 
     SafeQueue() {}
 
+    SafeQueue(debug) {
+        Logger.start();
+    }
+
     ~SafeQueue() {
         finish();
     }
 
     void produce(T &&item) {
         std::lock_guard<std::mutex> lock(mtx);
-
+        *Logger.cntItems++;
         q.push(std::move(item));
         cv.notify_one();
     }
@@ -72,7 +77,7 @@ public:
 
         item = std::move(q.front());
         q.pop();
-
+        *Logger.cntItems--;
         return true;
 
     }
@@ -92,7 +97,7 @@ public:
             decreaseSyncCounter();
             return false;
         }
-
+        *Logger.cntItems--;
         item = std::move(q.front());
         q.pop();
 

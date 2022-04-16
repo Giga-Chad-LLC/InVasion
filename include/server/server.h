@@ -23,12 +23,12 @@
 using boost::asio::ip::tcp;
 namespace invasion::session {
     inline std::vector<std::shared_ptr<Client>> connectedClients;
-    inline void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue) {
+    inline void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue) {
         while (true) {
-            NetworkPacketResponse response;
+            auto response = std::shared_ptr<NetworkPacketResponse>();
             if (responseQueue->consumeSync(response)) {
-                for (auto client: connectedClients) {
-                    NetworkPacketResponse packet = response;
+                for (auto& client: connectedClients) {
+                    std::shared_ptr<NetworkPacketResponse> packet = response;
                     client->m_clientResponseQueue.produce(std::move(packet));
                 }
             }
@@ -41,8 +41,8 @@ namespace invasion::session {
         tcp::acceptor acceptor;
         const size_t m_requiredClientsCountInSession = 1;
         bool m_isSessionActive = false;
-        SafeQueue<NetworkPacketRequest> m_requestQueue;
-        SafeQueue<NetworkPacketResponse> m_responseQueue;
+        SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue;
+        SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
         controllers::PhysicsTickController m_tickController = controllers::PhysicsTickController(30); // update the game each 30 milliseconds 
     public:
@@ -52,7 +52,7 @@ namespace invasion::session {
         friend class ClientRequestsReceiver;
         friend class RequestQueueManager;
         // puts each response packet from main response queue to client specific response queues
-        friend void dispatchPacketsToClients(SafeQueue<NetworkPacketResponse> *responseQueue);
+        friend void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue);
     };
 
 }
