@@ -41,7 +41,7 @@ namespace invasion::session {
         tcp::acceptor acceptor;
         const size_t m_requiredClientsCountInSession = 1;
         bool m_isSessionActive = false;
-        SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue;
+        SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue{debug{}};
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
         controllers::PhysicsTickController m_tickController = controllers::PhysicsTickController(30); // update the game each 30 milliseconds 

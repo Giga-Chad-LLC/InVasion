@@ -42,7 +42,7 @@ public:
 
     void produce(T &&item) {
         std::lock_guard<std::mutex> lock(mtx);
-        *Logger.cntItems++;
+        *Logger.countItems++;
         q.push(std::move(item));
         cv.notify_one();
     }
@@ -77,7 +77,7 @@ public:
 
         item = std::move(q.front());
         q.pop();
-        *Logger.cntItems--;
+        *Logger.countItems--;
         return true;
 
     }
@@ -97,7 +97,7 @@ public:
             decreaseSyncCounter();
             return false;
         }
-        *Logger.cntItems--;
+        *Logger.countItems--;
         item = std::move(q.front());
         q.pop();
 

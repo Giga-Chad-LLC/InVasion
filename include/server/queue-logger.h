@@ -8,26 +8,26 @@
 
 struct debug {};
 
-// pass {} to the queue constructor to call the debugger
+// pass debug{} to the queue constructor to call the debugger
 class QueueLogger {
 private:
     const int maxLimitItems = 40000;
-    const double time_check_sec = 1;
-    const int clocks_per_sec = static_cast<int>(1000000 * time_check_sec); // 1000000 - clocks in sec
+    const double timeCheckSec = 1;
+    const int clocksPerSec = static_cast<int>(1000000 * timeCheckSec); // 1000000 - clocks in sec
 public:
-    int *cntItems;
+    int *countItems;
 
-    QueueLogger() : cntItems(new int{0}) {}
+    QueueLogger() : countItems(new int{0}) {}
 
     void start() {
         std::thread([&]() {
             while (true) {
-                if ((clock()) / clocks_per_sec % 1 == 0 &&
-                    clock() % clocks_per_sec == 1) { // second condition need to print exactly once
+                if ((clock()) / clocksPerSec % 1 == 0 &&
+                    clock() % clocksPerSec == 1) { // second condition need to print exactly once
                     std::cout << "time(sec): " << clock() / CLOCKS_PER_SEC;
-                    std::cout << " | size of queue now: " << " " << *cntItems << '\n';
+                    std::cout << " | size of queue now: " << " " << *countItems << '\n';
                 }
-                if (*cntItems > maxLimitItems) {
+                if (*countItems > maxLimitItems) {
                     std::cout << "count items in queue exceeded the limit!\n";
                 }
             }
@@ -35,7 +35,7 @@ public:
     }
 
     ~QueueLogger() {
-        delete cntItems;
+        delete countItems;
     }
 };
 
