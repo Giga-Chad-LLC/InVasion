@@ -13,20 +13,21 @@
 
 
 namespace invasion::interactors {
+using namespace invasion::game_models;
+using namespace response_models;
+using namespace request_models;
 	
-response_models::ShootingStateResponse ShootInteractor::execute(
-	const request_models::ShootRequestModel& req, 
-	game_models::GameSession& session
-) const {
-	game_models::Player& player = session.getPlayer(req.player_id());
-	game_models::Weapon& weapon = player.getWeapon();
+ShootingStateResponse ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
+	std::shared_ptr<Player>& player_ptr = session.getPlayer(req.player_id());
+	Weapon& weapon = player_ptr->getWeapon();
 	
 	game_models::Vector2D direction(req.weapon_direction().x(), req.weapon_direction().y());
 	weapon.setDirection(std::move(direction));
 	
-	response_models::ShootingStateResponse response;
+	ShootingStateResponse response;
 	
-	response.set_player_id(player.getId());
+	response.set_player_id(player_ptr->getId());
+
 	// default values for reloading related state
 	response.set_is_reloading_required(false);
 	response.set_is_reloading(false);
@@ -34,7 +35,7 @@ response_models::ShootingStateResponse ShootInteractor::execute(
 	response.mutable_weapon_direction()->set_y(direction.getY());
 
 	if(weapon.isAbleToShoot()) {
-		const game_models::Vector2D position = player.getPosition();
+		const game_models::Vector2D position = player_ptr->getPosition();
 		const int bulletId = session.createIdForNewBullet();
 
 		std::shared_ptr<game_models::Bullet> bullet = weapon.shoot(position, bulletId);

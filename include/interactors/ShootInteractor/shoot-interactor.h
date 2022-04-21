@@ -12,13 +12,12 @@
 
 
 namespace invasion::interactors {
-	
+using namespace invasion::game_models;
+using namespace response_models;
+using namespace request_models;
 
 struct ShootInteractor {
-	response_models::ShootingStateResponse execute(
-		const request_models::ShootRequestModel& req, 
-		game_models::GameSession& session
-	) const;
+	ShootingStateResponse execute(const ShootRequestModel& req, GameSession& session) const;
 };
 
 
