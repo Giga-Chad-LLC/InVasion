@@ -22,14 +22,14 @@ GameSession::GameSession() {
 
 // returns id of created player
 int GameSession::createPlayerAndReturnId() {
-	auto& players = m_storage.getPlayers();
+	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
 	const auto playerId = static_cast<int>(players.size());
 
 	int firstTeamPlayersCount = 0;
 	int secondTeamPlayersCount = 0;
 
-	for(const auto& player : players) {
-		const Player::TeamId teamId = player.getTeamId();
+	for(const auto& player_ptr : players) {
+		const Player::TeamId teamId = player_ptr->getTeamId();
 
 		if(teamId == Player::TeamId::FirstTeam) {
 			firstTeamPlayersCount++;	
@@ -58,7 +58,7 @@ int GameSession::createPlayerAndReturnId() {
 		}
 	}
 
-	players.emplace_back(Vector2D::ZERO, playerId, teamId);
+	players.push_back(std::make_shared<Player>(Vector2D::ZERO, playerId, teamId));
 	return playerId;
 }
 
@@ -74,13 +74,13 @@ int GameSession::createIdForNewBullet() {
 }
 
 
-Player& GameSession::getPlayer(const int playerId) {
+std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
 	auto& players = m_storage.getPlayers();
-	Player* player_ptr = nullptr;
+	std::shared_ptr<Player> player_ptr = nullptr;
 
-	for(Player& player : players) {
-		if(playerId == player.getId()) {
-			player_ptr = &player;
+	for(const std::shared_ptr<Player>& player : players) {
+		if(playerId == player->getId()) {
+			player_ptr = player;
 			break;
 		}
 	}
@@ -90,11 +90,11 @@ Player& GameSession::getPlayer(const int playerId) {
 	}
 
 	assert(player_ptr != nullptr);
-	return *player_ptr;
+	return player_ptr;
 }
 
 
-std::vector<Player>& GameSession::getPlayers() {
+std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
 
@@ -104,10 +104,10 @@ std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 
 
 std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
-	auto& bullets = m_storage.getBullets();
+	std::vector<std::shared_ptr<Bullet>>& bullets = m_storage.getBullets();
 	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
-	for(std::shared_ptr<Bullet> bullet : bullets) {
+	for(const auto& bullet : bullets) {
 		if(bulletId == bullet->getId()) {
 			bullet_ptr = bullet;
 			break;
@@ -151,7 +151,6 @@ void GameSession::updateGameState() {
 		std::end(bullets)
 	);
 
-	// std::cout << bullets.size() << std::endl;
 
 	// --------------- TODO: respawn dead players --------------- //
 

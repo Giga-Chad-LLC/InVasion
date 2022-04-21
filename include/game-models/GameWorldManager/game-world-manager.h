@@ -15,17 +15,16 @@ namespace invasion::game_models {
 	
 
 struct GameWorldManager {
-	void updatePlayersPositions(std::vector<Player>& players, double dt) const;
-	void updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, std::vector<Player>& players, double dt) const;
+	void updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const;
+	void updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, 
+								std::vector<std::shared_ptr<Player>>& players, double dt) const;
 
 private:
-	void applyFrictionAndSetResultForceOnPlayer(Player& player, double dt) const;
+	void applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Player> player_ptr, double dt) const;
 	
-	void updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(
-		std::vector<Player>& players, 
-		Player& consideredPlayer, 
-		double dt
-	) const;
+	void updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(std::vector<std::shared_ptr<Player>>& players,
+																		  std::shared_ptr<Player> consideredPlayer_ptr,
+																		  double dt) const;
 };
 
 

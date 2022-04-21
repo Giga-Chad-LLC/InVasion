@@ -7,7 +7,7 @@
 
 namespace invasion::game_models {
 
-std::vector<Player>& GameWorldStorage::getPlayers() {
+std::vector<std::shared_ptr<Player>>& GameWorldStorage::getPlayers() {
 	return m_players;
 }
 
