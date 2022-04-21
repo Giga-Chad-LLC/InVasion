@@ -44,13 +44,13 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/game-state-response-model.proto
 
 		# schemas
-        ./src/proto/shems-of-game/player-schema.proto
-        ./src/proto/shems-of-game/session-state-schema.proto
-        ./src/proto/shems-of-game/game-state-schema.proto
-        ./src/proto/shems-of-game/initial-state-response-schema.proto
-        ./src/proto/shems-of-game/bullet-schema.proto
-        ./src/proto/shems-of-game/player-game-session-statistic-schema.proto
-        ./src/proto/shems-of-game/weapon-schema.proto
+        ./src/proto/game-schemes/player-schema.proto
+        ./src/proto/game-schemes/session-state-schema.proto
+        ./src/proto/game-schemes/game-state-schema.proto
+        ./src/proto/game-schemes/initial-state-response-schema.proto
+        ./src/proto/game-schemes/bullet-schema.proto
+        ./src/proto/game-schemes/player-game-session-statistic-schema.proto
+        ./src/proto/game-schemes/weapon-schema.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
