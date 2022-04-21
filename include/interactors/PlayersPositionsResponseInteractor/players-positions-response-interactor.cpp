@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "players-positions-response-interactor.h"
 // game-models
@@ -18,26 +19,25 @@ using namespace invasion::game_models;
 using namespace response_models;
 
 void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& response, GameSession& session) const {
+	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 	
-	const std::vector<Player>& players = session.getPlayers();
-	
-	for(const auto& player : players) {
+	for(const auto& player_ptr : players) {
 		PlayerPositionResponseModel* playerModel = response.add_players();
 
-		playerModel->set_player_id(player.getId());
+		playerModel->set_player_id(player_ptr->getId());
 		
-		if(player.getTeamId() == Player::TeamId::FirstTeam) {
+		if(player_ptr->getTeamId() == Player::TeamId::FirstTeam) {
 			playerModel->set_team_id(PlayerPositionResponseModel::FirstTeam);
 		}
 		else {
 			playerModel->set_team_id(PlayerPositionResponseModel::SecondTeam);
 		}
 
-		const Vector2D velocity = player.getVelocity();
+		const Vector2D velocity = player_ptr->getVelocity();
 		playerModel->mutable_velocity()->set_x(velocity.getX());
 		playerModel->mutable_velocity()->set_y(velocity.getY());
 
-		const Vector2D position = player.getPosition();
+		const Vector2D position = player_ptr->getPosition();
 		playerModel->mutable_position()->set_x(position.getX());
 		playerModel->mutable_position()->set_y(position.getY());
 	}
