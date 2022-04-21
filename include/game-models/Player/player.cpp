@@ -26,7 +26,7 @@ Player::Player(Vector2D initial_pos, const int playerId, const PlayerTeamId team
 	m_teamId(teamId),
 	m_hitPoints(Player::INITIAL_HIT_POINTS),
 	m_isDead(false),
-	m_weapon(playerId, Player::INITIAL_AMMO, Player::DAMAGE) {}
+	m_weapon(playerId, teamId, Player::INITIAL_AMMO, Player::DAMAGE) {}
 
 
 int Player::getId() const {

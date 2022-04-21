@@ -5,8 +5,10 @@
 
 #include "weapon.h"
 
+// game-models
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/Player/player-team-id-enum.h"
 
 
 namespace invasion::game_models {
@@ -24,7 +26,7 @@ long long Weapon::getCurrentTime_ms() {
 }
 
 
-Weapon::Weapon(int playerId, int ammo, double damage) 
+Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage) 
 	: m_leftMagazine(Weapon::MAGAZINE),
 	  m_leftAmmo(ammo),
 	  m_initialAmmo(ammo),
@@ -32,7 +34,8 @@ Weapon::Weapon(int playerId, int ammo, double damage)
 	  m_reloadingStartTimestamp_ms(0),
 	//   m_lastShotTimestamp_ms(0),
 	  m_direction(1.0, 0.0),
-	  m_playerId(playerId) {}
+	  m_playerId(playerId),
+	  m_playerTeamId(teamId) {}
 
 
 // Weapon::shoot may be called only if gun is able to shoot
@@ -45,7 +48,8 @@ std::shared_ptr<Bullet> Weapon::shoot(const Vector2D initialPos, const int bulle
 	std::shared_ptr<Bullet> bullet_ptr = std::make_shared<Bullet>(
 		std::move(initialPos), 
 		bulletId, 
-		m_playerId, 
+		m_playerId,
+		m_playerTeamId,
 		m_damage
 	);
 

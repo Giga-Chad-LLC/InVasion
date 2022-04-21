@@ -38,7 +38,9 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 
 		// searching for collided player
 		for(const std::shared_ptr<Player>& player_ptr : players) {
-			if(player_ptr->getId() != bullet_ptr->getPlayerId() && player_ptr->collidesWith(bullet_ptr.get())) {
+			if(player_ptr->getId() != bullet_ptr->getPlayerId() &&
+			   player_ptr->getTeamId() != bullet_ptr->getPlayerTeamId() &&
+			   player_ptr->collidesWith(bullet_ptr.get())) {
 				collidedPlayer_ptr = player_ptr;
 				break;
 			}
