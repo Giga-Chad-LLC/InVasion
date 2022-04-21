@@ -7,7 +7,7 @@
 
 
 namespace invasion::game_models {
-const double Bullet::MAX_SPEED = Vector2D(500, 0).magnitude();
+const double Bullet::MAX_SPEED = Vector2D(300, 0).magnitude();
 const double Bullet::MASS = 0.04;
 const Vector2D Bullet::COLLIDER_SIZE(1, 1);
 
