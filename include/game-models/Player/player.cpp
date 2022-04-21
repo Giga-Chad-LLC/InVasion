@@ -12,13 +12,16 @@ const double Player::MASS = 60.0;
 const int Player::INITIAL_AMMO = 180;
 const double Player::DAMAGE = 15.0;
 const double Player::INITIAL_HIT_POINTS = 100.0;
-const Vector2D Player::COLLIDER_SIZE(12, 6);
+const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
+const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14);
+
 
 	
-Player::Player(Vector2D initial_pos, const int playerId, const PlayerTeamId teamId)
+Player::Player(Vector2D initialPos, const int playerId, const PlayerTeamId teamId)
 	: KinematicObject(
-		Player::COLLIDER_SIZE, 
-		std::move(initial_pos), 
+		Player::SHAPE_COLLIDER_SIZE,
+		Player::HITBOX_COLLIDER_SIZE,
+		std::move(initialPos),
 		Player::MASS,
 		Player::MAX_SPEED
 	), 

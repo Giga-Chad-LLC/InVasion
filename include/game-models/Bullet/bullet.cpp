@@ -7,7 +7,7 @@
 
 
 namespace invasion::game_models {
-const double Bullet::MAX_SPEED = Vector2D(500, 0).magnitude();
+const double Bullet::MAX_SPEED = Vector2D(100, 0).magnitude();
 const double Bullet::MASS = 0.04;
 const Vector2D Bullet::COLLIDER_SIZE(1, 1);
 
@@ -16,6 +16,7 @@ const Vector2D Bullet::COLLIDER_SIZE(1, 1);
 Bullet::Bullet(Vector2D initialPos, int bulletId, int playerId, PlayerTeamId teamId, double damage)
 	: KinematicObject(
 		Bullet::COLLIDER_SIZE, 
+		Bullet::COLLIDER_SIZE,
 		std::move(initialPos), 
 		Bullet::MASS,
 		Bullet::MAX_SPEED
