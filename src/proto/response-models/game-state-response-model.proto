@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package response_models;
+
+import "bullet-position-response-model.proto";
+import "player-position-response-model.proto";
+
+
+// PlayerPositionResponseModel
+message GameStateResponseModel {
+	repeated response_models.PlayerPositionResponseModel players = 1;
+	repeated response_models.BulletPositionResponseModel bullets = 2;
+}
