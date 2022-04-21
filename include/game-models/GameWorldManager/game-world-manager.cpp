@@ -114,7 +114,6 @@ void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOther
 	for(const std::shared_ptr<Player>& other : players) {
 		if(consideredPlayer_ptr->getId() == other->getId()) continue;
 
-		// TODO: rewrite colliders to work with shared_ptrs instead of raw ptrs
 		inCollision = consideredPlayer_ptr->collidesWith(other.get());
 		if(inCollision) {
 			break;
