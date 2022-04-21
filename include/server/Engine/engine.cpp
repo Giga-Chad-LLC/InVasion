@@ -10,7 +10,7 @@
 #include "player.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
-#include "players-positions-response-model.pb.h"
+#include "game-state-response-model.pb.h"
 
 
 namespace invasion::session { 
@@ -35,46 +35,29 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                 switch (request->getMessageType()) {
                     case RequestModel_t::UpdateGameStateRequestModel: {
 						gameSession->updateGameState();
+						response_models::GameStateResponseModel responseModel;
 
-                        // send players positions 
+                        // players positions 
                         {
                             interactors::PlayersPositionsResponseInteractor interactor;
-                            response_models::PlayersPositionsResponseModel responseModel = interactor.execute(*gameSession);
-
-
-                            // serialize
-                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-                            
-                            std::shared_ptr<NetworkPacketResponse> response = std::make_shared<NetworkPacketResponse>(std::move(buffer_ptr), ResponseModel_t::PlayersPositionsResponseModel, responseModel.ByteSizeLong());
-                            
-                            responseQueue->produce(std::move(response));
+                            interactor.execute(responseModel, *gameSession);
                         }
-                        // send bullets positions
+
+                        // bullets positions
                         {
                             interactors::BulletsPositionsResponseInteractor interactor;
-                            response_models::BulletsPositionsResponseModel responseModel = interactor.execute(*gameSession);
-                            // std::cout << "Bullets: " << responseModel.bullets().size() << "\n";
-                            // serialize
-                            std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-                            responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-
-                            std::shared_ptr<NetworkPacketResponse> response = std::make_shared<NetworkPacketResponse>(std::move(buffer_ptr), ResponseModel_t::BulletsPositionsResponseModel, responseModel.ByteSizeLong());
-                            
-                            responseQueue->produce(std::move(response));
+							interactor.execute(responseModel, *gameSession);
                         }
 
-                        // responseQueue->produceSome(std::move(playersPositionsResponse), std::move(bulletsPositionsResponse));
-
                         // serialize
-                        // std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-                        // responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+                        std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                        responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
                         
-                        // auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
-                        //                                 ResponseModel_t::PlayersPositionsResponseModel,
-                        //                                 responseModel.ByteSizeLong());
+                        auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
+                                                        ResponseModel_t::GameStateResponseModel,
+                                                        responseModel.ByteSizeLong());
                         
-                        // responseQueue->produce(std::move(response));
+                        responseQueue->produce(std::move(response));
                         break;
                     }
                     case RequestModel_t::MoveRequestModel: {
