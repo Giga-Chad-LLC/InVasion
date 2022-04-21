@@ -7,6 +7,7 @@
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Bullet/bullet.h"
@@ -203,8 +204,8 @@ TEST_CASE("Team assigning") {
 	Player player1 = session.getPlayer(id1);
 	Player player2 = session.getPlayer(id2);
 
-	int teamId1 = player1.getTeamId() == Player::TeamId::SecondTeam;
-	int teamId2 = player2.getTeamId() == Player::TeamId::SecondTeam;
+	int teamId1 = player1.getTeamId() == PlayerTeamId::SecondTeam;
+	int teamId2 = player2.getTeamId() == PlayerTeamId::SecondTeam;
 
 	CHECK(player1.getTeamId() != player2.getTeamId());
 
@@ -217,7 +218,7 @@ TEST_CASE("Team assigning") {
 	for(int i = 0; i < 10'000; i++) {
 		int id = session.createPlayerAndReturnId();
 		Player player = session.getPlayer(id);
-		int teamId = player.getTeamId() == Player::TeamId::SecondTeam;
+		int teamId = player.getTeamId() == PlayerTeamId::SecondTeam;
 
 		if(teamId == 1) cnt2++;
 		else cnt1++;

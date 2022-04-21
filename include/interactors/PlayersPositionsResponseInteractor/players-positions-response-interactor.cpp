@@ -6,6 +6,7 @@
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
 // response models
 #include "player-position-response-model.pb.h"
@@ -26,7 +27,7 @@ void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& respons
 
 		playerModel->set_player_id(player_ptr->getId());
 		
-		if(player_ptr->getTeamId() == Player::TeamId::FirstTeam) {
+		if(player_ptr->getTeamId() == PlayerTeamId::FirstTeam) {
 			playerModel->set_team_id(PlayerPositionResponseModel::FirstTeam);
 		}
 		else {
