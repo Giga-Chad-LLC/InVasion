@@ -8,7 +8,6 @@ var exit_thread: bool = false
 const ThreadSafeQueue = preload("res://network/thread_safe_queue.gd")
 var queue: ThreadSafeQueue = ThreadSafeQueue.new()
 
-const PlayerProto = preload("res://player/scripts/player_proto.gd")
 
 # The thread will start here.
 func init(function: FuncRef):

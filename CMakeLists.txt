@@ -28,7 +28,6 @@ find_package(Protobuf REQUIRED)
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		# request-models
-        ./src/proto/request-models/player.proto
         ./src/proto/request-models/move-request-model.proto
         ./src/proto/request-models/update-game-state-request-model.proto
 		./src/proto/request-models/rotate-weapon-request-model.proto

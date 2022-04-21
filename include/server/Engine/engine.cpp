@@ -69,17 +69,6 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                         interactor.execute(move, *gameSession);
                         break;
                     }
-                    case RequestModel_t::PlayerActionRequestModel: { //  leave it for now, then we will delete this request/response-model
-                        PlayerAction action; // buttons
-                        action.ParseFromArray(request->getStoredBytes(), request->bytesSize());
-
-                        std::cout << "Action button: " << action.key_pressed() << std::endl;
-                        std::unique_ptr<char[]> bytes_ptr = request->getPureBytes();
-                        auto response = std::make_shared<NetworkPacketResponse> (std::move(bytes_ptr), ResponseModel_t::PlayerActionResponseModel, request->bytesSize());
-                        
-                        responseQueue->produce(std::move(response));
-                        break;
-                    }
                     case RequestModel_t::ShootRequestModel: {
                         request_models::ShootRequestModel shootAction;
                         shootAction.ParseFromArray(request->getStoredBytes(), request->bytesSize());

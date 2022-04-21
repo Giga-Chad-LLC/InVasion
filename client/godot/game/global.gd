@@ -18,13 +18,11 @@ enum RequestModels {
 	MoveRequestModel = 0,
 	UpdateGameStateRequestModel = 1,
 	ShootRequestModel = 2,
-	PlayerActionRequestModel = 100,
 	UnknownRequestModel
 }
 # Server sends to client
 enum ResponseModels {
 	PlayerPositionResponseModel = 1000,
-	PlayerActionResponseModel = 1002,
 	PlayerInfoResponseModel = 1003,
 	ShootingStateResponseModel = 1005,
 	GameStateResponseModel = 1007,
