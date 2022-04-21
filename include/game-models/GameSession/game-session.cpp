@@ -78,7 +78,7 @@ std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
 	auto& players = m_storage.getPlayers();
 	std::shared_ptr<Player> player_ptr = nullptr;
 
-	for(std::shared_ptr<Player>& player : players) {
+	for(const std::shared_ptr<Player>& player : players) {
 		if(playerId == player->getId()) {
 			player_ptr = player;
 			break;
@@ -104,11 +104,10 @@ std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 
 
 std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
-	auto& bullets = m_storage.getBullets();
+	std::vector<std::shared_ptr<Bullet>>& bullets = m_storage.getBullets();
 	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
-	// TODO: iterate using std::shared_ptr<Bullet>&
-	for(std::shared_ptr<Bullet> bullet : bullets) {
+	for(const auto& bullet : bullets) {
 		if(bulletId == bullet->getId()) {
 			bullet_ptr = bullet;
 			break;
