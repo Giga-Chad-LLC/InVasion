@@ -18,7 +18,7 @@ using namespace response_models;
 using namespace request_models;
 	
 ShootingStateResponse ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
-	std::shared_ptr<Player>& player_ptr = session.getPlayer(req.player_id());
+	std::shared_ptr<Player> player_ptr = session.getPlayer(req.player_id());
 	Weapon& weapon = player_ptr->getWeapon();
 	
 	game_models::Vector2D direction(req.weapon_direction().x(), req.weapon_direction().y());
