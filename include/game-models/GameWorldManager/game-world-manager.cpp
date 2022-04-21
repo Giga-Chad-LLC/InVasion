@@ -37,7 +37,7 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 		bullet_ptr->setPosition(nextPosition);
 
 		// searching for collided player
-		for(std::shared_ptr<Player>& player_ptr : players) {
+		for(const std::shared_ptr<Player>& player_ptr : players) {
 			if(player_ptr->getId() != bullet_ptr->getPlayerId() && player_ptr->collidesWith(bullet_ptr.get())) {
 				collidedPlayer_ptr = player_ptr;
 				break;
@@ -98,8 +98,11 @@ void GameWorldManager::applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Pl
 }
 
 
-void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(std::vector<std::shared_ptr<Player>>& players, 
-																						std::shared_ptr<Player> consideredPlayer_ptr, const double dt) const {
+void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(
+	std::vector<std::shared_ptr<Player>>& players,
+	std::shared_ptr<Player> consideredPlayer_ptr,
+	const double dt) const {
+	
 	Vector2D curPosition = consideredPlayer_ptr->getPosition();
 
 	// imitating player's intented move
@@ -108,7 +111,7 @@ void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOther
 
 	bool inCollision = false;
 
-	for(std::shared_ptr<Player>& other : players) {
+	for(const std::shared_ptr<Player>& other : players) {
 		if(consideredPlayer_ptr->getId() == other->getId()) continue;
 
 		// TODO: rewrite colliders to work with shared_ptrs instead of raw ptrs
