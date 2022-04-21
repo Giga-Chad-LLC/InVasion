@@ -1,4 +1,5 @@
 #include <utility>
+#include <memory>
 
 #include "rotate-weapon-interactor.h"
 // game-models
@@ -9,15 +10,14 @@
 
 
 namespace invasion::interactors {
+using namespace invasion::game_models;
+using namespace request_models;
 	
-void RotateWeaponInteractor::execute(
-	const request_models::RotateWeaponRequestModel& req, 
-	game_models::GameSession& session
-) const {
-	game_models::Player& player = session.getPlayer(req.player_id());
+void RotateWeaponInteractor::execute(const RotateWeaponRequestModel& req, GameSession& session) const {
+	std::shared_ptr<Player> player_ptr = session.getPlayer(req.player_id());
 	const game_models::Vector2D direction(req.direction().x(), req.direction().y());
 
-	player.getWeapon().setDirection(std::move(direction));
+	player_ptr->getWeapon().setDirection(std::move(direction));
 }
 
 } // namespace invasion::interactors
