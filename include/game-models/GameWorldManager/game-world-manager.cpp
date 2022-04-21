@@ -20,7 +20,7 @@ void GameWorldManager::updatePlayersPositions(std::vector<std::shared_ptr<Player
 void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, 
 											  std::vector<std::shared_ptr<Player>>& players,
 											  double dt) const {
-	const double appliedForceMagnitude = 1'000;
+	const double appliedForceMagnitude = 500;
 
 	for(const std::shared_ptr<Bullet>& bullet_ptr : bullets) {
 		// TODO: do not update result force on every update request because the result force is never changing
@@ -40,7 +40,7 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 		for(const std::shared_ptr<Player>& player_ptr : players) {
 			if(player_ptr->getId() != bullet_ptr->getPlayerId() &&
 			   player_ptr->getTeamId() != bullet_ptr->getPlayerTeamId() &&
-			   player_ptr->collidesWith(bullet_ptr.get())) {
+			   player_ptr->collidesWithHitbox(bullet_ptr.get())) {
 				collidedPlayer_ptr = player_ptr;
 				break;
 			}
@@ -50,8 +50,13 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 
 		if(collidedPlayer_ptr != nullptr) {
 			// std::cout << collidedPlayer_ptr->getId() << std::endl;
-			// std::cout << "bullet " << bullet_ptr->getId() << " damaged player " << collidedPlayer_ptr->getId() << std::endl; 
+			std::cout << "bullet " << bullet_ptr->getId() 
+					  << " damaged player " << collidedPlayer_ptr->getId();
+
 			collidedPlayer_ptr->applyDamage(bullet_ptr->getDamage());
+
+			std::cout << " HP: " << collidedPlayer_ptr->getHitPoints() << "\n";
+
 			bullet_ptr->setCrushedState(true);
 		}
 		else {
@@ -116,7 +121,7 @@ void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOther
 	for(const std::shared_ptr<Player>& other : players) {
 		if(consideredPlayer_ptr->getId() == other->getId()) continue;
 
-		inCollision = consideredPlayer_ptr->collidesWith(other.get());
+		inCollision = consideredPlayer_ptr->collidesWithShape(other.get());
 		if(inCollision) {
 			break;
 		}
