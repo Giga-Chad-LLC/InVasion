@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include <memory>
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
@@ -53,14 +54,14 @@ TEST_CASE("Testing players collisions with bullets") {
 	const int id1 = session.createPlayerAndReturnId();
 	const int id2 = session.createPlayerAndReturnId();
 
-	Player& player1 = session.getPlayer(id1);
-	player1.setPosition(Vector2D(0, 0));
+	std::shared_ptr<Player> player1 = session.getPlayer(id1);
+	player1->setPosition(Vector2D(0, 0));
 
-	Player& player2 = session.getPlayer(id2);
-	player2.setPosition(Vector2D(500, 0));
+	std::shared_ptr<Player> player2 = session.getPlayer(id2);
+	player2->setPosition(Vector2D(500, 0));
 
 	ShootRequestModel req;
-	req.set_player_id(player1.getId());
+	req.set_player_id(player1->getId());
 
 	const Vector2D direction = Vector2D(1, 0).normalize();
 	req.mutable_weapon_direction()->set_x(direction.getX());
@@ -85,7 +86,7 @@ TEST_CASE("Testing players collisions with bullets") {
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1'500));
 	controller.stop();
-	std::cout << "HP: " << player2.getHitPoints() << std::endl;
+	std::cout << "HP: " << player2->getHitPoints() << std::endl;
 }
 
 
