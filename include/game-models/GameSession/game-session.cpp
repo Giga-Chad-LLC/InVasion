@@ -9,8 +9,10 @@
 #include <memory>
 #include <cmath>
 
+// game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-session.h"
 
 
@@ -29,9 +31,9 @@ int GameSession::createPlayerAndReturnId() {
 	int secondTeamPlayersCount = 0;
 
 	for(const auto& player_ptr : players) {
-		const Player::TeamId teamId = player_ptr->getTeamId();
+		const PlayerTeamId teamId = player_ptr->getTeamId();
 
-		if(teamId == Player::TeamId::FirstTeam) {
+		if(teamId == PlayerTeamId::FirstTeam) {
 			firstTeamPlayersCount++;	
 		}
 		else {
@@ -40,10 +42,10 @@ int GameSession::createPlayerAndReturnId() {
 	}
 
 	// assigning team to new player
-	Player::TeamId teamId = Player::TeamId::SecondTeam;
+	PlayerTeamId teamId = PlayerTeamId::SecondTeam;
 
 	if(firstTeamPlayersCount < secondTeamPlayersCount) {
-		teamId = Player::TeamId::FirstTeam;
+		teamId = PlayerTeamId::FirstTeam;
 	}
 	else if(firstTeamPlayersCount == secondTeamPlayersCount) {
 		// randomly picking team
@@ -54,7 +56,7 @@ int GameSession::createPlayerAndReturnId() {
 		const double value = distribution(generator);
 
 		if(value < 0.5) {
-			teamId = Player::TeamId::FirstTeam;
+			teamId = PlayerTeamId::FirstTeam;
 		}
 	}
 
