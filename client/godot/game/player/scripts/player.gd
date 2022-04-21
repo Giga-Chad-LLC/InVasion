@@ -17,9 +17,8 @@ const MoveRequestModel = preload("res://proto/request-models/move_request_model.
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
-const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
-const BulletsPositionsResponseModel = preload("res://proto/response-models/bullets_positions_response_model.gd")
+const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client.gd")
@@ -52,42 +51,36 @@ func _physics_process(_delta):
 		send_player_move_request()
 		# Shooting logic
 		send_player_shoot_request()
-
+	
 #	Receive data from server
-	var received_packet: NetworkPacket = consumer.pop_data() # !!! 
+	var received_packet: NetworkPacket = consumer.pop_data() 
 	if (received_packet != null):
 		if (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
 			set_player_id(received_packet)
-		elif (received_packet.message_type == Global.ResponseModels.PlayersPositionsResponseModel):
-			var players_positions = PlayersPositionsResponseModel.PlayersPositionsResponseModel.new()
-#			print("PP: ", received_packet.get_bytes().size())
-			var result_code = players_positions.from_bytes(received_packet.get_bytes())
-			if (result_code != PlayersPositionsResponseModel.PB_ERR.NO_ERRORS): 
-				print("Error while receiving: ", "cannot unpack players positions")
+		elif (received_packet.message_type == Global.ResponseModels.GameStateResponseModel):
+			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
+			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
+			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack game update model")
 			else:
-#				Find ourselves and update position
-				players_positions = players_positions.get_players()
+				# update myself
+				var players_positions = new_game_state.get_players()
 				for i in range(0, players_positions.size()):
-					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions[i]
+					var model = players_positions[i]
 					if (model.get_player_id() == player_id):
 						update_player_position(model)
 						players_positions.erase(model) # erase ourselves
 						break
 				# update other players
 				GameWorld.update_players_states(players_positions)
+				# update bullets
+				var bullets_positions = new_game_state.get_bullets()
+				GameWorld.update_bullets_states(bullets_positions)
 		elif (received_packet.message_type == Global.ResponseModels.ShootingStateResponseModel):
 			# Update our ammo count, gun reloading state
 			print("We shot a bullet!")
-		elif (received_packet.message_type == Global.ResponseModels.BulletsPositionsResponseModel):
-			var bullets_positions = BulletsPositionsResponseModel.BulletsPositionsResponseModel.new()
-			var result_code = bullets_positions.from_bytes(received_packet.get_bytes())
-			if (result_code != BulletsPositionsResponseModel.PB_ERR.NO_ERRORS): 
-				print("Error while receiving: ", "cannot unpack bullets positions")
-			else:
-				# Update bullets
-				GameWorld.update_bullets_states(bullets_positions.get_bullets())
 		else:
-			print("Unknown message type!")
+			print("Unknown message type: ", received_packet.message_type)
 
 #	Client logic methods
 	animate_player()
@@ -115,9 +108,10 @@ func send_player_shoot_request():
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
 		producer.push_data(network_packet)
 
-func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
+func update_player_position(player_position_model):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
 	global_position = Vector2(player_position_model.get_position().get_x(), player_position_model.get_position().get_y())
+
 
 func animate_player():
 	#	Move the player
