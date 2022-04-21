@@ -1,7 +1,10 @@
 #include <utility>
 #include "player.h"
 
+#include "player-team-id-enum.h"
+// game-models
 #include "game-models/Vector2D/vector2d.h"
+
 
 namespace invasion::game_models {
 const double Player::MAX_SPEED = 100;
@@ -12,7 +15,7 @@ const double Player::INITIAL_HIT_POINTS = 100.0;
 const Vector2D Player::COLLIDER_SIZE(12, 6);
 
 	
-Player::Player(Vector2D initial_pos, const int playerId, const Player::TeamId teamId)
+Player::Player(Vector2D initial_pos, const int playerId, const PlayerTeamId teamId)
 	: KinematicObject(
 		Player::COLLIDER_SIZE, 
 		std::move(initial_pos), 
@@ -31,7 +34,7 @@ int Player::getId() const {
 }
 
 
-Player::TeamId Player::getTeamId() const {
+PlayerTeamId Player::getTeamId() const {
 	return m_teamId;
 }
 

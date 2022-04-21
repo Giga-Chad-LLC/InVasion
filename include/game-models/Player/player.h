@@ -1,6 +1,8 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+
+#include "player-team-id-enum.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -17,15 +19,10 @@ struct Player : KinematicObject {
 	static const double DAMAGE;
 	static const double INITIAL_HIT_POINTS;
 
-	enum class TeamId {
-		FirstTeam,
-		SecondTeam,
-	};
-
-	explicit Player(Vector2D initial_pos, int playerId, Player::TeamId teamId);
+	explicit Player(Vector2D initial_pos, int playerId, PlayerTeamId teamId);
 
 	int getId() const;
-	Player::TeamId getTeamId() const;
+	PlayerTeamId getTeamId() const;
 	double getHitPoints() const;
 	void applyDamage(double damage);
 	bool isInDeadState() const;
@@ -35,7 +32,7 @@ struct Player : KinematicObject {
 private:
 	static const Vector2D COLLIDER_SIZE;
 	const int m_id;
-	const Player::TeamId m_teamId;
+	const PlayerTeamId m_teamId;
 	double m_hitPoints;
 	bool m_isDead;
 	Weapon m_weapon;
