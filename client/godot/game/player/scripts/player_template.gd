@@ -3,13 +3,16 @@ extends KinematicBody2D
 # Animations
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
+onready var sprite = $Sprite
 onready var animationState = animationTree.get("parameters/playback")
 var velocity = Vector2.ZERO
 
 # Godobuf
-const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
+
+func set_sprite_color(color: Color):
+	sprite.modulate = color
 
 func animate_player():
 	#	Move the player

@@ -27,7 +27,6 @@
 #include "update-game-state-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
-#include "players-positions-response-model.pb.h"
 
 
 

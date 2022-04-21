@@ -10,6 +10,7 @@ onready var player_gun = $Gun
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var velocity = Vector2.ZERO
 var player_id: int = -1
+var team_id: int = -1
 
 
 # Godobuf
@@ -17,7 +18,7 @@ const MoveRequestModel = preload("res://proto/request-models/move_request_model.
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
-const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
+const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
 # Network
@@ -55,8 +56,8 @@ func _physics_process(_delta):
 #	Receive data from server
 	var received_packet: NetworkPacket = consumer.pop_data() 
 	if (received_packet != null):
-		if (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
-			set_player_id(received_packet)
+		if (received_packet.message_type == Global.ResponseModels.PlayerInfoResponseModel):
+			set_player_info(received_packet)
 		elif (received_packet.message_type == Global.ResponseModels.GameStateResponseModel):
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -72,7 +73,7 @@ func _physics_process(_delta):
 						players_positions.erase(model) # erase ourselves
 						break
 				# update other players
-				GameWorld.update_players_states(players_positions)
+				GameWorld.update_players_states(players_positions, team_id)
 				# update bullets
 				var bullets_positions = new_game_state.get_bullets()
 				GameWorld.update_bullets_states(bullets_positions)
@@ -154,14 +155,16 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 	return packed_player_action
 
 # Set player id retrieved from server
-func set_player_id(packet: NetworkPacket) -> void:
-	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
-	var result_code = player_id_model.from_bytes(packet.get_bytes())
-	if (result_code != PlayerIdResponseModel.PB_ERR.NO_ERRORS):
+func set_player_info(packet: NetworkPacket) -> void:
+	var player_info_model = PlayerInfoResponseModel.PlayerInfoResponseModel.new()
+	var result_code = player_info_model.from_bytes(packet.get_bytes())
+	if (result_code != PlayerInfoResponseModel.PB_ERR.NO_ERRORS):
 		print("Error while receiving: ", "cannot unpack player id")
 	else:
-		player_id = player_id_model.get_player_id()
-		print("Set my id in a game session: ", player_id)
+		player_id = player_info_model.get_player_id()
+		team_id = player_info_model.get_team_id()
+		print("Set my id: ", player_id)
+		print("Set my team id: ", team_id)
 
 # Networking
 func init_network() -> void:
@@ -173,10 +176,6 @@ func _handle_client_connected() -> void:
 	producer.init(funcref(self, "_produce"))
 
 func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
-#	var network_packet: NetworkPacket = client._unpack_data(data)
-#	if (network_packet):
-#		worker.push_data(network_packet)
-	# store incoming data into a main bytes buffer
 	client.reader.add_data(data)
 	var chunk: Array = client.reader.get_next_packet_sequence()
 	while (!chunk.empty()):

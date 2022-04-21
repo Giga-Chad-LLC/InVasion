@@ -25,10 +25,8 @@ enum RequestModels {
 enum ResponseModels {
 	PlayerPositionResponseModel = 1000,
 	PlayerActionResponseModel = 1002,
-	PlayerIdResponseModel = 1003,
-	PlayersPositionsResponseModel = 1004, # will be deleted 
+	PlayerInfoResponseModel = 1003,
 	ShootingStateResponseModel = 1005,
-	BulletsPositionsResponseModel = 1006, # will be deleted
 	GameStateResponseModel = 1007,
 	UnknownResponseModel
 }

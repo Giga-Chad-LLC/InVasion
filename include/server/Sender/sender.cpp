@@ -1,9 +1,5 @@
 #include "sender.h"
 
-#include "player.pb.h"
-#include "player-id-response-model.pb.h"
-#include "players-positions-response-model.pb.h"
-#include "player-position-response-model.pb.h"
 #include <thread>
 #include <cstring>
 #include <utility>

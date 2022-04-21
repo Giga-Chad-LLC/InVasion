@@ -228,7 +228,7 @@ collision_layer = 2
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 0, 0.956863, 1, 1 )
+modulate = Color( 0, 1, 0.564706, 1 )
 position = Vector2( 0, -9 )
 texture = ExtResource( 1 )
 hframes = 60
