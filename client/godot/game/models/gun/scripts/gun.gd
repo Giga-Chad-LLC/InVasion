@@ -15,7 +15,7 @@ func instance_bullet(rotation: float):
 	bullet_model_instance.rotation = rotation
 
 func shoot_bullet(rotation: float):
-	instance_bullet(rotation)
+#	instance_bullet(rotation)
 	is_cooldown = true
 	cooldown_timer.start()
 #	emit_signal("shoot_weapon", Vector2(cos(global_rotation), sin(global_rotation)))

@@ -2,12 +2,32 @@ syntax = "proto3";
 
 package response_models;
 
-import "bullet-position-response-model.proto";
 import "player-position-response-model.proto";
+import "bullet-position-response-model.proto";
 
+//import "../utils/vector2d.proto";
 
-// PlayerPositionResponseModel
 message GameStateResponseModel {
+	/*
+	message BulletPositionResponseModel {
+		int32 bullet_id = 1;
+		int32 player_id = 2;
+		Vector2D position = 3;
+		Vector2D velocity = 4;
+	}
+	message PlayerPositionResponseModel {
+		int32 player_id = 1;
+		TeamId team_id = 2;
+		Vector2D position = 3;
+		Vector2D velocity = 4;
+
+		enum TeamId {
+			FirstTeam = 0;
+			SecondTeam = 1;
+		}
+	}
+	*/
+
 	repeated response_models.PlayerPositionResponseModel players = 1;
 	repeated response_models.BulletPositionResponseModel bullets = 2;
 }

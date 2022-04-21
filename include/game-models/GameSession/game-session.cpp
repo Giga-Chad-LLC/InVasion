@@ -145,7 +145,7 @@ void GameSession::updateGameState() {
 			std::end(bullets), 
 			[](const std::shared_ptr<Bullet>& bullet_ptr) {
 				const Vector2D pos = bullet_ptr->getPosition();
-				bool bulletOutOfMapBounds = 1 || std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
+				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
 
 				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
 			}
