@@ -12,11 +12,11 @@ namespace invasion::game_models {
 
 struct GameWorldStorage {
 	
-	std::vector<Player>& getPlayers();
+	std::vector<std::shared_ptr<Player>>& getPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
 
 private:
-	std::vector<Player> m_players;
+	std::vector<std::shared_ptr<Player>> m_players;
 	std::vector<std::shared_ptr<Bullet>> m_bullets;
 };
 
