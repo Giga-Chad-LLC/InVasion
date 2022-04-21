@@ -47,7 +47,6 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                         {
                             interactors::BulletsPositionsResponseInteractor interactor;
 							interactor.execute(responseModel, *gameSession);
-                            std::cout << "bullets: " << gameSession->getBullets().size() << "\n";
                         }
 
 
