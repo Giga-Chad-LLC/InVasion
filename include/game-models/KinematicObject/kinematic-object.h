@@ -11,7 +11,11 @@ namespace invasion::game_models {
 
 struct KinematicObject : Object {
 
-	explicit KinematicObject(Vector2D collider_size, Vector2D initial_pos, double mass, double max_speed);
+	explicit KinematicObject(Vector2D shapeColliderSize,
+							 Vector2D hitboxColliderSize,
+							 Vector2D initialPos,
+							 double mass,
+							 double max_speed);
 
 	Vector2D getVelocity() const;
 	void setVelocity(Vector2D velocity);

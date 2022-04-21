@@ -6,8 +6,12 @@
 namespace invasion::game_models {
 	
 
-KinematicObject::KinematicObject(Vector2D collider_size, Vector2D initial_pos, double mass, double max_speed)
-	: Object(std::move(collider_size), std::move(initial_pos)),
+KinematicObject::KinematicObject(Vector2D shapeColliderSize,
+								 Vector2D hitboxColliderSize,
+								 Vector2D initialPos,
+								 double mass,
+								 double max_speed)
+	: Object(std::move(shapeColliderSize), std::move(hitboxColliderSize), std::move(initialPos)),
 	  m_mass(mass),
 	  m_max_speed(max_speed),
 	  m_moving(false) {}

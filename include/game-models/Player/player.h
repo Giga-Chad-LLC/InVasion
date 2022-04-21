@@ -19,7 +19,7 @@ struct Player : KinematicObject {
 	static const double DAMAGE;
 	static const double INITIAL_HIT_POINTS;
 
-	explicit Player(Vector2D initial_pos, int playerId, PlayerTeamId teamId);
+	explicit Player(Vector2D initialPos, int playerId, PlayerTeamId teamId);
 
 	int getId() const;
 	PlayerTeamId getTeamId() const;
@@ -30,7 +30,8 @@ struct Player : KinematicObject {
 	Weapon& getWeapon();
 
 private:
-	static const Vector2D COLLIDER_SIZE;
+	static const Vector2D SHAPE_COLLIDER_SIZE;
+	static const Vector2D HITBOX_COLLIDER_SIZE;
 	const int m_id;
 	const PlayerTeamId m_teamId;
 	double m_hitPoints;
