@@ -9,6 +9,7 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/ShootInteractor/shoot-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/InitialStateResponseInteractor/initial-state-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/DamagedPlayersResponseInteractor/damaged-players-response-interactor.cpp
 
 	PARENT_SCOPE
 )
