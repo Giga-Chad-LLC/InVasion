@@ -2,6 +2,7 @@
 #include "player.h"
 
 #include "player-team-id-enum.h"
+#include "player-life-state.h"
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 
@@ -27,8 +28,7 @@ Player::Player(Vector2D initialPos, const int playerId, const PlayerTeamId teamI
 	), 
 	m_id(playerId),
 	m_teamId(teamId),
-	m_hitPoints(Player::INITIAL_HIT_POINTS),
-	m_isDead(false),
+	m_lifeState(Player::INITIAL_HIT_POINTS),
 	m_weapon(playerId, teamId, Player::INITIAL_AMMO, Player::DAMAGE) {}
 
 
@@ -42,30 +42,13 @@ PlayerTeamId Player::getTeamId() const {
 }
 
 
-double Player::getHitPoints() const {
-	return m_hitPoints;
-}
-
-
-void Player::applyDamage(const double damage) {
-	if(m_hitPoints <= damage) {
-		m_hitPoints = 0.0;
-		m_isDead = true;
-	}
-	else {
-		m_hitPoints -= damage;
-	}
-}
-
-
-bool Player::isInDeadState() const {
-	return m_isDead;
+PlayerLifeState& Player::getLifeState() {
+	return m_lifeState;
 }
 
 
 void Player::respawn(Vector2D position) {
-	m_hitPoints = Player::INITIAL_HIT_POINTS;
-	m_isDead = false;
+	m_lifeState.reset();
 	m_weapon.reset();
 	
 	this->setPosition(std::move(position));

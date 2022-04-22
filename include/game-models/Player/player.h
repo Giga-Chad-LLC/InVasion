@@ -3,6 +3,7 @@
 
 
 #include "player-team-id-enum.h"
+#include "player-life-state.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -23,19 +24,17 @@ struct Player : KinematicObject {
 
 	int getId() const;
 	PlayerTeamId getTeamId() const;
-	double getHitPoints() const;
-	void applyDamage(double damage);
-	bool isInDeadState() const;
+	PlayerLifeState& getLifeState();	
 	void respawn(Vector2D position);
 	Weapon& getWeapon();
 
 private:
+
 	static const Vector2D SHAPE_COLLIDER_SIZE;
 	static const Vector2D HITBOX_COLLIDER_SIZE;
 	const int m_id;
 	const PlayerTeamId m_teamId;
-	double m_hitPoints;
-	bool m_isDead;
+	PlayerLifeState m_lifeState;
 	Weapon m_weapon;
 };
 
