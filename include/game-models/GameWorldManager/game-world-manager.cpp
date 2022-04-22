@@ -3,8 +3,12 @@
 #include <memory>
 
 #include "game-world-manager.h"
+// game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
+#include "game-models/Player/player-life-state.h"
+
 
 namespace invasion::game_models {
 	
@@ -16,6 +20,7 @@ void GameWorldManager::updatePlayersPositions(std::vector<std::shared_ptr<Player
 		player_ptr->makeMove(dt);
 	}
 }
+
 
 void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, 
 											  std::vector<std::shared_ptr<Player>>& players,
@@ -36,10 +41,14 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 
 		bullet_ptr->setPosition(nextPosition);
 
+		const int playerId = bullet_ptr->getPlayerId();
+		const PlayerTeamId teamId = bullet_ptr->getPlayerTeamId();
+		const double damage = bullet_ptr->getDamage();
+
 		// searching for collided player
 		for(const auto& player_ptr : players) {
-			if(player_ptr->getId() != bullet_ptr->getPlayerId() &&
-			   player_ptr->getTeamId() != bullet_ptr->getPlayerTeamId() &&
+			if(player_ptr->getId() != playerId &&
+			   player_ptr->getTeamId() != teamId &&
 			   player_ptr->collidesWithHitbox(bullet_ptr.get())) {
 				collidedPlayer_ptr = player_ptr;
 				break;
@@ -49,13 +58,12 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 		bullet_ptr->setPosition(curPosition);
 
 		if(collidedPlayer_ptr != nullptr) {
-			// std::cout << collidedPlayer_ptr->getId() << std::endl;
-			std::cout << "bullet " << bullet_ptr->getId() 
-					  << " damaged player " << collidedPlayer_ptr->getId();
+			std::cout << "bullet " << bullet_ptr->getId() << " damaged player " << collidedPlayer_ptr->getId();
 
-			collidedPlayer_ptr->applyDamage(bullet_ptr->getDamage());
+			PlayerLifeState& lifeState = collidedPlayer_ptr->getLifeState();
+			lifeState.applyDamage(damage, playerId);
 
-			std::cout << " HP: " << collidedPlayer_ptr->getHitPoints() << "\n";
+			std::cout << " HP: " << lifeState.getHitPoints() << "\n";
 
 			bullet_ptr->setCrushedState(true);
 		}
@@ -63,7 +71,17 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 			bullet_ptr->makeMove(dt);
 		}
 
-		// std::cout << "bullet " << bullet_ptr->getId() << ", crushed: " << bullet_ptr->isInCrushedState() << " pos: " << bullet_ptr->getPosition() << std::endl;
+	}
+}
+
+
+void GameWorldManager::findDamagedPlayers(std::vector<std::shared_ptr<Player>>& players,
+										  std::vector<std::shared_ptr<Player>>& damagedPlayers) const {
+	for(auto& player_ptr : players) {
+		if(player_ptr->getLifeState().isInDamagedState()) {
+			damagedPlayers.push_back(player_ptr);
+			player_ptr->getLifeState().removeDamagedState();
+		}
 	}
 }
 
