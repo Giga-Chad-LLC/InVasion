@@ -77,10 +77,10 @@ int GameSession::createIdForNewBullet() {
 
 
 std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
-	auto& players = m_storage.getPlayers();
+	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
 	std::shared_ptr<Player> player_ptr = nullptr;
 
-	for(const std::shared_ptr<Player>& player : players) {
+	for(const auto& player : players) {
 		if(playerId == player->getId()) {
 			player_ptr = player;
 			break;

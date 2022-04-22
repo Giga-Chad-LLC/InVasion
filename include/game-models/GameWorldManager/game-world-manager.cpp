@@ -10,7 +10,7 @@ namespace invasion::game_models {
 	
 // public:
 void GameWorldManager::updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const {
-	for(std::shared_ptr<Player>& player_ptr : players) {
+	for(auto& player_ptr : players) {
 		this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
 		this->updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(players, player_ptr, dt);
 		player_ptr->makeMove(dt);
@@ -22,7 +22,7 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 											  double dt) const {
 	const double appliedForceMagnitude = 500;
 
-	for(const std::shared_ptr<Bullet>& bullet_ptr : bullets) {
+	for(const auto& bullet_ptr : bullets) {
 		// TODO: do not update result force on every update request because the result force is never changing
 		const Vector2D resultForce = Vector2D::clampMagnitude(bullet_ptr->getMovingForce(), appliedForceMagnitude);
 		bullet_ptr->setResultForce(resultForce);
@@ -37,7 +37,7 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 		bullet_ptr->setPosition(nextPosition);
 
 		// searching for collided player
-		for(const std::shared_ptr<Player>& player_ptr : players) {
+		for(const auto& player_ptr : players) {
 			if(player_ptr->getId() != bullet_ptr->getPlayerId() &&
 			   player_ptr->getTeamId() != bullet_ptr->getPlayerTeamId() &&
 			   player_ptr->collidesWithHitbox(bullet_ptr.get())) {
@@ -118,7 +118,7 @@ void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOther
 
 	bool inCollision = false;
 
-	for(const std::shared_ptr<Player>& other : players) {
+	for(const auto& other : players) {
 		if(consideredPlayer_ptr->getId() == other->getId()) continue;
 
 		inCollision = consideredPlayer_ptr->collidesWithShape(other.get());
