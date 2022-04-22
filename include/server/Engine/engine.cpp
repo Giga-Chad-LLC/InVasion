@@ -1,9 +1,13 @@
+#include <optional>
+#include <utility>
+
 #include "engine.h"
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
 #include "interactors/ShootInteractor/shoot-interactor.h"
 #include "interactors/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.h"
+#include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -35,31 +39,54 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                 switch (request->getMessageType()) {
                     case RequestModel_t::UpdateGameStateRequestModel: {
 						gameSession->updateGameState();
-						response_models::GameStateResponseModel responseModel;
 
-                        // players positions 
-                        {
-                            interactors::PlayersPositionsResponseInteractor interactor;
-                            interactor.execute(responseModel, *gameSession);
-                        }
+						{
+							interactors::DamagedPlayersResponseInteractor interactor;
+							std::optional<response_models::DamagedPlayersResponseModel> optionalModel = interactor.execute(*gameSession);
 
-                        // bullets positions
-                        {
-                            interactors::BulletsPositionsResponseInteractor interactor;
-							interactor.execute(responseModel, *gameSession);
-                        }
+							if(optionalModel.has_value()) {
+								response_models::DamagedPlayersResponseModel responseModel = *std::move(optionalModel);
+								
+								// serialize
+								std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+								responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+								
+								auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
+																ResponseModel_t::DamagedPlayersResponseModel,
+																responseModel.ByteSizeLong());
+								
+								responseQueue->produce(std::move(response));
+							}
+						}
 
+						// sending players & bullets positions
+						{
+							// TODO: GameStateResponseModel rename in PositionsResponseModel
+							response_models::GameStateResponseModel responseModel;
 
+							// players positions 
+							{
+								interactors::PlayersPositionsResponseInteractor interactor;
+								interactor.execute(responseModel, *gameSession);
+							}
 
-                        // serialize
-                        std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-                        responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-                        
-                        auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
-                                                        ResponseModel_t::GameStateResponseModel,
-                                                        responseModel.ByteSizeLong());
-                        
-                        responseQueue->produce(std::move(response));
+							// bullets positions
+							{
+								interactors::BulletsPositionsResponseInteractor interactor;
+								interactor.execute(responseModel, *gameSession);
+							}
+
+							// serialize
+							std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+							responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+							
+							auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
+															ResponseModel_t::GameStateResponseModel,
+															responseModel.ByteSizeLong());
+							
+							responseQueue->produce(std::move(response));
+						}
+
                         break;
                     }
                     case RequestModel_t::MoveRequestModel: {

@@ -16,6 +16,7 @@ namespace invasion::session {
         PlayerInfoResponseModel = 1003,
         ShootingStateResponseModel = 1005, 
 		GameStateResponseModel = 1007,
+		DamagedPlayersResponseModel = 1008,
         UnknownResponseModel
     };
 
