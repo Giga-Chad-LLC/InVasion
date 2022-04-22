@@ -12,6 +12,10 @@ struct PlayerLifeState {
 	bool isInDeadState() const;
 	bool isInDamagedState() const;
 	void removeDamagedState();
+
+	int killedBy() const;
+	int damagedBy() const;
+
 	void reset();
 
 private:

@@ -45,6 +45,16 @@ void PlayerLifeState::removeDamagedState() {
 	m_isDamagedOnLastUpdate = false;
 }
 
+
+int PlayerLifeState::killedBy() const {
+	return m_killedBy;
+}
+
+int PlayerLifeState::damagedBy() const {
+	return m_damagedBy;
+}
+
+
 void PlayerLifeState::reset() {
 	m_hitPoints = m_initialHitPoints;
 	m_isDead = false;
