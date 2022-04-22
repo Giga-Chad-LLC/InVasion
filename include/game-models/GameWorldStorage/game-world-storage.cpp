@@ -15,4 +15,8 @@ std::vector<std::shared_ptr<Bullet>>& GameWorldStorage::getBullets() {
 	return m_bullets;
 }
 
+std::vector<std::shared_ptr<Player>>& GameWorldStorage::getDamagedPlayers() {
+	return m_damagedPlayers;
+}
+
 } // namespace invasion::game_models
