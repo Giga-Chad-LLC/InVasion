@@ -100,6 +100,12 @@ std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
 
+
+std::vector<std::shared_ptr<Player>>& GameSession::getDamagedPlayers() {
+	return m_storage.getDamagedPlayers();
+}
+
+
 std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 	return m_storage.getBullets();
 }
@@ -132,11 +138,15 @@ void GameSession::updateGameState() {
 	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
+	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& bullets = m_storage.getBullets();
 
 
 	m_manager.updatePlayersPositions(players, dt_s);
 	m_manager.updateBulletsPositions(bullets, players, dt_s);
+
+	damagedPlayers.clear();
+	m_manager.findDamagedPlayers(players, damagedPlayers);
 
 	// deleting crushed or went out of bounds bullets
 	bullets.erase(
