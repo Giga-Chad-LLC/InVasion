@@ -79,7 +79,8 @@ func _physics_process(_delta):
 				GameWorld.update_bullets_states(bullets_positions)
 		elif (received_packet.message_type == Global.ResponseModels.ShootingStateResponseModel):
 			# Update our ammo count, gun reloading state
-			print("We shot a bullet!")
+#			print("We shot a bullet!")
+			pass
 		else:
 			print("Unknown message type: ", received_packet.message_type)
 
@@ -95,11 +96,12 @@ func send_player_move_request():
 		previous_action = action.get_current_event()
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
-		producer.push_data(network_packet)
+		if (network_packet):
+			producer.push_data(network_packet)
 
 func send_player_shoot_request():
 	if (Input.is_action_pressed("shoot") and not player_gun.is_cooldown):
-		player_gun.shoot_bullet(player_gun.global_rotation)
+		player_gun.start_cooldown()
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
 		action.new_weapon_direction()
@@ -107,7 +109,8 @@ func send_player_shoot_request():
 		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
-		producer.push_data(network_packet)
+		if (network_packet):
+			producer.push_data(network_packet)
 
 func update_player_position(player_position_model):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
@@ -123,7 +126,7 @@ func animate_player():
 		animationState.travel("Run")
 	else:
 		animationState.travel("Idle")
-	move_and_slide(velocity)
+	velocity = move_and_slide(velocity)
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
@@ -197,6 +200,9 @@ func _produce(worker: Worker) -> void:
 			break
 
 		var network_packet: NetworkPacket = worker.queue.pop()
+		if (!network_packet):
+			print("Network packet is invalid: ", network_packet)
+			continue
 		if (!client.send_packed_data(network_packet)):
 			print("Error while sending packet: ", network_packet.get_bytes())
 

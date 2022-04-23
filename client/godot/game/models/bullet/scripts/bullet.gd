@@ -19,5 +19,6 @@ func update_bullet_position(bullet_position_model):
 
 func _process(_delta):
 	global_position += velocity / 100
+	rotation = velocity.angle()
 
 
