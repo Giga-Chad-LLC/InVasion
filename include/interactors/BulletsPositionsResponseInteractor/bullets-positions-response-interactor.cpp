@@ -8,20 +8,19 @@
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Vector2D/vector2d.h"
 // response-models
-#include "bullets-positions-response-model.pb.h"
+#include "bullet-position-response-model.pb.h"
+#include "game-state-response-model.pb.h"
 
 
 namespace invasion::interactors {
 using namespace invasion::game_models;	
+using namespace response_models;
 
-
-response_models::BulletsPositionsResponseModel BulletsPositionsResponseInteractor::execute(GameSession& session) const {
-	response_models::BulletsPositionsResponseModel response;
-	
+void BulletsPositionsResponseInteractor::execute(GameStateResponseModel& response, GameSession& session) const {	
 	const std::vector<std::shared_ptr<Bullet>>& bullets = session.getBullets();
 
 	for(const auto& bullet_ptr : bullets) {
-		response_models::BulletPositionResponseModel* bulletModel = response.add_bullets();
+		BulletPositionResponseModel* bulletModel = response.add_bullets();
 
 		bulletModel->set_bullet_id(bullet_ptr->getId());
 		bulletModel->set_player_id(bullet_ptr->getPlayerId());
@@ -34,9 +33,6 @@ response_models::BulletsPositionsResponseModel BulletsPositionsResponseInteracto
 		bulletModel->mutable_position()->set_x(position.getX());
 		bulletModel->mutable_position()->set_y(position.getY());
 	}
-
-	return response;
 }
-
 
 } // namespace invasion::interactors

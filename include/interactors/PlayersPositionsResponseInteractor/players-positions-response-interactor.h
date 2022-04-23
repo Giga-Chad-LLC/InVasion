@@ -4,14 +4,15 @@
 // game-models
 #include "game-models/GameSession/game-session.h"
 // response models
-#include "players-positions-response-model.pb.h"
+#include "game-state-response-model.pb.h"
 
 
 namespace invasion::interactors {
 using namespace invasion::game_models;
+using namespace response_models;
 
 struct PlayersPositionsResponseInteractor {
-	response_models::PlayersPositionsResponseModel execute(GameSession& session) const;
+	void execute(GameStateResponseModel& response, GameSession& session) const;
 };
 
 

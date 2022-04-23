@@ -9,8 +9,10 @@
 #include <memory>
 #include <cmath>
 
+// game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-session.h"
 
 
@@ -22,16 +24,16 @@ GameSession::GameSession() {
 
 // returns id of created player
 int GameSession::createPlayerAndReturnId() {
-	auto& players = m_storage.getPlayers();
+	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
 	const auto playerId = static_cast<int>(players.size());
 
 	int firstTeamPlayersCount = 0;
 	int secondTeamPlayersCount = 0;
 
-	for(const auto& player : players) {
-		const Player::TeamId teamId = player.getTeamId();
+	for(const auto& player_ptr : players) {
+		const PlayerTeamId teamId = player_ptr->getTeamId();
 
-		if(teamId == Player::TeamId::FirstTeam) {
+		if(teamId == PlayerTeamId::FirstTeam) {
 			firstTeamPlayersCount++;	
 		}
 		else {
@@ -40,10 +42,10 @@ int GameSession::createPlayerAndReturnId() {
 	}
 
 	// assigning team to new player
-	Player::TeamId teamId = Player::TeamId::SecondTeam;
+	PlayerTeamId teamId = PlayerTeamId::SecondTeam;
 
 	if(firstTeamPlayersCount < secondTeamPlayersCount) {
-		teamId = Player::TeamId::FirstTeam;
+		teamId = PlayerTeamId::FirstTeam;
 	}
 	else if(firstTeamPlayersCount == secondTeamPlayersCount) {
 		// randomly picking team
@@ -54,11 +56,11 @@ int GameSession::createPlayerAndReturnId() {
 		const double value = distribution(generator);
 
 		if(value < 0.5) {
-			teamId = Player::TeamId::FirstTeam;
+			teamId = PlayerTeamId::FirstTeam;
 		}
 	}
 
-	players.emplace_back(Vector2D::ZERO, playerId, teamId);
+	players.push_back(std::make_shared<Player>(Vector2D::ZERO, playerId, teamId));
 	return playerId;
 }
 
@@ -74,13 +76,13 @@ int GameSession::createIdForNewBullet() {
 }
 
 
-Player& GameSession::getPlayer(const int playerId) {
-	auto& players = m_storage.getPlayers();
-	Player* player_ptr = nullptr;
+std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
+	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
+	std::shared_ptr<Player> player_ptr = nullptr;
 
-	for(Player& player : players) {
-		if(playerId == player.getId()) {
-			player_ptr = &player;
+	for(const auto& player : players) {
+		if(playerId == player->getId()) {
+			player_ptr = player;
 			break;
 		}
 	}
@@ -90,13 +92,19 @@ Player& GameSession::getPlayer(const int playerId) {
 	}
 
 	assert(player_ptr != nullptr);
-	return *player_ptr;
+	return player_ptr;
 }
 
 
-std::vector<Player>& GameSession::getPlayers() {
+std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
 	return m_storage.getPlayers();
 }
+
+
+std::vector<std::shared_ptr<Player>>& GameSession::getDamagedPlayers() {
+	return m_storage.getDamagedPlayers();
+}
+
 
 std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 	return m_storage.getBullets();
@@ -104,10 +112,10 @@ std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 
 
 std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
-	auto& bullets = m_storage.getBullets();
+	std::vector<std::shared_ptr<Bullet>>& bullets = m_storage.getBullets();
 	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
-	for(std::shared_ptr<Bullet> bullet : bullets) {
+	for(const auto& bullet : bullets) {
 		if(bulletId == bullet->getId()) {
 			bullet_ptr = bullet;
 			break;
@@ -130,11 +138,15 @@ void GameSession::updateGameState() {
 	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
+	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& bullets = m_storage.getBullets();
 
 
 	m_manager.updatePlayersPositions(players, dt_s);
 	m_manager.updateBulletsPositions(bullets, players, dt_s);
+
+	damagedPlayers.clear();
+	m_manager.findDamagedPlayers(players, damagedPlayers);
 
 	// deleting crushed or went out of bounds bullets
 	bullets.erase(
@@ -143,7 +155,7 @@ void GameSession::updateGameState() {
 			std::end(bullets), 
 			[](const std::shared_ptr<Bullet>& bullet_ptr) {
 				const Vector2D pos = bullet_ptr->getPosition();
-				bool bulletOutOfMapBounds = 1 || std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
+				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
 
 				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
 			}
@@ -151,7 +163,6 @@ void GameSession::updateGameState() {
 		std::end(bullets)
 	);
 
-	// std::cout << bullets.size() << std::endl;
 
 	// --------------- TODO: respawn dead players --------------- //
 

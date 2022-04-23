@@ -5,22 +5,28 @@
 #include <utility>
 #include "server/server.h"
 #include "server/NetworkPacket/network-packet.h"
-#include "player-id-response-model.pb.h"
+#include "player-info-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
 #include "interactors/InitialStateResponseInteractor/initial-state-response-interactor.h"
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId) {
+    void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId, game_models::PlayerTeamId teamId) {
         // send to client his ID
         std::cout << "Send client his ID: " << playerId << std::endl;
-        response_models::PlayerIdResponseModel response;
+        response_models::PlayerInfoResponseModel response;
         response.set_player_id(playerId);
-        
+        if (teamId == game_models::PlayerTeamId::FirstTeam) {
+			response.set_team_id(response_models::PlayerInfoResponseModel::FirstTeam);
+		}
+		else {
+			response.set_team_id(response_models::PlayerInfoResponseModel::SecondTeam);
+		}
+
         uint32_t size = response.ByteSizeLong();
         std::unique_ptr<char[]> buffer_ptr(new char[size]);
         response.SerializeToArray(buffer_ptr.get(), size);
-        auto packet = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr), ResponseModel_t::PlayerIdResponseModel, size);
+        auto packet = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr), ResponseModel_t::PlayerInfoResponseModel, size);
         client->m_clientResponseQueue.produce(std::move(packet));
     }
 
@@ -37,13 +43,14 @@ namespace invasion::session {
             std::cout << "Connected client: " << socket.remote_endpoint() << " --> " << socket.local_endpoint()
                       << std::endl;
             uint32_t playerId = m_gameSession.createPlayerAndReturnId();
+            auto teamId = m_gameSession.getPlayer(playerId)->getTeamId();
             auto client = std::make_shared<Client>(std::move(socket), playerId);
 
             connectedClients.push_back(client);
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client, &m_requestQueue); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = ClientResponsesSender(client);
 
-            registerClientInSession(client, playerId);
+            registerClientInSession(client, playerId, teamId);
 
             if (!m_isSessionActive && connectedClients.size() == m_requiredClientsCountInSession) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "Maximum players count reached. Starting the game..." << std::endl;

@@ -36,10 +36,7 @@ RequestModel_t NetworkPacketRequest::getMessageType() const {
 
 // returns message type enum object by its `uint32_t` representation
 RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
-    if (type == static_cast<uint32_t> (RequestModel_t::PlayerActionRequestModel)) {
-        return RequestModel_t::PlayerActionRequestModel;
-    }
-    else if (type == static_cast<uint32_t> (RequestModel_t::MoveRequestModel)) {
+    if (type == static_cast<uint32_t> (RequestModel_t::MoveRequestModel)) {
         return RequestModel_t::MoveRequestModel;
     }
     else if (type == static_cast<uint32_t> (RequestModel_t::ShootRequestModel)) {

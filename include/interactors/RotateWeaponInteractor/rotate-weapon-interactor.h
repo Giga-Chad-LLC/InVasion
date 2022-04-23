@@ -6,10 +6,11 @@
 #include "rotate-weapon-request-model.pb.h"
 
 namespace invasion::interactors {
-	
+using namespace invasion::game_models;
+using namespace request_models;
 
 struct RotateWeaponInteractor {
-	void execute(const request_models::RotateWeaponRequestModel& req, game_models::GameSession& session) const;
+	void execute(const RotateWeaponRequestModel& req, GameSession& session) const;
 };
 
 

@@ -1,6 +1,8 @@
 extends Reference
 # Refactor it with the more efficient version based on two arrays 
-var queue: Array = []
+const FastQueue = preload("res://utils/fast_queue.gd")
+
+var queue: FastQueue = FastQueue.new()
 var mutex = Mutex.new()
 
 func size():

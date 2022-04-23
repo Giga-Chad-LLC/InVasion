@@ -1,10 +1,12 @@
 syntax = "proto3";
 
 package response_models;
+
 import "player-position-response-model.proto";
+import "bullet-position-response-model.proto";
 
 
-// PlayerPositionResponseModel
-message PlayersPositionsResponseModel {
+message GameStateResponseModel {
 	repeated response_models.PlayerPositionResponseModel players = 1;
+	repeated response_models.BulletPositionResponseModel bullets = 2;
 }

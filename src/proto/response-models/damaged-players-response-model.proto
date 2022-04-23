@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package response_models;
+
+message DamagedPlayerResponseModel {
+	int32 player_id = 1;
+	int32 damaged_by = 2; // id of player that made damage
+	double new_hitpoints = 3;
+}
+
+message DamagedPlayersResponseModel {
+  repeated DamagedPlayerResponseModel damaged_players = 1;
+}

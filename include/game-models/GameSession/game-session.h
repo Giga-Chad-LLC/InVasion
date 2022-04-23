@@ -21,10 +21,11 @@ struct GameSession {
 	int addBullet(std::shared_ptr<Bullet> bullet);
 	int createIdForNewBullet();
 
-	Player& getPlayer(int playerId);
+	std::shared_ptr<Player> getPlayer(int playerId);
 	std::shared_ptr<Bullet> getBullet(int bulletId);
 
-	std::vector<Player>& getPlayers();
+	std::vector<std::shared_ptr<Player>>& getPlayers();
+	std::vector<std::shared_ptr<Player>>& getDamagedPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
 
 	void updateGameState();

@@ -28,7 +28,6 @@ find_package(Protobuf REQUIRED)
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		# request-models
-        ./src/proto/request-models/player.proto
         ./src/proto/request-models/move-request-model.proto
         ./src/proto/request-models/update-game-state-request-model.proto
 		./src/proto/request-models/rotate-weapon-request-model.proto
@@ -38,21 +37,21 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/utils/vector2d.proto
 
 		# response-models
-        ./src/proto/response-models/player-id-response-model.proto
+        ./src/proto/response-models/player-info-response-model.proto
         ./src/proto/response-models/player-position-response-model.proto
-		./src/proto/response-models/players-positions-response-model.proto
         ./src/proto/response-models/shooting-state-response-model.proto
 		./src/proto/response-models/bullet-position-response-model.proto
-		./src/proto/response-models/bullets-positions-response-model.proto
+		./src/proto/response-models/game-state-response-model.proto
+		./src/proto/response-models/damaged-players-response-model.proto
 
 		# schemas
-        ./src/proto/shems-of-game/player-schema.proto
-        ./src/proto/shems-of-game/session-state-schema.proto
-        ./src/proto/shems-of-game/game-state-schema.proto
-        ./src/proto/shems-of-game/initial-state-response-schema.proto
-        ./src/proto/shems-of-game/bullet-schema.proto
-        ./src/proto/shems-of-game/player-game-session-statistic-schema.proto
-        ./src/proto/shems-of-game/weapon-schema.proto
+        ./src/proto/game-schemes/player-schema.proto
+        ./src/proto/game-schemes/session-state-schema.proto
+        ./src/proto/game-schemes/game-state-schema.proto
+        ./src/proto/game-schemes/initial-state-response-schema.proto
+        ./src/proto/game-schemes/bullet-schema.proto
+        ./src/proto/game-schemes/player-game-session-statistic-schema.proto
+        ./src/proto/game-schemes/weapon-schema.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

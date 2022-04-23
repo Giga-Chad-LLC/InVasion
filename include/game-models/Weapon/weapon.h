@@ -3,15 +3,18 @@
 
 #include <chrono>
 #include <memory>
+#include <iostream>
 
+// game-models
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/Player/player-team-id-enum.h"
 
 namespace invasion::game_models {
-	
+
 
 struct Weapon {
-	Weapon(int playerId, int ammo, double damage);
+	Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage);
 
 	std::shared_ptr<Bullet> shoot(Vector2D playerPos, int bulletId);
 	bool isAbleToShoot() const;
@@ -45,6 +48,7 @@ private:
 	
 	Vector2D m_direction;
 	const int m_playerId;
+	const PlayerTeamId m_playerTeamId;
 };
 
 

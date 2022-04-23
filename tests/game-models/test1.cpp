@@ -2,10 +2,12 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include <memory>
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Bullet/bullet.h"
@@ -25,7 +27,6 @@
 #include "update-game-state-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
-#include "players-positions-response-model.pb.h"
 
 
 
@@ -44,49 +45,49 @@ using namespace std;
 
 
 
-TEST_CASE("Testing players collisions with bullets") {
+// TEST_CASE("Testing players collisions with bullets") {
 
-	PhysicsTickController controller(10);
-	ShootInteractor shoot_interactor;
-	GameSession session;
+// 	PhysicsTickController controller(10);
+// 	ShootInteractor shoot_interactor;
+// 	GameSession session;
 	
-	const int id1 = session.createPlayerAndReturnId();
-	const int id2 = session.createPlayerAndReturnId();
+// 	const int id1 = session.createPlayerAndReturnId();
+// 	const int id2 = session.createPlayerAndReturnId();
 
-	Player& player1 = session.getPlayer(id1);
-	player1.setPosition(Vector2D(0, 0));
+// 	std::shared_ptr<Player> player1 = session.getPlayer(id1);
+// 	player1->setPosition(Vector2D(0, 0));
 
-	Player& player2 = session.getPlayer(id2);
-	player2.setPosition(Vector2D(500, 0));
+// 	std::shared_ptr<Player> player2 = session.getPlayer(id2);
+// 	player2->setPosition(Vector2D(500, 0));
 
-	ShootRequestModel req;
-	req.set_player_id(player1.getId());
+// 	ShootRequestModel req;
+// 	req.set_player_id(player1->getId());
 
-	const Vector2D direction = Vector2D(1, 0).normalize();
-	req.mutable_weapon_direction()->set_x(direction.getX());
-	req.mutable_weapon_direction()->set_y(direction.getY());
+// 	const Vector2D direction = Vector2D(1, 0).normalize();
+// 	req.mutable_weapon_direction()->set_x(direction.getX());
+// 	req.mutable_weapon_direction()->set_y(direction.getY());
 
-	/* ShootingStateResponseSchema res = */ shoot_interactor.execute(req, session);
-	shoot_interactor.execute(req, session);
+// 	/* ShootingStateResponseSchema res = */ shoot_interactor.execute(req, session);
+// 	shoot_interactor.execute(req, session);
 
-	req.mutable_weapon_direction()->set_x(-1);
-	req.mutable_weapon_direction()->set_y(0);
+// 	req.mutable_weapon_direction()->set_x(-1);
+// 	req.mutable_weapon_direction()->set_y(0);
 
-	shoot_interactor.execute(req, session);
+// 	shoot_interactor.execute(req, session);
 
-	req.mutable_weapon_direction()->set_x(direction.getX());
-	req.mutable_weapon_direction()->set_y(direction.getY());
+// 	req.mutable_weapon_direction()->set_x(direction.getX());
+// 	req.mutable_weapon_direction()->set_y(direction.getY());
 
-	shoot_interactor.execute(req, session);
+// 	shoot_interactor.execute(req, session);
 
-	controller.start([&]() {
-		session.updateGameState();
-	});
+// 	controller.start([&]() {
+// 		session.updateGameState();
+// 	});
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(1'500));
-	controller.stop();
-	std::cout << "HP: " << player2.getHitPoints() << std::endl;
-}
+// 	std::this_thread::sleep_for(std::chrono::milliseconds(1'500));
+// 	controller.stop();
+// 	std::cout << "HP: " << player2->getHitPoints() << std::endl;
+// }
 
 
 /*
@@ -202,8 +203,8 @@ TEST_CASE("Team assigning") {
 	Player player1 = session.getPlayer(id1);
 	Player player2 = session.getPlayer(id2);
 
-	int teamId1 = player1.getTeamId() == Player::TeamId::SecondTeam;
-	int teamId2 = player2.getTeamId() == Player::TeamId::SecondTeam;
+	int teamId1 = player1.getTeamId() == PlayerTeamId::SecondTeam;
+	int teamId2 = player2.getTeamId() == PlayerTeamId::SecondTeam;
 
 	CHECK(player1.getTeamId() != player2.getTeamId());
 
@@ -216,7 +217,7 @@ TEST_CASE("Team assigning") {
 	for(int i = 0; i < 10'000; i++) {
 		int id = session.createPlayerAndReturnId();
 		Player player = session.getPlayer(id);
-		int teamId = player.getTeamId() == Player::TeamId::SecondTeam;
+		int teamId = player.getTeamId() == PlayerTeamId::SecondTeam;
 
 		if(teamId == 1) cnt2++;
 		else cnt1++;

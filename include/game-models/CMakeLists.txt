@@ -8,6 +8,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Object/object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KinematicObject/kinematic-object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-life-state.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Bullet/bullet.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Weapon/weapon.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldManager/game-world-manager.cpp

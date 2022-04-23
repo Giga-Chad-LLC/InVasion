@@ -10,6 +10,7 @@ onready var player_gun = $Gun
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var velocity = Vector2.ZERO
 var player_id: int = -1
+var team_id: int = -1
 
 
 # Godobuf
@@ -17,9 +18,8 @@ const MoveRequestModel = preload("res://proto/request-models/move_request_model.
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
-const PlayersPositionsResponseModel = preload("res://proto/response-models/players_positions_response_model.gd")
-const PlayerIdResponseModel = preload("res://proto/response-models/player_id_response_model.gd")
-const BulletsPositionsResponseModel = preload("res://proto/response-models/bullets_positions_response_model.gd")
+const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
+const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client.gd")
@@ -52,42 +52,37 @@ func _physics_process(_delta):
 		send_player_move_request()
 		# Shooting logic
 		send_player_shoot_request()
-
+	
 #	Receive data from server
-	var received_packet: NetworkPacket = consumer.pop_data() # !!! 
+	var received_packet: NetworkPacket = consumer.pop_data() 
 	if (received_packet != null):
-		if (received_packet.message_type == Global.ResponseModels.PlayerIdResponseModel):
-			set_player_id(received_packet)
-		elif (received_packet.message_type == Global.ResponseModels.PlayersPositionsResponseModel):
-			var players_positions = PlayersPositionsResponseModel.PlayersPositionsResponseModel.new()
-#			print("PP: ", received_packet.get_bytes().size())
-			var result_code = players_positions.from_bytes(received_packet.get_bytes())
-			if (result_code != PlayersPositionsResponseModel.PB_ERR.NO_ERRORS): 
-				print("Error while receiving: ", "cannot unpack players positions")
+		if (received_packet.message_type == Global.ResponseModels.PlayerInfoResponseModel):
+			set_player_info(received_packet)
+		elif (received_packet.message_type == Global.ResponseModels.GameStateResponseModel):
+			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
+			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
+			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack game update model")
 			else:
-#				Find ourselves and update position
-				players_positions = players_positions.get_players()
+				# update myself
+				var players_positions = new_game_state.get_players()
 				for i in range(0, players_positions.size()):
-					var model: PlayersPositionsResponseModel.PlayerPositionResponseModel = players_positions[i]
+					var model = players_positions[i]
 					if (model.get_player_id() == player_id):
 						update_player_position(model)
 						players_positions.erase(model) # erase ourselves
 						break
 				# update other players
-				GameWorld.update_players_states(players_positions)
+				GameWorld.update_players_states(players_positions, team_id)
+				# update bullets
+				var bullets_positions = new_game_state.get_bullets()
+				GameWorld.update_bullets_states(bullets_positions)
 		elif (received_packet.message_type == Global.ResponseModels.ShootingStateResponseModel):
 			# Update our ammo count, gun reloading state
-			print("We shot a bullet!")
-		elif (received_packet.message_type == Global.ResponseModels.BulletsPositionsResponseModel):
-			var bullets_positions = BulletsPositionsResponseModel.BulletsPositionsResponseModel.new()
-			var result_code = bullets_positions.from_bytes(received_packet.get_bytes())
-			if (result_code != BulletsPositionsResponseModel.PB_ERR.NO_ERRORS): 
-				print("Error while receiving: ", "cannot unpack bullets positions")
-			else:
-				# Update bullets
-				GameWorld.update_bullets_states(bullets_positions.get_bullets())
+#			print("We shot a bullet!")
+			pass
 		else:
-			print("Unknown message type!")
+			print("Unknown message type: ", received_packet.message_type)
 
 #	Client logic methods
 	animate_player()
@@ -101,11 +96,12 @@ func send_player_move_request():
 		previous_action = action.get_current_event()
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
-		producer.push_data(network_packet)
+		if (network_packet):
+			producer.push_data(network_packet)
 
 func send_player_shoot_request():
 	if (Input.is_action_pressed("shoot") and not player_gun.is_cooldown):
-		player_gun.shoot_bullet(player_gun.global_rotation)
+		player_gun.start_cooldown()
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
 		action.new_weapon_direction()
@@ -113,11 +109,13 @@ func send_player_shoot_request():
 		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
-		producer.push_data(network_packet)
+		if (network_packet):
+			producer.push_data(network_packet)
 
-func update_player_position(player_position_model: PlayersPositionsResponseModel.PlayerPositionResponseModel):
+func update_player_position(player_position_model):
 	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
 	global_position = Vector2(player_position_model.get_position().get_x(), player_position_model.get_position().get_y())
+
 
 func animate_player():
 	#	Move the player
@@ -128,7 +126,7 @@ func animate_player():
 		animationState.travel("Run")
 	else:
 		animationState.travel("Idle")
-	move_and_slide(velocity)
+	velocity = move_and_slide(velocity)
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
@@ -160,14 +158,16 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 	return packed_player_action
 
 # Set player id retrieved from server
-func set_player_id(packet: NetworkPacket) -> void:
-	var player_id_model = PlayerIdResponseModel.PlayerIdResponseModel.new()
-	var result_code = player_id_model.from_bytes(packet.get_bytes())
-	if (result_code != PlayerIdResponseModel.PB_ERR.NO_ERRORS):
+func set_player_info(packet: NetworkPacket) -> void:
+	var player_info_model = PlayerInfoResponseModel.PlayerInfoResponseModel.new()
+	var result_code = player_info_model.from_bytes(packet.get_bytes())
+	if (result_code != PlayerInfoResponseModel.PB_ERR.NO_ERRORS):
 		print("Error while receiving: ", "cannot unpack player id")
 	else:
-		player_id = player_id_model.get_player_id()
-		print("Set my id in a game session: ", player_id)
+		player_id = player_info_model.get_player_id()
+		team_id = player_info_model.get_team_id()
+		print("Set my id: ", player_id)
+		print("Set my team id: ", team_id)
 
 # Networking
 func init_network() -> void:
@@ -179,10 +179,6 @@ func _handle_client_connected() -> void:
 	producer.init(funcref(self, "_produce"))
 
 func _handle_client_receive_data(data: PoolByteArray, worker: Worker) -> void:
-#	var network_packet: NetworkPacket = client._unpack_data(data)
-#	if (network_packet):
-#		worker.push_data(network_packet)
-	# store incoming data into a main bytes buffer
 	client.reader.add_data(data)
 	var chunk: Array = client.reader.get_next_packet_sequence()
 	while (!chunk.empty()):
@@ -204,6 +200,9 @@ func _produce(worker: Worker) -> void:
 			break
 
 		var network_packet: NetworkPacket = worker.queue.pop()
+		if (!network_packet):
+			print("Network packet is invalid: ", network_packet)
+			continue
 		if (!client.send_packed_data(network_packet)):
 			print("Error while sending packet: ", network_packet.get_bytes())
 
