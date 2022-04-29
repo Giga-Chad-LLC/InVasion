@@ -10,8 +10,9 @@
 namespace invasion::game_models {
 
 
-struct Bullet : KinematicObject {
-	Bullet(Vector2D initialPos, int bulletId, int playerId, PlayerTeamId teamId, double damage);
+class Bullet : public KinematicObject {
+public:
+	explicit Bullet(Vector2D initialPos, int bulletId, int playerId, PlayerTeamId teamId, double damage);
 
 	int getId() const;
 	int getPlayerId() const;
@@ -25,7 +26,6 @@ struct Bullet : KinematicObject {
 
 private:
 	static const Vector2D COLLIDER_SIZE;
-
 	const int m_id;
 	const int m_playerId;
 	const PlayerTeamId m_playerTeamId;

@@ -86,6 +86,8 @@ void GameWorldManager::findDamagedPlayers(std::vector<std::shared_ptr<Player>>& 
 }
 
 
+
+
 // private:
 void GameWorldManager::applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Player> player_ptr, const double dt) const {
 	const double g = -9.81;

@@ -40,6 +40,7 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                     case RequestModel_t::UpdateGameStateRequestModel: {
 						gameSession->updateGameState();
 
+						// sending damaged players info
 						{
 							interactors::DamagedPlayersResponseInteractor interactor;
 							std::optional<response_models::DamagedPlayersResponseModel> optionalModel = interactor.execute(*gameSession);

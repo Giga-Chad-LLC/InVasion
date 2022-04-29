@@ -10,8 +10,8 @@
 namespace invasion::game_models {
 	
 
-struct GameWorldStorage {
-	
+class GameWorldStorage {
+public:
 	std::vector<std::shared_ptr<Player>>& getPlayers();
 	std::vector<std::shared_ptr<Player>>& getDamagedPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();

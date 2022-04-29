@@ -6,8 +6,9 @@
 namespace invasion::game_models {
 
 
-struct Vector2D {
-	Vector2D() = default;
+class Vector2D {
+public:
+	explicit Vector2D() = default;
 	explicit Vector2D(double x, double y);
 
 	void setX(double x);

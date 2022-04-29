@@ -8,7 +8,8 @@
 
 namespace invasion::game_models {
 
-struct Object {
+class Object {
+public:
 	explicit Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPos);
 
 	Vector2D getPosition() const;

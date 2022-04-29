@@ -13,8 +13,9 @@
 namespace invasion::game_models {
 	
 
-struct GameSession {
-	GameSession();
+class GameSession {
+public:
+	explicit GameSession();
 
 	int createPlayerAndReturnId();
 	

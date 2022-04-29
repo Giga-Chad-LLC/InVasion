@@ -4,8 +4,9 @@
 
 namespace invasion::game_models {
 	
-struct PlayerLifeState {
-	PlayerLifeState(double initialHitPoints);
+class PlayerLifeState {
+public:
+	explicit PlayerLifeState(double initialHitPoints);
 
 	void applyDamage(double damage, int playerId);
 	double getHitPoints() const;

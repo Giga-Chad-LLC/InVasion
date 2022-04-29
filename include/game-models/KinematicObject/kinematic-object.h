@@ -9,8 +9,8 @@
 
 namespace invasion::game_models {
 
-struct KinematicObject : Object {
-
+class KinematicObject : public Object {
+public:
 	explicit KinematicObject(Vector2D shapeColliderSize,
 							 Vector2D hitboxColliderSize,
 							 Vector2D initialPos,
