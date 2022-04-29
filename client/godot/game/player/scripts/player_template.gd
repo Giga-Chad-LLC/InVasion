@@ -26,9 +26,9 @@ func animate_player():
 	move_and_slide(velocity)
 
 
-func update_player_position(player_position_model):
-	velocity = Vector2(player_position_model.get_velocity().get_x(), player_position_model.get_velocity().get_y())
-	global_position = Vector2(player_position_model.get_position().get_x(), player_position_model.get_position().get_y())
+func update_player_position(player_state_model):
+	velocity = Vector2(player_state_model.get_velocity().get_x(), player_state_model.get_velocity().get_y())
+	global_position = Vector2(player_state_model.get_position().get_x(), player_state_model.get_position().get_y())
 
 func _ready():
 	animationTree.active = true

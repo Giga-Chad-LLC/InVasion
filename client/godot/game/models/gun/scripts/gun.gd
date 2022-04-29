@@ -6,6 +6,7 @@ onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 var is_cooldown = false
+var should_follow_mouse: bool = false
 
 
 # User-defined functions
@@ -24,8 +25,8 @@ func start_cooldown():
 func _on_CooldownTimer_timeout():
 	is_cooldown = false
 
-
-func animate_gun():
-	look_at(get_global_mouse_position())
+func _process(_delta):
+	if (should_follow_mouse):
+		look_at(get_global_mouse_position())
 
 

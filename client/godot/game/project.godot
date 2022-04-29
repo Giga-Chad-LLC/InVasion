@@ -10,9 +10,19 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "BulletsStateManager",
+"language": "GDScript",
+"path": "res://models/bullet/scripts/bullets_state_manager.gd"
+}, {
+"base": "Reference",
 "class": "NetworkPacket",
 "language": "GDScript",
 "path": "res://network/data_types.gd"
+}, {
+"base": "Reference",
+"class": "PlayersStateManager",
+"language": "GDScript",
+"path": "res://player/scripts/players_state_manager.gd"
 }, {
 "base": "Reference",
 "class": "TCPStreamParser",
@@ -20,7 +30,9 @@ _global_script_classes=[ {
 "path": "res://network/tcp_stream_parser.gd"
 } ]
 _global_script_class_icons={
+"BulletsStateManager": "",
 "NetworkPacket": "",
+"PlayersStateManager": "",
 "TCPStreamParser": ""
 }
 
@@ -33,7 +45,6 @@ config/icon="res://icon.png"
 [autoload]
 
 Global="*res://global.gd"
-GameWorld="*res://screens/game/scripts/world.gd"
 
 [display]
 
@@ -114,6 +125,11 @@ melee_attack={
 shoot={
 "deadzone": 0.5,
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+escape={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777217,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 
