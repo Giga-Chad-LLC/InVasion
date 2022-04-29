@@ -31,9 +31,6 @@ public:
 	Vector2D getDirection() const;
 
 private:
-	static long long getCurrentTime_ms();
-
-private:
 	static const long long RELOAD_DURATION_MS;
 	static const long long DELAY_BETWEEN_SHOTS_MS;
 	static const int MAGAZINE;

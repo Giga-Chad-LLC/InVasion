@@ -12,6 +12,7 @@ add_subdirectory(./tests/)
 # CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 # GAME-SERVER-SRCS - propagated from ./include/server
+# UTILS-SRCS - propagated from ./include/utils
 
 
 #### setting names for executables
@@ -79,6 +80,7 @@ add_executable(${GAME_MODELS_TESTS_TARGET}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
+		${UTILS-SRCS}
 
         ${PROTO_SRCS}
         ${PROTO_HDRS}
@@ -104,12 +106,14 @@ endif ()
 add_executable(${SERVER_TARGET}
         src/main.cpp
         src/server.cpp
-        ${PROTO_SRCS}
-        ${PROTO_HDRS}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
         ${GAME-SERVER-SRCS}
+		${UTILS-SRCS}
+
+		${PROTO_SRCS}
+        ${PROTO_HDRS}
         )
 
 # including Protobuf dirs to server target

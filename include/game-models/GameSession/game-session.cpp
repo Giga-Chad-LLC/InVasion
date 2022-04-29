@@ -14,12 +14,14 @@
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-session.h"
+// utils
+#include "utils/TimeUtilities/time-utilities.h"
 
 
 namespace invasion::game_models {
 
 GameSession::GameSession() {
-	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
+	lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
 // returns id of created player
@@ -135,7 +137,7 @@ void GameSession::updateGameState() {
 	// deleting objects (killing players, deleting bullets) if needed: TODO
 	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
 
-	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
+	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
@@ -166,13 +168,8 @@ void GameSession::updateGameState() {
 
 	// --------------- TODO: respawn dead players --------------- //
 
-	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
+	lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
-long long GameSession::getCurrentTime_ms() {
-	return std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::high_resolution_clock::now().time_since_epoch()
-	).count();
-}
 
 } // namespace invasion::game_models
