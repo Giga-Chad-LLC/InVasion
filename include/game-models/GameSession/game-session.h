@@ -36,6 +36,8 @@ private:
 	long long m_lastGameStateUpdate_ms;
 	int m_firstTeamPlayersCount;
 	int m_secondTeamPlayersCount;
+	int m_nextBulletId;
+	int m_nextPlayerId;
 	GameWorldStorage m_storage;
 	GameWorldManager m_manager;
 };

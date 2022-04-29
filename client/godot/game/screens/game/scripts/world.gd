@@ -83,7 +83,8 @@ func _process(_delta):
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
-			print("We shot a bullet!")
+#			print("We shot a bullet!")
+			pass
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 

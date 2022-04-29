@@ -23,7 +23,9 @@ namespace invasion::game_models {
 GameSession::GameSession() 
 	: m_lastGameStateUpdate_ms(0),
 	  m_firstTeamPlayersCount(0),
-	  m_secondTeamPlayersCount(0) {
+	  m_secondTeamPlayersCount(0),
+	  m_nextBulletId(0),
+	  m_nextPlayerId(0) {
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
@@ -31,7 +33,6 @@ GameSession::GameSession()
 // returns id of created player
 int GameSession::createPlayerAndReturnId() {
 	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
-	const auto playerId = static_cast<int>(players.size());
 
 	// assigning team to new player
 	PlayerTeamId teamId = PlayerTeamId::FirstTeam;
@@ -58,8 +59,8 @@ int GameSession::createPlayerAndReturnId() {
 		m_secondTeamPlayersCount++;
 	}
 
-	players.push_back(std::make_shared<Player>(Vector2D::ZERO, playerId, teamId));
-	return playerId;
+	players.push_back(std::make_shared<Player>(Vector2D::ZERO, m_nextPlayerId, teamId));
+	return m_nextPlayerId++;
 }
 
 
@@ -70,7 +71,7 @@ int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
 }
 
 int GameSession::createIdForNewBullet() {
-	return static_cast<int>(m_storage.getBullets().size());
+	return m_nextBulletId++;
 }
 
 
@@ -118,6 +119,10 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 			bullet_ptr = bullet;
 			break;
 		}
+	}
+
+	if(bullet_ptr == nullptr) {
+		std::cout << "Cannot find bullet with id: " << bulletId << " in GameSession::getPlayer" << std::endl;
 	}
 
 	assert(bullet_ptr != nullptr);

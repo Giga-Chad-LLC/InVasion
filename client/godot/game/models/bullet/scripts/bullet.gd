@@ -1,4 +1,4 @@
-extends Node2D
+extends KinematicBody2D
 
 
 # Variables
@@ -18,7 +18,7 @@ func update_bullet_position(bullet_position_model):
 
 
 func _process(_delta):
-	global_position += velocity / 100
+	move_and_slide(velocity) # interpolation
 	rotation = velocity.angle()
 
 
