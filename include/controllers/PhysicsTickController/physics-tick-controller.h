@@ -12,7 +12,8 @@ namespace invasion::controllers {
 	
 	
 // instance of PhysicsTickController is created for every session
-struct PhysicsTickController {
+class PhysicsTickController {
+public:
 	explicit PhysicsTickController(std::size_t interval);
 
 	template <class Func, class... Args>

@@ -12,7 +12,8 @@
 namespace invasion::interactors {
 using namespace invasion::game_models;
 
-struct DamagedPlayersResponseInteractor {
+class DamagedPlayersResponseInteractor {
+public:
 	std::optional<response_models::DamagedPlayersResponseModel> execute(GameSession& session) const;
 };
 

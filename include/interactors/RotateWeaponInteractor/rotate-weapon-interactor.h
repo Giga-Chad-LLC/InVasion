@@ -9,7 +9,8 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 using namespace request_models;
 
-struct RotateWeaponInteractor {
+class RotateWeaponInteractor {
+public:
 	void execute(const RotateWeaponRequestModel& req, GameSession& session) const;
 };
 

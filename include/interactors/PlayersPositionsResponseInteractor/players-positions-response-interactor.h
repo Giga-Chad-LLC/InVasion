@@ -11,7 +11,8 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 using namespace response_models;
 
-struct PlayersPositionsResponseInteractor {
+class PlayersPositionsResponseInteractor {
+public:
 	void execute(GameStateResponseModel& response, GameSession& session) const;
 };
 
