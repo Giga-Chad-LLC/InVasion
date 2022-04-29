@@ -16,7 +16,7 @@ namespace invasion::game_models {
 void GameWorldManager::updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const {
 	for (auto& player_ptr : players) {
 		this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
-		this->updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(players, player_ptr, dt);
+		this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
 		player_ptr->makeMove(dt);
 	}
 }
@@ -125,7 +125,7 @@ void GameWorldManager::applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Pl
 }
 
 
-void GameWorldManager::updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(
+void GameWorldManager::updatePlayerPhysicsOnPlayerCollision(
 	std::vector<std::shared_ptr<Player>>& players,
 	std::shared_ptr<Player> consideredPlayer_ptr,
 	const double dt) const {

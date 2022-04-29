@@ -28,9 +28,9 @@ public:
 private:
 	void applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Player> player_ptr, double dt) const;
 	
-	void updateResultForceAndVelocityOfPlayerOnCollisionsWithOtherPlayers(std::vector<std::shared_ptr<Player>>& players,
-																		  std::shared_ptr<Player> consideredPlayer_ptr,
-																		  double dt) const;
+	void updatePlayerPhysicsOnPlayerCollision(std::vector<std::shared_ptr<Player>>& players,
+											  std::shared_ptr<Player> consideredPlayer_ptr,
+											  double dt) const;
 };
 
 
