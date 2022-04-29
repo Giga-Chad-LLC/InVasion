@@ -2,6 +2,7 @@
 #include "database.h"
 
 int main() {
+    using namespace Invasion::database;
     InterfaceDB::deleteAllUsers();
     int cnt = 0;
     while (cnt++ < 20) {

@@ -81,36 +81,39 @@ namespace {
     };
 }
 
-struct InterfaceDB {
-    static bool login(const std::string &nickname, const std::string &password) {
-        auto hashedPassword = methodsDB::getUserPassword(nickname);
-        if (hashedPassword.has_value()) {
-            return bcrypt::validatePassword(password, hashedPassword.value());
+
+namespace Invasion::database {
+    struct InterfaceDB {
+        static bool login(const std::string &nickname, const std::string &password) {
+            auto hashedPassword = methodsDB::getUserPassword(nickname);
+            if (hashedPassword.has_value()) {
+                return bcrypt::validatePassword(password, hashedPassword.value());
+            }
+            return false;
         }
-        return false;
-    }
 
-    static void tryToRegistationUser(const std::string &nickname, const std::string &password) {
-        if (methodsDB::checkUser(nickname)) {
-            std::cout << "ERROR!\n";
+        static bool tryToRegistationUser(const std::string &nickname, const std::string &password) {
+            if (methodsDB::checkUser(nickname)) {
+                return false;
+            }
+            std::cout << "success registration\n";
+            methodsDB::insertUser(User{-1, nickname, bcrypt::generateHash(password)});
+            return true;
         }
-        methodsDB::insertUser(User{-1, nickname, bcrypt::generateHash(password)});
-        std::cout << "success registration\n";
-    }
 
-    // these methods for debugging only
-    static void printUsers() {
-        auto arrayUsers = getTable().get_all<User>();
-        for (auto &user: arrayUsers) {
-            std::cout << getTable().dump(user) << std::endl;
+        // these methods for debugging only
+        static void printUsers() {
+            auto arrayUsers = getTable().get_all<User>();
+            for (auto &user: arrayUsers) {
+                std::cout << getTable().dump(user) << std::endl;
+            }
         }
-    }
 
-    static void deleteAllUsers() {
-        getTable().sync_schema();
-        getTable().remove_all<User>();
-    }
-};
+        static void deleteAllUsers() {
+            getTable().sync_schema();
+            getTable().remove_all<User>();
+        }
+    };
 
-
+}
 #endif //INVASION_DATABASE_H
