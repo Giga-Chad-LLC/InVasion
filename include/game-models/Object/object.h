@@ -13,7 +13,7 @@ public:
 	explicit Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPosition);
 
 	Vector2D getPosition() const;
-	void setPosition(Vector2D pos);
+	void setPosition(Vector2D position);
 
 	bool collidesWithHitbox(const Object* const other) const;
 	bool collidesWithShape(const Object* const other) const;

@@ -17,7 +17,7 @@ public:
 	explicit BoxCollider(Vector2D size);
 	
 	Vector2D size() const;
-	bool collidesWith(const Vector2D& center, const BoxCollider* const other, const Vector2D& other_center) const;
+	bool collidesWith(const Vector2D& center, const BoxCollider* const other, const Vector2D& otherCenter) const;
 
 
 private:

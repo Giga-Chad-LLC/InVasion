@@ -15,8 +15,8 @@ Vector2D Object::getPosition() const {
 	return m_position;
 }
 
-void Object::setPosition(Vector2D pos) {
-	m_position = std::move(pos);
+void Object::setPosition(Vector2D position) {
+	m_position = std::move(position);
 }
 
 bool Object::collidesWithHitbox(const Object* const other) const {
