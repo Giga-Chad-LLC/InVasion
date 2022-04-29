@@ -523,7 +523,7 @@ smoothing_enabled = true
 position = Vector2( 176, 104 )
 
 [node name="Bush2" parent="YSort/Bushes" instance=ExtResource( 3 )]
-position = Vector2( 147, 82 )
+position = Vector2( 166, 69 )
 
 [node name="Bush3" parent="YSort/Bushes" instance=ExtResource( 3 )]
 position = Vector2( 176, 16 )

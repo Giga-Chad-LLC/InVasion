@@ -4,7 +4,7 @@ extends Node2D
 onready var bullet_model = load("res://models/bullet/bullet.tscn")
 onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
-onready var bullet_spawning_node = get_tree().get_root().get_node("World/YSort/Bullets")
+onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 var is_cooldown = false
 
 

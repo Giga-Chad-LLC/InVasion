@@ -27,7 +27,7 @@ _global_script_class_icons={
 [application]
 
 config/name="InVasion"
-run/main_scene="res://screens/game/world.tscn"
+run/main_scene="res://models/scene_manager/scene_manager.tscn"
 config/icon="res://icon.png"
 
 [autoload]

@@ -45,7 +45,7 @@ func _ready():
 	add_child(producer)
 	add_child(consumer)
 
-func _physics_process(_delta):
+func _process(_delta):
 #	Send player movements to server
 	if (player_id != -1): # means that we have made sucessfull handshake with the server
 		# Moving logic
@@ -126,7 +126,7 @@ func animate_player():
 		animationState.travel("Run")
 	else:
 		animationState.travel("Idle")
-	velocity = move_and_slide(velocity)
+	move_and_slide(velocity)
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
