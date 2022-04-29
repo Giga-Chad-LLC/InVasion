@@ -1,5 +1,5 @@
-#ifndef PHYSICS_TICK_CONTROLLER_H_
-#define PHYSICS_TICK_CONTROLLER_H_
+#ifndef FIXED_TIME_INTERVAL_INVOKER_H_
+#define FIXED_TIME_INTERVAL_INVOKER_H_
 
 #include <atomic>
 #include <chrono>
@@ -9,12 +9,11 @@
 #include <functional>
 
 namespace invasion::controllers {
-	
-	
-// instance of PhysicsTickController is created for every session
-class PhysicsTickController {
+
+// instance of FixedTimeIntervalInvoker is created for every session
+class FixedTimeIntervalInvoker {
 public:
-	explicit PhysicsTickController(std::size_t interval);
+	explicit FixedTimeIntervalInvoker(std::size_t interval);
 
 	template <class Func, class... Args>
 	void start(Func&& f, Args&&... args) {
@@ -36,7 +35,7 @@ public:
 	}
 
 	void stop();
-	~PhysicsTickController();
+	~FixedTimeIntervalInvoker();
 
 private:
 	std::atomic_bool m_cancelToken;
@@ -49,4 +48,4 @@ private:
 
 
 
-#endif // PHYSICS_TICK_CONTROLLER_H_
+#endif // FIXED_TIME_INTERVAL_INVOKER_H_

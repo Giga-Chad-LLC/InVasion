@@ -1,8 +1,6 @@
+#ifndef INVASION_SERVER_SERVER_H_
+#define INVASION_SERVER_SERVER_H_
 
-#ifndef INVASION_SERVER_SERVER_H
-#define INVASION_SERVER_SERVER_H
-
-#include "player.pb.h"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <fstream>
@@ -10,14 +8,20 @@
 #include <string>
 #include <thread>
 #include <utility>
+
+// proto
+#include "player.pb.h"
+// server
 #include "server/safe-queue.h"
 #include "server/Client/client.h"
 #include "server/Receiver/receiver.h"
 #include "server/Sender/sender.h"
 #include "server/Engine/engine.h"
 #include "server/NetworkPacket/network-packet.h"
+// game-models
 #include "game-models/GameSession/game-session.h"
-#include "controllers/PhysicsTickController/physics-tick-controller.h"
+// controllers
+#include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
 
 
 using boost::asio::ip::tcp;
@@ -44,7 +48,7 @@ namespace invasion::session {
         SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue{debug{}};
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
-        controllers::PhysicsTickController m_tickController = controllers::PhysicsTickController(30); // update the game each 30 milliseconds 
+        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); // update the game each 30 milliseconds 
     public:
         explicit Server();
         void awaitNewConnections();
@@ -56,4 +60,5 @@ namespace invasion::session {
     };
 
 }
-#endif //INVASION_SERVER_SERVER_H
+
+#endif // INVASION_SERVER_SERVER_H_
