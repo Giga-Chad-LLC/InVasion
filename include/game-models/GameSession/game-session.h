@@ -33,7 +33,9 @@ public:
 
 
 private:
-	long long lastGameStateUpdate_ms;
+	long long m_lastGameStateUpdate_ms;
+	int m_firstTeamPlayersCount;
+	int m_secondTeamPlayersCount;
 	GameWorldStorage m_storage;
 	GameWorldManager m_manager;
 };

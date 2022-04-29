@@ -20,46 +20,42 @@
 
 namespace invasion::game_models {
 
-GameSession::GameSession() {
-	lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
+GameSession::GameSession() 
+	: m_lastGameStateUpdate_ms(0),
+	  m_firstTeamPlayersCount(0),
+	  m_secondTeamPlayersCount(0) {
+	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
+
 
 // returns id of created player
 int GameSession::createPlayerAndReturnId() {
 	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
 	const auto playerId = static_cast<int>(players.size());
 
-	int firstTeamPlayersCount = 0;
-	int secondTeamPlayersCount = 0;
-
-	for(const auto& player_ptr : players) {
-		const PlayerTeamId teamId = player_ptr->getTeamId();
-
-		if(teamId == PlayerTeamId::FirstTeam) {
-			firstTeamPlayersCount++;	
-		}
-		else {
-			secondTeamPlayersCount++;	
-		}
-	}
-
 	// assigning team to new player
-	PlayerTeamId teamId = PlayerTeamId::SecondTeam;
+	PlayerTeamId teamId = PlayerTeamId::FirstTeam;
 
-	if(firstTeamPlayersCount < secondTeamPlayersCount) {
-		teamId = PlayerTeamId::FirstTeam;
+	if (m_firstTeamPlayersCount > m_secondTeamPlayersCount) {
+		teamId = PlayerTeamId::SecondTeam;
 	}
-	else if(firstTeamPlayersCount == secondTeamPlayersCount) {
+	else if (m_firstTeamPlayersCount == m_secondTeamPlayersCount) {
 		// randomly picking team
 		const auto seed = static_cast<std::uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
 		std::default_random_engine generator(seed);
-		std::uniform_real_distribution<double> distribution(0.0, 1.0);
-		
-		const double value = distribution(generator);
+		std::bernoulli_distribution distribution(0.5);
+		const bool value = distribution(generator);
 
-		if(value < 0.5) {
-			teamId = PlayerTeamId::FirstTeam;
+		if (value) {
+			teamId = PlayerTeamId::SecondTeam;
 		}
+	}
+
+	if (teamId == PlayerTeamId::FirstTeam) {
+		m_firstTeamPlayersCount++;
+	}
+	else {
+		m_secondTeamPlayersCount++;
 	}
 
 	players.push_back(std::make_shared<Player>(Vector2D::ZERO, playerId, teamId));
@@ -137,7 +133,7 @@ void GameSession::updateGameState() {
 	// deleting objects (killing players, deleting bullets) if needed: TODO
 	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
 
-	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
+	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
@@ -168,7 +164,7 @@ void GameSession::updateGameState() {
 
 	// --------------- TODO: respawn dead players --------------- //
 
-	lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
+	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
 
