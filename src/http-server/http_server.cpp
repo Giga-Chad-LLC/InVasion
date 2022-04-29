@@ -3,11 +3,12 @@
 #include <iostream>
 
 int main() {
+    using namespace Invasion::database;
+    InterfaceDB::deleteAllUsers();
     crow::SimpleApp app;
     CROW_ROUTE(app, "/registration")
             .methods("POST"_method)
                     ([](const crow::request &rowRequest) {
-                        using namespace Invasion::database;
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
                         if (!requestJson) {
@@ -20,13 +21,13 @@ int main() {
                         } else {
                             responseJson["status code"] = 400;
                             responseJson["message"] = "This user already exists in the database!";
+                            return crow::response(400, responseJson);
                         }
-                        return responseJson;
+                        return crow::response(200, responseJson);
                     });
     CROW_ROUTE(app, "/login")
             .methods("GET"_method)
                     ([](const crow::request &rowRequest) {
-                        using namespace Invasion::database;
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
                         if (!requestJson) {
