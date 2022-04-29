@@ -1,0 +1,9 @@
+/snap/clion/180/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/180/bin/ninja/linux/ninja -G Ninja "/home/nikolai/Рабочий стол/project/InVasion/src"
+Protoc compiler: /usr/bin/protoc
+Bin dir: /home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug
+Proto Source: /home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug/player.pb.cc
+Proto Headers: /home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug/move-request-model.pb.h
+Proto Libraries: /usr/lib/x86_64-linux-gnu/libprotobuf.so-lpthread
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug
