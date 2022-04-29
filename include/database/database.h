@@ -17,11 +17,12 @@ using namespace sqlite_orm;
 
 namespace {
     auto &getTable() {
-        static auto storage_ = make_storage("db.sqlite",
-                                            make_table("users",
-                                                       make_column("id", &User::id, primary_key(), autoincrement()),
-                                                       make_column("nickname", &User::nickname, unique()),
-                                                       make_column("hashed password", &User::password)));
+        auto table = make_table("users",
+                                make_column("id", &User::id, primary_key(), autoincrement()),
+                                make_column("nickname", &User::nickname, unique()),
+        make_column("hashed password", &User::password));
+        static auto storage_ = make_storage("db.sqlite", table);
+
         return storage_;
     }
 
