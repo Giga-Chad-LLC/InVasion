@@ -5,10 +5,10 @@
 
 namespace invasion::game_models {
 
-Object::Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPos)
+Object::Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPosition)
 	: m_shapeCollider(std::move(shapeColliderSize)),
 	  m_hitboxCollider(std::move(hitboxColliderSize)),
-	  m_position(std::move(initialPos))
+	  m_position(std::move(initialPosition))
 	{}
 
 Vector2D Object::getPosition() const {

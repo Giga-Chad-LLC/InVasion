@@ -18,11 +18,11 @@ const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14);
 
 
 	
-Player::Player(Vector2D initialPos, const int playerId, const PlayerTeamId teamId)
+Player::Player(Vector2D initialPosition, const int playerId, const PlayerTeamId teamId)
 	: KinematicObject(
 		Player::SHAPE_COLLIDER_SIZE,
 		Player::HITBOX_COLLIDER_SIZE,
-		std::move(initialPos),
+		std::move(initialPosition),
 		Player::MASS,
 		Player::MAX_SPEED
 	), 

@@ -13,7 +13,7 @@ class KinematicObject : public Object {
 public:
 	explicit KinematicObject(Vector2D shapeColliderSize,
 							 Vector2D hitboxColliderSize,
-							 Vector2D initialPos,
+							 Vector2D initialPosition,
 							 double mass,
 							 double max_speed);
 

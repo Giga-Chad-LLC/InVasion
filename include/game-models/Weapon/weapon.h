@@ -17,7 +17,7 @@ class Weapon {
 public:
 	explicit Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage);
 
-	std::shared_ptr<Bullet> shoot(Vector2D playerPos, int bulletId);
+	std::shared_ptr<Bullet> shoot(Vector2D playerPosition, int bulletId);
 	bool isAbleToShoot() const;
 	void reload();
 	bool isReloading() const;

@@ -12,7 +12,7 @@ namespace invasion::game_models {
 
 class Bullet : public KinematicObject {
 public:
-	explicit Bullet(Vector2D initialPos, int bulletId, int playerId, PlayerTeamId teamId, double damage);
+	explicit Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, double damage);
 
 	int getId() const;
 	int getPlayerId() const;

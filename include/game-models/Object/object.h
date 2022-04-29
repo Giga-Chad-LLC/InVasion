@@ -10,7 +10,7 @@ namespace invasion::game_models {
 
 class Object {
 public:
-	explicit Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPos);
+	explicit Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPosition);
 
 	Vector2D getPosition() const;
 	void setPosition(Vector2D pos);

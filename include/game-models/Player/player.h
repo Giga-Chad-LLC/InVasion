@@ -15,11 +15,11 @@ namespace invasion::game_models {
 
 class Player : public KinematicObject {
 public:
-	explicit Player(Vector2D initialPos, int playerId, PlayerTeamId teamId);
+	explicit Player(Vector2D initialPosition, int playerId, PlayerTeamId teamId);
 
 	int getId() const;
 	PlayerTeamId getTeamId() const;
-	PlayerLifeState& getLifeState();	
+	PlayerLifeState& getLifeState();
 	void respawn(Vector2D position);
 	Weapon& getWeapon();
 
