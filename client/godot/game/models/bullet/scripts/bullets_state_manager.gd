@@ -24,7 +24,7 @@ func despawn_bullet(bullet_id, bullets_parent_node):
 
 
 
-var all_bullets_on_map: Array = [] # stored strings (names of bullets in godot nodes hierarchy)
+var bullets_on_map: Array = [] # stored strings (names of bullets in godot nodes hierarchy)
 
 func update_bullets_states(bullets_positions: Array, bullets_parent_node):
 	if (!bullets_parent_node):
@@ -42,19 +42,19 @@ func update_bullets_states(bullets_positions: Array, bullets_parent_node):
 			# animate and move the bullet
 			bullets_parent_node.get_node(bullet_node_name).update_bullet_position(bullet)
 		else:
-			all_bullets_on_map.push_back(bullet_node_name)
+			bullets_on_map.push_back(bullet_node_name)
 			var data = {
 				'bullet_id': bullet.get_bullet_id(),
 				'player_id': bullet.get_player_id(),
 				'velocity': Vector2(bullet.get_velocity().get_x(), bullet.get_velocity().get_y())
 			}
 			spawn_bullet(data, bullets_parent_node, Vector2(bullet.get_position().get_x(), bullet.get_position().get_y()))
-		
-	# find bullet to delete from tree
-	var bullets_to_delete = []
-	for i in range(0, all_bullets_on_map.size()):
-		if (!existing_bullets.get(all_bullets_on_map[i], false)):
-			bullets_to_delete.push_back(i)
 	
-	for i in range(0, bullets_to_delete.size()):
-		despawn_bullet(all_bullets_on_map.pop_at(i), bullets_parent_node)
+	# find bullets to delete from tree
+	var valid_bullets = []
+	for i in range(0, bullets_on_map.size()):
+		if (existing_bullets.get(bullets_on_map[i], false)):
+			valid_bullets.push_back(bullets_on_map[i])
+		else:
+			despawn_bullet(bullets_on_map[i], bullets_parent_node)
+	bullets_on_map = valid_bullets

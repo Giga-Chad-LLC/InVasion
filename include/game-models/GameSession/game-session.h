@@ -35,6 +35,8 @@ private:
 	static long long getCurrentTime_ms();
 
 	long long lastGameStateUpdate_ms;
+	long long nextBulletId;
+	long long nextPlayerId;
 	GameWorldStorage m_storage;
 	GameWorldManager m_manager;
 };

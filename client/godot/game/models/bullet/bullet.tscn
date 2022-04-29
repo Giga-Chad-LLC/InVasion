@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 2.5, 2.5 )
 
-[node name="Bullet" type="Node2D"]
+[node name="Bullet" type="KinematicBody2D"]
 scale = Vector2( 0.4, 0.4 )
 script = ExtResource( 2 )
 

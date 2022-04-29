@@ -18,7 +18,7 @@
 
 namespace invasion::game_models {
 
-GameSession::GameSession() {
+GameSession::GameSession(): nextBulletId(0), nextPlayerId(0) {
 	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
 }
 
@@ -60,8 +60,8 @@ int GameSession::createPlayerAndReturnId() {
 		}
 	}
 
-	players.push_back(std::make_shared<Player>(Vector2D::ZERO, playerId, teamId));
-	return playerId;
+	players.push_back(std::make_shared<Player>(Vector2D::ZERO, nextPlayerId, teamId));
+	return nextPlayerId++;
 }
 
 
@@ -72,7 +72,7 @@ int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
 }
 
 int GameSession::createIdForNewBullet() {
-	return static_cast<int>(m_storage.getBullets().size());
+	return static_cast<int>(nextBulletId++); // m_storage.getBullets().size()
 }
 
 
