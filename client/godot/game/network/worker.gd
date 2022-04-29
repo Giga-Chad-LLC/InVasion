@@ -20,8 +20,9 @@ func _worker_function(function: FuncRef):
 		print("Worker didn't run the function: ", function)
 
 func push_data(data):
-	queue.push(data)
-	semaphore.post()
+	if (data != null):
+		queue.push(data)
+		semaphore.post()
 
 
 func pop_data():

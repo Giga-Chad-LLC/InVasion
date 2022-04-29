@@ -52,6 +52,8 @@ func connect_to_host(host: String, port: int) -> void:
 		print("Error connecting to host.")
 		emit_signal("error")
 
+func disconnect_from_host():
+	_stream.disconnect_from_host()
 
 func is_connected_to_host() -> bool:
 	return _status == _stream.STATUS_CONNECTED
