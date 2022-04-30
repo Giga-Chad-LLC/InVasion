@@ -509,12 +509,14 @@ tile_data = PoolIntArray( -2, 0, 0, -1, 0, 1, -65536, 0, 1, -65535, 0, 1, -65534
 [node name="YSort" type="YSort" parent="."]
 
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
-position = Vector2( 160, 91 )
-collision_mask = 0
+position = Vector2( 211, 90 )
 
 [node name="Camera2D" type="Camera2D" parent="YSort/Player"]
 current = true
 smoothing_enabled = true
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="Bullets" type="YSort" parent="YSort"]
 

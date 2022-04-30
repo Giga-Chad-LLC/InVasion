@@ -1,11 +1,8 @@
-extends KinematicBody2D
+#extends KinematicBody2D
+extends "res://player/scripts/base_player.gd"
 
 # Animations
-onready var animationPlayer = $AnimationPlayer
-onready var animationTree = $AnimationTree
-onready var animationState = animationTree.get("parameters/playback")
 onready var player_gun = $Gun
-
 
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
@@ -15,10 +12,8 @@ const PlayerPositionResponseModel = preload("res://proto/response-models/player_
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
-
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
-var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
 
@@ -32,19 +27,6 @@ func _ready():
 	animationTree.active = true
 	$Gun.should_follow_mouse = true # gun will start following mouse
 
-func _process(_delta):
-	animate_player()
-
-func animate_player():
-	#	Move the player
-	if velocity != Vector2.ZERO:
-		animationTree.set("parameters/Idle/blend_position", velocity)
-		animationTree.set("parameters/Run/blend_position", velocity)
-
-		animationState.travel("Run")
-	else:
-		animationState.travel("Idle")
-	move_and_slide(velocity)
 
 func get_player_move_request():
 	var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
@@ -72,10 +54,6 @@ func get_player_shoot_request():
 			return network_packet # producer.push_data(network_packet)
 		return null
 
-func update_player_position(player_state_model):
-	velocity = Vector2(player_state_model.get_velocity().get_x(), player_state_model.get_velocity().get_y())
-	global_position = Vector2(player_state_model.get_position().get_x(), player_state_model.get_position().get_y())
-
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 	var packed_player_action = MoveRequestModel.MoveRequestModel.new()
@@ -90,7 +68,6 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingRight)
 	elif (Input.is_action_just_released("ui_right")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingRight)
-
 	elif (Input.is_action_just_pressed("ui_down")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingDown)
 	elif (Input.is_action_just_released("ui_down")):
