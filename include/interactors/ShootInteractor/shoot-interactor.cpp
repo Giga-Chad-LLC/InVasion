@@ -34,20 +34,23 @@ ShootingStateResponse ShootInteractor::execute(const ShootRequestModel& req, Gam
 	response.mutable_weapon_direction()->set_x(direction.getX());
 	response.mutable_weapon_direction()->set_y(direction.getY());
 
-	if(weapon.isAbleToShoot()) {
-		const game_models::Vector2D position = player_ptr->getPosition();
-		const int bulletId = session.createIdForNewBullet();
+	// if player is alive
+	if(player_ptr->getLifeState().isInDeadState() == false) {
+		if(weapon.isAbleToShoot()) {
+			const game_models::Vector2D position = player_ptr->getPosition();
+			const int bulletId = session.createIdForNewBullet();
 
-		std::shared_ptr<game_models::Bullet> bullet = weapon.shoot(position, bulletId);
-		// adding bullet in session storage
-		session.addBullet(bullet);
-	}
-	else if(weapon.isReloading()) {
-		response.set_is_reloading(true);
-	}
-	else {
-		// magazine is empty and weapon is not in reloading state
-		response.set_is_reloading_required(true);
+			std::shared_ptr<game_models::Bullet> bullet = weapon.shoot(position, bulletId);
+			// adding bullet in session storage
+			session.addBullet(bullet);
+		}
+		else if(weapon.isReloading()) {
+			response.set_is_reloading(true);
+		}
+		else {
+			// magazine is empty and weapon is not in reloading state
+			response.set_is_reloading_required(true);
+		}
 	}
 
 	response.set_left_magazine(weapon.getLeftMagazine());

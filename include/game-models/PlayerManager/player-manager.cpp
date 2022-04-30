@@ -107,7 +107,11 @@ void PlayerManager::updatePlayerPhysicsOnPlayerCollision(
 	bool inCollision = false;
 
 	for(const auto& other : players) {
-		if(consideredPlayer_ptr->getId() == other->getId()) continue;
+		// if other player is dead or he is considered player
+		if(other->getLifeState().isInDeadState() ||
+		   consideredPlayer_ptr->getId() == other->getId()) {
+			continue;
+		}
 
 		inCollision = consideredPlayer_ptr->collidesWithShape(other.get());
 		if(inCollision) {
