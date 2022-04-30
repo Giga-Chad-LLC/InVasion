@@ -31,9 +31,13 @@ var consumer: Worker = Worker.new() # thread that will read data from the server
 									# and put correct network packets to the thread-safe-queue
 
 
-# scene changing
+# scene/ui changing
 func _on_Quit_pressed():
 	emit_signal("scene_changed", "start_menu")
+
+# disable player movements when escape menu is opened
+func _on_EscapeMenu_toggle_escape_menu(is_escaped):
+	Player.is_active = !is_escaped
 
 
 
@@ -50,7 +54,7 @@ func _ready():
 
 func _process(_delta):
 #	Send player movements to server
-	if (client_connection and client_connection.is_connected_to_host()): # means that we have made sucessfull handshake with the server
+	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
 		# send actions to server
 		producer.push_data(Player.get_player_move_request())
 		producer.push_data(Player.get_player_shoot_request())
@@ -69,20 +73,12 @@ func _process(_delta):
 			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack game update model")
 			else:
-				# update myself
-				var players_positions = new_game_state.get_players()
-				for i in range(0, players_positions.size()):
-					var model = players_positions[i]
-					if (model.get_player_id() == Player.player_id):
-						Player.update_player_position(model)
-						players_positions.erase(model) # erase ourselves
-						break
 				# update other players
-				players_state_manager.update_players_states(players_positions, Player.team_id, players_parent_node)
-				# update bullets
-				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+				players_state_manager.update_players_states(new_game_state.get_players(), Player, players_parent_node)
 				# update damaged players
 				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
+				# update bullets
+				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")
@@ -129,6 +125,7 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 			worker.push_data(network_packet)
 		chunk = client_connection.reader.get_next_packet_sequence()
 	client_connection.reader.flush()
+
 
 
 

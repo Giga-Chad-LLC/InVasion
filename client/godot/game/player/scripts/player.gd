@@ -14,7 +14,7 @@ const GameStateResponseModel = preload("res://proto/response-models/game_state_r
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
-
+var is_active: bool = true
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")

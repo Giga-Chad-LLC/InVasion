@@ -24,26 +24,28 @@ func despawn_player(player_id, players_parent_node):
 
 
 
-func update_players_states(player_positions: Array, team_id: int, players_parent_node):
+func update_players_states(player_positions: Array, Player, players_parent_node):
 	if (!players_parent_node):
 		print("Error: Players parent node is ", players_parent_node)
 		return
 	
 	for i in range(0, player_positions.size()):
-		var player = player_positions[i]
-		if (players_parent_node.has_node(str(player.get_player_id()))): 
-			# animate and move the player
-			players_parent_node.get_node(str(player.get_player_id())).update_player_position(player)
+		var model = player_positions[i]
+		
+		if (model.get_player_id() == Player.player_id):
+			Player.update_player_position(model)
+		elif (players_parent_node.has_node(str(model.get_player_id()))): 
+			players_parent_node.get_node(str(model.get_player_id())).update_player_position(model)
 		else:
 			var data = {
-				'player_id': player.get_player_id(),
-				'player_team_id': player.get_team_id(),
-				'local_team_id': team_id
+				'player_id': model.get_player_id(),
+				'player_team_id': model.get_team_id(),
+				'local_team_id': Player.team_id
 			}
-			spawn_player(data, players_parent_node, Vector2(player.get_position().get_x(), player.get_position().get_y()))
+			spawn_player(data, players_parent_node, Vector2(model.get_position().get_x(), model.get_position().get_y()))
 
 
-func update_damaged_players_states(damaged_players: Array, main_player, players_parent_node):	
+func update_damaged_players_states(damaged_players: Array, main_player, players_parent_node):
 	for i in range(damaged_players.size()):
 		var damage_event = damaged_players[i]
 		var attacker_id = damage_event.get_damaged_by()
