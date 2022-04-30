@@ -107,6 +107,11 @@ std::vector<std::shared_ptr<Player>>& GameSession::getDamagedPlayers() {
 }
 
 
+std::vector<std::shared_ptr<Player>>& GameSession::getKilledPlayers() {
+	return m_storage.getKilledPlayers();
+}
+
+
 std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 	return m_storage.getBullets();
 }
@@ -146,15 +151,6 @@ void GameSession::updateGameState() {
 	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
 	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
-	
-
-	if(killedPlayers.size() > 0) {
-		std::cout << killedPlayers.size() << '\n';
-		for (auto& ptr : killedPlayers) {
-			std::cout << "killed player id: " << ptr->getId() << ' ';
-		}
-		std::cout << '\n';
-	}
 
 	// --------------- TODO: respawn dead players --------------- //
 
