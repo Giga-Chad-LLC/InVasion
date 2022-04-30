@@ -9,6 +9,7 @@ namespace invasion::session {
         MoveRequestModel = 0,
         UpdateGameStateRequestModel = 1,
         ShootRequestModel = 2,
+		RespawnPlayerRequestModel = 3,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {
@@ -16,6 +17,7 @@ namespace invasion::session {
         PlayerInfoResponseModel = 1003,
         ShootingStateResponseModel = 1005, 
 		GameStateResponseModel = 1007,
+		RespawnPlayerResponseModel = 1008,
         UnknownResponseModel
     };
 
