@@ -1,17 +1,15 @@
 extends Reference
+class_name PlayersStateManager
 
 # scenes
 var player_scene = preload("res://player/player_template.tscn")
 
-# Godobuf
-const DamagedPlayersResponseModel = preload("res://proto/response-models/damaged_players_response_model.gd")
-
-
-class_name PlayersStateManager
-
 func spawn_player(data, players_parent_node, location):
 	var spawned_player = Global.instance_node_at_location(player_scene, players_parent_node, location)
 	spawned_player.name = str(data['player_id'])
+	spawned_player.player_id = data['player_id']
+	spawned_player.team_id = data['player_team_id']
+	
 	if (data['player_team_id'] != data['local_team_id']):
 		spawned_player.set_sprite_color(Color(1, 0.27, 0.27))
 	else:
@@ -45,14 +43,19 @@ func update_players_states(player_positions: Array, team_id: int, players_parent
 			spawn_player(data, players_parent_node, Vector2(player.get_position().get_x(), player.get_position().get_y()))
 
 
-func update_damaged_players_states(damaged_players: Array, main_player, players_parent_node):
+func update_damaged_players_states(damaged_players: Array, main_player, players_parent_node):	
 	for i in range(damaged_players.size()):
-		var damage_event: DamagedPlayersResponseModel.DamagedPlayerResponseModel = damaged_players[i]
-		var attacker = damage_event.get_damaged_by()
-		var defender = damage_event.get_player_id()
+		var damage_event = damaged_players[i]
+		var attacker_id = damage_event.get_damaged_by()
+		var defender_id = damage_event.get_player_id()
 		var new_defender_hitpoints = damage_event.get_new_hitpoints()
 		
-		
+		if (defender_id == main_player.player_id):
+			main_player.play_hit_animation()
+		else:
+			var other_player = players_parent_node.get_node(str(defender_id))
+			if (other_player):
+				other_player.play_hit_animation()
 
 
 

@@ -3,10 +3,14 @@ extends KinematicBody2D
 onready var animationPlayer = $AnimationPlayer
 onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
+onready var hitAnimationPlayer = $Sprite/HitAnimation
 onready var sprite = $Sprite
 
 
 var velocity = Vector2.ZERO
+var player_id: int = -1
+var team_id: int = -1
+
 
 func set_sprite_color(color: Color):
 	sprite.modulate = color
@@ -29,10 +33,14 @@ func update_player_position(player_state_model):
 
 
 
+func play_hit_animation():
+	hitAnimationPlayer.play("Hit")
+
 func _process(_delta):
 	animate_player()
 
-
+func _ready():
+	sprite.material.set_shader_param("hit_opacity", 0)
 
 
 

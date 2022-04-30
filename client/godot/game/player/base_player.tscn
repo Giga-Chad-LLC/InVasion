@@ -1,8 +1,56 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://player/images/character_sprite.png" type="Texture" id=1]
 [ext_resource path="res://player/scripts/base_player.gd" type="Script" id=2]
 [ext_resource path="res://models/gun/gun.tscn" type="PackedScene" id=3]
+
+[sub_resource type="Shader" id=34]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform float hit_opacity = 0;
+
+void fragment(){
+ COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - hit_opacity) + vec3(1,1,1) * hit_opacity; // interpolates between the original sprite's color and the color white depending on the value of hit_opacity
+ COLOR.a = texture(TEXTURE, UV).a; // copies the original sprite's alpha values
+}
+"
+
+[sub_resource type="ShaderMaterial" id=35]
+resource_local_to_scene = true
+shader = SubResource( 34 )
+shader_param/hit_opacity = 1.0
+
+[sub_resource type="Animation" id=32]
+resource_name = "Hit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/hit_opacity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=33]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/hit_opacity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 4.0
@@ -220,6 +268,7 @@ states/Run/node = SubResource( 22 )
 states/Run/position = Vector2( 674, 208 )
 transitions = [ "Idle", "Run", SubResource( 23 ), "Run", "Idle", SubResource( 24 ) ]
 start_node = "Idle"
+graph_offset = Vector2( -252.763, 82.2939 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=12]
 
@@ -228,10 +277,15 @@ collision_layer = 2
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 35 )
 position = Vector2( 0, -9 )
 texture = ExtResource( 1 )
 hframes = 60
 frame = 36
+
+[node name="HitAnimation" type="AnimationPlayer" parent="Sprite"]
+anims/Hit = SubResource( 32 )
+anims/RESET = SubResource( 33 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = -1.5708
