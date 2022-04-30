@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package response_models;
 
+/*
+// Comment out the code below when building for Godot
+*/
 import "player-position-response-model.proto";
 import "bullet-position-response-model.proto";
 import "damaged-player-response-model.proto";
@@ -13,3 +16,44 @@ message GameStateResponseModel {
 	repeated response_models.DamagedPlayerResponseModel damaged_players = 3;
 	repeated response_models.KilledPlayerResponseModel killed_players = 4;
 }
+
+
+
+/* 
+// Needed only for Godobuf for successful proto-files build
+
+import "../utils/vector2d.proto";
+message BulletPositionResponseModel {
+  int32 bullet_id = 1;
+  int32 player_id = 2;
+  Vector2D position = 3;
+  Vector2D velocity = 4;
+}
+message DamagedPlayerResponseModel {
+	int32 player_id = 1;
+	int32 damaged_by = 2; // id of player that made damage
+	double new_hitpoints = 3;
+}
+message KilledPlayerResponseModel {
+	int32 player_id = 1;
+	int32 killed_by = 2; // id of player that made kill
+}
+message PlayerPositionResponseModel {
+  int32 player_id = 1;
+  TeamId team_id = 2;
+  Vector2D position = 3;
+  Vector2D velocity = 4;
+
+  enum TeamId {
+    FirstTeam = 0;
+    SecondTeam = 1;
+  }
+}
+message GameStateResponseModel {
+	repeated PlayerPositionResponseModel players = 1;
+	repeated BulletPositionResponseModel bullets = 2;
+	repeated DamagedPlayerResponseModel damaged_players = 3;
+	repeated KilledPlayerResponseModel killed_players = 4;
+}
+*/
+

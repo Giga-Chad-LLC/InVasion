@@ -6,7 +6,6 @@ onready var animationState = animationTree.get("parameters/playback")
 onready var hitAnimationPlayer = $Sprite/HitAnimation
 onready var sprite = $Sprite
 
-
 var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
@@ -40,6 +39,8 @@ func _process(_delta):
 	animate_player()
 
 func _ready():
+	# Activate animation for the character
+	animationTree.active = true
 	sprite.material.set_shader_param("hit_opacity", 0)
 
 

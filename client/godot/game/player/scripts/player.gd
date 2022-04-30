@@ -22,8 +22,6 @@ const NetworkPacket = preload("res://network/data_types.gd")
 
 # Built-in functions
 func _ready():
-	# Activate animation for the character
-	animationTree.active = true
 	$Gun.should_follow_mouse = true # gun will start following mouse
 
 
