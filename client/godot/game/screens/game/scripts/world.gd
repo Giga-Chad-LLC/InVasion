@@ -20,7 +20,6 @@ const ShootRequestModel = preload("res://proto/request-models/shoot_request_mode
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
-const DamagedPlayersResponseModel = preload("res://proto/response-models/damaged_players_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -82,18 +81,12 @@ func _process(_delta):
 				players_state_manager.update_players_states(players_positions, Player.team_id, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+				# update damaged players
+				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
-#			print("We shot a bullet!")
+			# print("We shot a bullet!")
 			pass
-		Global.ResponseModels.DamagedPlayersResponseModel:
-			print("We damaged a player")
-			var damaged_players_state = DamagedPlayersResponseModel.DamagedPlayersResponseModel.new()
-			var result_code = damaged_players_state.from_bytes(received_packet.get_bytes())
-			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
-				print("Error while receiving: ", "cannot unpack damaged players model")
-			else:
-				players_state_manager.update_damaged_players_states(damaged_players_state.get_damaged_players(), Player, players_parent_node)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 
@@ -136,6 +129,7 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 			worker.push_data(network_packet)
 		chunk = client_connection.reader.get_next_packet_sequence()
 	client_connection.reader.flush()
+
 
 
 

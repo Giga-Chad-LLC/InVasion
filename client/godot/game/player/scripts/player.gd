@@ -63,10 +63,12 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingUp)
 	elif (Input.is_action_just_released("ui_up")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingUp)
+
 	elif (Input.is_action_just_pressed("ui_right")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingRight)
 	elif (Input.is_action_just_released("ui_right")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StopMovingRight)
+
 	elif (Input.is_action_just_pressed("ui_down")):
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.StartMovingDown)
 	elif (Input.is_action_just_released("ui_down")):
