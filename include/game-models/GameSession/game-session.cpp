@@ -9,11 +9,13 @@
 #include <memory>
 #include <cmath>
 
+#include "game-session.h"
 // game-models
-#include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
-#include "game-session.h"
+#include "game-models/PlayerManager/player-manager.h"
+#include "game-models/BulletManager/bullet-manager.h"
+#include "game-models/Vector2D/vector2d.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 
@@ -131,42 +133,19 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 
 
 
-
 void GameSession::updateGameState() {
-	// trying update players/bullets positions: manager.tryUpdatePosition(...): TODO
-	// checking collisions: TODO
-	// deleting objects (killing players, deleting bullets) if needed: TODO
-	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
-
-	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
-
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& bullets = m_storage.getBullets();
 
+	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
-	m_manager.updatePlayersPositions(players, dt_s);
-	m_manager.updateBulletsPositions(bullets, players, dt_s);
-
-	damagedPlayers.clear();
-	m_manager.findDamagedPlayers(players, damagedPlayers);
-
-	// deleting crushed or went out of bounds bullets
-	bullets.erase(
-		std::remove_if(
-			std::begin(bullets),
-			std::end(bullets), 
-			[](const std::shared_ptr<Bullet>& bullet_ptr) {
-				const Vector2D pos = bullet_ptr->getPosition();
-				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
-
-				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
-			}
-		),
-		std::end(bullets)
-	);
-
-
+	m_playerManager.updatePlayersPositions(players, dt_s);
+	m_bulletManager.updateBulletsPositions(bullets, players, dt_s);
+	// damagedPlayers will be cleared inside 'findDamagedPlayers' method
+	m_playerManager.findDamagedPlayers(players, damagedPlayers);
+	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
+	
 	// --------------- TODO: respawn dead players --------------- //
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();

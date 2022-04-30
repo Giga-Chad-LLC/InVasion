@@ -9,7 +9,6 @@
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/GameSession/game-session.h"
-#include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Weapon/weapon.h"
 // interactors

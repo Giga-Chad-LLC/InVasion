@@ -5,8 +5,10 @@
 #include <vector>
 #include <memory>
 
+// game-models
 #include "game-models/GameWorldStorage/game-world-storage.h"
-#include "game-models/GameWorldManager/game-world-manager.h"
+#include "game-models/PlayerManager/player-manager.h"
+#include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Player/player.h"
 #include "game-models/Bullet/bullet.h"
 
@@ -39,7 +41,8 @@ private:
 	int m_nextBulletId;
 	int m_nextPlayerId;
 	GameWorldStorage m_storage;
-	GameWorldManager m_manager;
+	PlayerManager m_playerManager;
+	BulletManager m_bulletManager;
 };
 
 
