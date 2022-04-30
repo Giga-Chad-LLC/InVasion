@@ -12,7 +12,6 @@ PlayerLifeState::PlayerLifeState(double initialHitPoints)
 	  m_damagedBy(-1) {}
 
 
-
 void PlayerLifeState::applyDamage(const double damage, const int playerId) {
 	if(m_hitPoints <= damage) {
 		m_hitPoints = 0.0;
@@ -21,9 +20,9 @@ void PlayerLifeState::applyDamage(const double damage, const int playerId) {
 	}
 	else {
 		m_hitPoints -= damage;
-		m_isDamagedOnLastUpdate = true;
 		m_damagedBy = playerId;
 	}
+	m_isDamagedOnLastUpdate = true;
 }
 
 

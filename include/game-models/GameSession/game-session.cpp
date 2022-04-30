@@ -136,16 +136,26 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 void GameSession::updateGameState() {
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
+	auto& killedPlayers = m_storage.getKilledPlayers();
 	auto& bullets = m_storage.getBullets();
 
 	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
 	m_playerManager.updatePlayersPositions(players, dt_s);
 	m_bulletManager.updateBulletsPositions(bullets, players, dt_s);
-	// damagedPlayers will be cleared inside 'findDamagedPlayers' method
-	m_playerManager.findDamagedPlayers(players, damagedPlayers);
+	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
+	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
 	
+
+	if(killedPlayers.size() > 0) {
+		std::cout << killedPlayers.size() << '\n';
+		for (auto& ptr : killedPlayers) {
+			std::cout << "killed player id: " << ptr->getId() << ' ';
+		}
+		std::cout << '\n';
+	}
+
 	// --------------- TODO: respawn dead players --------------- //
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();

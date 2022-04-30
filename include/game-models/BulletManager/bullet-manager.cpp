@@ -32,9 +32,10 @@ void BulletManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>&
 
 		// searching for collided player
 		for (const auto& player_ptr : players) {
-			if (player_ptr->getId() != playerId &&
-			   player_ptr->getTeamId() != teamId &&
-			   player_ptr->collidesWithHitbox(bullet_ptr.get(), Player::HITBOX_POSITION_OFFSET)) {
+			if (player_ptr->getLifeState().isInDeadState() == false &&
+				player_ptr->getId() != playerId &&
+			    player_ptr->getTeamId() != teamId &&
+			    player_ptr->collidesWithHitbox(bullet_ptr.get(), Player::HITBOX_POSITION_OFFSET)) {
 				collidedPlayer_ptr = player_ptr;
 				break;
 			}

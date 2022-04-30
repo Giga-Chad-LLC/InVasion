@@ -11,9 +11,12 @@ namespace invasion::game_models {
 
 void PlayerManager::updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const {
 	for (auto& player_ptr : players) {
-		this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
-		this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
-		player_ptr->makeMove(dt);
+		const bool killed = player_ptr->getLifeState().isInDeadState();
+		if(!killed) {
+			this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
+			this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
+			player_ptr->makeMove(dt);
+		}
 	}
 }
 
@@ -23,9 +26,32 @@ void PlayerManager::findDamagedPlayers(std::vector<std::shared_ptr<Player>>& pla
 	damagedPlayers.clear();
 
 	for (auto& player_ptr : players) {
-		if (player_ptr->getLifeState().isInDamagedState()) {
+		PlayerLifeState& lifeState = player_ptr->getLifeState();
+		
+		const bool damaged = lifeState.isInDamagedState();
+		const bool killed = lifeState.isInDeadState();
+
+		if (damaged && !killed) {
 			damagedPlayers.push_back(player_ptr);
-			player_ptr->getLifeState().removeDamagedState();
+			lifeState.removeDamagedState();
+		}
+	}
+}
+
+
+void PlayerManager::findKilledPlayers(std::vector<std::shared_ptr<Player>>& players,
+									  std::vector<std::shared_ptr<Player>>& killedPlayers) const {
+	killedPlayers.clear();
+
+	for (auto& player_ptr : players) {
+		PlayerLifeState& lifeState = player_ptr->getLifeState();
+
+		const bool damaged = lifeState.isInDamagedState();
+		const bool killed = lifeState.isInDeadState();
+
+		if(damaged && killed) {
+			killedPlayers.push_back(player_ptr);
+			lifeState.removeDamagedState();
 		}
 	}
 }
