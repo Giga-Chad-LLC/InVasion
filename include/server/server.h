@@ -26,13 +26,20 @@
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    inline std::vector<std::shared_ptr<Client>> connectedClients;
+    class ConnectedClients{
+    public:
+        static std::vector<std::shared_ptr<Client>> &getConnectedClients() noexcept{
+            static std::vector<std::shared_ptr<Client>> data;
+            return data;
+        }
+    };
 
     inline void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue) {
         while (true) {
             auto response = std::shared_ptr<NetworkPacketResponse>();
             if (responseQueue->consumeSync(response)) {
-                for (auto &client: connectedClients) {
+                auto clients = ConnectedClients::getConnectedClients();
+                for (auto &client: clients) {
                     std::shared_ptr<NetworkPacketResponse> packet = response;
                     client->getClientResponseQueue().produce(std::move(packet));
                 }
@@ -55,7 +62,12 @@ namespace invasion::session {
         explicit Server();
 
         void awaitNewConnections();
-
+        SafeQueue<std::shared_ptr<NetworkPacketRequest>>& getRequestQueue(){
+            return m_requestQueue;
+        }
+        SafeQueue<std::shared_ptr<NetworkPacketResponse>> &getResponseQueue(){
+            return m_responseQueue;
+        }
         friend class ClientRequestsReceiver;
 
         friend class RequestQueueManager;
