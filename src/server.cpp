@@ -49,6 +49,7 @@ namespace invasion::session {
             connectedClients.push_back(client);
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client,
                                                                               &m_requestQueue); // создание двух потоков на каждого клиента
+            receiverOnThisUser.start();
             [[maybe_unused]] auto senderOnThisUser = ClientResponsesSender(client);
             senderOnThisUser.start();
 

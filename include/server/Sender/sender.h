@@ -10,10 +10,10 @@ namespace invasion::session {
 
     class ClientResponsesSender {
     private:
-        std::shared_ptr<Client> client;
+        std::shared_ptr<Client> ptrClient;
         std::thread thread_;
     public:
-        ClientResponsesSender(std::shared_ptr<Client> client_) : client(client_) {
+        ClientResponsesSender(const std::shared_ptr<Client> client_) : ptrClient(client_) {
         }
 
         void start();

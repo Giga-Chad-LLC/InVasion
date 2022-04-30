@@ -15,7 +15,7 @@
 
 namespace invasion::session {
     void ClientResponsesSender::start() {
-        thread_ = std::move(std::thread([client = client]() {
+        thread_ = std::move(std::thread([client = ptrClient]() {
             while (true) {
                 std::shared_ptr<NetworkPacketResponse> response;
                 if (client->getClientResponseQueue().consumeSync(response)) {
