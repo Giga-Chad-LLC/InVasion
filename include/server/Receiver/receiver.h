@@ -7,6 +7,7 @@
 #include "server/safe-queue.h"
 #include <memory>
 #include <optional>
+#include <utility>
 
 namespace invasion::session {
     class ClientRequestsReceiver {
@@ -19,7 +20,7 @@ namespace invasion::session {
         std::shared_ptr<Client> ptrClient;
         std::thread thread_;
     public:
-        ClientRequestsReceiver(const std::shared_ptr<Client> client,
+        ClientRequestsReceiver(std::shared_ptr<Client> &client,
                                SafeQueue<std::shared_ptr<NetworkPacketRequest>> *requestQueue) : ptrClient(client),
                                                                                                  RefRequestQueue(
                                                                                                          requestQueue) {}

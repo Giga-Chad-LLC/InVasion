@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "bullet-manager.h"
 
 // game-models

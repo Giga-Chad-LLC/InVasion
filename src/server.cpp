@@ -31,8 +31,10 @@ namespace invasion::session {
     }
 
     Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"),
-                                                         8000)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
-        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession, connectedClients);
+                                                         8000)), dispatcher(
+            DispatcherPackets(&m_responseQueue)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
+        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession,
+                                                ConnectedClients::getConnectedClients());
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
@@ -46,7 +48,7 @@ namespace invasion::session {
             auto teamId = m_gameSession.getPlayer(playerId)->getTeamId();
             auto client = std::make_shared<Client>(std::move(socket), playerId);
 
-            connectedClients.push_back(client);
+            ConnectedClients::getConnectedClients().push_back(client);
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client,
                                                                               &m_requestQueue); // создание двух потоков на каждого клиента
             receiverOnThisUser.start();
@@ -55,13 +57,13 @@ namespace invasion::session {
 
             registerClientInSession(client, playerId, teamId);
 
-            if (!m_isSessionActive && connectedClients.size() ==
+            if (!m_isSessionActive && ConnectedClients::getConnectedClients().size() ==
                                       m_requiredClientsCountInSession) { // создание обработчика, если комманда собралась пока что handler - заглушка
                 std::cout << "Maximum players count reached. Starting the game..." << std::endl;
                 m_isSessionActive = true;
 
                 // start putting packets from main response queue to client's specific queues
-                std::thread(dispatchPacketsToClients, &m_responseQueue).detach();
+                dispatcher.start();
 
                 // start tick controller
                 m_tickController.start([this]() mutable {

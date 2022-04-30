@@ -81,9 +81,11 @@ func _process(_delta):
 				players_state_manager.update_players_states(players_positions, Player.team_id, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+				# update damaged players
+				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
-#			print("We shot a bullet!")
+			# print("We shot a bullet!")
 			pass
 		_:
 			print("Unknown message type: ", received_packet.message_type)
@@ -127,6 +129,7 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 			worker.push_data(network_packet)
 		chunk = client_connection.reader.get_next_packet_sequence()
 	client_connection.reader.flush()
+
 
 
 
