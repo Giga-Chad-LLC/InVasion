@@ -1,4 +1,3 @@
-#include <optional>
 #include <utility>
 
 #include "engine.h"
@@ -40,53 +39,35 @@ void RequestQueueManager::manageRequestQueue(SafeQueue<std::shared_ptr<NetworkPa
                     case RequestModel_t::UpdateGameStateRequestModel: {
 						gameSession->updateGameState();
 
-						// sending damaged players info
+						response_models::GameStateResponseModel responseModel;
+
+						// players positions 
+						{
+							interactors::PlayersPositionsResponseInteractor interactor;
+							interactor.execute(responseModel, *gameSession);
+						}
+
+						// bullets positions
+						{
+							interactors::BulletsPositionsResponseInteractor interactor;
+							interactor.execute(responseModel, *gameSession);
+						}
+
+						// damaged players
 						{
 							interactors::DamagedPlayersResponseInteractor interactor;
-							std::optional<response_models::DamagedPlayersResponseModel> optionalModel = interactor.execute(*gameSession);
-
-							if(optionalModel.has_value()) {
-								response_models::DamagedPlayersResponseModel responseModel = *std::move(optionalModel);
-								
-								// serialize
-								std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-								responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-								
-								auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
-																ResponseModel_t::DamagedPlayersResponseModel,
-																responseModel.ByteSizeLong());
-								
-								responseQueue->produce(std::move(response));
-							}
+							interactor.execute(responseModel, *gameSession);
 						}
 
-						// sending players & bullets positions
-						{
-							// TODO: GameStateResponseModel rename in PositionsResponseModel
-							response_models::GameStateResponseModel responseModel;
-
-							// players positions 
-							{
-								interactors::PlayersPositionsResponseInteractor interactor;
-								interactor.execute(responseModel, *gameSession);
-							}
-
-							// bullets positions
-							{
-								interactors::BulletsPositionsResponseInteractor interactor;
-								interactor.execute(responseModel, *gameSession);
-							}
-
-							// serialize
-							std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
-							responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
-							
-							auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
-															ResponseModel_t::GameStateResponseModel,
-															responseModel.ByteSizeLong());
-							
-							responseQueue->produce(std::move(response));
-						}
+						// serialize
+						std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+						responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+						
+						auto response = std::make_shared<NetworkPacketResponse> (std::move(buffer_ptr),
+														ResponseModel_t::GameStateResponseModel,
+														responseModel.ByteSizeLong());
+						
+						responseQueue->produce(std::move(response));
 
                         break;
                     }
