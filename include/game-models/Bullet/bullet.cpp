@@ -13,11 +13,11 @@ const Vector2D Bullet::COLLIDER_SIZE(1, 1);
 
 
 
-Bullet::Bullet(Vector2D initialPos, int bulletId, int playerId, PlayerTeamId teamId, double damage)
+Bullet::Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, double damage)
 	: KinematicObject(
 		Bullet::COLLIDER_SIZE, 
 		Bullet::COLLIDER_SIZE,
-		std::move(initialPos), 
+		std::move(initialPosition), 
 		Bullet::MASS,
 		Bullet::MAX_SPEED
 	), 

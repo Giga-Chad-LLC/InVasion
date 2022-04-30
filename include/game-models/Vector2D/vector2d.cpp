@@ -47,8 +47,8 @@ Vector2D Vector2D::normalize() const {
 }
 
 // static
-Vector2D Vector2D::clampMagnitude(const Vector2D& vec, const double magnitude) {
-	return vec.normalize() * magnitude;
+Vector2D Vector2D::clampMagnitude(const Vector2D& vector, const double magnitude) {
+	return vector.normalize() * magnitude;
 }
 
 
@@ -63,21 +63,21 @@ Vector2D& Vector2D::operator+=(const Vector2D& other) {
 	return *this;
 }
 
-Vector2D operator*(const Vector2D& vec, double value) {
-	return Vector2D(vec.m_x * value, vec.m_y * value);
+Vector2D operator*(const Vector2D& vector, double value) {
+	return Vector2D(vector.m_x * value, vector.m_y * value);
 }
 
-Vector2D operator*(double value, const Vector2D& vec) {
-	return Vector2D(vec.m_x * value, vec.m_y * value);
+Vector2D operator*(double value, const Vector2D& vector) {
+	return Vector2D(vector.m_x * value, vector.m_y * value);
 }
 
-Vector2D operator/(const Vector2D& vec, double value) {
+Vector2D operator/(const Vector2D& vector, double value) {
 	assert(std::abs(value) > Vector2D::EPS);
-	return Vector2D(vec.m_x / value, vec.m_y / value);
+	return Vector2D(vector.m_x / value, vector.m_y / value);
 }
 
-std::ostream& operator<<(std::ostream& os, const Vector2D& vec) {
-	os << "Vector2D (" << vec.m_x << ", " << vec.m_y << ")";
+std::ostream& operator<<(std::ostream& os, const Vector2D& vector) {
+	os << "Vector2D (" << vector.m_x << ", " << vector.m_y << ")";
 	return os;
 }
 

@@ -6,7 +6,8 @@
 
 namespace invasion::interactors {
 
-struct MoveInteractor {
+class MoveInteractor {
+public:
 	void execute(const request_models::MoveRequestModel& req, game_models::GameSession& session) const;
 };
 

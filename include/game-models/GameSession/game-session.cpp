@@ -9,59 +9,60 @@
 #include <memory>
 #include <cmath>
 
+#include "game-session.h"
 // game-models
-#include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
-#include "game-session.h"
+#include "game-models/PlayerManager/player-manager.h"
+#include "game-models/BulletManager/bullet-manager.h"
+#include "game-models/Vector2D/vector2d.h"
+// utils
+#include "utils/TimeUtilities/time-utilities.h"
 
 
 namespace invasion::game_models {
 
-GameSession::GameSession(): nextBulletId(0), nextPlayerId(0) {
-	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
+GameSession::GameSession() 
+	: m_lastGameStateUpdate_ms(0),
+	  m_firstTeamPlayersCount(0),
+	  m_secondTeamPlayersCount(0),
+	  m_nextBulletId(0),
+	  m_nextPlayerId(0) {
+	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
+
 
 // returns id of created player
 int GameSession::createPlayerAndReturnId() {
 	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
-	const auto playerId = static_cast<int>(players.size());
-
-	int firstTeamPlayersCount = 0;
-	int secondTeamPlayersCount = 0;
-
-	for(const auto& player_ptr : players) {
-		const PlayerTeamId teamId = player_ptr->getTeamId();
-
-		if(teamId == PlayerTeamId::FirstTeam) {
-			firstTeamPlayersCount++;	
-		}
-		else {
-			secondTeamPlayersCount++;	
-		}
-	}
 
 	// assigning team to new player
-	PlayerTeamId teamId = PlayerTeamId::SecondTeam;
+	PlayerTeamId teamId = PlayerTeamId::FirstTeam;
 
-	if(firstTeamPlayersCount < secondTeamPlayersCount) {
-		teamId = PlayerTeamId::FirstTeam;
+	if (m_firstTeamPlayersCount > m_secondTeamPlayersCount) {
+		teamId = PlayerTeamId::SecondTeam;
 	}
-	else if(firstTeamPlayersCount == secondTeamPlayersCount) {
+	else if (m_firstTeamPlayersCount == m_secondTeamPlayersCount) {
 		// randomly picking team
 		const auto seed = static_cast<std::uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
 		std::default_random_engine generator(seed);
-		std::uniform_real_distribution<double> distribution(0.0, 1.0);
-		
-		const double value = distribution(generator);
+		std::bernoulli_distribution distribution(0.5);
+		const bool value = distribution(generator);
 
-		if(value < 0.5) {
-			teamId = PlayerTeamId::FirstTeam;
+		if (value) {
+			teamId = PlayerTeamId::SecondTeam;
 		}
 	}
 
-	players.push_back(std::make_shared<Player>(Vector2D::ZERO, nextPlayerId, teamId));
-	return nextPlayerId++;
+	if (teamId == PlayerTeamId::FirstTeam) {
+		m_firstTeamPlayersCount++;
+	}
+	else {
+		m_secondTeamPlayersCount++;
+	}
+
+	players.push_back(std::make_shared<Player>(Vector2D::ZERO, m_nextPlayerId, teamId));
+	return m_nextPlayerId++;
 }
 
 
@@ -72,7 +73,7 @@ int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
 }
 
 int GameSession::createIdForNewBullet() {
-	return static_cast<int>(nextBulletId++); // m_storage.getBullets().size()
+	return m_nextBulletId++;
 }
 
 
@@ -122,57 +123,33 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 		}
 	}
 
+	if(bullet_ptr == nullptr) {
+		std::cout << "Cannot find bullet with id: " << bulletId << " in GameSession::getPlayer" << std::endl;
+	}
+
 	assert(bullet_ptr != nullptr);
 	return bullet_ptr;
 }
 
 
 
-
 void GameSession::updateGameState() {
-	// trying update players/bullets positions: manager.tryUpdatePosition(...): TODO
-	// checking collisions: TODO
-	// deleting objects (killing players, deleting bullets) if needed: TODO
-	// making positions update: manager.updatePlayersPositions(...) && manager.updateBulletsPositions(...): TODO
-
-	const double dt_s = (GameSession::getCurrentTime_ms() - lastGameStateUpdate_ms) / 1000.0;
-
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& bullets = m_storage.getBullets();
 
+	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
-	m_manager.updatePlayersPositions(players, dt_s);
-	m_manager.updateBulletsPositions(bullets, players, dt_s);
-
-	damagedPlayers.clear();
-	m_manager.findDamagedPlayers(players, damagedPlayers);
-
-	// deleting crushed or went out of bounds bullets
-	bullets.erase(
-		std::remove_if(
-			std::begin(bullets),
-			std::end(bullets), 
-			[](const std::shared_ptr<Bullet>& bullet_ptr) {
-				const Vector2D pos = bullet_ptr->getPosition();
-				bool bulletOutOfMapBounds = std::abs(pos.getX()) > 1000 || std::abs(pos.getY()) > 1000;
-
-				return bullet_ptr->isInCrushedState() || bulletOutOfMapBounds;
-			}
-		),
-		std::end(bullets)
-	);
-
-
+	m_playerManager.updatePlayersPositions(players, dt_s);
+	m_bulletManager.updateBulletsPositions(bullets, players, dt_s);
+	// damagedPlayers will be cleared inside 'findDamagedPlayers' method
+	m_playerManager.findDamagedPlayers(players, damagedPlayers);
+	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
+	
 	// --------------- TODO: respawn dead players --------------- //
 
-	lastGameStateUpdate_ms = GameSession::getCurrentTime_ms();
+	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
-long long GameSession::getCurrentTime_ms() {
-	return std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::high_resolution_clock::now().time_since_epoch()
-	).count();
-}
 
 } // namespace invasion::game_models

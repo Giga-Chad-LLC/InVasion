@@ -1,8 +1,6 @@
+#ifndef INVASION_SERVER_SERVER_H_
+#define INVASION_SERVER_SERVER_H_
 
-#ifndef INVASION_SERVER_SERVER_H
-#define INVASION_SERVER_SERVER_H
-
-#include "player.pb.h"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <fstream>
@@ -10,26 +8,40 @@
 #include <string>
 #include <thread>
 #include <utility>
+
+// proto
+#include "player.pb.h"
+// server
 #include "server/safe-queue.h"
 #include "server/Client/client.h"
 #include "server/Receiver/receiver.h"
 #include "server/Sender/sender.h"
 #include "server/Engine/engine.h"
 #include "server/NetworkPacket/network-packet.h"
+// game-models
 #include "game-models/GameSession/game-session.h"
-#include "controllers/PhysicsTickController/physics-tick-controller.h"
+// controllers
+#include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
 
 
 using boost::asio::ip::tcp;
 namespace invasion::session {
-    inline std::vector<std::shared_ptr<Client>> connectedClients;
+    class ConnectedClients{
+    public:
+        static std::vector<std::shared_ptr<Client>> &getConnectedClients() noexcept{
+            static std::vector<std::shared_ptr<Client>> data;
+            return data;
+        }
+    };
+
     inline void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue) {
         while (true) {
             auto response = std::shared_ptr<NetworkPacketResponse>();
             if (responseQueue->consumeSync(response)) {
-                for (auto& client: connectedClients) {
+                auto clients = ConnectedClients::getConnectedClients();
+                for (auto &client: clients) {
                     std::shared_ptr<NetworkPacketResponse> packet = response;
-                    client->m_clientResponseQueue.produce(std::move(packet));
+                    client->getClientResponseQueue().produce(std::move(packet));
                 }
             }
         }
@@ -44,16 +56,26 @@ namespace invasion::session {
         SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue{debug{}};
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
-        controllers::PhysicsTickController m_tickController = controllers::PhysicsTickController(30); // update the game each 30 milliseconds 
+        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(
+                30); // update the game each 30 milliseconds
     public:
         explicit Server();
-        void awaitNewConnections();
 
+        void awaitNewConnections();
+        SafeQueue<std::shared_ptr<NetworkPacketRequest>>& getRequestQueue(){
+            return m_requestQueue;
+        }
+        SafeQueue<std::shared_ptr<NetworkPacketResponse>> &getResponseQueue(){
+            return m_responseQueue;
+        }
         friend class ClientRequestsReceiver;
+
         friend class RequestQueueManager;
+
         // puts each response packet from main response queue to client specific response queues
         friend void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue);
     };
 
 }
-#endif //INVASION_SERVER_SERVER_H
+
+#endif // INVASION_SERVER_SERVER_H_

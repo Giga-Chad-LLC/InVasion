@@ -8,13 +8,13 @@ namespace invasion::game_models {
 
 KinematicObject::KinematicObject(Vector2D shapeColliderSize,
 								 Vector2D hitboxColliderSize,
-								 Vector2D initialPos,
+								 Vector2D initialPosition,
 								 double mass,
-								 double max_speed)
-	: Object(std::move(shapeColliderSize), std::move(hitboxColliderSize), std::move(initialPos)),
+								 double maxSpeed)
+	: Object(std::move(shapeColliderSize), std::move(hitboxColliderSize), std::move(initialPosition)),
 	  m_mass(mass),
-	  m_max_speed(max_speed),
-	  m_moving(false) {}
+	  m_maxSpeed(maxSpeed),
+	  m_isMoving(false) {}
 
 
 Vector2D KinematicObject::getVelocity() const {
@@ -28,23 +28,23 @@ void KinematicObject::setVelocity(Vector2D velocity) {
 
 
 Vector2D KinematicObject::getMovingForce() const {
-	return m_moving_force;
+	return m_movingForce;
 }
 
 
 void KinematicObject::setMovingForce(Vector2D force) {
-	m_moving_force = std::move(force);
+	m_movingForce = std::move(force);
 }
 
 
 Vector2D KinematicObject::getResultForce() const {
-	return m_result_force;
+	return m_resultForce;
 }
 
 
 void KinematicObject::setResultForce(Vector2D force) {
-	m_result_force = std::move(force);
-	m_acceleration = m_result_force / m_mass;
+	m_resultForce = std::move(force);
+	m_acceleration = m_resultForce / m_mass;
 }
 
 
@@ -56,8 +56,8 @@ Vector2D KinematicObject::getAcceleration() const {
 Vector2D KinematicObject::intentMove(double dt) const {
 	Vector2D velocity = m_velocity + m_acceleration * dt;
 
-	if(velocity.magnitude() > m_max_speed) {
-		velocity = Vector2D::clampMagnitude(velocity, m_max_speed);
+	if(velocity.magnitude() > m_maxSpeed) {
+		velocity = Vector2D::clampMagnitude(velocity, m_maxSpeed);
 	}
 
 	return m_position + velocity * dt;
@@ -68,8 +68,8 @@ void KinematicObject::makeMove(double dt) {
 	m_velocity += m_acceleration * dt;
 	
 	// clamping velocity to max speed
-	if(m_velocity.magnitude() > m_max_speed) {
-		m_velocity = Vector2D::clampMagnitude(m_velocity, m_max_speed);
+	if(m_velocity.magnitude() > m_maxSpeed) {
+		m_velocity = Vector2D::clampMagnitude(m_velocity, m_maxSpeed);
 	}
 
 	m_position += m_velocity * dt;
@@ -77,12 +77,12 @@ void KinematicObject::makeMove(double dt) {
 
 
 void KinematicObject::setMovingState(bool state) {
-	m_moving = state;
+	m_isMoving = state;
 }
 
 
 bool KinematicObject::isMoving() const {
-	return m_moving;
+	return m_isMoving;
 }
 
 

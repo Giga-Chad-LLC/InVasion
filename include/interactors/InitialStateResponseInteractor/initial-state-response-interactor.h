@@ -5,9 +5,12 @@
 #include "game-models/GameSession/game-session.h"
 
 namespace invasion::interactors {
-    struct InitialStateResponseInteractor {
-        static game_schemes::InitialStateResponseSchema execute(game_models::GameSession &session, int playerId);
-    };
+
+class InitialStateResponseInteractor {
+public:
+	static game_schemes::InitialStateResponseSchema execute(game_models::GameSession &session, int playerId);
+};
+
 }
 
 #endif //INITIAL_STATE_RESPONSE_INTERACTOR_H

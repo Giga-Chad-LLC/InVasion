@@ -9,7 +9,6 @@
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/GameSession/game-session.h"
-#include "game-models/GameWorldManager/game-world-manager.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Weapon/weapon.h"
 // interactors
@@ -18,7 +17,7 @@
 #include "interactors/RotateWeaponInteractor/rotate-weapon-interactor.h"
 #include "interactors/ShootInteractor/shoot-interactor.h"
 // controllers
-#include "controllers/PhysicsTickController/physics-tick-controller.h"
+#include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
 
 
 // request-models
@@ -47,7 +46,7 @@ using namespace std;
 
 // TEST_CASE("Testing players collisions with bullets") {
 
-// 	PhysicsTickController controller(10);
+// 	FixedTimeIntervalInvoker controller(10);
 // 	ShootInteractor shoot_interactor;
 // 	GameSession session;
 	
@@ -115,7 +114,7 @@ TEST_CASE("Testing collision checking in GameWorldManager | moving diagonal top-
 
 	PlayersPositionsResponseInteractor updateInteractor;
 
-	PhysicsTickController controller(100);
+	FixedTimeIntervalInvoker controller(100);
 	controller.start([&]() mutable {
 		// std::cout << "position of player #" << id1 << ": " << player1.getPosition() << std::endl; 
 		updateInteractor.execute(session);
@@ -146,7 +145,7 @@ TEST_CASE("Testing collision checking in GameWorldManager | moving straight righ
 
 	PlayersPositionsResponseInteractor updateInteractor;
 
-	PhysicsTickController controller(100);
+	FixedTimeIntervalInvoker controller(100);
 	controller.start([&]() mutable {
 		// std::cout << "position of player #" << id1 << ": " << player1.getPosition() << std::endl; 
 		updateInteractor.execute(session);
@@ -237,7 +236,7 @@ TEST_CASE("Team assigning") {
 
 /*
 TEST_CASE("ShootInteractor test") {
-	PhysicsTickController controller(10);
+	FixedTimeIntervalInvoker controller(10);
 	ShootInteractor shoot_interactor;
 	GameSession session;
 	Player& player = session.getPlayer(session.createPlayerAndReturnId());
@@ -275,7 +274,7 @@ TEST_CASE("ShootInteractor test") {
 
 /*
 TEST_CASE("RotateWeaponInteractor test") {
-	PhysicsTickController controller(100);
+	FixedTimeIntervalInvoker controller(100);
 	RotateWeaponInteractor interactor;
 	GameSession session;
 	Player& player = session.getPlayer(session.createPlayerAndReturnId());
@@ -318,7 +317,7 @@ TEST_CASE("Weapon testing") {
 		<< "   reloading: " << weapon.isReloading() << std::endl;
 
 
-	PhysicsTickController controller(100);
+	FixedTimeIntervalInvoker controller(100);
 
 	controller.start([&]() mutable {
 		if(bulletId % 10 == 0) {
@@ -358,7 +357,7 @@ TEST_CASE("Collision test") {
 
 
 TEST_CASE("Set interval test") {
-	PhysicsTickController controller(100);
+	FixedTimeIntervalInvoker controller(100);
 
 	int cnt = 0;
 	controller.start([&cnt]() {
