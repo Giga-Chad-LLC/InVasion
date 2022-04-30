@@ -8,13 +8,16 @@
 #include "interactors/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.h"
 #include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
 #include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
+#include "interactors/RespawnPlayerInteractor/respawn-player-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
+#include "respawn-player-request-model.pb.h"
 #include "player.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
+#include "respawn-player-response-model.pb.h"
 
 
 namespace invasion::session {
@@ -116,7 +119,29 @@ namespace invasion::session {
 
                                     break;
                                 }
-                                    // case
+								case RequestModel_t::RespawnPlayerRequestModel: {
+									request_models::RespawnPlayerRequestModel respawnAction;
+									respawnAction.ParseFromArray(request->getStoredBytes(), request->bytesSize());
+
+									interactors::RespawnPlayerInteractor interactor;
+									response_models::RespawnPlayerResponseModel responseModel = interactor.execute(
+											respawnAction, *gameSession);
+
+                                    // serialize
+                                    std::unique_ptr<char[]> buffer_ptr(new char[responseModel.ByteSizeLong()]);
+                                    responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
+
+                                    auto response = std::make_shared<NetworkPacketResponse>(std::move(buffer_ptr),
+                                                                                            ResponseModel_t::ShootingStateResponseModel,
+                                                                                            responseModel.ByteSizeLong());
+
+                                    std::shared_ptr<Client> client = RequestQueueManager::getConnectedClientByPlayerId(
+                                            *connectedClients, responseModel.player_id());
+                                    if (client) {
+                                        client->getClientResponseQueue().produce(std::move(response));
+                                    }
+									break;
+								}
                                 default: {
                                     std::cout << "Unknown message type: "
                                               << static_cast<int> (request->getMessageType())
