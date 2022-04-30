@@ -50,6 +50,7 @@ namespace invasion::session {
             [[maybe_unused]] auto receiverOnThisUser = ClientRequestsReceiver(client,
                                                                               &m_requestQueue); // создание двух потоков на каждого клиента
             [[maybe_unused]] auto senderOnThisUser = ClientResponsesSender(client);
+            senderOnThisUser.start();
 
             registerClientInSession(client, playerId, teamId);
 
