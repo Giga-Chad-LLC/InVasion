@@ -19,9 +19,7 @@ func toggle(value):
 # setters
 func set_is_active(value):
 	is_active = value
-	visible = is_active
-
-
+	visible = value
 
 
 # signals

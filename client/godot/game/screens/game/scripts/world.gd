@@ -40,6 +40,10 @@ func _on_Quit_pressed():
 func _on_EscapeMenu_toggle_escape_menu(is_escaped):
 	Player.is_active = !is_escaped	
 
+# player want to respawn - send required request model for that
+func _on_RespawnButton_pressed():
+	if (client_connection and client_connection.is_connected_to_host() and producer):
+		producer.push_data(Player.get_respawn_player_request())
 
 
 func _ready():
@@ -53,7 +57,7 @@ func _ready():
 	add_child(producer)
 	add_child(consumer)
 	
-	# attach UI to the managers
+	# attach UI to the players state manager
 	players_state_manager.UI = UI
 
 func _process(_delta):
@@ -89,6 +93,12 @@ func _process(_delta):
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")
 			pass
+		Global.ResponseModels.RespawnPlayerResponseModel:
+			print("Server said to respawn a player")
+			if (!Player.is_active):
+				Player.visible = true
+				Player.is_active = true
+				UI.get_node("RespawnMenu").toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 

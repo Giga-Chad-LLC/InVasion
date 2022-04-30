@@ -7,6 +7,7 @@ onready var player_gun = $Gun
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
+const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_player_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
@@ -29,6 +30,15 @@ func set_is_active(value):
 	is_active = value
 	$Gun.should_follow_mouse = is_active
 
+func get_respawn_player_request():
+	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()
+	action.set_player_id(player_id)
+	var network_packet = NetworkPacket.new()
+	network_packet.set_data(action.to_bytes(), Global.RequestModels.RespawnPlayerRequestModel)
+	if (network_packet):
+		return network_packet 
+	return null
+
 func get_player_move_request():
 	var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
 	if (action.get_current_event() != MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -38,7 +48,7 @@ func get_player_move_request():
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.MoveRequestModel)
 		
 		if (network_packet):
-			return network_packet # producer.push_data(network_packet)
+			return network_packet
 		return null
 
 func get_player_shoot_request():
@@ -52,7 +62,7 @@ func get_player_shoot_request():
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
 		if (network_packet):
-			return network_packet # producer.push_data(network_packet)
+			return network_packet 
 		return null
 
 # save pressed key to the model object

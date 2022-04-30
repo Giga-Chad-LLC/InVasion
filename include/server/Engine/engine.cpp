@@ -132,7 +132,7 @@ namespace invasion::session {
                                     responseModel.SerializeToArray(buffer_ptr.get(), responseModel.ByteSizeLong());
 
                                     auto response = std::make_shared<NetworkPacketResponse>(std::move(buffer_ptr),
-                                                                                            ResponseModel_t::ShootingStateResponseModel,
+                                                                                            ResponseModel_t::RespawnPlayerResponseModel,
                                                                                             responseModel.ByteSizeLong());
 
                                     std::shared_ptr<Client> client = RequestQueueManager::getConnectedClientByPlayerId(
