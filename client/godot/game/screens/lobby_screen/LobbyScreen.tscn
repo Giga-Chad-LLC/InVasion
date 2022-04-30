@@ -20,10 +20,10 @@ __meta__ = {
 }
 
 [node name="ServerIP" type="TextEdit" parent="."]
-margin_left = 83.0
-margin_top = 53.0
-margin_right = 234.0
-margin_bottom = 71.0
+margin_left = 86.0
+margin_top = 62.0
+margin_right = 237.0
+margin_bottom = 80.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -54,4 +54,17 @@ margin_right = 63.0
 margin_bottom = 20.0
 text = "connect"
 
+[node name="ExitButton" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "Exit"
+
+[node name="InfoLabel" type="Label" parent="."]
+margin_left = 111.0
+margin_top = 42.0
+margin_right = 210.0
+margin_bottom = 56.0
+text = "Input Server IP:"
+
 [connection signal="pressed" from="CenterContainer2/VBoxContainer/connectServerButton" to="." method="_on_connectServerButton_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]

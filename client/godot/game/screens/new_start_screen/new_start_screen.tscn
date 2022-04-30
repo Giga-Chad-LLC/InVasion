@@ -72,4 +72,4 @@ margin_bottom = 20.0
 text = "registrate"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/LoginButton" to="." method="_on_LoginButton_pressed"]
-[connection signal="pressed" from="CenterContainer2/VBoxContainer/RegistrateButton" to="." method="_on_StartGameButton_pressed"]
+[connection signal="pressed" from="CenterContainer2/VBoxContainer/RegistrateButton" to="." method="_on_RegistrateButton_pressed"]

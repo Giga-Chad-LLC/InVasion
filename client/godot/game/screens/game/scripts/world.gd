@@ -33,7 +33,7 @@ var consumer: Worker = Worker.new() # thread that will read data from the server
 
 # scene changing
 func _on_Quit_pressed():
-	emit_signal("scene_changed", "start_menu")
+	emit_signal("scene_changed", "game_menu")
 
 
 

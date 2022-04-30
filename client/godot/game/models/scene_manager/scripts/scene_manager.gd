@@ -12,14 +12,23 @@ func _handle_scene_changed(next_scene_name):
 			add_child(next_scene)
 			set_current_scene(next_scene)
 		'start_menu':
-			var next_scene = load("res://screens/start_screen/start_screen.tscn").instance()
+			print("OK")
+			var next_scene = load("res://screens/new_start_screen/new_start_screen.tscn").instance()
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)
 		'login':
 			var next_scene = load("res://screens/login_screen/LoginWindow.tscn").instance()
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)
+		'registration':
+			var next_scene = load("res://screens/registration_screen/RegistrationScreen.tscn").instance()
+			$UI.add_child(next_scene)
+			set_current_scene(next_scene)
 		'lobby':
+			var next_scene = load("res://screens/lobby_screen/LobbyScreen.tscn").instance()
+			$UI.add_child(next_scene)
+			set_current_scene(next_scene)
+		'game_menu':
 			var next_scene = load("res://screens/lobby_screen/LobbyScreen.tscn").instance()
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)

@@ -11,5 +11,5 @@ func _on_LoginButton_pressed():
 
 
 
-func _on_StartGameButton_pressed():
-	emit_signal("scene_changed", "game")
+func _on_RegistrateButton_pressed():
+	emit_signal("scene_changed", "registration")
