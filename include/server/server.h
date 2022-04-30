@@ -27,13 +27,14 @@
 using boost::asio::ip::tcp;
 namespace invasion::session {
     inline std::vector<std::shared_ptr<Client>> connectedClients;
+
     inline void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue) {
         while (true) {
             auto response = std::shared_ptr<NetworkPacketResponse>();
             if (responseQueue->consumeSync(response)) {
-                for (auto& client: connectedClients) {
+                for (auto &client: connectedClients) {
                     std::shared_ptr<NetworkPacketResponse> packet = response;
-                    client->m_clientResponseQueue.produce(std::move(packet));
+                    client->getClientResponseQueue().produce(std::move(packet));
                 }
             }
         }
@@ -48,13 +49,17 @@ namespace invasion::session {
         SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue{debug{}};
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
-        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); // update the game each 30 milliseconds 
+        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(
+                30); // update the game each 30 milliseconds
     public:
         explicit Server();
+
         void awaitNewConnections();
 
         friend class ClientRequestsReceiver;
+
         friend class RequestQueueManager;
+
         // puts each response packet from main response queue to client specific response queues
         friend void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue);
     };
