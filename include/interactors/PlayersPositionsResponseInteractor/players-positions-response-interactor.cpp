@@ -23,6 +23,10 @@ void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& respons
 	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 	
 	for(const auto& player_ptr : players) {
+		if(player_ptr->getLifeState().isInDeadState()) {
+			continue;
+		}
+
 		PlayerPositionResponseModel* playerModel = response.add_players();
 
 		playerModel->set_player_id(player_ptr->getId());

@@ -7,6 +7,7 @@
 #include "interactors/ShootInteractor/shoot-interactor.h"
 #include "interactors/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.h"
 #include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
+#include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -62,6 +63,12 @@ namespace invasion::session {
 									// damaged players
 									{
 										interactors::DamagedPlayersResponseInteractor interactor;
+										interactor.execute(responseModel, *gameSession);
+									}
+
+									// killed players
+									{
+										interactors::KilledPlayersResponseInteractor interactor;
 										interactor.execute(responseModel, *gameSession);
 									}
 
