@@ -1,6 +1,5 @@
 #include "damaged-players-response-interactor.h"
 
-#include <optional>
 #include <memory>
 #include <vector>
 // game-models
