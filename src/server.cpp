@@ -31,8 +31,10 @@ namespace invasion::session {
     }
 
     Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"),
-                                                         8000)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
-        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession, ConnectedClients::getConnectedClients());
+                                                         8000)), dispatcher(
+            DispatcherPackets(&m_responseQueue)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
+        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession,
+                                                ConnectedClients::getConnectedClients());
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
@@ -61,7 +63,7 @@ namespace invasion::session {
                 m_isSessionActive = true;
 
                 // start putting packets from main response queue to client's specific queues
-                std::thread(dispatchPacketsToClients, &m_responseQueue).detach();
+                dispatcher.start();
 
                 // start tick controller
                 m_tickController.start([this]() mutable {
