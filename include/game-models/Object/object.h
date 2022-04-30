@@ -15,7 +15,7 @@ public:
 	Vector2D getPosition() const;
 	void setPosition(Vector2D position);
 
-	bool collidesWithHitbox(const Object* const other) const;
+	bool collidesWithHitbox(const Object* const other, const Vector2D& offset = Vector2D::ZERO) const;
 	bool collidesWithShape(const Object* const other) const;
 
 protected:

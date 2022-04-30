@@ -28,6 +28,7 @@ public:
 	static const int INITIAL_AMMO;
 	static const double DAMAGE;
 	static const double INITIAL_HIT_POINTS;
+	static const Vector2D HITBOX_POSITION_OFFSET;
 
 private:
 

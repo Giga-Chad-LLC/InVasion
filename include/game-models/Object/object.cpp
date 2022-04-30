@@ -19,8 +19,8 @@ void Object::setPosition(Vector2D position) {
 	m_position = std::move(position);
 }
 
-bool Object::collidesWithHitbox(const Object* const other) const {
-	return m_hitboxCollider.collidesWith(m_position, &(other->m_shapeCollider), other->m_position);
+bool Object::collidesWithHitbox(const Object* const other, const Vector2D& offset) const {
+	return m_hitboxCollider.collidesWith(m_position + offset, &(other->m_shapeCollider), other->m_position);
 }
 
 bool Object::collidesWithShape(const Object* const other) const {

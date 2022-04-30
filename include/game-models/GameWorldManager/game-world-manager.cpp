@@ -49,7 +49,7 @@ void GameWorldManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet
 		for (const auto& player_ptr : players) {
 			if (player_ptr->getId() != playerId &&
 			   player_ptr->getTeamId() != teamId &&
-			   player_ptr->collidesWithHitbox(bullet_ptr.get())) {
+			   player_ptr->collidesWithHitbox(bullet_ptr.get(), Player::HITBOX_POSITION_OFFSET)) {
 				collidedPlayer_ptr = player_ptr;
 				break;
 			}

@@ -13,8 +13,10 @@ const double Player::MASS = 60.0;
 const int Player::INITIAL_AMMO = 180;
 const double Player::DAMAGE = 15.0;
 const double Player::INITIAL_HIT_POINTS = 100.0;
+const Vector2D Player::HITBOX_POSITION_OFFSET(0, -8);
+
 const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
-const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14);
+const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14.5);
 
 
 	
