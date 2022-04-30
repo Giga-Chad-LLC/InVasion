@@ -7,6 +7,7 @@ signal scene_changed(scene_name)
 onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var Player = $YSort/Player
+onready var UI = $UI
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -37,7 +38,7 @@ func _on_Quit_pressed():
 
 # disable player movements when escape menu is opened
 func _on_EscapeMenu_toggle_escape_menu(is_escaped):
-	Player.is_active = !is_escaped
+	Player.is_active = !is_escaped	
 
 
 
@@ -51,6 +52,9 @@ func _ready():
 	consumer.init(funcref(self, "_consumer_receive_data"))
 	add_child(producer)
 	add_child(consumer)
+	
+	# attach UI to the managers
+	players_state_manager.UI = UI
 
 func _process(_delta):
 #	Send player movements to server
@@ -77,6 +81,8 @@ func _process(_delta):
 				players_state_manager.update_players_states(new_game_state.get_players(), Player, players_parent_node)
 				# update damaged players
 				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
+				# update illed players
+				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:

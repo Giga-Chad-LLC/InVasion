@@ -14,7 +14,7 @@ const GameStateResponseModel = preload("res://proto/response-models/game_state_r
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
-var is_active: bool = true
+var is_active: bool setget set_is_active
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -22,8 +22,12 @@ const NetworkPacket = preload("res://network/data_types.gd")
 
 # Built-in functions
 func _ready():
-	$Gun.should_follow_mouse = true # gun will start following mouse
+	self.is_active = true # call the setter (gun will start rotating as well)
 
+
+func set_is_active(value):
+	is_active = value
+	$Gun.should_follow_mouse = is_active
 
 func get_player_move_request():
 	var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
