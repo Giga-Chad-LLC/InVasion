@@ -17,7 +17,7 @@
 rule CXX_COMPILER__unittest_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = /usr/bin/g++-10 $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building CXX object $out
 
 
@@ -25,7 +25,7 @@ rule CXX_COMPILER__unittest_Debug
 # Rule for linking CXX executable.
 
 rule CXX_EXECUTABLE_LINKER__unittest_Debug
-  command = $PRE_LINK && /usr/bin/c++ $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
+  command = $PRE_LINK && /usr/bin/g++-10 $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
 
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /snap/clion/189/bin/cmake/linux/bin/cmake --regenerate-during-build -S"/home/nikolai/Рабочий стол/project/InVasion/src/http-server" -B"/home/nikolai/Рабочий стол/project/InVasion/src/http-server/cmake-build-debug"
+  command = /snap/clion/189/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nikolai/InVasion/src/http-server -B/home/nikolai/InVasion/src/http-server/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 
