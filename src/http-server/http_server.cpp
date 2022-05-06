@@ -12,8 +12,9 @@ int main() {
                     ([](const crow::request &rowRequest) {
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
-                        if (!requestJson) {
+                        if (!requestJson || requestJson["nickname"].s() == ""|| requestJson["password"].s()=="") {
                             responseJson["message"] = "Bad request";
+                            return crow::response(404, responseJson);
                         } else if (AuthService::tryToRegisterUser(requestJson["nickname"].s(),
                                                                      requestJson["password"].s())) {
                             responseJson["message"] = "Success registration!";
@@ -21,6 +22,7 @@ int main() {
                             responseJson["message"] = "This user already exists in the database!";
                             return crow::response(400, responseJson);
                         }
+                        std::cout << requestJson["nickname"].s() << " " << requestJson["password"].s() << std::endl;
                         return crow::response(200, responseJson);
                     });
     CROW_ROUTE(app, "/login")
@@ -28,14 +30,16 @@ int main() {
                     ([](const crow::request &rowRequest) {
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
-                        if (!requestJson) {
+                        if (!requestJson || requestJson["nickname"].s() == ""|| requestJson["password"].s()=="") {
                             responseJson["message"] = "Bad request";
+                            return crow::response(404, responseJson);
                         } else if (AuthService::login(requestJson["nickname"].s(), requestJson["password"].s())) {
                             responseJson["message"] = "Success entry!";
+                            return crow::response(200, responseJson);
                         } else {
                             responseJson["message"] = "Wrong nickname or password!";
+                            return crow::response(400, responseJson);
                         }
-                        return responseJson;
                     });
     app.port(5555).multithreaded().run();
 }

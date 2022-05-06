@@ -8,9 +8,6 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -47,6 +44,8 @@ margin_bottom = -74.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="HTTPRequest" type="HTTPRequest" parent="CheckButton"]
 
 [node name="LabelOfError" type="Label" parent="."]
 margin_left = 74.0
@@ -98,4 +97,5 @@ rect_scale = Vector2( 1.5, 1.5 )
 text = "LOGIN"
 
 [connection signal="pressed" from="CheckButton" to="." method="_on_Button_pressed"]
+[connection signal="request_completed" from="CheckButton/HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="GotoBack" to="." method="_on_GotoBack_pressed"]
