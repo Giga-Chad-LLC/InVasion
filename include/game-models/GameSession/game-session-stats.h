@@ -1,6 +1,11 @@
 #ifndef GAME_SESSION_STATS_H_
 #define GAME_SESSION_STATS_H_
 
+#include <vector>
+#include <memory>
+
+// game-models
+#include "game-models/Player/player.h"
 
 
 namespace invasion::game_models {
@@ -18,12 +23,8 @@ namespace invasion::game_models {
 		void decrementSecondTeamPlayersCount();
 
 		int getFirstTeamKillsCount() const;
-		void incrementFirstTeamKillsCount();
-		void decrementFirstTeamKillsCount();
-
 		int getSecondTeamKillsCount() const;
-		void incrementSecondTeamKillsCount();
-		void decrementSecondTeamKillsCount();
+		void updateTeamsKillsCounts(const std::vector<std::shared_ptr<Player>>& killedPlayers);
 
 	private:
 		int m_firstTeamPlayersCount;

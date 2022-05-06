@@ -59,7 +59,7 @@ int GameSession::createPlayerAndReturnId() {
 	if (teamId == PlayerTeamId::FirstTeam) {
 		m_gameStatistics.incrementFirstTeamPlayersCount();
 	}
-	else {
+	else if (teamId == PlayerTeamId::SecondTeam) {
 		m_gameStatistics.incrementSecondTeamPlayersCount();
 	}
 
@@ -206,6 +206,8 @@ void GameSession::updateGameState() {
 	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
 	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
+
+	m_gameStatistics.updateTeamsKillsCounts(killedPlayers);
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }

@@ -1,4 +1,12 @@
+#include <vector>
+#include <memory>
+
+// game-models
+#include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
+
 #include "game-session-stats.h"
+
 
 namespace invasion::game_models {
 
@@ -46,29 +54,23 @@ int GameSessionStats::getFirstTeamKillsCount() const {
 }
 
 
-void GameSessionStats::incrementFirstTeamKillsCount() {
-	++m_firstTeamKillsCount;
-}
-
-
-void GameSessionStats::decrementFirstTeamKillsCount() {
-	--m_firstTeamKillsCount;
-}
-
-
 // 2nd team kills count
 int GameSessionStats::getSecondTeamKillsCount() const {
 	return m_secondTeamKillsCount;
 }
 
 
-void GameSessionStats::incrementSecondTeamKillsCount() {
-	++m_secondTeamKillsCount;
-}
+void GameSessionStats::updateTeamsKillsCounts(const std::vector<std::shared_ptr<Player>>& killedPlayers) {
+	for (const auto& player_ptr : killedPlayers) {
+		const PlayerTeamId teamId = player_ptr->getTeamId();
 
-
-void GameSessionStats::decrementSecondTeamKillsCount() {
-	--m_secondTeamKillsCount;
+		if (teamId == PlayerTeamId::FirstTeam) {
+			++m_secondTeamKillsCount;
+		}
+		else if (teamId == PlayerTeamId::SecondTeam) {
+			++m_firstTeamKillsCount;
+		}
+	}
 }
 
 } // namespace invasion::game_models
