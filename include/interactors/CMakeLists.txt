@@ -12,6 +12,7 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/DamagedPlayersResponseInteractor/damaged-players-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KilledPlayersResponseInteractor/killed-players-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/RespawnPlayerInteractor/respawn-player-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GameSessionStatsInteractor/game-session-stats-interactor.cpp
 
 	PARENT_SCOPE
 )
