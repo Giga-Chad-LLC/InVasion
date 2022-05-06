@@ -13,6 +13,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Weapon/weapon.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldStorage/game-world-storage.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameSession/game-session.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GameSession/game-session-stats.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerManager/player-manager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletManager/bullet-manager.cpp
 

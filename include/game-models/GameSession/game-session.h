@@ -12,6 +12,9 @@
 #include "game-models/Player/player.h"
 #include "game-models/Bullet/bullet.h"
 
+#include "game-session-stats.h"
+
+
 namespace invasion::game_models {
 	
 
@@ -39,10 +42,9 @@ public:
 
 private:
 	long long m_lastGameStateUpdate_ms;
-	int m_firstTeamPlayersCount;
-	int m_secondTeamPlayersCount;
 	int m_nextBulletId;
 	int m_nextPlayerId;
+	GameSessionStats m_gameStatistics;
 	GameWorldStorage m_storage;
 	PlayerManager m_playerManager;
 	BulletManager m_bulletManager;

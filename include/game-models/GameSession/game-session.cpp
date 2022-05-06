@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "game-session.h"
+#include "game-session-stats.h"
 // game-models
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
@@ -24,8 +25,6 @@ namespace invasion::game_models {
 
 GameSession::GameSession() 
 	: m_lastGameStateUpdate_ms(0),
-	  m_firstTeamPlayersCount(0),
-	  m_secondTeamPlayersCount(0),
 	  m_nextBulletId(0),
 	  m_nextPlayerId(0) {
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
@@ -39,10 +38,13 @@ int GameSession::createPlayerAndReturnId() {
 	// assigning team to new player
 	PlayerTeamId teamId = PlayerTeamId::FirstTeam;
 
-	if (m_firstTeamPlayersCount > m_secondTeamPlayersCount) {
+	const int firstTeamPlayersCount  = m_gameStatistics.getFirstTeamPlayersCount();
+	const int secondTeamPlayersCount = m_gameStatistics.getSecondTeamPlayersCount();
+
+	if (firstTeamPlayersCount > secondTeamPlayersCount) {
 		teamId = PlayerTeamId::SecondTeam;
 	}
-	else if (m_firstTeamPlayersCount == m_secondTeamPlayersCount) {
+	else if (firstTeamPlayersCount == secondTeamPlayersCount) {
 		// randomly picking team
 		const auto seed = static_cast<std::uint64_t>(std::chrono::system_clock::now().time_since_epoch().count());
 		std::default_random_engine generator(seed);
@@ -55,10 +57,10 @@ int GameSession::createPlayerAndReturnId() {
 	}
 
 	if (teamId == PlayerTeamId::FirstTeam) {
-		m_firstTeamPlayersCount++;
+		m_gameStatistics.incrementFirstTeamPlayersCount();
 	}
 	else {
-		m_secondTeamPlayersCount++;
+		m_gameStatistics.incrementSecondTeamPlayersCount();
 	}
 
 	players.push_back(std::make_shared<Player>(Vector2D::ZERO, m_nextPlayerId, teamId));
