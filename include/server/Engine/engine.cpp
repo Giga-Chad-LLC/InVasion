@@ -13,7 +13,7 @@
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
 #include "respawn-player-request-model.pb.h"
-#include "player.pb.h"
+#include "player-schema.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
