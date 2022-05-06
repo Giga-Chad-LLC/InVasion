@@ -66,14 +66,15 @@ int GameSession::createPlayerAndReturnId() {
 }
 
 
+int GameSession::createIdForNewBullet() {
+	return m_nextBulletId++;
+}
+
+
 int GameSession::addBullet(std::shared_ptr<Bullet> bullet) {
 	const int id = bullet->getId();
 	m_storage.getBullets().push_back(bullet);	
 	return id;
-}
-
-int GameSession::createIdForNewBullet() {
-	return m_nextBulletId++;
 }
 
 
@@ -94,26 +95,6 @@ std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
 
 	assert(player_ptr != nullptr);
 	return player_ptr;
-}
-
-
-std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
-	return m_storage.getPlayers();
-}
-
-
-std::vector<std::shared_ptr<Player>>& GameSession::getDamagedPlayers() {
-	return m_storage.getDamagedPlayers();
-}
-
-
-std::vector<std::shared_ptr<Player>>& GameSession::getKilledPlayers() {
-	return m_storage.getKilledPlayers();
-}
-
-
-std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
-	return m_storage.getBullets();
 }
 
 
@@ -138,6 +119,57 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 
 
 
+std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
+	return m_storage.getPlayers();
+}
+
+
+std::vector<std::shared_ptr<Player>>& GameSession::getDamagedPlayers() {
+	return m_storage.getDamagedPlayers();
+}
+
+
+std::vector<std::shared_ptr<Player>>& GameSession::getKilledPlayers() {
+	return m_storage.getKilledPlayers();
+}
+
+
+std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
+	return m_storage.getBullets();
+}
+
+
+void GameSession::removePlayerById(const int playerId) {
+	auto& players = m_storage.getPlayers();
+	
+	// asserting player with passed id exists to debugging purposes
+	// the following loop must be removed after testing
+	bool playerExists = false;
+
+	for(int i = 0; i < players.size(); i++) {
+		if(playerId == players[i]->getId()) {
+			playerExists = true;
+			break;
+		}
+	}
+
+	if(!playerExists) {
+		std::cout << "In GameSession: removePlayerById() called with playerId == " << playerId
+				  << ", but player with the id does not exist" << std::endl;
+	}
+	assert(playerExists);
+
+
+	players.erase(std::remove_if(
+		players.begin(),
+		players.end(),
+		[playerId](const std::shared_ptr<Player>& player_ptr) {
+			return playerId == player_ptr->getId();
+		}
+	), players.end());
+}
+
+
 void GameSession::updateGameState() {
 	auto& players = m_storage.getPlayers();
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
@@ -151,8 +183,6 @@ void GameSession::updateGameState() {
 	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
 	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
-
-	// --------------- TODO: respawn dead players --------------- //
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }

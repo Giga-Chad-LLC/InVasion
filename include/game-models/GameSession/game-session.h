@@ -20,9 +20,9 @@ public:
 	explicit GameSession();
 
 	int createPlayerAndReturnId();
+	int createIdForNewBullet();
 	
 	int addBullet(std::shared_ptr<Bullet> bullet);
-	int createIdForNewBullet();
 
 	std::shared_ptr<Player> getPlayer(int playerId);
 	std::shared_ptr<Bullet> getBullet(int bulletId);
@@ -31,6 +31,8 @@ public:
 	std::vector<std::shared_ptr<Player>>& getDamagedPlayers();
 	std::vector<std::shared_ptr<Player>>& getKilledPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
+
+	void removePlayerById(int playerId);
 
 	void updateGameState();
 
