@@ -17,9 +17,19 @@ namespace invasion::game_models {
 		void incrementSecondTeamPlayersCount();
 		void decrementSecondTeamPlayersCount();
 
+		int getFirstTeamKillsCount() const;
+		void incrementFirstTeamKillsCount();
+		void decrementFirstTeamKillsCount();
+
+		int getSecondTeamKillsCount() const;
+		void incrementSecondTeamKillsCount();
+		void decrementSecondTeamKillsCount();
+
 	private:
 		int m_firstTeamPlayersCount;
 		int m_secondTeamPlayersCount;
+		int m_firstTeamKillsCount;
+		int m_secondTeamKillsCount; 
 	};
 
 } // namespace invasion::game_models
