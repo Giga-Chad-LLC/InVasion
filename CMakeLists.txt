@@ -34,6 +34,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/rotate-weapon-request-model.proto
 		./src/proto/request-models/shoot-request-model.proto
 		./src/proto/request-models/respawn-player-request-model.proto
+		./src/proto/request-models/game-session-ended-request-model.proto
 		
 		# utils
         ./src/proto/utils/vector2d.proto
@@ -47,6 +48,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/damaged-player-response-model.proto
 		./src/proto/response-models/killed-player-response-model.proto
 		./src/proto/response-models/respawn-player-response-model.proto
+		./src/proto/response-models/game-session-stats-response-model.proto
+		./src/proto/response-models/player-game-session-stats-response-model.proto
 
 		# schemas
         ./src/proto/game-schemes/player-schema.proto
