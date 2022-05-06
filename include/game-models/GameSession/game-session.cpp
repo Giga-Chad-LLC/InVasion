@@ -146,21 +146,35 @@ void GameSession::removePlayerById(const int playerId) {
 	
 	// asserting player with passed id exists to debugging purposes
 	// the following loop must be removed after testing
-	bool playerExists = false;
+	 {
+		bool playerExists = false;
 
-	for(int i = 0; i < players.size(); i++) {
-		if(playerId == players[i]->getId()) {
-			playerExists = true;
+		for (int i = 0; i < players.size(); i++) {
+			if(playerId == players[i]->getId()) {
+				playerExists = true;
+				break;
+			}
+		}
+
+		if (!playerExists) {
+			std::cout << "In GameSession: removePlayerById() called with playerId == " << playerId
+					<< ", but player with the id does not exist" << std::endl;
+		}
+		assert(playerExists);
+	 }
+
+	PlayerTeamId teamId;
+	bool playerFound = false;
+
+	for (const auto& player_ptr : players) {
+		if (playerId == player_ptr->getId()) {
+			teamId = player_ptr->getTeamId();
+			playerFound = true;
 			break;
 		}
 	}
 
-	if(!playerExists) {
-		std::cout << "In GameSession: removePlayerById() called with playerId == " << playerId
-				  << ", but player with the id does not exist" << std::endl;
-	}
-	assert(playerExists);
-
+	assert(playerFound);
 
 	players.erase(std::remove_if(
 		players.begin(),
@@ -169,6 +183,13 @@ void GameSession::removePlayerById(const int playerId) {
 			return playerId == player_ptr->getId();
 		}
 	), players.end());
+
+	if (teamId == PlayerTeamId::FirstTeam) {
+		m_gameStatistics.decrementFirstTeamPlayersCount();
+	}
+	else {
+		m_gameStatistics.decrementSecondTeamPlayersCount();
+	}
 }
 
 

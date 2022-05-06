@@ -39,6 +39,10 @@ public:
 
 	void updateGameState();
 
+	GameSessionStats getStats_debug() {
+		return m_gameStatistics;
+	}
+
 
 private:
 	long long m_lastGameStateUpdate_ms;
