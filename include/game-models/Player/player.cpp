@@ -3,8 +3,11 @@
 
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
+#include "player-game-session-stats.h"
 // game-models
+#include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/Weapon/weapon.h"
 
 
 namespace invasion::game_models {
@@ -49,6 +52,16 @@ PlayerLifeState& Player::getLifeState() {
 }
 
 
+PlayerGameSessionStats& Player::getGameSessionStats() {
+	return m_gameSessionStats;
+}
+
+
+Weapon& Player::getWeapon() {
+	return m_weapon;
+}
+
+
 void Player::respawn(Vector2D position) {
 	m_lifeState.reset();
 	m_weapon.reset();
@@ -61,9 +74,5 @@ void Player::respawn(Vector2D position) {
 	this->setVelocity(Vector2D::ZERO);
 }
 
-
-Weapon& Player::getWeapon() {
-	return m_weapon;
-}
 
 } // namespace invasion::game_models

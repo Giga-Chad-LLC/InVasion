@@ -4,6 +4,7 @@
 
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
+#include "player-game-session-stats.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -20,8 +21,10 @@ public:
 	int getId() const;
 	PlayerTeamId getTeamId() const;
 	PlayerLifeState& getLifeState();
-	void respawn(Vector2D position);
+	PlayerGameSessionStats& getGameSessionStats();
 	Weapon& getWeapon();
+	void respawn(Vector2D position);
+
 
 	static const double MAX_SPEED;
 	static const double MASS;
@@ -31,12 +34,12 @@ public:
 	static const Vector2D HITBOX_POSITION_OFFSET;
 
 private:
-
 	static const Vector2D SHAPE_COLLIDER_SIZE;
 	static const Vector2D HITBOX_COLLIDER_SIZE;
 	const int m_id;
 	const PlayerTeamId m_teamId;
 	PlayerLifeState m_lifeState;
+	PlayerGameSessionStats m_gameSessionStats;
 	Weapon m_weapon;
 };
 

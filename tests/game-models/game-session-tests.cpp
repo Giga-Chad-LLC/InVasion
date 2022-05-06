@@ -53,6 +53,10 @@ TEST_CASE("setTimeout testing") {
 	});
 
 	std::cout << "testing!" << std::endl;
+
+	invoker.setTimeout(60 * 1000, []() {
+		std::cout << '\n' << "One minute has passed" << std::endl;
+	}); // 1 minute
 }
 
 
