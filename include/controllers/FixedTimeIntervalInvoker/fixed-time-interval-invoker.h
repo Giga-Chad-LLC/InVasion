@@ -13,7 +13,7 @@ namespace invasion::controllers {
 // instance of FixedTimeIntervalInvoker is created for every session
 class FixedTimeIntervalInvoker {
 public:
-	explicit FixedTimeIntervalInvoker(std::size_t interval);
+	explicit FixedTimeIntervalInvoker(std::size_t interval_ms);
 
 	template <class Func, class... Args>
 	void start(Func&& f, Args&&... args) {

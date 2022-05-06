@@ -5,10 +5,10 @@
 
 namespace invasion::controllers {
 
-FixedTimeIntervalInvoker::FixedTimeIntervalInvoker(const std::size_t interval)
+FixedTimeIntervalInvoker::FixedTimeIntervalInvoker(const std::size_t interval_ms)
 	: m_cancelToken(false), 
 	 m_isThreadActive(false),
-	  m_interval_ms(interval) {}
+	  m_interval_ms(interval_ms) {}
 
 void FixedTimeIntervalInvoker::stop() {
 	if(m_isThreadActive.load()) {

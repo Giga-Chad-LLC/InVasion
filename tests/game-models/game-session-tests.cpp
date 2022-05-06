@@ -18,6 +18,7 @@
 // interactors
 
 // controllers
+#include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 
 // request-models
 
@@ -28,12 +29,34 @@
 
 namespace doctest {
 using namespace invasion::game_models;
+using namespace invasion::controllers;
 // using namespace invasion::interactors;
-// using namespace invasion::controllers;
 // using namespace request_models;
 // using namespace response_models;
 
 
+TEST_CASE("setTimeout testing") {
+	FixedTimeoutCallbackInvoker invoker;
+
+	for(int i = 0; i < 10; i++) {
+		invoker.setTimeout(500, [i]() {
+			std::cout << '\n' << "Hello World " << i << "! 500" << std::endl;
+		});
+	}
+
+	invoker.setTimeout(1000, []() {
+		std::cout << '\n' << "Hello World 1000!" << std::endl;
+	});
+
+	invoker.setTimeout(3000, []() {
+		std::cout << '\n' << "Hello World! 3000" << std::endl;
+	});
+
+	std::cout << "testing!" << std::endl;
+}
+
+
+/*
 TEST_CASE("Updating kills counts of teams") {
 	using namespace std::chrono_literals;
 	GameSession session;
@@ -81,7 +104,7 @@ TEST_CASE("Updating kills counts of teams") {
 		CHECK(stats.getFirstTeamKillsCount() == 0);
 		CHECK(stats.getSecondTeamKillsCount() == 1);
 	}
-}
+}*/
 
 
 /*
