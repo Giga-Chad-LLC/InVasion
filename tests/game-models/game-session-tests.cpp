@@ -3,10 +3,16 @@
 #include <random>
 #include <cmath>
 #include <memory>
+#include <thread>
+#include <chrono>
+
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
+#include "game-models/Weapon/weapon.h"
+#include "game-models/Bullet/bullet.h"
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameSession/game-session-stats.h"
 // interactors
@@ -28,6 +34,57 @@ using namespace invasion::game_models;
 // using namespace response_models;
 
 
+TEST_CASE("Updating kills counts of teams") {
+	using namespace std::chrono_literals;
+	GameSession session;
+	std::shared_ptr<Player> player1 = session.getPlayer(session.createPlayerAndReturnId());
+	Weapon& weapon = player1->getWeapon();
+	weapon.setDirection(Vector2D(0, 1));
+	const Vector2D position = player1->getPosition();
+
+	std::shared_ptr<Player> player2 = session.getPlayer(session.createPlayerAndReturnId());
+	player2->setPosition(Vector2D(0, 15));
+
+	for(int i = 0; i < 10; i++) {
+		const int bulletId = session.createIdForNewBullet();		
+		std::shared_ptr<Bullet> bullet = weapon.shoot(position, bulletId);
+
+		session.addBullet(bullet);
+
+		std::this_thread::sleep_for(30ms);
+		session.updateGameState();
+	}
+	
+	for(int i = 0; i < 10; i++) {
+		std::this_thread::sleep_for(30ms);
+		session.updateGameState();
+	}
+
+	// logging
+	{
+		std::vector<std::shared_ptr<Bullet>>& bullets = session.getBullets();
+		for(const auto& bullet_ptr : bullets) {
+			std::cout << "bullet id: " << bullet_ptr->getId() << " position: " << bullet_ptr->getPosition() << '\n';
+		}
+		std::cout << "player2 position: " << player2->getPosition() << std::endl;
+		std::cout << "player2 life state: " << player2->getLifeState().isInDeadState() << std::endl;
+		std::cout << "player2 HP: " << player2->getLifeState().getHitPoints() << std::endl;
+	}
+
+	GameSessionStats stats = session.getStats_debug();
+
+	if (player1->getTeamId() == PlayerTeamId::FirstTeam) {
+		CHECK(stats.getFirstTeamKillsCount() == 1);
+		CHECK(stats.getSecondTeamKillsCount() == 0);
+	}
+	else if (player1->getTeamId() == PlayerTeamId::SecondTeam) {
+		CHECK(stats.getFirstTeamKillsCount() == 0);
+		CHECK(stats.getSecondTeamKillsCount() == 1);
+	}
+}
+
+
+/*
 TEST_CASE("Distributing players by teams") {
 	GameSession session;
 
@@ -51,7 +108,7 @@ TEST_CASE("Distributing players by teams") {
 			CHECK(std::abs(count1 - count2) == 0); 
 		}
 	}
-}
+}*/
 
 
 /*
