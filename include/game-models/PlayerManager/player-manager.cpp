@@ -4,6 +4,7 @@
 #include "player-manager.h"
 // game-models
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-game-session-stats.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
@@ -54,6 +55,30 @@ void PlayerManager::findKilledPlayers(std::vector<std::shared_ptr<Player>>& play
 			lifeState.removeDamagedState();
 		}
 	}
+}
+
+
+void PlayerManager::updatePlayersGameSessionStats(std::vector<std::shared_ptr<Player>>& players,
+								  				 std::vector<std::shared_ptr<Player>>& killedPlayers) const {
+	
+	for (const auto& killedPlayer : killedPlayers) {
+		const int killedPlayerId = killedPlayer->getId();
+		const int killedBy = killedPlayer->getLifeState().killedBy();
+
+		for (auto& player : players) {
+			const int playerId = player->getId();
+			PlayerGameSessionStats& stats = player->getGameSessionStats();
+
+			if (playerId == killedPlayerId) {
+				stats.incrementDeaths();
+			}
+
+			if (playerId == killedBy) {
+				stats.incrementKills();
+			}
+		}
+	}
+
 }
 
 

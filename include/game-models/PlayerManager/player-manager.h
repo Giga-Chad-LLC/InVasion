@@ -17,7 +17,10 @@ public:
 							std::vector<std::shared_ptr<Player>>& damagedPlayers) const;
 
 	void findKilledPlayers(std::vector<std::shared_ptr<Player>>& players,
-						  std::vector<std::shared_ptr<Player>>& killedPlayers) const;
+						   std::vector<std::shared_ptr<Player>>& killedPlayers) const;
+
+	void updatePlayersGameSessionStats(std::vector<std::shared_ptr<Player>>& players,
+						   			  std::vector<std::shared_ptr<Player>>& killedPlayers) const;
 
 private:
 	void applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Player> player_ptr, double dt) const;

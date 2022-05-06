@@ -208,6 +208,7 @@ void GameSession::updateGameState() {
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
 
 	m_gameStatistics.updateTeamsKillsCounts(killedPlayers);
+	m_playerManager.updatePlayersGameSessionStats(players, killedPlayers);
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
