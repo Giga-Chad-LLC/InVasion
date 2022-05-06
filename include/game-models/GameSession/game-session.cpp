@@ -214,4 +214,9 @@ void GameSession::updateGameState() {
 }
 
 
+const GameSessionStats& GameSession::getGameStatistics() {
+	return m_gameStatistics;
+}
+
+
 } // namespace invasion::game_models

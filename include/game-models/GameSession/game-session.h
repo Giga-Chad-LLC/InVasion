@@ -39,9 +39,7 @@ public:
 
 	void updateGameState();
 
-	GameSessionStats getStats_debug() {
-		return m_gameStatistics;
-	}
+	const GameSessionStats& getGameStatistics();
 
 
 private:
