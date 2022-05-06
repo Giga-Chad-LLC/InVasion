@@ -12,4 +12,4 @@ func _on_LoginButton_pressed():
 
 
 func _on_RegistrateButton_pressed():
-	emit_signal("scene_changed", "registration")
+	emit_signal("scene_changed", "registrate")

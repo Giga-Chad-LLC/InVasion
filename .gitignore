@@ -190,5 +190,6 @@ cmake
 !client/godot/game/bin
 build
 cmake-build-debug
-
+src/cmake-build-debug
+src/http-server/cmake-build-debug
 src/grpc/out
