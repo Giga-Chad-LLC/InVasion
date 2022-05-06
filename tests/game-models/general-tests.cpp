@@ -4,28 +4,28 @@
 #include <cmath>
 #include <memory>
 
-// game-models
-#include "game-models/Vector2D/vector2d.h"
-#include "game-models/Player/player.h"
-#include "game-models/Player/player-team-id-enum.h"
-#include "game-models/GameSession/game-session.h"
-#include "game-models/Bullet/bullet.h"
-#include "game-models/Weapon/weapon.h"
-// interactors
-#include "interactors/MoveInteractor/move-interactor.h"
-#include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
-#include "interactors/RotateWeaponInteractor/rotate-weapon-interactor.h"
-#include "interactors/ShootInteractor/shoot-interactor.h"
-// controllers
-#include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
+// // game-models
+// #include "game-models/Vector2D/vector2d.h"
+// #include "game-models/Player/player.h"
+// #include "game-models/Player/player-team-id-enum.h"
+// #include "game-models/GameSession/game-session.h"
+// #include "game-models/Bullet/bullet.h"
+// #include "game-models/Weapon/weapon.h"
+// // interactors
+// #include "interactors/MoveInteractor/move-interactor.h"
+// #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
+// #include "interactors/RotateWeaponInteractor/rotate-weapon-interactor.h"
+// #include "interactors/ShootInteractor/shoot-interactor.h"
+// // controllers
+// #include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
 
 
-// request-models
-#include "shoot-request-model.pb.h"
-#include "move-request-model.pb.h"
-#include "update-game-state-request-model.pb.h"
-// response-models
-#include "player-position-response-model.pb.h"
+// // request-models
+// #include "shoot-request-model.pb.h"
+// #include "move-request-model.pb.h"
+// #include "update-game-state-request-model.pb.h"
+// // response-models
+// #include "player-position-response-model.pb.h"
 
 
 
@@ -33,12 +33,12 @@
 
 
 namespace doctest {
-using namespace invasion::game_models;
-using namespace invasion::interactors;
-using namespace invasion::controllers;
+// using namespace invasion::game_models;
+// using namespace invasion::interactors;
+// using namespace invasion::controllers;
 
-using namespace request_models;
-using namespace response_models;
+// using namespace request_models;
+// using namespace response_models;
 using namespace std;
 
 
