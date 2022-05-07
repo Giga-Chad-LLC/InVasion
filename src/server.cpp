@@ -7,7 +7,6 @@
 #include "server/NetworkPacket/network-packet.h"
 #include "player-info-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
-#include "interactors/InitialStateResponseInteractor/initial-state-response-interactor.h"
 
 using boost::asio::ip::tcp;
 namespace invasion::session {

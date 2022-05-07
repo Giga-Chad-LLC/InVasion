@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package game_schemes;
-
-message SessionStateSchema{
-  int32 leftTime_ms = 1;
-  int32 teammatesScore = 2;
-  int32 enemiesScore = 3;
-}
