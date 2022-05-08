@@ -102,7 +102,6 @@ endif ()
 
 add_executable(${SERVER_TARGET}
         src/main.cpp
-        src/server.cpp
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
