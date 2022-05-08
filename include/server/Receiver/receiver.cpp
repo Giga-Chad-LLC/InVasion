@@ -1,6 +1,6 @@
 #include "receiver.h"
 #include <thread>
-#include "player-schema.pb.h"
+#include <player.pb.h>
 #include "player-position-response-model.pb.h"
 
 
@@ -33,11 +33,12 @@ namespace invasion::session {
                     while (client->getChannel()) {
                         // get data from client
                         auto request = ClientRequestsReceiver::getRequestFromClient(client);
+                        
                         if (request.has_value()) {
                             q->produce(std::move(request.value()));
                         }
                     }
-                    std::cout << "Client disconnected" << std::endl;
+                    std::cout << "Client disconnected (receiver)" << std::endl;
                 }));
         thread_.detach();
     }

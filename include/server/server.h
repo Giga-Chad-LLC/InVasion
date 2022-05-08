@@ -38,8 +38,8 @@ namespace invasion::session {
         SafeQueue<std::shared_ptr<NetworkPacketRequest>> m_requestQueue{debug{}};
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_responseQueue;
         game_models::GameSession m_gameSession;
-        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(
-                30); // update the game each 30 milliseconds
+        // update the game each 30 milliseconds
+        controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); 
 
         DispatcherPackets dispatcher;
     public:

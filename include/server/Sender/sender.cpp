@@ -16,7 +16,7 @@
 namespace invasion::session {
     void ClientResponsesSender::start() {
         thread_ = std::move(std::thread([client = ptrClient]() {
-            while (true) {
+            while (client->getChannel()) {
                 std::shared_ptr<NetworkPacketResponse> response;
                 if (client->getClientResponseQueue().consumeSync(response)) {
                     uint32_t messageLength =
@@ -24,9 +24,9 @@ namespace invasion::session {
                             sizeof(response->bytesSize());
                     std::shared_ptr<char[]> buffer = response->serializeToByteArray();
                     client->getChannel().write(buffer.get(), messageLength);
-
                 }
             }
+            std::cout << "Client disconnected (sender)" << std::endl;
         }));
         thread_.detach();
     }
