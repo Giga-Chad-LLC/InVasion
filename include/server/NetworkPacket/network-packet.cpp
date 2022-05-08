@@ -1,7 +1,7 @@
 #include <cstring>
 #include "network-packet.h"
 
-namespace invasion::session {
+namespace invasion::server {
 // NetworkPacket
 NetworkPacket::NetworkPacket(std::unique_ptr<char[]> &&bytes_, uint32_t bytesLength_) : bytes(std::move(bytes_)), bytesLength(bytesLength_) {}
 

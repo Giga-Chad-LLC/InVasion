@@ -1,9 +1,9 @@
-#ifndef INVASION_SERVER_NETWORK_PACKET_H
-#define INVASION_SERVER_NETWORK_PACKET_H
+#ifndef NETWORK_PACKET_H_
+#define NETWORK_PACKET_H_
 
 #include <memory>
 
-namespace invasion::session {
+namespace invasion::server {
     // When adding new message type, update `NetworkPacketRequest::getMessageTypeById` method
     enum class RequestModel_t : uint32_t {
         MoveRequestModel = 0,
