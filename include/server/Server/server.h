@@ -4,9 +4,11 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/core/noncopyable.hpp>
+#include <boost/system/error_code.hpp>
 #include <memory>
 #include <atomic>
 #include <string>
+#include <iostream>
 
 #include "server/Session/session.h"
 #include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
@@ -15,28 +17,68 @@
 namespace invasion::server {
 using boost::asio::ip::tcp;
 
+
+
 class Server : private boost::noncopyable {
-public:
-    explicit Server(std::string host, short port);
-    ~Server();
-    // starts the server acceptor
-    void start();
-    // stops the server and releases all resources
-    void stop();
 private:
     struct Connection {
-        explicit Connection(
-            std::shared_ptr<boost::asio::io_service> ios, std::shared_ptr<boost::asio::io_service::work> work, std::shared_ptr<tcp::socket> socket
-        ): ios(ios), work(work), socket(socket) {}
-
         std::shared_ptr<boost::asio::io_service> ios;
         std::shared_ptr<boost::asio::io_service::work> work;
         std::shared_ptr<tcp::socket> socket;
     };
 
-    // waits for new client and puts it to the available session
-    void acceptNewClient();
-    void onAccept(const boost::system::error_code& error, Connection connection);
+    class Acceptor {
+    public:
+
+        Acceptor(boost::asio::io_service& ios, std::string host, short port):
+            m_acceptor(ios, tcp::endpoint(boost::asio::ip::address_v4::from_string(host), port)) {}
+        
+        // starts listening for the incoming connections
+        void start() {
+            m_acceptor.listen();
+            std::cout << "Listening at " << m_acceptor.local_endpoint() << std::endl;
+        }
+
+        void stop() {
+            m_isActive.store(false);
+        }
+
+        void close() {
+            m_acceptor.close();
+        }
+
+        bool isActive() {
+            return m_isActive.load();
+        }
+
+        // waits for new client and calls the callback when it is connected
+        template <class Functor>
+        void acceptNewClient(Functor callback) {
+            // create execution thread for the newly connected client
+            std::shared_ptr<boost::asio::io_service> ioService(new boost::asio::io_service);
+            std::shared_ptr<boost::asio::io_service::work> ioWork(new boost::asio:: io_service::work(*ioService));
+            std::shared_ptr<tcp::socket> socket(new tcp::socket(*ioService));
+
+            Connection connection{ioService, ioWork, socket};
+
+            m_acceptor.async_accept(*connection.socket, [callback, connection](const boost::system::error_code& errorCode) {
+                callback(errorCode, connection);
+            });
+        }
+    private:
+        tcp::acceptor m_acceptor;
+        std::atomic <bool> m_isActive = true;
+    };
+
+public:
+    Server();
+    ~Server();
+    // starts the server acceptor
+    void start(std::string host, short port);
+    // stops the server and releases all resources
+    void stop();
+private:
+    void onAccept(const boost::system::error_code& errorCode, Connection connection);
     // returns the best-fit session
     std::shared_ptr<Session> getAvailableSession();
     // creates and adds new session
@@ -44,10 +86,12 @@ private:
     // removes session by id
     void removeSession(uint32_t sessionId);
 
-    tcp::acceptor m_acceptor;
+    int test = 1;
+
+    std::unique_ptr <Acceptor> m_acceptor;
     boost::asio::io_service m_ios;
-    std::atomic <bool> m_isActive = true;
-    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60);
+    std::unique_ptr <boost::asio::io_service::work> m_work;
+    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60); // invokes every minute
     std::vector <std::shared_ptr <Session>> m_sessions;
 };
 }

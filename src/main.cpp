@@ -1,18 +1,18 @@
 #include "server/Server/server.h"
 #include <exception>
+#include <boost/system/error_code.hpp>
 #include <iostream>
 #include <system_error>
 
 
 int main() {
     try {
-        std::cout << "Creating server" << std::endl;
-        invasion::server::Server server("127.0.0.1", 8000);
-        server.start();
+        invasion::server::Server server;
+        server.start("127.0.0.1", 8000);
         system("pause");
     }
-    catch (const std::exception& error) {
-        std::cout << "Error while starting server. Message: " << error.what() << std::endl;
+    catch (boost::system::system_error& error) {
+        std::cout << "Error while starting server: Error code = " << error.code() << ", Message: " << error.what() << std::endl;
     }
 
 }
