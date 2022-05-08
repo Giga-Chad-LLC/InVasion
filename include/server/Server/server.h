@@ -54,6 +54,7 @@ private:
         // waits for new client and calls the callback when it is connected
         template <class Functor>
         void acceptNewClient(Functor callback) {
+            std::cout << "Accepting new client" << std::endl;
             // create execution thread for the newly connected client
             std::shared_ptr<boost::asio::io_service> ioService(new boost::asio::io_service);
             std::shared_ptr<boost::asio::io_service::work> ioWork(new boost::asio:: io_service::work(*ioService));
@@ -62,6 +63,7 @@ private:
             Connection connection{ioService, ioWork, socket};
 
             m_acceptor.async_accept(*connection.socket, [callback, connection](const boost::system::error_code& errorCode) {
+                std::cout << "Call the callback on a connected user" << std::endl;
                 callback(errorCode, connection);
             });
         }
