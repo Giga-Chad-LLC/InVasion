@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <memory>
 #include <cmath>
+#include <filesystem>
+#include <string>
 
 #include "game-session.h"
 #include "game-session-stats.h"
@@ -17,6 +19,9 @@
 #include "game-models/PlayerManager/player-manager.h"
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/StaticObject/static-object.h"
+// controllers
+#include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 
@@ -27,6 +32,30 @@ GameSession::GameSession()
 	: m_lastGameStateUpdate_ms(0),
 	  m_nextBulletId(0),
 	  m_nextPlayerId(0) {
+	
+	const std::filesystem::path directory("client/godot/game/assets/tilemaps/");
+
+	for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator{directory}) {
+		if(!entry.is_regular_file() || entry.path().extension() != ".txt") {
+			continue;
+		}
+		 
+		std::string filepath(entry.path().string());
+		controllers::TilemapsFileReader reader(filepath);
+
+
+		std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
+
+		Vector2D tileDimension(reader.getTileDimensions());
+		const auto& tilesCentersPositions = reader.getTileCentersPositions();
+
+		for(const auto& position : tilesCentersPositions) {
+			obstacles.push_back(std::make_shared<StaticObject>(tileDimension, tileDimension, Vector2D(position)));
+		}
+
+	}
+
+	
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
@@ -138,6 +167,11 @@ std::vector<std::shared_ptr<Player>>& GameSession::getKilledPlayers() {
 
 std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 	return m_storage.getBullets();
+}
+
+
+std::vector<std::shared_ptr<StaticObject>>& GameSession::getObstacles() {
+	return m_storage.getObstacles();
 }
 
 

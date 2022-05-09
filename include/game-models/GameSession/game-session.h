@@ -11,6 +11,7 @@
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Player/player.h"
 #include "game-models/Bullet/bullet.h"
+#include "game-models/StaticObject/static-object.h"
 
 #include "game-session-stats.h"
 
@@ -34,6 +35,7 @@ public:
 	std::vector<std::shared_ptr<Player>>& getDamagedPlayers();
 	std::vector<std::shared_ptr<Player>>& getKilledPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
+	std::vector<std::shared_ptr<StaticObject>>& getObstacles();
 
 	void removePlayerById(int playerId);
 

@@ -2,11 +2,14 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #include "doctest.h"
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/GameSession/game-session.h"
+#include "game-models/StaticObject/static-object.h"
 // controllers
 #include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
 
@@ -15,6 +18,17 @@ using namespace invasion::controllers;
 using namespace invasion::game_models;
 
 
+TEST_CASE("Iterating through directory in GameSession") {
+	GameSession session;
+
+	const auto& obstacles = session.getObstacles();
+
+	for(std::shared_ptr<StaticObject> object : obstacles) {
+		std::cout << object->getPosition() << '\n';
+	}
+}
+
+/*
 TEST_CASE("TilemapsFileReader testing") {
 	// client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt
 
@@ -43,7 +57,8 @@ TEST_CASE("TilemapsFileReader testing") {
 		std::cout << err.what() << '\n';
 		CHECK_MESSAGE(false, "Error occured");
 	}
-
 }
+*/
+
 
 }
