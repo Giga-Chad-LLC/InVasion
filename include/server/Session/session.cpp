@@ -25,8 +25,7 @@ void Session::start() {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
         m_requestQueue->produce(std::move(request));
     });
-    // std::cout << "Starting dispatcher" << std::endl;
-    // m_gameEventsDispatcher->start();
+    m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 }
 
 void Session::stop() {
@@ -37,9 +36,10 @@ void Session::stop() {
     m_isActive.store(false);
     std::cout << "Stopping session: " << m_sessionId << std::endl;
 
-    
-    // m_gameEventsDispatcher->stop();
+    std::cout << "Stopping tick controller" << std::endl;
     m_tickController.stop();
+    std::cout << "Stopping events dispatcher" << std::endl;
+    m_gameEventsDispatcher->stop();
 
     assert(m_clientsThreadPool.size() == m_connections.size());
 
@@ -48,12 +48,13 @@ void Session::stop() {
         client->stop();
     }
 
-    std::cout << "Stopping works" << std::endl;
+    std::cout << "Stopping workers" << std::endl;
     for (auto [ ios, work ] : m_clientsThreadPool) {
-        // we want to finish all sending/receiving data processes (on a client side and inside a `m_gameEventsDispatcher` we will stop adding any more newtwork packets)
-        work.reset();
-        std::cout << "Stop work. Wait to finish clients operations." << std::endl;
+        // we want to finish all sending/receiving data processes (on a client side and inside a `m_gameEventsDispatcher` we will stop adding any more network packets)
+        // work.reset(); // does not work for some reason (maybe I don't get something about it)
+
         // for force stop we might user `ios->stop()` - the last packet will be discarded mid-air (not good, because client will not get full network packet and won't be able to parse it correctly)
+        ios->stop();
     }
 }
 
@@ -90,7 +91,7 @@ void Session::addClient(
         // lock the mutexes
         std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
         m_connections.push_back({
-            std::make_shared <Client> (socket, m_gameSession.createPlayerAndReturnId()),
+            std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId()),
             std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
         });
         
@@ -101,7 +102,9 @@ void Session::addClient(
         std::thread thread([socket, executionService]() {
             std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
             executionService.first->run();
+            std::cout << "Client thread exits" << std::endl;
         });
+
         thread.detach();
     }
 }

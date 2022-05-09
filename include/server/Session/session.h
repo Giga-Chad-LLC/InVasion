@@ -21,7 +21,7 @@
 namespace invasion::server {
 using boost::asio::ip::tcp;
 
-class Session {
+class Session : public std::enable_shared_from_this<Session> {
 public:
     Session(uint32_t sessionId);
     ~Session();
@@ -58,7 +58,7 @@ private:
     std::mutex mtx_connections;
     std::mutex mtx_clientsThreadPool;
 
-    game_models::GameSession m_gameSession;
+    std::shared_ptr <game_models::GameSession> m_gameSession = std::make_shared <game_models::GameSession> ();
     // update the game each 30 milliseconds
     controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); 
     std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher = std::make_shared <GameEventsDispatcher> ();
