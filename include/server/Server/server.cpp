@@ -48,7 +48,11 @@ void Server::stop() {
     // stop blocking the execution thread
     m_ios.stop();
     
-    // sessions will be stopped and destroyed automatically
+    // stop the sessions 
+    for (auto session : m_sessions) {
+        session->stop();
+    }
+
     std::cout << "Server stopped" << std::endl;
 }
 
@@ -57,11 +61,6 @@ void Server::onAccept(const boost::system::error_code& errorCode, Connection con
     if (errorCode.value() == 0) {
         // add client to the session
         std::cout << "Connected client: " << connection.socket->remote_endpoint() << " --> " << connection.socket->local_endpoint() << std::endl;
-
-        // std::thread th([connection]() {
-        //     connection.ios->run();
-        // });
-        // th.detach();
 
         auto availableSession = getAvailableSession();
         std::cout << "Available session: " << availableSession->getSessionId() << std::endl;
