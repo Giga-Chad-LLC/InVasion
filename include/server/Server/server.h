@@ -2,7 +2,6 @@
 #define SERVER_H_
 
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
 #include <boost/core/noncopyable.hpp>
 #include <boost/system/error_code.hpp>
 #include <memory>
@@ -63,23 +62,26 @@ private:
             Connection connection{ioService, ioWork, socket};
 
             m_acceptor.async_accept(*connection.socket, [callback, connection](const boost::system::error_code& errorCode) {
-                std::cout << "Call the callback on a connected user" << std::endl;
+                std::cout << "Handle a connected user" << std::endl;
                 callback(errorCode, connection);
             });
         }
     private:
         tcp::acceptor m_acceptor;
-        std::atomic <bool> m_isActive = true;
+        std::atomic_bool m_isActive = true;
     };
 
 public:
     Server();
     ~Server();
-    // starts the server acceptor
+    // starts the server acceptor (blocks the current thread of execution)
     void start(std::string host, short port);
     // stops the server and releases all resources
     void stop();
 private:
+    // next session id
+    uint32_t m_nextSessionId = 0U;
+    // callback is invoked when the client connected successfully 
     void onAccept(const boost::system::error_code& errorCode, Connection connection);
     // returns the best-fit session
     std::shared_ptr<Session> getAvailableSession();
@@ -88,13 +90,12 @@ private:
     // removes session by id
     void removeSession(uint32_t sessionId);
 
-    int test = 1;
-
     std::unique_ptr <Acceptor> m_acceptor;
     boost::asio::io_service m_ios;
-    std::unique_ptr <boost::asio::io_service::work> m_work;
+    std::shared_ptr <boost::asio::io_service::work> m_work;
     invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60); // invokes every minute
     std::vector <std::shared_ptr <Session>> m_sessions;
+    std::atomic_bool m_isActive = false;
 };
 }
 
