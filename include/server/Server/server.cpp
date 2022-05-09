@@ -91,9 +91,9 @@ void Server::onAccept(const boost::system::error_code& errorCode, Connection con
 }
 
 
-
-
-std::shared_ptr<Session> Server::getAvailableSession() {
+std::shared_ptr<Session> Server::getAvailableSession() { 
+    // std::unique_lock ul{mtx_sessions};
+       
     for (auto session : m_sessions) {
         if (session->isAvailable()) {
             std::cout << "Found available session" << std::endl;
@@ -101,7 +101,7 @@ std::shared_ptr<Session> Server::getAvailableSession() {
         }
     }
     std::cout << "No available sessions" << std::endl;
-    return addSession();    
+    return addSession();
 }
 
 std::shared_ptr<Session> Server::addSession() {
@@ -112,7 +112,14 @@ std::shared_ptr<Session> Server::addSession() {
 }
 
 void Server::removeSession(uint32_t sessionId) {
+    // std::unique_lock ul{mtx_sessions};
 
+    for (auto it = m_sessions.begin(); it != m_sessions.end(); it++) {
+        if ((*it)->getSessionId() == sessionId) {
+            m_sessions.erase(it); // session destructor will call this.stop()
+            break;
+        }
+    }
 }
 
 }

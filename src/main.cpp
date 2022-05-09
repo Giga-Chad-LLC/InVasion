@@ -11,21 +11,28 @@
 
 int main() {
     try {
+        bool shouldStop = true;
         invasion::server::Server server;
-        std::thread serverThread([&server]() {
+        
+        if (!shouldStop) {
             server.start("127.0.0.1", 8000); // blocks the current thread of execution!
-        });
-        serverThread.detach();
+        }
+        else {
+            std::thread serverThread([&server]() {
+                server.start("127.0.0.1", 8000); // blocks the current thread of execution!
+            });
+            serverThread.detach();
 
-        invasion::controllers::FixedTimeoutCallbackInvoker timeout;
-        timeout.setTimeout(1000 * 10, [&serverThread, &server]() {
-            server.stop();
-            // serverThread.join();
-        });
-
-        // std::this_thread::sleep_for(std::chrono::seconds(6));
+            invasion::controllers::FixedTimeoutCallbackInvoker timeout;
+            timeout.setTimeout(1000 * 10, [&serverThread, &server]() {
+                server.stop();
+            });
+        }
     }
-    catch (boost::system::system_error& error) {
-        std::cout << "Error while starting server: Error code = " << error.code() << ", Message: " << error.what() << std::endl;
+    catch (const boost::system::system_error& error) {
+        std::cout << "Error while running server: Error code = " << error.code() << ", Message: " << error.what() << std::endl;
+    }
+    catch (const std::exception& error) {
+        std::cout << "Error while running server: " << "Message: " << error.what() << std::endl;
     }
 }

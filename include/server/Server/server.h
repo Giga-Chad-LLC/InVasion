@@ -7,6 +7,7 @@
 #include <memory>
 #include <atomic>
 #include <string>
+#include <mutex>
 #include <iostream>
 
 #include "server/Session/session.h"
@@ -95,6 +96,8 @@ private:
     std::shared_ptr <boost::asio::io_service::work> m_work;
     invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60); // invokes every minute
     std::vector <std::shared_ptr <Session>> m_sessions;
+    std::mutex mtx_sessions;
+    
     std::atomic_bool m_isActive = false;
 };
 }
