@@ -2,7 +2,12 @@
 #define GAME_EVENTS_DISPATCHER_H_
 
 namespace invasion::server {
-class GameEventsDispatcher {};
+class GameEventsDispatcher {
+public:
+    void start();
+    void stop();
+private:
+};
 }
 
 #endif
