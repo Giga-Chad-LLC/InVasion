@@ -2,6 +2,7 @@
 #include <string>
 #include <utility>
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 
 #include "tilemaps-file-reader.h"
@@ -10,7 +11,7 @@
 namespace invasion::controllers {
 
 TilemapsFileReader::TilemapsFileReader(const std::string& filepath)
-	: m_filename(filepath), m_tilesNumber(0) {
+	: m_filepath(filepath), m_tilesNumber(0) {
 	std::ifstream file(filepath);
 
 	if(!file.is_open()) {
@@ -61,8 +62,8 @@ const std::vector<std::pair<double, double>>& TilemapsFileReader::getTileCenters
 }
 
 
-std::string TilemapsFileReader::getFileName() const {
-	return m_filename;
+std::filesystem::path TilemapsFileReader::getFilePath() const {
+	return m_filepath;
 }
 
 

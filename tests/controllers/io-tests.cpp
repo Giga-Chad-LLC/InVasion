@@ -18,7 +18,7 @@ using namespace invasion::game_models;
 TEST_CASE("TilemapsFileReader testing") {
 	// client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt
 
-	std::string filepath("./client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt");
+	std::string filepath("client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt");
 	
 	try {
 		TilemapsFileReader reader(filepath);
@@ -36,6 +36,8 @@ TEST_CASE("TilemapsFileReader testing") {
 			Vector2D center(center_.first, center_.second);
 			std::cout << center << '\n';
 		}
+
+		std::cout << reader.getFilePath() << std::endl;
 	}
 	catch(const std::exception& err) {
 		std::cout << err.what() << '\n';

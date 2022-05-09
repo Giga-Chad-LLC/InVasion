@@ -4,9 +4,10 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <filesystem>
 
 namespace invasion::controllers {
-	
+
 
 class TilemapsFileReader {
 public:
@@ -15,10 +16,10 @@ public:
 	std::pair<double, double> getTileDimensions() const;
 	std::size_t getTilesNumber() const;
 	const std::vector<std::pair<double, double>>& getTileCentersPositions() const;
-	std::string getFileName() const;
+	std::filesystem::path getFilePath() const;
 
 private:
-	std::string m_filename;
+	std::filesystem::path m_filepath;
 	std::pair<double, double> m_tileDimensions;
 	std::size_t m_tilesNumber;
 	std::vector<std::pair<double, double>> m_tileCentersPositions;
