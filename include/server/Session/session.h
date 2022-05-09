@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <atomic>
+#include <mutex>
 // server
 #include "server/Client/client.h"
 #include "server/NetworkPacket/network-packet.h"
@@ -36,8 +37,8 @@ public:
     void removeClient(uint32_t clientId);
     void putDataToSingleClient(uint32_t clientId, std::shared_ptr <NetworkPacket>);
     void putDataToAllClients(std::shared_ptr <NetworkPacket>);
-    bool isAvailable();
-    uint32_t getSessionId();
+    bool isAvailable() const noexcept;
+    uint32_t getSessionId() const noexcept;
 
 
 private:
@@ -52,13 +53,16 @@ private:
     > m_clientsThreadPool;
     std::vector <std::pair <
         std::shared_ptr <Client>,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacket>>>
+        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>>
     >> m_connections;
+    std::mutex mtx_connections;
+    std::mutex mtx_clientsThreadPool;
+
     game_models::GameSession m_gameSession;
     // update the game each 30 milliseconds
     controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); 
-    std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher;
-    std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacket>>> m_requestQueue;
+    std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher = std::make_shared <GameEventsDispatcher> ();
+    std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> m_requestQueue = std::make_shared <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> ();
 };
 }
 

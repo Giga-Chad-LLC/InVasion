@@ -1,5 +1,6 @@
 #include <cassert>
 #include <thread>
+#include <iterator>
 #include "server/Session/session.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
@@ -18,12 +19,14 @@ void Session::start() {
     if (m_isActive.load()) {
         return;
     }
+    std::cout << "Starting session: " << m_sessionId << std::endl;
     m_isActive.store(true);
-    // m_tickController.start([this]() mutable {
-    //     auto request = std::make_shared <NetworkPacket> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
-    //     m_requestQueue->produce(std::move(request));
-    // });
-    m_gameEventsDispatcher->start();
+    m_tickController.start([this]() mutable {
+        auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
+        m_requestQueue->produce(std::move(request));
+    });
+    // std::cout << "Starting dispatcher" << std::endl;
+    // m_gameEventsDispatcher->start();
 }
 
 void Session::stop() {
@@ -34,7 +37,9 @@ void Session::stop() {
     m_isActive.store(false);
     std::cout << "Stopping session: " << m_sessionId << std::endl;
 
-    m_gameEventsDispatcher->stop();
+    
+    // m_gameEventsDispatcher->stop();
+    m_tickController.stop();
 
     assert(m_clientsThreadPool.size() == m_connections.size());
 
@@ -50,16 +55,27 @@ void Session::stop() {
         std::cout << "Stop work. Wait to finish clients operations." << std::endl;
         // for force stop we might user `ios->stop()` - the last packet will be discarded mid-air (not good, because client will not get full network packet and won't be able to parse it correctly)
     }
-
 }
 
-bool Session::isAvailable() {
+bool Session::isAvailable() const noexcept {
     return MAX_CLIENT_COUNT > m_connections.size();
 }
 
 
-uint32_t Session::getSessionId() {
+uint32_t Session::getSessionId() const noexcept {
     return m_sessionId;
+}
+
+void Session::removeClient(uint32_t clientId) {
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+    
+    for (std::size_t i = 0U; i < m_connections.size(); i++) {
+        if (m_connections[i].first->getClientId() == clientId) {
+            m_connections.erase(std::next(m_connections.begin(), i));
+            m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
+            return;
+        }
+    }
 }
 
 void Session::addClient(
@@ -71,9 +87,11 @@ void Session::addClient(
     ) {
         std::cout << "Adding client to the session: " << m_sessionId << std::endl;
 
+        // lock the mutexes
+        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
         m_connections.push_back({
             std::make_shared <Client> (socket, m_gameSession.createPlayerAndReturnId()),
-            std::make_shared <SafeQueue<std::shared_ptr <NetworkPacket>>> ()
+            std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
         });
         
         m_clientsThreadPool.push_back(
