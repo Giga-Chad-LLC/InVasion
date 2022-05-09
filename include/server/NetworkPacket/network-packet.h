@@ -21,6 +21,9 @@ namespace invasion::server {
         UnknownResponseModel
     };
 
+    class NetworkPacketRequest;
+    class NetworkPacketResponse;
+
     class NetworkPacket {
     protected:
         std::unique_ptr<char[]> bytes;
@@ -35,6 +38,30 @@ namespace invasion::server {
         std::unique_ptr<char[]> getPureBytes();
         // returns bytes data length
         uint32_t bytesSize() const;
+
+        // serialize
+        template <class Model>
+        inline static std::unique_ptr<char[]> serialize(const Model& model) {
+            std::unique_ptr <char[]> buffer_ptr(new char[model.ByteSizeLong()]);
+            model.SerializeToArray(buffer_ptr.get(), model.ByteSizeLong());
+            return std::move(buffer_ptr);
+        }
+        // deserialize
+        template <class Model>
+        inline static void deserialize(
+            Model& model,
+            std::shared_ptr<NetworkPacketRequest> packet
+        ) {
+            model.ParseFromArray(packet->getStoredBytes(), packet->bytesSize());
+        }
+        // deserialize
+        template <class Model>
+        inline static void deserialize(
+            Model& model,
+            std::shared_ptr<NetworkPacketResponse> packet
+        ) {
+            model.ParseFromArray(packet->getStoredBytes(), packet->bytesSize());
+        }
     };
 
     class NetworkPacketRequest : public NetworkPacket {
