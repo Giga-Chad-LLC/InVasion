@@ -35,6 +35,7 @@ using namespace invasion::controllers;
 // using namespace response_models;
 
 
+/*
 TEST_CASE("setTimeout testing") {
 	FixedTimeoutCallbackInvoker invoker;
 
@@ -58,6 +59,8 @@ TEST_CASE("setTimeout testing") {
 		std::cout << '\n' << "One minute has passed" << std::endl;
 	}); // 1 minute
 }
+*/
+
 
 
 /*
