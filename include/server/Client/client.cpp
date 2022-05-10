@@ -18,9 +18,9 @@ Client::~Client() {
 }
 
 void Client::start(
-    std::shared_ptr <Session> session,
     std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue    
+    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+    std::shared_ptr <Session> session    
 ) {
     if (m_isActive.load()) {
         return;
@@ -29,6 +29,7 @@ void Client::start(
     m_isActive.store(true);
     std::cout << "Starting a client" << std::endl;
     receiveNextPacket(requestQueue, session);
+    sendNextPacket(clientResponseQueue, session);
 }
 
 void Client::stop() {
@@ -98,22 +99,22 @@ void Client::sendNextPacket(
     std::shared_ptr <Session> session
 ) {
     // should be started in a separate thread
-    // std::shared_ptr <NetworkPacketResponse> response;
-    // if (m_isActive.load() && clientResponseQueue->consumeSync(response)) {
-    //     uint32_t messageLength = response->bytesSize() + sizeof(static_cast<std::uint32_t> (response->getMessageType())) + sizeof(response->bytesSize());
-    //     m_writeBuffer = response->serializeToByteArray();
+    std::shared_ptr <NetworkPacketResponse> response;
+    if (m_isActive.load() && clientResponseQueue->consumeSync(response)) {
+        uint32_t messageLength = response->bytesSize() + sizeof(static_cast<std::uint32_t> (response->getMessageType())) + sizeof(response->bytesSize());
+       m_writeBuffer = response->serializeToByteArray();
 
-    //     write(messageLength, [this, clientResponseQueue, session](const boost::system::error_code& errorCode, std::size_t bytes_transferred) {
-    //         if (errorCode.value() != 0) {
-    //             std::cout << "Error while writing to client socket (" << m_socket->remote_endpoint() << "), Error code: " << errorCode.value() << ", Message: " << errorCode.message() << std::endl;
+        write(messageLength, [this, clientResponseQueue, session](const boost::system::error_code& errorCode, std::size_t bytes_transferred) {
+            if (errorCode.value() != 0) {
+                std::cout << "Error while writing to client socket (" << m_socket->remote_endpoint() << "), Error code: " << errorCode.value() << ", Message: " << errorCode.message() << std::endl;
                 
-    //             // session->removeClient(m_clientId); // remove client from session
-    //             return;
-    //         }
+                // session->removeClient(m_clientId); // remove client from session
+                return;
+            }
 
-    //         sendNextPacket(clientResponseQueue, session);
-    //     });
-    // }
+            sendNextPacket(clientResponseQueue, session);
+        });
+    }
 }
 
 

@@ -107,7 +107,7 @@ void Session::addClient(
 
         std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
             std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
-            client->start(shared_from_this(), m_requestQueue, clientResponseQueue); // !!!
+            client->start(m_requestQueue, clientResponseQueue, shared_from_this());
             executionService.first->run();
             std::cout << "Client thread exits" << std::endl;
         });

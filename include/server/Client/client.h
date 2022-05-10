@@ -21,9 +21,9 @@ public:
     ~Client();
 
     void start(
-        std::shared_ptr <Session> session,
         std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+        std::shared_ptr <Session> session
     );
     void stop();
 
@@ -44,13 +44,13 @@ private:
     
     template <class Functor>
     void write(std::size_t totalMessageLength, Functor callback) {
-        // boost::asio::async_write(
-        //     *m_socket.get(),
-        //     boost::asio::buffer(m_writeBuffer.get(), totalMessageLength),
-        //     [this, callback] (const boost::system::error_code& errorCode, std::size_t bytes_transferred) {
-        //         callback(errorCode, bytes_transferred);
-        //     }
-        // );
+        boost::asio::async_write(
+            *m_socket.get(),
+            boost::asio::buffer(m_writeBuffer.get(), totalMessageLength),
+            [this, callback] (const boost::system::error_code& errorCode, std::size_t bytes_transferred) {
+                callback(errorCode, bytes_transferred);
+            }
+        );
     }
 
     void receiveNextPacket(
@@ -76,6 +76,7 @@ private:
     std::atomic_bool m_isActive = false;
     std::shared_ptr <tcp::socket> m_socket;
     char* m_readBuffer = new char[MAX_MESSAGE_LENGTH];
+    std::shared_ptr <char[]> m_writeBuffer;
 };
 }
 
