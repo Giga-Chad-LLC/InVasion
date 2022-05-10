@@ -11,7 +11,7 @@
 
 int main() {
     try {
-        bool shouldStop = true;
+        bool shouldStop = false;
         invasion::server::Server server;
         
         if (!shouldStop) {

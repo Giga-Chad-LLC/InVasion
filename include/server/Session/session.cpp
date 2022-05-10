@@ -72,6 +72,9 @@ void Session::removeClient(uint32_t clientId) {
     
     for (std::size_t i = 0U; i < m_connections.size(); i++) {
         if (m_connections[i].first->getClientId() == clientId) {
+            std::cout << "Removing client: " << clientId << std::endl;
+            m_connections[i].first->stop(); // stop client threads
+            m_clientsThreadPool[i].first->stop(); // stop ios
             m_connections.erase(std::next(m_connections.begin(), i));
             m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
             return;
@@ -99,8 +102,12 @@ void Session::addClient(
             executionService
         );
 
-        std::thread thread([socket, executionService]() {
+        auto client = m_connections.back().first;
+        auto clientResponseQueue = m_connections.back().second;
+
+        std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
             std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
+            client->start(shared_from_this(), m_requestQueue, clientResponseQueue); // !!!
             executionService.first->run();
             std::cout << "Client thread exits" << std::endl;
         });

@@ -102,6 +102,10 @@ void GameEventsDispatcher::dispatchEvent(
 
             break;
         }
+        default: {
+            std::cout << "Request type: " << static_cast <uint32_t> (request->getMessageType()) << "\n";
+            break;
+        }
     }
 }
 
