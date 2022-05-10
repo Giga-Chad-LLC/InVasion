@@ -37,7 +37,9 @@ namespace invasion::server {
         // returns a `unique_ptr<char[]>` to the `bytes` array
         std::unique_ptr<char[]> getPureBytes();
         // returns bytes data length
-        uint32_t bytesSize() const;
+        uint32_t bytesSize() const noexcept;
+        // returns total size of all bytes (including 4 bytes for length and 4 bytes for type)
+        uint32_t totalSize() const noexcept;
 
         // serialize
         template <class Model>
