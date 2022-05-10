@@ -3,6 +3,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <filesystem>
 
 #include "doctest.h"
 
@@ -12,21 +13,44 @@
 #include "game-models/StaticObject/static-object.h"
 // controllers
 #include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
+#include "controllers/DirectoryFilesContainer/directory-files-container.h"
 
 namespace doctest {
 using namespace invasion::controllers;
 using namespace invasion::game_models;
 
 
+
+/*
+TEST_CASE("Obtaining files by extension") {
+	namespace fs = std::filesystem;
+	const std::string directory("client/godot/game/assets/tilemaps/");
+
+	DirectoryFilesContainer container(directory);
+
+	std::vector<fs::directory_entry> entries = container.obtainFilesWithExtension(".txt");
+
+	for(const auto& entry : entries) {
+		TilemapsFileReader reader(entry.path().string());
+		std::cout << reader.getTilesNumber() << '\n';
+	}
+}
+*/
+
+
+
+/*
 TEST_CASE("Iterating through directory in GameSession") {
 	GameSession session;
-
 	const auto& obstacles = session.getObstacles();
 
+	std::cout << obstacles.size() << '\n';
 	for(std::shared_ptr<StaticObject> object : obstacles) {
 		std::cout << object->getPosition() << '\n';
 	}
-}
+}*/
+
+
 
 /*
 TEST_CASE("TilemapsFileReader testing") {
