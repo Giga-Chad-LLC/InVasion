@@ -22,6 +22,7 @@
 #include "game-models/StaticObject/static-object.h"
 // controllers
 #include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
+#include "controllers/DirectoryFilesContainer/directory-files-container.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 
@@ -33,8 +34,24 @@ GameSession::GameSession()
 	  m_nextBulletId(0),
 	  m_nextPlayerId(0) {
 	
-	const std::filesystem::path directory("client/godot/game/assets/tilemaps/");
+	controllers::DirectoryFilesContainer container(TILEMAPS_ASSETS_DIRECTORY);
+	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
+	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
+
+	for(const auto& entry  : entries) {
+		controllers::TilemapsFileReader reader(entry.path().string());
+
+		Vector2D tileDimension(reader.getTileDimensions());
+		const auto& tilesCentersPositions = reader.getTileCentersPositions();
+
+		for(const auto& position : tilesCentersPositions) {
+			obstacles.push_back(std::make_shared<StaticObject>(tileDimension, tileDimension, Vector2D(position)));
+		}
+	}
+
+	/*
+	const std::string directory("client/godot/game/assets/tilemaps/");
 	for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator{directory}) {
 		if(!entry.is_regular_file() || entry.path().extension() != ".txt") {
 			continue;
@@ -42,7 +59,6 @@ GameSession::GameSession()
 		 
 		std::string filepath(entry.path().string());
 		controllers::TilemapsFileReader reader(filepath);
-
 
 		std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
 
@@ -52,8 +68,8 @@ GameSession::GameSession()
 		for(const auto& position : tilesCentersPositions) {
 			obstacles.push_back(std::make_shared<StaticObject>(tileDimension, tileDimension, Vector2D(position)));
 		}
-
 	}
+	*/
 
 	
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
@@ -232,11 +248,12 @@ void GameSession::updateGameState() {
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& killedPlayers = m_storage.getKilledPlayers();
 	auto& bullets = m_storage.getBullets();
+	auto& obstacles = m_storage.getObstacles();
 
 	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
-	m_playerManager.updatePlayersPositions(players, dt_s);
-	m_bulletManager.updateBulletsPositions(bullets, players, dt_s);
+	m_playerManager.updatePlayersPositions(players, obstacles, dt_s);
+	m_bulletManager.updateBulletsPositions(bullets, players, obstacles, dt_s);
 	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
 	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
