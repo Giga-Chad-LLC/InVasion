@@ -1,6 +1,7 @@
 #include <iostream>
 #include <utility>
 #include "game-events-dispatcher.h"
+#include "server/Session/session.h"
 
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
@@ -99,6 +100,7 @@ void GameEventsDispatcher::dispatchEvent(
             );
             
             // responseQueue->produce(std::move(response));
+            session->putDataToAllClients(response);
 
             break;
         }
