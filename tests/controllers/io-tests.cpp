@@ -12,7 +12,7 @@
 #include "game-models/GameSession/game-session.h"
 #include "game-models/StaticObject/static-object.h"
 // controllers
-#include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
+#include "controllers/StaticObjectsFileReader/static-objects-file-reader.h"
 #include "controllers/DirectoryFilesContainer/directory-files-container.h"
 
 namespace doctest {
@@ -31,8 +31,7 @@ TEST_CASE("Obtaining files by extension") {
 	std::vector<fs::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
 	for(const auto& entry : entries) {
-		TilemapsFileReader reader(entry.path().string());
-		std::cout << reader.getTilesNumber() << '\n';
+		StaticObjectsFileReader reader(entry.path().string());
 	}
 }
 */
@@ -53,13 +52,13 @@ TEST_CASE("Iterating through directory in GameSession") {
 
 
 /*
-TEST_CASE("TilemapsFileReader testing") {
+TEST_CASE("StaticObjectsFileReader testing") {
 	// client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt
 
 	std::string filepath("client/godot/game/assets/tilemaps/DirtCliffTileMap-tiles-data.invasion.txt");
 	
 	try {
-		TilemapsFileReader reader(filepath);
+		StaticObjectsFileReader reader(filepath);
 
 		std::pair<double, double> dims_ = reader.getTileDimensions();
 		int tilesNumber = reader.getTilesNumber();

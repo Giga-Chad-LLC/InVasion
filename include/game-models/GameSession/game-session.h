@@ -45,7 +45,7 @@ public:
 
 
 private:
-	inline static const std::string TILEMAPS_ASSETS_DIRECTORY = "client/godot/game/assets/tilemaps/";
+	inline static const std::string TILEMAPS_ASSETS_DIRECTORY = "client/godot/game/assets/statics/";
 
 	long long m_lastGameStateUpdate_ms;
 	int m_nextBulletId;

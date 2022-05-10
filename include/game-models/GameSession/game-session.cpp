@@ -21,7 +21,7 @@
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/StaticObject/static-object.h"
 // controllers
-#include "controllers/TilemapsFileReader/tilemaps-file-reader.h"
+#include "controllers/StaticObjectsFileReader/static-objects-file-reader.h"
 #include "controllers/DirectoryFilesContainer/directory-files-container.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
@@ -40,13 +40,14 @@ GameSession::GameSession()
 	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
 
 	for(const auto& entry  : entries) {
-		controllers::TilemapsFileReader reader(entry.path().string());
+		controllers::StaticObjectsFileReader reader(entry.path().string());
 
-		Vector2D tileDimension(reader.getTileDimensions());
-		const auto& tilesCentersPositions = reader.getTileCentersPositions();
+		const auto& objects = reader.getObjectsData();
 
-		for(const auto& position : tilesCentersPositions) {
-			obstacles.push_back(std::make_shared<StaticObject>(tileDimension, tileDimension, Vector2D(position)));
+		for(const auto& object : objects) {
+			const Vector2D shape(object.getShape());
+			const Vector2D position(object.getPosition()); 
+			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
 		}
 	}
 
