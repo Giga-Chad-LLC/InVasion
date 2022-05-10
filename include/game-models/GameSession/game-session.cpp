@@ -50,28 +50,6 @@ GameSession::GameSession()
 		}
 	}
 
-	/*
-	const std::string directory("client/godot/game/assets/tilemaps/");
-	for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator{directory}) {
-		if(!entry.is_regular_file() || entry.path().extension() != ".txt") {
-			continue;
-		}
-		 
-		std::string filepath(entry.path().string());
-		controllers::TilemapsFileReader reader(filepath);
-
-		std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
-
-		Vector2D tileDimension(reader.getTileDimensions());
-		const auto& tilesCentersPositions = reader.getTileCentersPositions();
-
-		for(const auto& position : tilesCentersPositions) {
-			obstacles.push_back(std::make_shared<StaticObject>(tileDimension, tileDimension, Vector2D(position)));
-		}
-	}
-	*/
-
-	
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
