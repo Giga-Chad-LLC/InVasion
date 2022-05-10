@@ -35,8 +35,8 @@ public:
         > executionService
     );
     void removeClient(uint32_t clientId);
-    void putDataToSingleClient(uint32_t clientId, std::shared_ptr <NetworkPacket>);
-    void putDataToAllClients(std::shared_ptr <NetworkPacket>);
+    void putDataToSingleClient(uint32_t clientId, std::shared_ptr <NetworkPacketResponse> response);
+    void putDataToAllClients(std::shared_ptr <NetworkPacketResponse> response);
     bool isAvailable() const noexcept;
     uint32_t getSessionId() const noexcept;
 

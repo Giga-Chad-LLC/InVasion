@@ -83,35 +83,57 @@ void Session::removeClient(uint32_t clientId) {
 }
 
 void Session::addClient(
-        std::shared_ptr <tcp::socket> socket,
-        std::pair <
-            std::shared_ptr <boost::asio::io_service>,
-            std::shared_ptr <boost::asio::io_service::work>
-        > executionService
-    ) {
-        std::cout << "Adding client to the session: " << m_sessionId << std::endl;
+    std::shared_ptr <tcp::socket> socket,
+    std::pair <
+        std::shared_ptr <boost::asio::io_service>,
+        std::shared_ptr <boost::asio::io_service::work>
+    > executionService
+) {
+    std::cout << "Adding client to the session: " << m_sessionId << std::endl;
 
-        // lock the mutexes
-        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
-        m_connections.push_back({
-            std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId()),
-            std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
-        });
-        
-        m_clientsThreadPool.push_back(
-            executionService
-        );
+    // lock the mutexes
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+    m_connections.push_back({
+        std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId()),
+        std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
+    });
+    
+    m_clientsThreadPool.push_back(
+        executionService
+    );
 
-        auto client = m_connections.back().first;
-        auto clientResponseQueue = m_connections.back().second;
+    auto client = m_connections.back().first;
+    auto clientResponseQueue = m_connections.back().second;
 
-        std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
-            std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
-            client->start(m_requestQueue, clientResponseQueue, shared_from_this());
-            executionService.first->run();
-            std::cout << "Client thread exits" << std::endl;
-        });
+    std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
+        std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
+        client->start(m_requestQueue, clientResponseQueue, shared_from_this());
+        executionService.first->run();
+        std::cout << "Client thread exits" << std::endl;
+    });
 
-        thread.detach();
+    thread.detach();
+}
+
+void Session::putDataToSingleClient(
+    uint32_t clientId,
+    std::shared_ptr <NetworkPacketResponse> response
+) {
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+    for (auto [client, clientResponseQueue] : m_connections) {
+        if (client->getClientId() == clientId) {       
+            clientResponseQueue->produce(std::move(response));
+            return;
+        }
     }
+}
+
+void Session::putDataToAllClients(
+    std::shared_ptr <NetworkPacketResponse> response
+) {
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+    for (auto [client, clientResponseQueue] : m_connections) {
+        clientResponseQueue->produce(std::move(std::shared_ptr <NetworkPacketResponse> (response)));
+    }
+}
 }
