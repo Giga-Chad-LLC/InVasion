@@ -8,6 +8,7 @@ NetworkPacket::NetworkPacket(std::unique_ptr<char[]> &&bytes_, uint32_t bytesLen
 
 NetworkPacket::NetworkPacket(): bytes(nullptr), bytesLength(0U) {}
 
+
 char* NetworkPacket::getStoredBytes() const {
     return bytes.get();
 }
@@ -19,8 +20,12 @@ std::unique_ptr<char[]> NetworkPacket::getPureBytes() {
     return std::move(buffer_ptr);
 }
 
-uint32_t NetworkPacket::bytesSize() const {
+uint32_t NetworkPacket::bytesSize() const noexcept {
     return bytesLength;
+}
+
+uint32_t NetworkPacket::totalSize() const noexcept {
+    return bytesLength + 8U;
 }
 
 
