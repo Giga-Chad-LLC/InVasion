@@ -58,51 +58,26 @@ void Client::receiveNextPacket(
         const boost::system::error_code& errorCode,
         std::size_t bytes_transferred
         ) {
-        std::cout << "We read " << bytes_transferred << std::endl;
-
         if (errorCode.value() != 0) {
-            std::cout << "Error while receiving from client: Error code = " << errorCode.value() << ", Message: " << errorCode.message() << std::endl;
-            // close the connection with the client
-            session->removeClient(m_clientId);
+            onError(errorCode, session);
             return;
         }
 
-        std::cout << "Bytes: ";
-        for (int i = 0; i < bytes_transferred; i++) {
-            std::cout << (int)m_readBuffer[i] << ' ';
-        }
-        std::cout << std::endl;
-        // std::istringstream in(m_readBuffer);
         std::uint32_t messageLength;  // get the message data length in bytes
         std::memcpy(reinterpret_cast<char*> (&messageLength), m_readBuffer, PACKET_SIZE_LENGTH);
-        // std::cout << "Bytes: " << m_readBuffer << std::endl;
-        // in.read(reinterpret_cast<char*> (&messageLength), PACKET_SIZE_LENGTH);
 
         std::uint32_t messageType; // get the message type
         std::memcpy(reinterpret_cast<char*> (&messageType), m_readBuffer + PACKET_SIZE_LENGTH, PACKET_TYPE_LENGTH);
-        // in.read(reinterpret_cast<char*> (&messageType), PACKET_TYPE_LENGTH);
-
-        std::cout << "Message length: " << messageLength << std::endl;
-        std::cout << "Message type: " << messageType << std::endl;
 
         read(messageLength, [this, requestQueue, session, messageLength, messageType](
             const boost::system::error_code& errorCode,
             std::size_t bytes_transferred
         ) {
-            std::cout << "We read additional " << bytes_transferred << std::endl;
             if (errorCode.value() != 0) {
-                std::cout << "Error while receiving from client: Error code = " << errorCode.value() << ", Message: " << errorCode.message() << std::endl;
-                // close the connection with the client
-                session->removeClient(m_clientId);
+                onError(errorCode, session);
                 return;
             }
 
-            
-            std::cout << "Additional Bytes: ";
-            for (int i = 0; i < bytes_transferred; i++) {
-                std::cout << (int)m_readBuffer[i] << ' ';
-            }
-            std::cout << std::endl;
             std::unique_ptr<char[]> buffer_ptr(new char[messageLength]);
             std::memcpy(buffer_ptr.get(), m_readBuffer, messageLength);
 
@@ -139,5 +114,15 @@ void Client::sendNextPacket(
     //         sendNextPacket(clientResponseQueue, session);
     //     });
     // }
+}
+
+
+void Client::onError(
+    const boost::system::error_code& errorCode,
+    std::shared_ptr <Session> session
+) {
+    std::cout << "Error while receiving from client: Error code = " << errorCode.value() << ", Message: " << errorCode.message() << std::endl;
+    // close the connection with the client
+    session->removeClient(m_clientId);
 }
 }

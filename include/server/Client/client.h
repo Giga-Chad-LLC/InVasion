@@ -63,6 +63,11 @@ private:
         std::shared_ptr <Session> session
     );
 
+    void onError(
+        const boost::system::error_code& errorCode,
+        std::shared_ptr <Session> session
+    );
+
     const std::size_t PACKET_SIZE_LENGTH = sizeof(std::uint32_t);
     const std::size_t PACKET_TYPE_LENGTH = sizeof(std::uint32_t);
     const std::size_t MAX_MESSAGE_LENGTH = 1024U;
