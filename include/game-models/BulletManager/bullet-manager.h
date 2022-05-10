@@ -7,6 +7,7 @@
 // game-models
 #include "game-models/Player/player.h"
 #include "game-models/Bullet/bullet.h"
+#include "game-models/StaticObject/static-object.h"
 
 
 namespace invasion::game_models {
@@ -14,7 +15,9 @@ namespace invasion::game_models {
 class BulletManager {
 public:
 	void updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, 
-								std::vector<std::shared_ptr<Player>>& players, double dt) const;
+								std::vector<std::shared_ptr<Player>>& players,
+								std::vector<std::shared_ptr<StaticObject>>& obstacles,
+								double dt) const;
 
 	void removeCrushedAndFlewOutOfBoundsBullets(std::vector<std::shared_ptr<Bullet>>& bullets) const;
 };
