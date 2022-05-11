@@ -39,7 +39,11 @@ public:
     void putDataToAllClients(std::shared_ptr <NetworkPacketResponse> response);
     bool isAvailable() const noexcept;
     uint32_t getSessionId() const noexcept;
-
+    void makeHandshakeWithClient(
+        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+        uint32_t playerId,
+        game_models::PlayerTeamId teamId
+    );
 
 private:
     const std::size_t MAX_CLIENT_COUNT = 8U;

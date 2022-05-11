@@ -4,6 +4,9 @@
 #include "server/Session/session.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
+// game-models
+#include "player-info-response-model.pb.h"
+#include "update-game-state-request-model.pb.h"
 
 
 namespace invasion::server {
@@ -82,6 +85,31 @@ void Session::removeClient(uint32_t clientId) {
     }
 }
 
+void Session::makeHandshakeWithClient(
+    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+    uint32_t playerId,
+    game_models::PlayerTeamId teamId
+) {
+    // send to client his ID
+    std::cout << "Send client his ID: " << playerId << std::endl;
+    response_models::PlayerInfoResponseModel response;
+    response.set_player_id(playerId);
+
+    if (teamId == game_models::PlayerTeamId::FirstTeam) {
+        response.set_team_id(response_models::PlayerInfoResponseModel::FirstTeam);
+    } else {
+        response.set_team_id(response_models::PlayerInfoResponseModel::SecondTeam);
+    }
+
+    auto packet = std::make_shared<NetworkPacketResponse> (
+        NetworkPacket::serialize(response),
+        ResponseModel_t::PlayerInfoResponseModel,
+        response.ByteSizeLong()
+    );
+
+    clientResponseQueue->produce(std::move(packet));
+}
+
 void Session::addClient(
     std::shared_ptr <tcp::socket> socket,
     std::pair <
@@ -93,6 +121,7 @@ void Session::addClient(
 
     // lock the mutexes
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+    
     m_connections.push_back({
         std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId()),
         std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
@@ -105,11 +134,24 @@ void Session::addClient(
     auto client = m_connections.back().first;
     auto clientResponseQueue = m_connections.back().second;
 
+    makeHandshakeWithClient(
+        clientResponseQueue,
+        client->getClientId(),
+        m_gameSession->getPlayer(client->getClientId())->getTeamId()
+    );
+    
+
     std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
         std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
-        client->start(m_requestQueue, clientResponseQueue, shared_from_this());
+        
+        client->start(
+            m_requestQueue,
+            clientResponseQueue,
+            shared_from_this()
+        );
+
         executionService.first->run();
-        std::cout << "Client thread exits" << std::endl;
+        std::cout << "Client (" << client->getSocket()->remote_endpoint() << ") thread exits" << std::endl;
     });
 
     thread.detach();

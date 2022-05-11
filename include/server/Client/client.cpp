@@ -53,7 +53,6 @@ void Client::receiveNextPacket(
     std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
     std::shared_ptr <Session> session
 ) {
-    std::cout << "Start receiving next packet" << std::endl;
     // use callbacks for sequential reads
     read(PACKET_SIZE_LENGTH + PACKET_TYPE_LENGTH, [this, requestQueue, session](
         const boost::system::error_code& errorCode,

@@ -93,19 +93,60 @@ void GameEventsDispatcher::dispatchEvent(
 
             // serialize            
 
-            auto response = std::make_shared<NetworkPacketResponse> (
-                NetworkPacket::serialize(responseModel), // instead of std::move(std::unique_ptr)
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(responseModel),
                 ResponseModel_t::GameStateResponseModel,
                 responseModel.ByteSizeLong()
             );
             
-            // responseQueue->produce(std::move(response));
             session->putDataToAllClients(response);
 
             break;
         }
+        case RequestModel_t::MoveRequestModel: {
+            request_models::MoveRequestModel move;
+            NetworkPacket::deserialize(move, request);
+
+            interactors::MoveInteractor interactor;
+            interactor.execute(move, *gameSession);
+
+            break;
+        }
+        case RequestModel_t::ShootRequestModel: {
+            request_models::ShootRequestModel shootAction;
+            NetworkPacket::deserialize(shootAction, request);
+
+            interactors::ShootInteractor interactor;
+            response_models::ShootingStateResponse responseModel = interactor.execute(shootAction, *gameSession);
+
+            // serialize
+            auto response = std::make_shared<NetworkPacketResponse>(
+                NetworkPacket::serialize(responseModel),
+                ResponseModel_t::ShootingStateResponseModel,
+                responseModel.ByteSizeLong()
+            );
+
+            session->putDataToSingleClient(responseModel.player_id(), response);
+            break;
+        }
+        case RequestModel_t::RespawnPlayerRequestModel: {
+            request_models::RespawnPlayerRequestModel respawnAction;
+            NetworkPacket::deserialize(respawnAction, request);
+
+            interactors::RespawnPlayerInteractor interactor;
+            response_models::RespawnPlayerResponseModel responseModel = interactor.execute(respawnAction, *gameSession);
+
+            auto response = std::make_shared<NetworkPacketResponse>(
+                NetworkPacket::serialize(responseModel),
+                ResponseModel_t::RespawnPlayerResponseModel,
+                responseModel.ByteSizeLong()
+            );
+
+            session->putDataToSingleClient(responseModel.player_id(), response);
+            break;
+        }
         default: {
-            std::cout << "Request type: " << static_cast <uint32_t> (request->getMessageType()) << "\n";
+            std::cout << "Unknown message type: " << static_cast<uint32_t> (request->getMessageType()) << std::endl;
             break;
         }
     }

@@ -24,7 +24,7 @@ int main() {
             serverThread.detach();
 
             invasion::controllers::FixedTimeoutCallbackInvoker timeout;
-            timeout.setTimeout(1000 * 10, [&serverThread, &server]() {
+            timeout.setTimeout(1000 * 20, [&serverThread, &server]() {
                 server.stop();
             });
         }
