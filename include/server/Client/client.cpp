@@ -8,7 +8,11 @@
 namespace invasion::server {
 using boost::asio::ip::tcp;
 
-Client::Client(std::shared_ptr <tcp::socket> socket, uint32_t clientId): m_socket(socket), m_clientId(clientId) {
+Client::Client(
+    std::shared_ptr <tcp::socket> socket,
+    uint32_t clientId,
+    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+): m_socket(socket), m_clientId(clientId), m_clientResponseQueue(clientResponseQueue) {
     std::cout << "Created new client" << std::endl;   
 }
 
@@ -19,7 +23,6 @@ Client::~Client() {
 
 void Client::start(
     std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
     std::shared_ptr <Session> session    
 ) {
     if (m_isActive.load()) {
@@ -29,15 +32,21 @@ void Client::start(
     m_isActive.store(true);
     std::cout << "Starting a client" << std::endl;
     receiveNextPacket(requestQueue, session);
-    sendNextPacket(clientResponseQueue, session);
+    m_writeThread = std::move(std::thread([this, session]() mutable {
+        std::cout << "Client (" << m_socket->remote_endpoint() << ") write thread starts" << std::endl;
+        sendNextPacket(session);
+        std::cout << "Client (" << m_socket->remote_endpoint() << ") write thread exits" << std::endl;
+    }));
 }
 
 void Client::stop() {
     if (!m_isActive.load()) {
         return;
     }
-
+    
     m_isActive.store(false);
+    m_clientResponseQueue->finish(); // notify client to check his `m_isActive`
+    m_writeThread.join();
     std::cout << "Stop client (" << m_socket->remote_endpoint() << "): " << m_clientId << std::endl;
 }
 
@@ -57,7 +66,7 @@ void Client::receiveNextPacket(
     read(PACKET_SIZE_LENGTH + PACKET_TYPE_LENGTH, [this, requestQueue, session](
         const boost::system::error_code& errorCode,
         std::size_t bytes_transferred
-        ) {
+    ) {
         if (errorCode.value() != 0) {
             onError(errorCode, session);
             return;
@@ -86,7 +95,7 @@ void Client::receiveNextPacket(
                 NetworkPacketRequest::getMessageTypeById(messageType),
                 messageLength
             );
-
+            
             requestQueue->produce(std::move(packet));
             receiveNextPacket(requestQueue, session);
         });
@@ -94,19 +103,22 @@ void Client::receiveNextPacket(
 }
 
 void Client::sendNextPacket(
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
     std::shared_ptr <Session> session
 ) {
     // should be started in a separate thread
     std::shared_ptr <NetworkPacketResponse> response;
 
-    if (m_isActive.load() && clientResponseQueue->consumeSync(response)) {
+    while (m_isActive.load() && m_clientResponseQueue->consumeSync(response)) {
         uint32_t messageLength = response->totalSize();
         m_writeBuffer = response->serializeToByteArray();
-        // for some reason work with no conditional_variable (but should be thought through better)
+        
+        std::unique_lock ul{mtx_writeNextPacket};
+        cv_writeNextPacket.wait(ul, [this]() { return m_canStartNextWriteAction; });
+        m_canStartNextWriteAction = false;
+
         write(
             messageLength,
-            [this, clientResponseQueue, session](
+            [this, session](
                 const boost::system::error_code& errorCode,
                 std::size_t bytes_transferred
             ) {
@@ -115,7 +127,8 @@ void Client::sendNextPacket(
                     return;
                 }
 
-                sendNextPacket(clientResponseQueue, session);
+                m_canStartNextWriteAction = true;
+                cv_writeNextPacket.notify_one();
         });
     }
 }

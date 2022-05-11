@@ -47,7 +47,7 @@ void Session::stop() {
     assert(m_clientsThreadPool.size() == m_connections.size());
 
     std::cout << "Stopping clients" << std::endl;
-    for (auto [ client, queue ] : m_connections) {
+    for (auto [ client, clientResponseQueue ] : m_connections) {
         client->stop();
     }
 
@@ -74,10 +74,14 @@ void Session::removeClient(uint32_t clientId) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
     for (std::size_t i = 0U; i < m_connections.size(); i++) {
-        if (m_connections[i].first->getClientId() == clientId) {
+        auto client = m_connections[i].first;
+        auto clientResponseQueue = m_connections[i].second;
+        auto ios = m_clientsThreadPool[i].first;
+
+        if (client->getClientId() == clientId) {
             std::cout << "Removing client: " << clientId << std::endl;
-            m_connections[i].first->stop(); // stop client threads
-            m_clientsThreadPool[i].first->stop(); // stop ios
+            client->stop(); // stop client's threads
+            ios->stop(); // stop ios
             m_connections.erase(std::next(m_connections.begin(), i));
             m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
             return;
@@ -122,9 +126,10 @@ void Session::addClient(
     // lock the mutexes
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
+    auto clientResponseQueue = std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ();
     m_connections.push_back({
-        std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId()),
-        std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ()
+        std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue),
+        clientResponseQueue
     });
     
     m_clientsThreadPool.push_back(
@@ -132,7 +137,6 @@ void Session::addClient(
     );
 
     auto client = m_connections.back().first;
-    auto clientResponseQueue = m_connections.back().second;
 
     makeHandshakeWithClient(
         clientResponseQueue,
@@ -146,7 +150,6 @@ void Session::addClient(
         
         client->start(
             m_requestQueue,
-            clientResponseQueue,
             shared_from_this()
         );
 

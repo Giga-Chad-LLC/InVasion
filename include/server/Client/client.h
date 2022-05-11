@@ -6,6 +6,8 @@
 #include <memory>
 #include <iostream>
 #include <atomic>
+#include <thread>
+#include <condition_variable>
 #include <string>
 // server
 #include "server/NetworkPacket/network-packet.h"
@@ -17,12 +19,15 @@ using boost::asio::ip::tcp;
 
 class Client {
 public:
-    Client(std::shared_ptr <tcp::socket> socket, uint32_t clientId);
+    Client(
+        std::shared_ptr <tcp::socket> socket,
+        uint32_t clientId,
+        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+    );
     ~Client();
 
     void start(
         std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
         std::shared_ptr <Session> session
     );
     void stop();
@@ -59,7 +64,6 @@ private:
     );
 
     void sendNextPacket(
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
         std::shared_ptr <Session> session
     );
 
@@ -72,10 +76,16 @@ private:
     const std::size_t PACKET_TYPE_LENGTH = sizeof(std::uint32_t);
     const std::size_t MAX_MESSAGE_LENGTH = 1024U;
 
+
+    std::shared_ptr<SafeQueue<std::shared_ptr<NetworkPacketResponse>>> m_clientResponseQueue;
+    bool m_canStartNextWriteAction = true;
+    std::condition_variable cv_writeNextPacket;
+    std::mutex mtx_writeNextPacket;
+    std::thread m_writeThread;
     uint32_t m_clientId;
     std::atomic_bool m_isActive = false;
     std::shared_ptr <tcp::socket> m_socket;
-    char* m_readBuffer = new char[MAX_MESSAGE_LENGTH];
+    char* m_readBuffer = new char[MAX_MESSAGE_LENGTH]; // needed to use pure pointer, cuz boost (or me) is damn stupid...
     std::shared_ptr <char[]> m_writeBuffer;
 };
 }
