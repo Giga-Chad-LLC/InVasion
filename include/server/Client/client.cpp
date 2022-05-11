@@ -45,7 +45,11 @@ void Client::stop() {
     }
     
     m_isActive.store(false);
-    m_clientResponseQueue->finish(); // notify client to check his `m_isActive`
+    // notify client to check his `m_isActive`
+    m_clientResponseQueue->finish(); 
+    m_canStartNextWriteAction = true;
+    cv_writeNextPacket.notify_one();
+
     m_writeThread.join();
     std::cout << "Stop client (" << m_socket->remote_endpoint() << "): " << m_clientId << std::endl;
 }

@@ -127,16 +127,15 @@ void Session::addClient(
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
     auto clientResponseQueue = std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ();
+    auto client = std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue);
     m_connections.push_back({
-        std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue),
+        client,
         clientResponseQueue
     });
     
     m_clientsThreadPool.push_back(
         executionService
     );
-
-    auto client = m_connections.back().first;
 
     makeHandshakeWithClient(
         clientResponseQueue,
