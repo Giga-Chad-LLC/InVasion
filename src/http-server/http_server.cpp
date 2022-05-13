@@ -1,28 +1,28 @@
-#include "crow_all.h"
-#include "../../include/database/database.h"
+#include "../../3rd-party/crow_all.h"
+#include "../../include/database/auth-service.h"
 #include <iostream>
 
 int main() {
-    using namespace Invasion::database;
-    InterfaceDB::deleteAllUsers();
+    using namespace invasion::database_access;
+    using namespace invasion::database_interface;
+    AuthService::deleteAllUsers();
     crow::SimpleApp app;
     CROW_ROUTE(app, "/registration")
             .methods("POST"_method)
                     ([](const crow::request &rowRequest) {
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
-                        if (!requestJson) {
-                            responseJson["status code"] = 404;
+                        if (!requestJson || requestJson["nickname"].s() == ""|| requestJson["password"].s()=="") {
                             responseJson["message"] = "Bad request";
-                        } else if (InterfaceDB::tryToRegistationUser(requestJson["nickname"].s(),
+                            return crow::response(404, responseJson);
+                        } else if (AuthService::tryToRegisterUser(requestJson["nickname"].s(),
                                                                      requestJson["password"].s())) {
-                            responseJson["status code"] = 200;
                             responseJson["message"] = "Success registration!";
                         } else {
-                            responseJson["status code"] = 400;
                             responseJson["message"] = "This user already exists in the database!";
                             return crow::response(400, responseJson);
                         }
+                        std::cout << requestJson["nickname"].s() << " " << requestJson["password"].s() << std::endl;
                         return crow::response(200, responseJson);
                     });
     CROW_ROUTE(app, "/login")
@@ -30,17 +30,16 @@ int main() {
                     ([](const crow::request &rowRequest) {
                         auto requestJson = crow::json::load(rowRequest.body);
                         crow::json::wvalue responseJson;
-                        if (!requestJson) {
-                            responseJson["status code"] = 404;
+                        if (!requestJson || requestJson["nickname"].s() == ""|| requestJson["password"].s()=="") {
                             responseJson["message"] = "Bad request";
-                        } else if (InterfaceDB::login(requestJson["nickname"].s(), requestJson["password"].s())) {
-                            responseJson["status code"] = 200;
+                            return crow::response(404, responseJson);
+                        } else if (AuthService::login(requestJson["nickname"].s(), requestJson["password"].s())) {
                             responseJson["message"] = "Success entry!";
+                            return crow::response(200, responseJson);
                         } else {
-                            responseJson["status code"] = 400;
                             responseJson["message"] = "Wrong nickname or password!";
+                            return crow::response(400, responseJson);
                         }
-                        return responseJson;
                     });
     app.port(5555).multithreaded().run();
 }

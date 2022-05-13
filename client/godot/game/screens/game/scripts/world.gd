@@ -34,7 +34,7 @@ var consumer: Worker = Worker.new() # thread that will read data from the server
 
 # scene/ui changing
 func _on_Quit_pressed():
-	emit_signal("scene_changed", "start_menu")
+	emit_signal("scene_changed", "game_menu")
 
 # disable player movements when escape menu is opened
 func _on_EscapeMenu_toggle_escape_menu(is_escaped):

@@ -173,3 +173,12 @@
 
 To be continued...
 Точнее not to be continue... (анрил)
+
+
+## Установка sqlite  (чтобы работал http-server)
+
+sudo apt update 
+
+sudo apt-get install libsqlite3-dev
+
+sudo apt-get install sqlite3
