@@ -10,7 +10,7 @@ using boost::asio::ip::tcp;
 
 Client::Client(
     std::shared_ptr <tcp::socket> socket,
-    uint32_t clientId,
+    int clientId,
     std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
 ): m_socket(socket), m_clientId(clientId), m_clientResponseQueue(clientResponseQueue) {
     std::cout << "Created new client" << std::endl;   
@@ -54,7 +54,7 @@ void Client::stop() {
     std::cout << "Stop client (" << m_socket->remote_endpoint() << "): " << m_clientId << std::endl;
 }
 
-uint32_t Client::getClientId() const noexcept {
+int Client::getClientId() const noexcept {
     return m_clientId;
 }
 

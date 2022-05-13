@@ -15,7 +15,7 @@ int main() {
         invasion::server::Server server;
         
         if (!shouldStop) {
-            server.start("192.168.0.17", 8000); // blocks the current thread of execution!
+            server.start("127.0.0.1", 8000); // blocks the current thread of execution!
         }
         else {
             std::thread serverThread([&server]() {

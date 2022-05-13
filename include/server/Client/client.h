@@ -21,7 +21,7 @@ class Client {
 public:
     Client(
         std::shared_ptr <tcp::socket> socket,
-        uint32_t clientId,
+        int clientId,
         std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
     );
     ~Client();
@@ -32,7 +32,7 @@ public:
     );
     void stop();
 
-    uint32_t getClientId() const noexcept;
+    int getClientId() const noexcept;
 
     std::shared_ptr <tcp::socket> getSocket() const noexcept;
 private:
@@ -82,7 +82,7 @@ private:
     std::condition_variable cv_writeNextPacket;
     std::mutex mtx_writeNextPacket;
     std::thread m_writeThread;
-    uint32_t m_clientId;
+    int m_clientId;
     std::atomic_bool m_isActive = false;
     std::shared_ptr <tcp::socket> m_socket;
     char* m_readBuffer = new char[MAX_MESSAGE_LENGTH]; // needed to use pure pointer, cuz boost (or me) is damn stupid...
