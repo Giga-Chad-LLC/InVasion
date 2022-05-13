@@ -660,6 +660,309 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
+class BulletPositionResponseModel:
+	func _init():
+		var service
+		
+		_bullet_id = PBField.new("bullet_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _bullet_id
+		data[_bullet_id.tag] = service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_position = PBField.new("position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _position
+		service.func_ref = funcref(self, "new_position")
+		data[_position.tag] = service
+		
+		_velocity = PBField.new("velocity", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _velocity
+		service.func_ref = funcref(self, "new_velocity")
+		data[_velocity.tag] = service
+		
+	var data = {}
+	
+	var _bullet_id: PBField
+	func get_bullet_id() -> int:
+		return _bullet_id.value
+	func clear_bullet_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_bullet_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_bullet_id(value : int) -> void:
+		_bullet_id.value = value
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _position: PBField
+	func get_position() -> Vector2D:
+		return _position.value
+	func clear_position() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_position() -> Vector2D:
+		_position.value = Vector2D.new()
+		return _position.value
+	
+	var _velocity: PBField
+	func get_velocity() -> Vector2D:
+		return _velocity.value
+	func clear_velocity() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_velocity.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_velocity() -> Vector2D:
+		_velocity.value = Vector2D.new()
+		return _velocity.value
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class DamagedPlayerResponseModel:
+	func _init():
+		var service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_damaged_by = PBField.new("damaged_by", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _damaged_by
+		data[_damaged_by.tag] = service
+		
+		_new_hitpoints = PBField.new("new_hitpoints", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = _new_hitpoints
+		data[_new_hitpoints.tag] = service
+		
+	var data = {}
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _damaged_by: PBField
+	func get_damaged_by() -> int:
+		return _damaged_by.value
+	func clear_damaged_by() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_damaged_by.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_damaged_by(value : int) -> void:
+		_damaged_by.value = value
+	
+	var _new_hitpoints: PBField
+	func get_new_hitpoints() -> float:
+		return _new_hitpoints.value
+	func clear_new_hitpoints() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_new_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_new_hitpoints(value : float) -> void:
+		_new_hitpoints.value = value
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class KilledPlayerResponseModel:
+	func _init():
+		var service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_killed_by = PBField.new("killed_by", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _killed_by
+		data[_killed_by.tag] = service
+		
+	var data = {}
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _killed_by: PBField
+	func get_killed_by() -> int:
+		return _killed_by.value
+	func clear_killed_by() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_killed_by.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_killed_by(value : int) -> void:
+		_killed_by.value = value
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class PlayerPositionResponseModel:
+	func _init():
+		var service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_team_id = PBField.new("team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
+		service = PBServiceField.new()
+		service.field = _team_id
+		data[_team_id.tag] = service
+		
+		_position = PBField.new("position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _position
+		service.func_ref = funcref(self, "new_position")
+		data[_position.tag] = service
+		
+		_velocity = PBField.new("velocity", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _velocity
+		service.func_ref = funcref(self, "new_velocity")
+		data[_velocity.tag] = service
+		
+	var data = {}
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _team_id: PBField
+	func get_team_id():
+		return _team_id.value
+	func clear_team_id() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
+	func set_team_id(value) -> void:
+		_team_id.value = value
+	
+	var _position: PBField
+	func get_position() -> Vector2D:
+		return _position.value
+	func clear_position() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_position() -> Vector2D:
+		_position.value = Vector2D.new()
+		return _position.value
+	
+	var _velocity: PBField
+	func get_velocity() -> Vector2D:
+		return _velocity.value
+	func clear_velocity() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_velocity.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_velocity() -> Vector2D:
+		_velocity.value = Vector2D.new()
+		return _velocity.value
+	
+	enum TeamId {
+		FirstTeam = 0,
+		SecondTeam = 1
+	}
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
 class GameStateResponseModel:
 	func _init():
 		var service
@@ -676,6 +979,18 @@ class GameStateResponseModel:
 		service.func_ref = funcref(self, "add_bullets")
 		data[_bullets.tag] = service
 		
+		_damaged_players = PBField.new("damaged_players", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 3, true, [])
+		service = PBServiceField.new()
+		service.field = _damaged_players
+		service.func_ref = funcref(self, "add_damaged_players")
+		data[_damaged_players.tag] = service
+		
+		_killed_players = PBField.new("killed_players", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 4, true, [])
+		service = PBServiceField.new()
+		service.field = _killed_players
+		service.func_ref = funcref(self, "add_killed_players")
+		data[_killed_players.tag] = service
+		
 	var data = {}
 	
 	var _players: PBField
@@ -684,8 +999,8 @@ class GameStateResponseModel:
 	func clear_players() -> void:
 		data[1].state = PB_SERVICE_STATE.UNFILLED
 		_players.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func add_players() -> GameStateResponseModel.PlayerPositionResponseModel:
-		var element = GameStateResponseModel.PlayerPositionResponseModel.new()
+	func add_players() -> PlayerPositionResponseModel:
+		var element = PlayerPositionResponseModel.new()
 		_players.value.append(element)
 		return element
 	
@@ -695,190 +1010,33 @@ class GameStateResponseModel:
 	func clear_bullets() -> void:
 		data[2].state = PB_SERVICE_STATE.UNFILLED
 		_bullets.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func add_bullets() -> GameStateResponseModel.BulletPositionResponseModel:
-		var element = GameStateResponseModel.BulletPositionResponseModel.new()
+	func add_bullets() -> BulletPositionResponseModel:
+		var element = BulletPositionResponseModel.new()
 		_bullets.value.append(element)
 		return element
 	
-	class BulletPositionResponseModel:
-		func _init():
-			var service
-			
-			_bullet_id = PBField.new("bullet_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-			service = PBServiceField.new()
-			service.field = _bullet_id
-			data[_bullet_id.tag] = service
-			
-			_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-			service = PBServiceField.new()
-			service.field = _player_id
-			data[_player_id.tag] = service
-			
-			_position = PBField.new("position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
-			service = PBServiceField.new()
-			service.field = _position
-			service.func_ref = funcref(self, "new_position")
-			data[_position.tag] = service
-			
-			_velocity = PBField.new("velocity", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
-			service = PBServiceField.new()
-			service.field = _velocity
-			service.func_ref = funcref(self, "new_velocity")
-			data[_velocity.tag] = service
-			
-		var data = {}
-		
-		var _bullet_id: PBField
-		func get_bullet_id() -> int:
-			return _bullet_id.value
-		func clear_bullet_id() -> void:
-			data[1].state = PB_SERVICE_STATE.UNFILLED
-			_bullet_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-		func set_bullet_id(value : int) -> void:
-			_bullet_id.value = value
-		
-		var _player_id: PBField
-		func get_player_id() -> int:
-			return _player_id.value
-		func clear_player_id() -> void:
-			data[2].state = PB_SERVICE_STATE.UNFILLED
-			_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-		func set_player_id(value : int) -> void:
-			_player_id.value = value
-		
-		var _position: PBField
-		func get_position() -> Vector2D:
-			return _position.value
-		func clear_position() -> void:
-			data[3].state = PB_SERVICE_STATE.UNFILLED
-			_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-		func new_position() -> Vector2D:
-			_position.value = Vector2D.new()
-			return _position.value
-		
-		var _velocity: PBField
-		func get_velocity() -> Vector2D:
-			return _velocity.value
-		func clear_velocity() -> void:
-			data[4].state = PB_SERVICE_STATE.UNFILLED
-			_velocity.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-		func new_velocity() -> Vector2D:
-			_velocity.value = Vector2D.new()
-			return _velocity.value
-		
-		func to_string() -> String:
-			return PBPacker.message_to_string(data)
-			
-		func to_bytes() -> PoolByteArray:
-			return PBPacker.pack_message(data)
-			
-		func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
-			var cur_limit = bytes.size()
-			if limit != -1:
-				cur_limit = limit
-			var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
-			if result == cur_limit:
-				if PBPacker.check_required(data):
-					if limit == -1:
-						return PB_ERR.NO_ERRORS
-				else:
-					return PB_ERR.REQUIRED_FIELDS
-			elif limit == -1 && result > 0:
-				return PB_ERR.PARSE_INCOMPLETE
-			return result
-		
-	class PlayerPositionResponseModel:
-		func _init():
-			var service
-			
-			_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-			service = PBServiceField.new()
-			service.field = _player_id
-			data[_player_id.tag] = service
-			
-			_team_id = PBField.new("team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
-			service = PBServiceField.new()
-			service.field = _team_id
-			data[_team_id.tag] = service
-			
-			_position = PBField.new("position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
-			service = PBServiceField.new()
-			service.field = _position
-			service.func_ref = funcref(self, "new_position")
-			data[_position.tag] = service
-			
-			_velocity = PBField.new("velocity", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
-			service = PBServiceField.new()
-			service.field = _velocity
-			service.func_ref = funcref(self, "new_velocity")
-			data[_velocity.tag] = service
-			
-		var data = {}
-		
-		var _player_id: PBField
-		func get_player_id() -> int:
-			return _player_id.value
-		func clear_player_id() -> void:
-			data[1].state = PB_SERVICE_STATE.UNFILLED
-			_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-		func set_player_id(value : int) -> void:
-			_player_id.value = value
-		
-		var _team_id: PBField
-		func get_team_id():
-			return _team_id.value
-		func clear_team_id() -> void:
-			data[2].state = PB_SERVICE_STATE.UNFILLED
-			_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-		func set_team_id(value) -> void:
-			_team_id.value = value
-		
-		var _position: PBField
-		func get_position() -> Vector2D:
-			return _position.value
-		func clear_position() -> void:
-			data[3].state = PB_SERVICE_STATE.UNFILLED
-			_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-		func new_position() -> Vector2D:
-			_position.value = Vector2D.new()
-			return _position.value
-		
-		var _velocity: PBField
-		func get_velocity() -> Vector2D:
-			return _velocity.value
-		func clear_velocity() -> void:
-			data[4].state = PB_SERVICE_STATE.UNFILLED
-			_velocity.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-		func new_velocity() -> Vector2D:
-			_velocity.value = Vector2D.new()
-			return _velocity.value
-		
-		enum TeamId {
-			FirstTeam = 0,
-			SecondTeam = 1
-		}
-		
-		func to_string() -> String:
-			return PBPacker.message_to_string(data)
-			
-		func to_bytes() -> PoolByteArray:
-			return PBPacker.pack_message(data)
-			
-		func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
-			var cur_limit = bytes.size()
-			if limit != -1:
-				cur_limit = limit
-			var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
-			if result == cur_limit:
-				if PBPacker.check_required(data):
-					if limit == -1:
-						return PB_ERR.NO_ERRORS
-				else:
-					return PB_ERR.REQUIRED_FIELDS
-			elif limit == -1 && result > 0:
-				return PB_ERR.PARSE_INCOMPLETE
-			return result
-		
+	var _damaged_players: PBField
+	func get_damaged_players() -> Array:
+		return _damaged_players.value
+	func clear_damaged_players() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_damaged_players.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func add_damaged_players() -> DamagedPlayerResponseModel:
+		var element = DamagedPlayerResponseModel.new()
+		_damaged_players.value.append(element)
+		return element
+	
+	var _killed_players: PBField
+	func get_killed_players() -> Array:
+		return _killed_players.value
+	func clear_killed_players() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_killed_players.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func add_killed_players() -> KilledPlayerResponseModel:
+		var element = KilledPlayerResponseModel.new()
+		_killed_players.value.append(element)
+		return element
+	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)
 		

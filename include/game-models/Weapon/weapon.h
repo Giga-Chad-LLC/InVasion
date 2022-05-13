@@ -13,10 +13,11 @@
 namespace invasion::game_models {
 
 
-struct Weapon {
-	Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage);
+class Weapon {
+public:
+	explicit Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage);
 
-	std::shared_ptr<Bullet> shoot(Vector2D playerPos, int bulletId);
+	std::shared_ptr<Bullet> shoot(Vector2D playerPosition, int bulletId);
 	bool isAbleToShoot() const;
 	void reload();
 	bool isReloading() const;
@@ -28,9 +29,6 @@ struct Weapon {
 	int getLeftAmmo() const;
 	long long getReloadingStartTimestamp_ms() const;
 	Vector2D getDirection() const;
-
-private:
-	static long long getCurrentTime_ms();
 
 private:
 	static const long long RELOAD_DURATION_MS;

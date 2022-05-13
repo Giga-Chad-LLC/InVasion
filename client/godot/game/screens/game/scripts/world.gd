@@ -7,6 +7,7 @@ signal scene_changed(scene_name)
 onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var Player = $YSort/Player
+onready var UI = $UI
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -31,10 +32,18 @@ var consumer: Worker = Worker.new() # thread that will read data from the server
 									# and put correct network packets to the thread-safe-queue
 
 
-# scene changing
+# scene/ui changing
 func _on_Quit_pressed():
 	emit_signal("scene_changed", "game_menu")
 
+# disable player movements when escape menu is opened
+func _on_EscapeMenu_toggle_escape_menu(is_escaped):
+	Player.is_active = !is_escaped	
+
+# player want to respawn - send required request model for that
+func _on_RespawnButton_pressed():
+	if (client_connection and client_connection.is_connected_to_host() and producer):
+		producer.push_data(Player.get_respawn_player_request())
 
 
 func _ready():
@@ -47,10 +56,13 @@ func _ready():
 	consumer.init(funcref(self, "_consumer_receive_data"))
 	add_child(producer)
 	add_child(consumer)
+	
+	# attach UI to the players state manager
+	players_state_manager.UI = UI
 
 func _process(_delta):
 #	Send player movements to server
-	if (client_connection and client_connection.is_connected_to_host()): # means that we have made sucessfull handshake with the server
+	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
 		# send actions to server
 		producer.push_data(Player.get_player_move_request())
 		producer.push_data(Player.get_player_shoot_request())
@@ -69,21 +81,24 @@ func _process(_delta):
 			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack game update model")
 			else:
-				# update myself
-				var players_positions = new_game_state.get_players()
-				for i in range(0, players_positions.size()):
-					var model = players_positions[i]
-					if (model.get_player_id() == Player.player_id):
-						Player.update_player_position(model)
-						players_positions.erase(model) # erase ourselves
-						break
 				# update other players
-				players_state_manager.update_players_states(players_positions, Player.team_id, players_parent_node)
+				players_state_manager.update_players_states(new_game_state.get_players(), Player, players_parent_node)
+				# update damaged players
+				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
+				# update illed players
+				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
-			print("We shot a bullet!")
+			# print("We shot a bullet!")
+			pass
+		Global.ResponseModels.RespawnPlayerResponseModel:
+			print("Server said to respawn a player")
+			if (!Player.is_active):
+				Player.visible = true
+				Player.is_active = true
+				UI.get_node("RespawnMenu").toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 
@@ -126,6 +141,8 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 			worker.push_data(network_packet)
 		chunk = client_connection.reader.get_next_packet_sequence()
 	client_connection.reader.flush()
+
+
 
 
 

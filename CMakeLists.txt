@@ -12,6 +12,7 @@ add_subdirectory(./tests/)
 # CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 # GAME-SERVER-SRCS - propagated from ./include/server
+# UTILS-SRCS - propagated from ./include/utils
 
 
 #### setting names for executables
@@ -32,6 +33,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/request-models/update-game-state-request-model.proto
 		./src/proto/request-models/rotate-weapon-request-model.proto
 		./src/proto/request-models/shoot-request-model.proto
+		./src/proto/request-models/respawn-player-request-model.proto
+		./src/proto/request-models/game-session-ended-request-model.proto
 		
 		# utils
         ./src/proto/utils/vector2d.proto
@@ -42,16 +45,11 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
         ./src/proto/response-models/shooting-state-response-model.proto
 		./src/proto/response-models/bullet-position-response-model.proto
 		./src/proto/response-models/game-state-response-model.proto
-		./src/proto/response-models/damaged-players-response-model.proto
-
-		# schemas
-        ./src/proto/game-schemes/player-schema.proto
-        ./src/proto/game-schemes/session-state-schema.proto
-        ./src/proto/game-schemes/game-state-schema.proto
-        ./src/proto/game-schemes/initial-state-response-schema.proto
-        ./src/proto/game-schemes/bullet-schema.proto
-        ./src/proto/game-schemes/player-game-session-statistic-schema.proto
-        ./src/proto/game-schemes/weapon-schema.proto
+		./src/proto/response-models/damaged-player-response-model.proto
+		./src/proto/response-models/killed-player-response-model.proto
+		./src/proto/response-models/respawn-player-response-model.proto
+		./src/proto/response-models/game-session-stats-response-model.proto
+		./src/proto/response-models/player-game-session-stats-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
@@ -79,6 +77,7 @@ add_executable(${GAME_MODELS_TESTS_TARGET}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
+		${UTILS-SRCS}
 
         ${PROTO_SRCS}
         ${PROTO_HDRS}
@@ -104,12 +103,14 @@ endif ()
 add_executable(${SERVER_TARGET}
         src/main.cpp
         src/server.cpp
-        ${PROTO_SRCS}
-        ${PROTO_HDRS}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
         ${GAME-SERVER-SRCS}
+		${UTILS-SRCS}
+
+		${PROTO_SRCS}
+        ${PROTO_HDRS}
         )
 
 # including Protobuf dirs to server target

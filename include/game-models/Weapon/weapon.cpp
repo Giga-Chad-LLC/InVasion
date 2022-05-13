@@ -9,6 +9,8 @@
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player-team-id-enum.h"
+// utils
+#include "utils/TimeUtilities/time-utilities.h"
 
 
 namespace invasion::game_models {
@@ -16,14 +18,6 @@ namespace invasion::game_models {
 const long long Weapon::RELOAD_DURATION_MS = 2100;
 const long long Weapon::DELAY_BETWEEN_SHOTS_MS = 74;
 const int Weapon::MAGAZINE = 1000;
-
-
-// static
-long long Weapon::getCurrentTime_ms() {
-	return std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::high_resolution_clock::now().time_since_epoch()
-	).count();
-}
 
 
 Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage) 
@@ -39,14 +33,14 @@ Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage)
 
 
 // Weapon::shoot may be called only if gun is able to shoot
-std::shared_ptr<Bullet> Weapon::shoot(const Vector2D initialPos, const int bulletId) {
+std::shared_ptr<Bullet> Weapon::shoot(const Vector2D playerPosition, const int bulletId) {
 	assert(isAbleToShoot());
 	
-	m_leftMagazine--;
-	// m_lastShotTimestamp_ms = Weapon::getCurrentTime_ms();
+	m_leftMagazine--; 
+	// m_lastShotTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
 
 	std::shared_ptr<Bullet> bullet_ptr = std::make_shared<Bullet>(
-		std::move(initialPos), 
+		std::move(playerPosition), 
 		bulletId, 
 		m_playerId,
 		m_playerTeamId,
@@ -61,7 +55,7 @@ std::shared_ptr<Bullet> Weapon::shoot(const Vector2D initialPos, const int bulle
 
 
 bool Weapon::isAbleToShoot() const {
-	const long long now = Weapon::getCurrentTime_ms();
+	const long long now = utils::TimeUtilities::getCurrentTime_ms();
 	return (
 		m_leftMagazine > 0 && 
 		// now > m_lastShotTimestamp_ms + Weapon::DELAY_BETWEEN_SHOTS_MS &&
@@ -75,7 +69,7 @@ void Weapon::reload() {
 		return;
 	}
 
-	m_reloadingStartTimestamp_ms = Weapon::getCurrentTime_ms();
+	m_reloadingStartTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
 	
 	if(m_leftAmmo < Weapon::MAGAZINE - m_leftMagazine) {
 		m_leftMagazine += m_leftAmmo;
@@ -94,7 +88,7 @@ void Weapon::setDirection(const Vector2D& dir) {
 
 
 bool Weapon::isReloading() const {
-	const long long now = Weapon::getCurrentTime_ms();
+	const long long now = utils::TimeUtilities::getCurrentTime_ms();
 	return now < m_reloadingStartTimestamp_ms + Weapon::RELOAD_DURATION_MS;
 }
 

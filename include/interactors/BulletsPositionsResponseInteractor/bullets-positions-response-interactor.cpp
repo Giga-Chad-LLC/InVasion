@@ -19,7 +19,7 @@ using namespace response_models;
 void BulletsPositionsResponseInteractor::execute(GameStateResponseModel& response, GameSession& session) const {	
 	const std::vector<std::shared_ptr<Bullet>>& bullets = session.getBullets();
 
-	for(const auto& bullet_ptr : bullets) {
+	for (const auto& bullet_ptr : bullets) {
 		BulletPositionResponseModel* bulletModel = response.add_bullets();
 
 		bulletModel->set_bullet_id(bullet_ptr->getId());

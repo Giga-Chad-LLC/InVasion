@@ -8,8 +8,6 @@ onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 var is_cooldown = false
 var should_follow_mouse: bool = false
 
-
-# User-defined functions
 func instance_bullet(rotation: float):
 	var bullet_model_instance = Global.instance_node_at_location(bullet_model,
 							  bullet_spawning_node, shoot_point.global_position)

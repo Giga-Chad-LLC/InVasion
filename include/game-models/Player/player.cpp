@@ -3,8 +3,11 @@
 
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
+#include "player-game-session-stats.h"
 // game-models
+#include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/Weapon/weapon.h"
 
 
 namespace invasion::game_models {
@@ -13,16 +16,18 @@ const double Player::MASS = 60.0;
 const int Player::INITIAL_AMMO = 180;
 const double Player::DAMAGE = 15.0;
 const double Player::INITIAL_HIT_POINTS = 100.0;
+const Vector2D Player::HITBOX_POSITION_OFFSET(0, -8);
+
 const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
-const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14);
+const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14.5);
 
 
 	
-Player::Player(Vector2D initialPos, const int playerId, const PlayerTeamId teamId)
+Player::Player(Vector2D initialPosition, const int playerId, const PlayerTeamId teamId)
 	: KinematicObject(
 		Player::SHAPE_COLLIDER_SIZE,
 		Player::HITBOX_COLLIDER_SIZE,
-		std::move(initialPos),
+		std::move(initialPosition),
 		Player::MASS,
 		Player::MAX_SPEED
 	), 
@@ -47,6 +52,16 @@ PlayerLifeState& Player::getLifeState() {
 }
 
 
+PlayerGameSessionStats& Player::getGameSessionStats() {
+	return m_gameSessionStats;
+}
+
+
+Weapon& Player::getWeapon() {
+	return m_weapon;
+}
+
+
 void Player::respawn(Vector2D position) {
 	m_lifeState.reset();
 	m_weapon.reset();
@@ -59,9 +74,5 @@ void Player::respawn(Vector2D position) {
 	this->setVelocity(Vector2D::ZERO);
 }
 
-
-Weapon& Player::getWeapon() {
-	return m_weapon;
-}
 
 } // namespace invasion::game_models

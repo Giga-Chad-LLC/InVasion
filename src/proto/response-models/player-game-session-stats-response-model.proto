@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package response_models;
+
+message PlayerGameSessionStatsResponseModel {
+	int32 player_id = 1;
+	int32 kills = 2;
+	int32 deaths = 3;
+}

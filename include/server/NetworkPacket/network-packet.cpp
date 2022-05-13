@@ -45,6 +45,9 @@ RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
     else if (type == static_cast<uint32_t> (RequestModel_t::UpdateGameStateRequestModel)) {
         return RequestModel_t::UpdateGameStateRequestModel;
     }
+    else if (type == static_cast<uint32_t> (RequestModel_t::RespawnPlayerRequestModel)) {
+        return RequestModel_t::RespawnPlayerRequestModel;
+    }
 
     return RequestModel_t::UnknownRequestModel;
 }

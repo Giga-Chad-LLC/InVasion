@@ -15,20 +15,25 @@ namespace invasion::session {
     class Client {
     private:
         uint32_t m_clientIdInGameSession;
-        tcp::iostream m_channel;
+        mutable tcp::iostream m_channel;
         SafeQueue<std::shared_ptr<NetworkPacketResponse>> m_clientResponseQueue;
-
-        friend class ClientRequestsReceiver;
-        friend class ClientResponsesSender;
-        friend class Server;
-        friend class RequestQueueManager;
-
-        friend void dispatchPacketsToClients(SafeQueue<std::shared_ptr<NetworkPacketResponse>> *responseQueue);
-        friend void registerClientInSession(std::shared_ptr<Client> client, uint32_t playerId, game_models::PlayerTeamId teamId);
-
     public:
+
         Client() = default;
+
         explicit Client(tcp::socket &&socket, uint32_t playerId);
+
+        uint32_t getClientIDInSession() const noexcept {
+            return m_clientIdInGameSession;
+        }
+
+        tcp::iostream &getChannel() const {
+            return m_channel;
+        }
+
+        auto &getClientResponseQueue() {
+            return m_clientResponseQueue;
+        }
     };
 }
 #endif //INVASION_SERVER_USER_H
