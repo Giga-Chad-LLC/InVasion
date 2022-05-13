@@ -1,4 +1,6 @@
 
+var randomGenerator = RandomNumberGenerator.new()
+var RAND_GENERATOR_ESTABLISHED = false
 
 func getMapCellSize(tileMap) -> int:
 	return tileMap.cell_size
@@ -29,8 +31,12 @@ func getTileCentersGlobalPositions(tileMap) -> Array:
 
 
 func create_filename(name) -> String:
+	if (not RAND_GENERATOR_ESTABLISHED):
+		RAND_GENERATOR_ESTABLISHED = true
+		randomGenerator.randomize()
+	
 	var filename = "res://assets/statics/" + \
-					name + \
+					name + "-" + String(randomGenerator.randi()) + \
 					"-static-data.invasion.txt"
 	return filename
 
