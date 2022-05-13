@@ -103,6 +103,7 @@ endif ()
 add_executable(${SERVER_TARGET}
         src/main.cpp
         src/server.cpp
+		include/http-server/http-server.cpp
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
@@ -132,8 +133,10 @@ else ()
     find_package(Threads REQUIRED)
     target_link_libraries(${SERVER_TARGET} PRIVATE
             Threads::Threads
+			#==== for http-server ======
 			gcov
 			sqlite3
+			#==========
             ${Protobuf_LIBRARIES}
             )
 endif ()

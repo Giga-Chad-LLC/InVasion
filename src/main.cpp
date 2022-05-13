@@ -2,6 +2,7 @@
 #include "../include/http-server/http-server.h"
 int main() {
     invasion::session::Server server;
-    aboba();
+    HttpServer httpServer;
+    httpServer.start();
     server.awaitNewConnections();
 }
