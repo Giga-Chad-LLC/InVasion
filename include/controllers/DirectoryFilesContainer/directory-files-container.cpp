@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "directory-files-container.h"
 
@@ -17,6 +18,12 @@ std::vector<fs::directory_entry> DirectoryFilesContainer::obtainFilesWithExtensi
 	
 	std::vector<fs::directory_entry> entries;
 	
+	// if directory does not exist
+	if(!fs::directory_entry{m_directory}.exists()) {
+		std::cout << "Directory '" << m_directory.string() << "'  with static files does not exists, empty vector returned from DirectoryFilesContainer::obtainFilesWithExtension()" << std::endl;
+		return entries;
+	}
+
 	for(const auto& entry : fs::directory_iterator{m_directory}) {
 		if(entry.exists() && entry.is_regular_file() && entry.path().extension() == extention) {
 			entries.push_back(entry);
