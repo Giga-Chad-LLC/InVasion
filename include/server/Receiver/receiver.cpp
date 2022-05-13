@@ -1,6 +1,5 @@
 #include "receiver.h"
 #include <thread>
-#include <player.pb.h>
 #include "player-position-response-model.pb.h"
 
 

@@ -9,8 +9,6 @@
 #include <thread>
 #include <utility>
 
-// proto
-#include "player-schema.pb.h"
 // server
 #include "server/safe-queue.h"
 #include "server/Client/client.h"
