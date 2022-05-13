@@ -80,6 +80,7 @@ void Session::removeClient(uint32_t clientId) {
 
         if (client->getClientId() == clientId) {
             std::cout << "Removing client: " << clientId << std::endl;
+            m_gameSession->removePlayerById(clientId);
             client->stop(); // stop client's threads
             ios->stop(); // stop ios
             m_connections.erase(std::next(m_connections.begin(), i));

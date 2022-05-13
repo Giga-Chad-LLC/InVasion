@@ -46,7 +46,7 @@ public:
     );
 
 private:
-    const std::size_t MAX_CLIENT_COUNT = 8U;
+    const std::size_t MAX_CLIENT_COUNT = 1U;
     std::atomic_bool m_isActive = false;
     uint32_t m_sessionId;
     std::vector <
