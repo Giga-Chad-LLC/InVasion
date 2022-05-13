@@ -7,9 +7,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( -130, -40 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -19,52 +16,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ServerIP" type="TextEdit" parent="."]
-margin_left = 86.0
-margin_top = 62.0
-margin_right = 237.0
-margin_bottom = 80.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CenterContainer2" type="CenterContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 124.0
-margin_top = 85.0
-margin_right = -56.0
-margin_bottom = -57.0
-rect_scale = Vector2( 0.526281, 0.321359 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer2"]
-margin_left = 38.0
-margin_top = 9.0
-margin_right = 101.0
-margin_bottom = 29.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="connectServerButton" type="Button" parent="CenterContainer2/VBoxContainer"]
-margin_right = 63.0
-margin_bottom = 20.0
-text = "connect"
-
 [node name="ExitButton" type="Button" parent="."]
 margin_right = 12.0
 margin_bottom = 20.0
 text = "Exit"
 
-[node name="InfoLabel" type="Label" parent="."]
-margin_left = 111.0
-margin_top = 42.0
-margin_right = 210.0
-margin_bottom = 56.0
-text = "Input Server IP:"
+[node name="connectServerButton" type="Button" parent="."]
+margin_left = 105.0
+margin_top = 69.0
+margin_right = 220.0
+margin_bottom = 103.0
+text = "START"
 
-[connection signal="pressed" from="CenterContainer2/VBoxContainer/connectServerButton" to="." method="_on_connectServerButton_pressed"]
 [connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]
+[connection signal="pressed" from="connectServerButton" to="." method="_on_connectServerButton_pressed"]
