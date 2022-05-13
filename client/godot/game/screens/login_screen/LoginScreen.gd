@@ -20,12 +20,12 @@ func _on_CheckButton_pressed():
 	var password = $"./CheckButton/PasswordEdit".get_text()
 	var username = $"./CheckButton/UsernameEdit".get_text()
 	var body = {"nickname" : username, "password" : password}
-	http_request.request("http://0.0.0.0:5555/registration", PoolStringArray([]),
-		false, HTTPClient.METHOD_POST, to_json(body))
+	http_request.request("http://0.0.0.0:5555/login", PoolStringArray([]),
+		false, HTTPClient.METHOD_GET, to_json(body))
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if (response_code == 200):
-		emit_signal("scene_changed", "start_menu")
+		emit_signal("scene_changed", "game_menu")
 	elif (response_code == 0):
 		label_error.text = "ERROR FROM SERVER"
 	elif(response_code == 404):
@@ -33,5 +33,5 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	elif (response_code == 500):
 		label_error.text = "Invalid Symbols!"
 	else:
-		label_error.text = "This Login already taken!"
+		label_error.text = "Wrong login or password!"
 	label_error.visible = true
