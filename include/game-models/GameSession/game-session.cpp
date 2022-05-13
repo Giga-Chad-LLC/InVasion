@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <memory>
 #include <cmath>
+#include <filesystem>
+#include <string>
 
 #include "game-session.h"
 #include "game-session-stats.h"
@@ -17,6 +19,10 @@
 #include "game-models/PlayerManager/player-manager.h"
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/StaticObject/static-object.h"
+// controllers
+#include "controllers/StaticObjectsFileReader/static-objects-file-reader.h"
+#include "controllers/DirectoryFilesContainer/directory-files-container.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 
@@ -27,6 +33,24 @@ GameSession::GameSession()
 	: m_lastGameStateUpdate_ms(0),
 	  m_nextBulletId(0),
 	  m_nextPlayerId(0) {
+	
+	controllers::DirectoryFilesContainer container(TILEMAPS_ASSETS_DIRECTORY);
+	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
+
+	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
+
+	for(const auto& entry  : entries) {
+		controllers::StaticObjectsFileReader reader(entry.path().string());
+
+		const auto& objects = reader.getObjectsData();
+
+		for(const auto& object : objects) {
+			const Vector2D shape(object.getShape());
+			const Vector2D position(object.getPosition()); 
+			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
+		}
+	}
+
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
@@ -141,6 +165,11 @@ std::vector<std::shared_ptr<Bullet>>& GameSession::getBullets() {
 }
 
 
+std::vector<std::shared_ptr<StaticObject>>& GameSession::getObstacles() {
+	return m_storage.getObstacles();
+}
+
+
 void GameSession::removePlayerById(const int playerId) {
 	auto& players = m_storage.getPlayers();
 	
@@ -198,11 +227,12 @@ void GameSession::updateGameState() {
 	auto& damagedPlayers = m_storage.getDamagedPlayers();
 	auto& killedPlayers = m_storage.getKilledPlayers();
 	auto& bullets = m_storage.getBullets();
+	auto& obstacles = m_storage.getObstacles();
 
 	const double dt_s = (utils::TimeUtilities::getCurrentTime_ms() - m_lastGameStateUpdate_ms) / 1000.0;
 
-	m_playerManager.updatePlayersPositions(players, dt_s);
-	m_bulletManager.updateBulletsPositions(bullets, players, dt_s);
+	m_playerManager.updatePlayersPositions(players, obstacles, dt_s);
+	m_bulletManager.updateBulletsPositions(bullets, players, obstacles, dt_s);
 	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
 	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
