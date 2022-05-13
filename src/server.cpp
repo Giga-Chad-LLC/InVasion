@@ -29,11 +29,8 @@ namespace invasion::session {
         client->getClientResponseQueue().produce(std::move(packet));
     }
 
-    Server::Server() : acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"),
-                                                         8000)), dispatcher(
-            DispatcherPackets(&m_responseQueue)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
-        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession,
-                                                ConnectedClients::getConnectedClients());
+    Server::Server(): acceptor(ioContext, tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 8000)), dispatcher(DispatcherPackets(&m_responseQueue)) { // boost::asio::ip::address::from_string("127.0.0.1"); 192.168.1.201
+        RequestQueueManager::manageRequestQueue(m_requestQueue, m_responseQueue, m_gameSession, ConnectedClients::getConnectedClients());
         std::cout << "Listening at " << acceptor.local_endpoint() << std::endl;
     }
 
