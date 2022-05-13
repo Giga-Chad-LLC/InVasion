@@ -132,6 +132,8 @@ else ()
     find_package(Threads REQUIRED)
     target_link_libraries(${SERVER_TARGET} PRIVATE
             Threads::Threads
+			gcov
+			sqlite3
             ${Protobuf_LIBRARIES}
             )
 endif ()
