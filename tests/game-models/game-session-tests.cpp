@@ -35,6 +35,57 @@ using namespace invasion::controllers;
 // using namespace response_models;
 
 
+
+TEST_CASE("Decrementing players in teams") {
+	GameSession session;
+
+	const int id1 = session.createPlayerAndReturnId();
+	const int id2 = session.createPlayerAndReturnId();
+
+	const GameSessionStats& stats = session.getGameStatistics();
+
+	CHECK(stats.getFirstTeamPlayersCount() == 1);
+	CHECK(stats.getSecondTeamPlayersCount() == 1);
+
+	session.removePlayerById(id1);
+	session.removePlayerById(id2);
+	
+	std::vector<int> ids;
+	
+	const int n = 100;
+	for(int i = 0; i < n; i++) {
+		const int id = session.createPlayerAndReturnId();
+		ids.push_back(id);
+	}
+
+	int firstTeamCount = stats.getFirstTeamPlayersCount();
+	int secondTeamCount = stats.getSecondTeamPlayersCount();
+
+	CHECK(2 * firstTeamCount == n);
+	CHECK(2 * secondTeamCount == n);
+	CHECK(secondTeamCount == firstTeamCount);
+
+	for(int id : ids) {
+		PlayerTeamId teamId = session.getPlayer(id)->getTeamId();
+		session.removePlayerById(id);
+
+		if(teamId == PlayerTeamId::FirstTeam) {
+			CHECK(stats.getFirstTeamPlayersCount() + 1 == firstTeamCount);
+			--firstTeamCount;
+		}
+		else if(teamId == PlayerTeamId::SecondTeam) {
+			CHECK(stats.getSecondTeamPlayersCount() + 1 == secondTeamCount);
+			--secondTeamCount;
+		}
+	}
+
+	CHECK(stats.getFirstTeamPlayersCount() == 0);
+	CHECK(stats.getSecondTeamPlayersCount() == 0);
+}
+
+
+
+/*
 TEST_CASE("setTimeout testing") {
 	FixedTimeoutCallbackInvoker invoker;
 
@@ -58,6 +109,8 @@ TEST_CASE("setTimeout testing") {
 		std::cout << '\n' << "One minute has passed" << std::endl;
 	}); // 1 minute
 }
+*/
+
 
 
 /*

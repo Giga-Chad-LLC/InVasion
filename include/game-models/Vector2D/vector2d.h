@@ -2,6 +2,7 @@
 #define VECTOR2D_H_
 
 #include <iostream>
+#include <utility>
 
 namespace invasion::game_models {
 
@@ -10,6 +11,7 @@ class Vector2D {
 public:
 	explicit Vector2D() = default;
 	explicit Vector2D(double x, double y);
+	explicit Vector2D(const std::pair<double, double>& coords);
 
 	void setX(double x);
 	double getX() const;

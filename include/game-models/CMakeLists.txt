@@ -7,6 +7,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/BoxCollider/box-collider.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Object/object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/KinematicObject/kinematic-object.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StaticObject/static-object.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-life-state.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-game-session-stats.cpp

@@ -11,12 +11,13 @@ add_subdirectory(./tests/)
 # INTERACTORS-SRCS - propagated from ./include/interactors
 # CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
+# CONTROLLERS-TESTS-SRCS - propagated from ./tests/controllers
 # GAME-SERVER-SRCS - propagated from ./include/server
 # UTILS-SRCS - propagated from ./include/utils
 
 
 #### setting names for executables
-set(GAME_MODELS_TESTS_TARGET game-models-tests)
+set(TESTS_TARGET tests)
 set(SERVER_TARGET server)
 
 #### setting global props
@@ -70,10 +71,11 @@ else ()
 endif ()
 
 
-#### configuring GAME_MODELS_TESTS_TARGET:
-add_executable(${GAME_MODELS_TESTS_TARGET}
+#### configuring TESTS_TARGET:
+add_executable(${TESTS_TARGET}
         src/doctest_main.cpp
         ${GAME-MODELS-TESTS-SRCS}
+		${CONTROLLERS-TESTS-SRCS}
         ${GAME-MODELS-SRCS}
         ${INTERACTORS-SRCS}
         ${CONTROLLERS-SRCS}
@@ -83,7 +85,7 @@ add_executable(${GAME_MODELS_TESTS_TARGET}
         ${PROTO_HDRS}
         )
 
-target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
+target_include_directories(${TESTS_TARGET} PUBLIC
         ./doctest
         ./include
         ${Protobuf_INCLUDE_DIR}
@@ -91,10 +93,10 @@ target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
         )
 
 if (WIN32 AND NOT MSVC AND NOT BORLAND)
-    target_link_libraries(${GAME_MODELS_TESTS_TARGET} ws2_32 ${Protobuf_LIBRARIES})
+    target_link_libraries(${TESTS_TARGET} ws2_32 ${Protobuf_LIBRARIES})
 else ()
     find_package(Threads REQUIRED)
-    target_link_libraries(${GAME_MODELS_TESTS_TARGET} PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
+    target_link_libraries(${TESTS_TARGET} PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
 endif ()
 
 

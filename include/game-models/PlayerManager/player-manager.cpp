@@ -4,18 +4,24 @@
 #include "player-manager.h"
 // game-models
 #include "game-models/Player/player.h"
+#include "game-models/StaticObject/static-object.h"
 #include "game-models/Player/player-game-session-stats.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
 namespace invasion::game_models {
 
-void PlayerManager::updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const {
+void PlayerManager::updatePlayersPositions(
+	std::vector<std::shared_ptr<Player>>& players,
+	std::vector<std::shared_ptr<StaticObject>>& obstacles,
+	double dt) const {
+	
 	for (auto& player_ptr : players) {
 		const bool killed = player_ptr->getLifeState().isInDeadState();
 		if(!killed) {
 			this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
 			this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
+			this->updatePlayerPhysicsOnObstacleCollision(obstacles, player_ptr, dt);
 			player_ptr->makeMove(dt);
 		}
 	}
@@ -139,6 +145,36 @@ void PlayerManager::updatePlayerPhysicsOnPlayerCollision(
 		}
 
 		inCollision = consideredPlayer_ptr->collidesWithShape(other.get());
+		if(inCollision) {
+			break;
+		}
+	}
+
+	consideredPlayer_ptr->setPosition(curPosition);
+
+	if(inCollision) {
+		// TODO: make logic to find nearest position where objects do not collide and move player to that position
+		consideredPlayer_ptr->setResultForce(Vector2D::ZERO);
+		consideredPlayer_ptr->setVelocity(Vector2D::ZERO);
+	}
+}
+
+
+void PlayerManager::updatePlayerPhysicsOnObstacleCollision(
+	std::vector<std::shared_ptr<StaticObject>>& obstacles,
+	std::shared_ptr<Player> consideredPlayer_ptr,
+	double dt) const {
+	
+	Vector2D curPosition = consideredPlayer_ptr->getPosition();
+
+	// imitating player's intented move
+	Vector2D nextPosition = consideredPlayer_ptr->intentMove(dt);
+	consideredPlayer_ptr->setPosition(nextPosition);
+
+	bool inCollision = false;
+
+	for(const auto& obstacle : obstacles) {
+		inCollision = consideredPlayer_ptr->collidesWithShape(obstacle.get());
 		if(inCollision) {
 			break;
 		}

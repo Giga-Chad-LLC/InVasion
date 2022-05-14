@@ -1,9 +1,9 @@
-#ifndef INVASION_SERVER_NETWORK_PACKET_H
-#define INVASION_SERVER_NETWORK_PACKET_H
+#ifndef NETWORK_PACKET_H_
+#define NETWORK_PACKET_H_
 
 #include <memory>
 
-namespace invasion::session {
+namespace invasion::server {
     // When adding new message type, update `NetworkPacketRequest::getMessageTypeById` method
     enum class RequestModel_t : uint32_t {
         MoveRequestModel = 0,
@@ -21,6 +21,9 @@ namespace invasion::session {
         UnknownResponseModel
     };
 
+    class NetworkPacketRequest;
+    class NetworkPacketResponse;
+
     class NetworkPacket {
     protected:
         std::unique_ptr<char[]> bytes;
@@ -34,7 +37,33 @@ namespace invasion::session {
         // returns a `unique_ptr<char[]>` to the `bytes` array
         std::unique_ptr<char[]> getPureBytes();
         // returns bytes data length
-        uint32_t bytesSize() const;
+        uint32_t bytesSize() const noexcept;
+        // returns total size of all bytes (including 4 bytes for length and 4 bytes for type)
+        uint32_t totalSize() const noexcept;
+
+        // serialize
+        template <class Model>
+        inline static std::unique_ptr<char[]> serialize(const Model& model) {
+            std::unique_ptr <char[]> buffer_ptr(new char[model.ByteSizeLong()]);
+            model.SerializeToArray(buffer_ptr.get(), model.ByteSizeLong());
+            return std::move(buffer_ptr);
+        }
+        // deserialize
+        template <class Model>
+        inline static void deserialize(
+            Model& model,
+            std::shared_ptr<NetworkPacketRequest> packet
+        ) {
+            model.ParseFromArray(packet->getStoredBytes(), packet->bytesSize());
+        }
+        // deserialize
+        template <class Model>
+        inline static void deserialize(
+            Model& model,
+            std::shared_ptr<NetworkPacketResponse> packet
+        ) {
+            model.ParseFromArray(packet->getStoredBytes(), packet->bytesSize());
+        }
     };
 
     class NetworkPacketRequest : public NetworkPacket {
