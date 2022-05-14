@@ -192,7 +192,7 @@ build
 
 cmake-build-debug
 src/cmake-build-debug
-src/http-server/cmake-build-debug
+src/http-
 cmake-build
 cmake-debug-build
 cmake-release-build

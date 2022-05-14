@@ -3,7 +3,7 @@ extends "res://player/scripts/base_player.gd"
 
 # Animations
 onready var player_gun = $Gun
-
+onready var healthBar = $HealthyBar
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
@@ -30,9 +30,14 @@ func set_is_active(value):
 	is_active = value
 	$Gun.should_follow_mouse = is_active
 
+func set_health(value):
+	healthBar.value = value
+
 func get_respawn_player_request():
+	set_health(100)
 	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()
 	action.set_player_id(player_id)
+	#action.initHealth()
 	var network_packet = NetworkPacket.new()
 	network_packet.set_data(action.to_bytes(), Global.RequestModels.RespawnPlayerRequestModel)
 	if (network_packet):
@@ -106,3 +111,5 @@ func set_player_info(packet: NetworkPacket) -> void:
 		team_id = player_info_model.get_team_id()
 		print("Set my id: ", player_id)
 		print("Set my team id: ", team_id)
+
+

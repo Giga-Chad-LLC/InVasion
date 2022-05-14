@@ -5,6 +5,8 @@ onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 onready var hitAnimationPlayer = $Sprite/HitAnimation
 onready var sprite = $Sprite
+onready var healtyBar = $HealthyBar
+ 
 
 var velocity = Vector2.ZERO
 var player_id: int = -1
@@ -30,10 +32,18 @@ func update_player_position(player_state_model):
 	velocity = Vector2(player_state_model.get_velocity().get_x(), player_state_model.get_velocity().get_y())
 	global_position = Vector2(player_state_model.get_position().get_x(), player_state_model.get_position().get_y())
 
-
+func initHealth():
+	healtyBar.value = 100
+	
+	
+func updateHealth():
+	var unitHealt = 15
+	healtyBar.value -= unitHealt
 
 func play_hit_animation():
+	updateHealth()
 	hitAnimationPlayer.play("Hit")
+
 
 func _process(_delta):
 	animate_player()
@@ -50,5 +60,11 @@ func _ready():
 
 
 
+
+
+
+
+
+	
 
 

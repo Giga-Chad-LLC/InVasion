@@ -10,7 +10,7 @@ func spawn_player(data, players_parent_node, location):
 	spawned_player.name = str(data['player_id'])
 	spawned_player.player_id = data['player_id']
 	spawned_player.team_id = data['player_team_id']
-	
+
 	if (data['player_team_id'] != data['local_team_id']):
 		spawned_player.set_sprite_color(Color(1, 0.27, 0.27))
 	else:
@@ -18,6 +18,7 @@ func spawn_player(data, players_parent_node, location):
 
 
 func despawn_player(player_id, players_parent_node):
+	
 	if (players_parent_node and players_parent_node.has_node(str(player_id))):
 		players_parent_node.get_node(str(player_id)).queue_free()
 	else:
@@ -54,10 +55,12 @@ func update_damaged_players_states(damaged_players: Array, main_player, players_
 		var new_defender_hitpoints = damage_event.get_new_hitpoints()
 		
 		if (defender_id == main_player.player_id):
+			#main_player.updateHealth(10)
 			main_player.play_hit_animation()
 		else:
 			var other_player = players_parent_node.get_node(str(defender_id))
 			if (other_player):
+				#other_player.updateHealth(10)
 				other_player.play_hit_animation()
 
 func update_killed_players_states(killed_players: Array, main_player, players_parent_node):
