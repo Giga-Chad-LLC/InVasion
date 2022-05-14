@@ -25,7 +25,7 @@ func _on_CheckButton_pressed():
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if (response_code == 200):
-		emit_signal("scene_changed", "start_menu")
+		emit_signal("scene_changed", "game_menu")
 	elif (response_code == 0):
 		label_error.text = "ERROR FROM SERVER"
 	elif(response_code == 404):

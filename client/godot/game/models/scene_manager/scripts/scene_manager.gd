@@ -20,11 +20,11 @@ func _handle_scene_changed(next_scene_name):
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)
 		'registrate':
-			var next_scene = load("res://screens/registration_screen/RegistrationScreen.tscn").instance()
+			var next_scene = load("res://screens/registration_screen/RegistrateScreen.tscn").instance()
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)
 		'game_menu':
-			var next_scene = load("res://screens/lobby_screen/LobbyScreen.tscn").instance()
+			var next_scene = load("res://screens/game_menu_screen/GameMenuScreen.tscn").instance()
 			$UI.add_child(next_scene)
 			set_current_scene(next_scene)
 		_:
