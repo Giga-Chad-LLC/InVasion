@@ -1,6 +1,7 @@
 #include <cassert>
 #include <thread>
 #include <iterator>
+#include "server/Server/server.h"
 #include "server/Session/session.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
@@ -27,6 +28,12 @@ void Session::start() {
     m_tickController.start([this]() mutable {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
         m_requestQueue->produce(std::move(request));
+    });
+    m_sessionRemover.setTimeout(MATCH_DURATION_MS, [this]() {
+        // send to players notification that the session is closing
+        // ...
+        // wait for notification to be send to every player
+        std::cout << "Session " << m_sessionId << " expired, removing it" << std::endl;         
     });
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 }

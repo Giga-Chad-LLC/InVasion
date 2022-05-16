@@ -79,6 +79,8 @@ public:
     void start(std::string host, short port);
     // stops the server and releases all resources
     void stop();
+    // removes session by id
+    void removeSession(uint32_t sessionId);
 private:
     // next session id
     uint32_t m_nextSessionId = 0U;
@@ -88,8 +90,6 @@ private:
     std::shared_ptr<Session> getAvailableSession();
     // creates and adds new session
     std::shared_ptr<Session> addSession();
-    // removes session by id
-    void removeSession(uint32_t sessionId);
 
     std::unique_ptr <Acceptor> m_acceptor;
     boost::asio::io_service m_ios;

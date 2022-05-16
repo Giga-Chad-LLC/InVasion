@@ -17,6 +17,7 @@
 #include "game-models/GameSession/game-session.h"
 // controllers
 #include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
+#include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 
 namespace invasion::server {
 using boost::asio::ip::tcp;
@@ -46,7 +47,8 @@ public:
     );
 
 private:
-    const std::size_t MAX_CLIENT_COUNT = 1U;
+    const std::size_t MAX_CLIENT_COUNT = 8U;
+    const std::size_t MATCH_DURATION_MS = 1000 * 10; // 10 seconds
     std::atomic_bool m_isActive = false;
     uint32_t m_sessionId;
     std::vector <
@@ -65,6 +67,7 @@ private:
     std::shared_ptr <game_models::GameSession> m_gameSession = std::make_shared <game_models::GameSession> ();
     // update the game each 30 milliseconds
     controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); 
+    controllers::FixedTimeoutCallbackInvoker m_sessionRemover;
     std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher = std::make_shared <GameEventsDispatcher> ();
     std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> m_requestQueue = std::make_shared <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> ();
 };
