@@ -29,6 +29,8 @@ public:
 	);
 
 	bool isAbleToApplyAbility() const;
+
+	// TODO: change return type to the one specified in UML-board
 	virtual void applyAbility() = 0;
 
 private:
