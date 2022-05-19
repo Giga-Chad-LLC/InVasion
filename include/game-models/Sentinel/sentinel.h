@@ -16,8 +16,8 @@ public:
 
 	inline static const double MASS = 80.0;
 	inline static const double MAX_SPEED = 90.0;
-	inline static const int INITIAL_HIT_POINTS = 200;
-	inline static const double INITIAL_AMMO = 180;
+	inline static const double INITIAL_HIT_POINTS = 200;
+	inline static const int INITIAL_AMMO = 180;
 	inline static const double DAMAGE = 18;
 };
 
