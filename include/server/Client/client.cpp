@@ -109,7 +109,7 @@ void Client::receiveNextPacket(
 void Client::sendNextPacket(
     std::shared_ptr <Session> session
 ) {
-    // should be started in a separate thread
+    // this method should be started in a separate thread
     std::shared_ptr <NetworkPacketResponse> response;
 
     while (m_isActive.load() && m_clientResponseQueue->consumeSync(response)) {
@@ -133,7 +133,8 @@ void Client::sendNextPacket(
 
                 m_canStartNextWriteAction = true;
                 cv_writeNextPacket.notify_one();
-        });
+            }
+        );
     }
 }
 

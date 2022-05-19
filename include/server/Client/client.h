@@ -12,7 +12,7 @@
 // server
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
-#include "server/Session/session_fwd.h"
+#include "server/Session/session-fwd.h"
 
 namespace invasion::server {
 using boost::asio::ip::tcp;
@@ -35,6 +35,7 @@ public:
     int getClientId() const noexcept;
 
     std::shared_ptr <tcp::socket> getSocket() const noexcept;
+
 private:
     template <class Functor>
     void read(std::size_t totalMessageLength, Functor callback) {
@@ -46,7 +47,7 @@ private:
             }
         );
     }
-    
+
     template <class Functor>
     void write(std::size_t totalMessageLength, Functor callback) {
         boost::asio::async_write(
@@ -57,7 +58,7 @@ private:
             }
         );
     }
-
+    
     void receiveNextPacket(
         std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
         std::shared_ptr <Session> session
