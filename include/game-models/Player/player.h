@@ -24,7 +24,7 @@ public:
 		double mass,
 		double maxSpeed,
 		int playerId,
-		PlayerSpecializationType specialization,
+		PlayerSpecialization specialization,
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
@@ -53,7 +53,7 @@ protected:
 
 private:	
 	const int m_id;
-	const PlayerSpecializationType m_specialization;
+	const PlayerSpecialization m_specialization;
 	const PlayerTeamId m_teamId;
 	PlayerLifeState m_lifeState;
 	PlayerGameSessionStats m_gameSessionStats;

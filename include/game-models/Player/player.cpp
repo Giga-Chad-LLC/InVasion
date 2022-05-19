@@ -20,7 +20,7 @@ Player::Player(
 		double mass,
 		double maxSpeed,
 		int playerId,
-		PlayerSpecializationType specialization,
+		PlayerSpecialization specialization,
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,

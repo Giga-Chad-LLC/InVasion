@@ -17,7 +17,7 @@ Sentinel::Sentinel(Vector2D position, int playerId, PlayerTeamId teamId)
 		Sentinel::MASS,
 		Sentinel::MAX_SPEED,
 		playerId,
-		PlayerSpecializationType::Sentinel,
+		PlayerSpecialization::Sentinel,
 		teamId,
 		Sentinel::INITIAL_HIT_POINTS,
 		Sentinel::INITIAL_AMMO,

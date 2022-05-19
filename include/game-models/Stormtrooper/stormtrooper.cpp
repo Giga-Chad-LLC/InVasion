@@ -18,7 +18,7 @@ Stormtrooper::Stormtrooper(Vector2D position, int playerId, PlayerTeamId teamId)
 		Player::MASS,
 		Stormtrooper::MAX_SPEED,
 		playerId,
-		PlayerSpecializationType::Stormtrooper,
+		PlayerSpecialization::Stormtrooper,
 		teamId,
 		Stormtrooper::INITIAL_HIT_POINTS,
 		Stormtrooper::INITIAL_AMMO,
