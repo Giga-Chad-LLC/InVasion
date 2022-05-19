@@ -12,6 +12,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-life-state.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-game-session-stats.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Stormtrooper/stormtrooper.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Sentinel/sentinel.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Bullet/bullet.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Weapon/weapon.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldStorage/game-world-storage.cpp
