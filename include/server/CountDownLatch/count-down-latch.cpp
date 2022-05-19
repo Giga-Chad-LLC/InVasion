@@ -2,7 +2,7 @@
 
 
 namespace invasion::server {
-CountDownLatch::CountDownLatch(uint32_t count) {}
+CountDownLatch::CountDownLatch(uint32_t count): m_count(count) {}
 
 void CountDownLatch::await() {
     std::unique_lock ul{m_mutex};
