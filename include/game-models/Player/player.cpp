@@ -11,17 +11,6 @@
 
 
 namespace invasion::game_models {
-// const double Player::MAX_SPEED = 100.0;
-// const double Player::MASS = 60.0;
-// const int Player::INITIAL_AMMO = 180;
-// const int Player::DAMAGE = 15;
-// const int Player::INITIAL_HIT_POINTS = 100;
-// const Vector2D Player::HITBOX_POSITION_OFFSET(0, -8);
-
-// const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
-// const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14.5);
-
-
 	
 Player::Player(
 		Vector2D shapeColliderSize,

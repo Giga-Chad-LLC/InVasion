@@ -45,10 +45,11 @@ public:
 	inline static const double INITIAL_HIT_POINTS = 100.0;
 	inline static const Vector2D HITBOX_POSITION_OFFSET = Vector2D(0, -8);
 
-private:
+protected:
 	inline static const Vector2D SHAPE_COLLIDER_SIZE = Vector2D(12, 6);
 	inline static const Vector2D HITBOX_COLLIDER_SIZE = Vector2D(10, 14.5);
-	
+
+private:	
 	const int m_id;
 	const PlayerTeamId m_teamId;
 	PlayerLifeState m_lifeState;
