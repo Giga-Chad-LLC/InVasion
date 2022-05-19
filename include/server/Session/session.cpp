@@ -9,6 +9,7 @@
 // game-models
 #include "player-info-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
+#include "game-over-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -44,7 +45,17 @@ void Session::start() {
             std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
             latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
             for (auto [ client, clientResponseQueue ] : m_connections) {
-                // clientResponseQueue->produce(...);
+                response_models::GameOverResponseModel gameOverModel;
+                auto response = std::make_shared <NetworkPacketResponse> (
+                    NetworkPacket::serialize(gameOverModel),
+                    ResponseModel_t::GameOverResponseModel,
+                    gameOverModel.ByteSizeLong()
+                );
+
+                clientResponseQueue->produce({
+                    std::move(response),
+                    std::make_shared <LatchCaller> (latch)
+                });
             }
         }
         
@@ -182,7 +193,7 @@ void Session::addClient(
         client->getClientId(),
         m_gameSession->getPlayer(client->getClientId())->getTeamId()
     );
-    
+
 
     std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
         std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;

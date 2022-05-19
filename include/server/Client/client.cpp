@@ -121,7 +121,7 @@ void Client::sendNextPacket(
     > data;
 
     while (m_isActive.load() && m_clientResponseQueue->consumeSync(data)) {
-        auto [ response, latchCeller ] = data;
+        auto [ response, latchCaller ] = data;
 
         uint32_t messageLength = response->totalSize();
         m_writeBuffer = response->serializeToByteArray();
@@ -132,10 +132,14 @@ void Client::sendNextPacket(
 
         write(
             messageLength,
-            [this, session](
+            [this, latchCaller = std::move(latchCaller), session](
                 const boost::system::error_code& errorCode,
                 std::size_t bytes_transferred
             ) {
+                if (latchCaller != nullptr) {
+                    (*latchCaller)(); // since we disconnect user if we fail to send the data, we must call the latcher counter even if the package sending fails 
+                }
+
                 if (errorCode.value() != 0) {
                     onError(errorCode, session);
                     return;
