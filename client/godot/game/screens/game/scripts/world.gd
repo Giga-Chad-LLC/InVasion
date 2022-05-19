@@ -21,6 +21,7 @@ const ShootRequestModel = preload("res://proto/request-models/shoot_request_mode
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
+const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -93,6 +94,8 @@ func _process(_delta):
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")
 			pass
+		Global.ResponseModels.GameOverResponseModel:
+			print("Game over!")
 		Global.ResponseModels.RespawnPlayerResponseModel:
 			print("Server said to respawn a player")
 			if (!Player.is_active):

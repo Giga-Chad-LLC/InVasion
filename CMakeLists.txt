@@ -51,6 +51,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/respawn-player-response-model.proto
 		./src/proto/response-models/game-session-stats-response-model.proto
 		./src/proto/response-models/player-game-session-stats-response-model.proto
+		./src/proto/response-models/game-over-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

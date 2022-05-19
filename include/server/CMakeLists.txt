@@ -8,6 +8,7 @@ set(GAME-SERVER-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Session/session.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameEventsDispatcher/game-events-dispatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Client/client.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/CountDownLatch/count-down-latch.cpp
 
 	PARENT_SCOPE
 )

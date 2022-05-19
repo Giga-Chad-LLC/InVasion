@@ -92,7 +92,7 @@ void Server::onAccept(const boost::system::error_code& errorCode, Connection con
 
 
 std::shared_ptr<Session> Server::getAvailableSession() { 
-    // std::unique_lock ul{mtx_sessions};
+    std::unique_lock ul{mtx_sessions};
        
     for (auto session : m_sessions) {
         if (session->isAvailable()) {
@@ -105,6 +105,7 @@ std::shared_ptr<Session> Server::getAvailableSession() {
 }
 
 std::shared_ptr<Session> Server::addSession() {
+    // mtx_sessions is assumed to be locked
     std::cout << "Creating new session" << std::endl;
     m_sessions.push_back(std::make_shared <Session> (m_nextSessionId++));
     m_sessions.back()->start();
@@ -112,7 +113,7 @@ std::shared_ptr<Session> Server::addSession() {
 }
 
 void Server::removeSession(uint32_t sessionId) {
-    // std::unique_lock ul{mtx_sessions};
+    std::unique_lock ul{mtx_sessions};
 
     for (auto it = m_sessions.begin(); it != m_sessions.end(); it++) {
         if ((*it)->getSessionId() == sessionId) {
@@ -121,5 +122,4 @@ void Server::removeSession(uint32_t sessionId) {
         }
     }
 }
-
 }

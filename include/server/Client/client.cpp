@@ -11,7 +11,12 @@ using boost::asio::ip::tcp;
 Client::Client(
     std::shared_ptr <tcp::socket> socket,
     int clientId,
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+    std::shared_ptr <SafeQueue<
+        std::pair<
+            std::shared_ptr <NetworkPacketResponse>,
+            std::shared_ptr <LatchCaller>
+        >
+    >> clientResponseQueue
 ): m_socket(socket), m_clientId(clientId), m_clientResponseQueue(clientResponseQueue) {
     std::cout << "Created new client" << std::endl;   
 }
@@ -109,10 +114,15 @@ void Client::receiveNextPacket(
 void Client::sendNextPacket(
     std::shared_ptr <Session> session
 ) {
-    // should be started in a separate thread
-    std::shared_ptr <NetworkPacketResponse> response;
+    // this method should be started in a separate thread
+    std::pair <
+        std::shared_ptr <NetworkPacketResponse>,
+        std::shared_ptr <LatchCaller>
+    > data;
 
-    while (m_isActive.load() && m_clientResponseQueue->consumeSync(response)) {
+    while (m_isActive.load() && m_clientResponseQueue->consumeSync(data)) {
+        auto [ response, latchCaller ] = data;
+
         uint32_t messageLength = response->totalSize();
         m_writeBuffer = response->serializeToByteArray();
         
@@ -122,10 +132,14 @@ void Client::sendNextPacket(
 
         write(
             messageLength,
-            [this, session](
+            [this, latchCaller = std::move(latchCaller), session](
                 const boost::system::error_code& errorCode,
                 std::size_t bytes_transferred
             ) {
+                if (latchCaller != nullptr) {
+                    (*latchCaller)(); // since we disconnect user if we fail to send the data, we must call the latcher counter even if the package sending fails 
+                }
+
                 if (errorCode.value() != 0) {
                     onError(errorCode, session);
                     return;
@@ -133,7 +147,8 @@ void Client::sendNextPacket(
 
                 m_canStartNextWriteAction = true;
                 cv_writeNextPacket.notify_one();
-        });
+            }
+        );
     }
 }
 

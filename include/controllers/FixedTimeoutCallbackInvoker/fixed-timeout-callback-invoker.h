@@ -14,11 +14,13 @@ public:
 	template <class Func, class... Args>
 	void setTimeout(std::size_t timeout_ms, Func&& f, Args&&... args) {
 		auto callback = std::bind(std::forward<Func>(f), std::forward<Args>(args)...);
-
-		m_createdThreads.emplace_back([callback, timeout_ms]() {
+		auto thread = std::move(std::thread([callback, timeout_ms]() mutable {
 			std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms));
 			callback();
-		});
+		}));
+
+		thread.detach();
+		m_createdThreads.push_back(std::move(thread));
 	}
 
 	~FixedTimeoutCallbackInvoker();

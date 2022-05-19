@@ -12,7 +12,8 @@
 // server
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
-#include "server/Session/session_fwd.h"
+#include "server/Session/session-fwd.h"
+#include "server/CountDownLatch/count-down-latch.h"
 
 namespace invasion::server {
 using boost::asio::ip::tcp;
@@ -22,7 +23,12 @@ public:
     Client(
         std::shared_ptr <tcp::socket> socket,
         int clientId,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+        std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue
     );
     ~Client();
 
@@ -35,6 +41,7 @@ public:
     int getClientId() const noexcept;
 
     std::shared_ptr <tcp::socket> getSocket() const noexcept;
+
 private:
     template <class Functor>
     void read(std::size_t totalMessageLength, Functor callback) {
@@ -46,7 +53,7 @@ private:
             }
         );
     }
-    
+
     template <class Functor>
     void write(std::size_t totalMessageLength, Functor callback) {
         boost::asio::async_write(
@@ -57,7 +64,7 @@ private:
             }
         );
     }
-
+    
     void receiveNextPacket(
         std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketRequest>>> requestQueue,
         std::shared_ptr <Session> session
@@ -77,7 +84,12 @@ private:
     const std::size_t MAX_MESSAGE_LENGTH = 1024U;
 
 
-    std::shared_ptr<SafeQueue<std::shared_ptr<NetworkPacketResponse>>> m_clientResponseQueue;
+    std::shared_ptr<SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+    >> m_clientResponseQueue;
     bool m_canStartNextWriteAction = true;
     std::condition_variable cv_writeNextPacket;
     std::mutex mtx_writeNextPacket;

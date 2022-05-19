@@ -1,12 +1,15 @@
+#include "session.h"
 #include <cassert>
 #include <thread>
 #include <iterator>
-#include "server/Session/session.h"
+#include "server/Server/server.h"
+#include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 // game-models
 #include "player-info-response-model.pb.h"
 #include "update-game-state-request-model.pb.h"
+#include "game-over-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -28,7 +31,41 @@ void Session::start() {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
         m_requestQueue->produce(std::move(request));
     });
+
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
+
+    m_sessionRemover.setTimeout(MATCH_DURATION_MS, [this]() {
+        // send notification to players that the session is closing
+        std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
+        
+        // users cannot connect to the session anymore
+        m_isAvailable.store(false);
+        std::shared_ptr <CountDownLatch> latch = nullptr;
+        {
+            std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+            latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
+            for (auto [ client, clientResponseQueue ] : m_connections) {
+                response_models::GameOverResponseModel gameOverModel;
+                auto response = std::make_shared <NetworkPacketResponse> (
+                    NetworkPacket::serialize(gameOverModel),
+                    ResponseModel_t::GameOverResponseModel,
+                    gameOverModel.ByteSizeLong()
+                );
+
+                clientResponseQueue->produce({
+                    std::move(response),
+                    std::make_shared <LatchCaller> (latch)
+                });
+            }
+        }
+        
+        // wait for notification to be send to every player
+        std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+        latch->await();
+        std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+    
+        stop();
+    });
 }
 
 void Session::stop() {
@@ -37,6 +74,8 @@ void Session::stop() {
     }
 
     m_isActive.store(false);
+    m_isAvailable.store(false);
+
     std::cout << "Stopping session: " << m_sessionId << std::endl;
 
     std::cout << "Stopping tick controller" << std::endl;
@@ -62,7 +101,7 @@ void Session::stop() {
 }
 
 bool Session::isAvailable() const noexcept {
-    return MAX_CLIENT_COUNT > m_connections.size();
+    return MAX_CLIENT_COUNT > m_connections.size() && m_isAvailable.load();
 }
 
 
@@ -80,6 +119,7 @@ void Session::removeClient(uint32_t clientId) {
 
         if (client->getClientId() == clientId) {
             std::cout << "Removing client: " << clientId << std::endl;
+            m_gameSession->removePlayerById(clientId);
             client->stop(); // stop client's threads
             ios->stop(); // stop ios
             m_connections.erase(std::next(m_connections.begin(), i));
@@ -90,7 +130,12 @@ void Session::removeClient(uint32_t clientId) {
 }
 
 void Session::makeHandshakeWithClient(
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+    std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue,
     uint32_t playerId,
     game_models::PlayerTeamId teamId
 ) {
@@ -111,7 +156,7 @@ void Session::makeHandshakeWithClient(
         response.ByteSizeLong()
     );
 
-    clientResponseQueue->produce(std::move(packet));
+    clientResponseQueue->produce({ std::move(packet), nullptr });
 }
 
 void Session::addClient(
@@ -126,7 +171,13 @@ void Session::addClient(
     // lock the mutexes
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
-    auto clientResponseQueue = std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ();
+    auto clientResponseQueue = std::make_shared <SafeQueue<
+        std::pair<
+            std::shared_ptr <NetworkPacketResponse>,
+            std::shared_ptr <LatchCaller>
+        >
+    >> ();
+
     auto client = std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue);
     m_connections.push_back({
         client,
@@ -142,7 +193,7 @@ void Session::addClient(
         client->getClientId(),
         m_gameSession->getPlayer(client->getClientId())->getTeamId()
     );
-    
+
 
     std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
         std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
@@ -166,7 +217,7 @@ void Session::putDataToSingleClient(
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
         if (client->getClientId() == clientId) {       
-            clientResponseQueue->produce(std::move(response));
+            clientResponseQueue->produce({ std::move(response), nullptr });
             return;
         }
     }
@@ -177,7 +228,7 @@ void Session::putDataToAllClients(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        clientResponseQueue->produce(std::move(std::shared_ptr <NetworkPacketResponse> (response)));
+        clientResponseQueue->produce({ std::move(std::shared_ptr <NetworkPacketResponse> (response)), nullptr });
     }
 }
 }

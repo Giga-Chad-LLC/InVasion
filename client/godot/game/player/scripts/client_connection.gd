@@ -2,7 +2,7 @@ extends Node
 
 
 # TCP Networking
-const HOST: String = "127.0.0.1" #  127.0.0.1 | 192.168.1.201 | 192.168.1.17
+const HOST: String = "127.0.0.1" #  127.0.0.1 | 192.168.1.201 | 192.168.0.17
 const PORT: int = 8000
 const RECONNECT_TIMEOUT: float = 3.0
 
