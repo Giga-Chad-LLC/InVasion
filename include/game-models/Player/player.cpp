@@ -4,7 +4,7 @@
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
 #include "player-game-session-stats.h"
-#include "player-specialization-type-enum.h"
+#include "player-specialization-enum.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
