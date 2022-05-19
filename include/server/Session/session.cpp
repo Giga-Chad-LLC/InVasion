@@ -1,8 +1,9 @@
+#include "session.h"
 #include <cassert>
 #include <thread>
 #include <iterator>
 #include "server/Server/server.h"
-#include "server/Session/session.h"
+#include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 // game-models
@@ -29,11 +30,24 @@ void Session::start() {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
         m_requestQueue->produce(std::move(request));
     });
+
+    
     m_sessionRemover.setTimeout(MATCH_DURATION_MS, [this]() {
-        // send to players notification that the session is closing
-        // ...
+        // send notification to players that the session is closing
+        std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
+        
+        // users cannot connect to the session anymore
+        m_isAvailable.store(false);
+        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+
+        CountDownLatch latch(static_cast <uint32_t> (m_connections.size()));
+        for (auto [ client, clientResponseQueue ] : m_connections) {
+            // clientResponseQueue->produce(...);
+        }
+
         // wait for notification to be send to every player
-        std::cout << "Session " << m_sessionId << " expired, removing it" << std::endl;         
+        latch.await();
+        stop();
     });
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 }
@@ -44,6 +58,8 @@ void Session::stop() {
     }
 
     m_isActive.store(false);
+    m_isAvailable.store(false);
+
     std::cout << "Stopping session: " << m_sessionId << std::endl;
 
     std::cout << "Stopping tick controller" << std::endl;
@@ -69,7 +85,7 @@ void Session::stop() {
 }
 
 bool Session::isAvailable() const noexcept {
-    return MAX_CLIENT_COUNT > m_connections.size();
+    return MAX_CLIENT_COUNT > m_connections.size() && m_isAvailable.load();
 }
 
 
