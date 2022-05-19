@@ -5,6 +5,8 @@
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
+#include <memory>
+#include <iostream>
 
 namespace invasion::server {
 class CountDownLatch {
@@ -34,29 +36,25 @@ protected:
 };
 
 
-template <class Func>
-class Caller {
+class LatchCaller {
 public:
-    Caller(Func func): m_func(func), m_isCalled(false) {}
+    LatchCaller(std::shared_ptr <CountDownLatch> latch): m_latch(latch) {};
     
-    ~Caller() {
-        if (m_isCalled) {
+    ~LatchCaller() {
+        this->operator()();
+    }
+
+    void operator()() {
+        if (!m_isCalled) {
             m_isCalled = true;
-            std::cout << "Call the func()" << std::endl;
-            m_func();
+            m_latch->countDown();
+            std::cout << "Decrease latch counter to " << m_latch->getCount() << std::endl;
         }
     }
 
-    void call() {
-        if (!m_isCalled) {
-            m_isCalled = true;
-            std::cout << "Call the func()" << std::endl;
-            m_func();
-        }
-    }
 private:
-    Func m_func;
-    bool m_isCalled;
+    std::shared_ptr <CountDownLatch> m_latch;
+    bool m_isCalled = false;
 };
 }
 
