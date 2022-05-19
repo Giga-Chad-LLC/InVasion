@@ -8,8 +8,10 @@
 #include <memory>
 #include <atomic>
 #include <mutex>
+#include <functional>
 // server
 #include "server/Client/client.h"
+#include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 #include "server/GameEventsDispatcher/game-events-dispatcher.h"
@@ -41,7 +43,12 @@ public:
     bool isAvailable() const noexcept;
     uint32_t getSessionId() const noexcept;
     void makeHandshakeWithClient(
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+        std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue,
         uint32_t playerId,
         game_models::PlayerTeamId teamId
     );
@@ -60,7 +67,12 @@ private:
     > m_clientsThreadPool;
     std::vector <std::pair <
         std::shared_ptr <Client>,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>>
+        std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >>
     >> m_connections;
     std::mutex mtx_connections;
     std::mutex mtx_clientsThreadPool;

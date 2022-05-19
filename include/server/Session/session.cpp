@@ -119,7 +119,12 @@ void Session::removeClient(uint32_t clientId) {
 }
 
 void Session::makeHandshakeWithClient(
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
+    std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue,
     uint32_t playerId,
     game_models::PlayerTeamId teamId
 ) {
@@ -140,7 +145,7 @@ void Session::makeHandshakeWithClient(
         response.ByteSizeLong()
     );
 
-    clientResponseQueue->produce(std::move(packet));
+    clientResponseQueue->produce({ std::move(packet), nullptr });
 }
 
 void Session::addClient(
@@ -155,7 +160,13 @@ void Session::addClient(
     // lock the mutexes
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
-    auto clientResponseQueue = std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ();
+    auto clientResponseQueue = std::make_shared <SafeQueue<
+        std::pair<
+            std::shared_ptr <NetworkPacketResponse>,
+            std::shared_ptr <LatchCaller>
+        >
+    >> ();
+
     auto client = std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue);
     m_connections.push_back({
         client,
@@ -195,7 +206,7 @@ void Session::putDataToSingleClient(
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
         if (client->getClientId() == clientId) {       
-            clientResponseQueue->produce(std::move(response));
+            clientResponseQueue->produce({ std::move(response), nullptr });
             return;
         }
     }
@@ -206,7 +217,7 @@ void Session::putDataToAllClients(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        clientResponseQueue->produce(std::move(std::shared_ptr <NetworkPacketResponse> (response)));
+        clientResponseQueue->produce({ std::move(std::shared_ptr <NetworkPacketResponse> (response)), nullptr });
     }
 }
 }
