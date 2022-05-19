@@ -234,8 +234,8 @@ void GameSession::updateGameState() {
 
 	m_playerManager.updatePlayersPositions(players, obstacles, dt_s);
 	m_bulletManager.updateBulletsPositions(bullets, players, obstacles, dt_s);
-	m_playerManager.findDamagedPlayers(players, damagedPlayers); // cleared inside the method
-	m_playerManager.findKilledPlayers(players, killedPlayers); // cleared inside the method
+	m_playerManager.findDamagedPlayers(players, damagedPlayers); // vector damagedPlayers cleared inside the method
+	m_playerManager.findKilledPlayers(players, killedPlayers); // vector killedPlayers cleared inside the method
 	m_bulletManager.removeCrushedAndFlewOutOfBoundsBullets(bullets);
 
 	m_gameStatistics.updateTeamsKillsCounts(killedPlayers);

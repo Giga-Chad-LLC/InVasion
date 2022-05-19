@@ -11,30 +11,35 @@
 
 
 namespace invasion::game_models {
-const double Player::MAX_SPEED = 100;
-const double Player::MASS = 60.0;
-const int Player::INITIAL_AMMO = 180;
-const double Player::DAMAGE = 15.0;
-const double Player::INITIAL_HIT_POINTS = 100.0;
-const Vector2D Player::HITBOX_POSITION_OFFSET(0, -8);
+// const double Player::MAX_SPEED = 100.0;
+// const double Player::MASS = 60.0;
+// const int Player::INITIAL_AMMO = 180;
+// const int Player::DAMAGE = 15;
+// const int Player::INITIAL_HIT_POINTS = 100;
+// const Vector2D Player::HITBOX_POSITION_OFFSET(0, -8);
 
-const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
-const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14.5);
+// const Vector2D Player::SHAPE_COLLIDER_SIZE(12, 6);
+// const Vector2D Player::HITBOX_COLLIDER_SIZE(10, 14.5);
 
 
 	
-Player::Player(Vector2D initialPosition, const int playerId, const PlayerTeamId teamId)
-	: KinematicObject(
-		Player::SHAPE_COLLIDER_SIZE,
-		Player::HITBOX_COLLIDER_SIZE,
-		std::move(initialPosition),
-		Player::MASS,
-		Player::MAX_SPEED
-	), 
-	m_id(playerId),
-	m_teamId(teamId),
-	m_lifeState(Player::INITIAL_HIT_POINTS),
-	m_weapon(playerId, teamId, Player::INITIAL_AMMO, Player::DAMAGE) {}
+Player::Player(
+		Vector2D shapeColliderSize,
+		Vector2D hitboxColliderSize,
+		Vector2D position,
+		double mass,
+		double maxSpeed,
+		int playerId,
+		PlayerTeamId teamId,
+		int initialHitPoints,
+		int initialAmmo,
+		double damage
+	) :
+		KinematicObject(shapeColliderSize, hitboxColliderSize, position, mass, maxSpeed), 
+		m_id(playerId),
+		m_teamId(teamId),
+		m_lifeState(initialHitPoints),
+		m_weapon(playerId, teamId, initialAmmo, damage) {}
 
 
 int Player::getId() const {
