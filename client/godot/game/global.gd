@@ -28,5 +28,6 @@ enum ResponseModels {
 	ShootingStateResponseModel = 1002,
 	GameStateResponseModel = 1003,
 	RespawnPlayerResponseModel = 1004,
+	GameOverResponseModel = 1005,
 	UnknownResponseModel
 }
