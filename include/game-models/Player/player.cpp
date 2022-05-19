@@ -4,6 +4,7 @@
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
 #include "player-game-session-stats.h"
+#include "player-specialization-type-enum.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -19,6 +20,7 @@ Player::Player(
 		double mass,
 		double maxSpeed,
 		int playerId,
+		PlayerSpecializationType specialization,
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
@@ -26,6 +28,7 @@ Player::Player(
 	) :
 		KinematicObject(shapeColliderSize, hitboxColliderSize, position, mass, maxSpeed), 
 		m_id(playerId),
+		m_specialization(specialization),
 		m_teamId(teamId),
 		m_lifeState(initialHitPoints),
 		m_weapon(playerId, teamId, initialAmmo, damage) {}

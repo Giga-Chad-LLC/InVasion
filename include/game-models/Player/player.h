@@ -5,6 +5,7 @@
 #include "player-team-id-enum.h"
 #include "player-life-state.h"
 #include "player-game-session-stats.h"
+#include "player-specialization-type-enum.h"
 // game-models
 #include "game-models/KinematicObject/kinematic-object.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -23,6 +24,7 @@ public:
 		double mass,
 		double maxSpeed,
 		int playerId,
+		PlayerSpecializationType specialization,
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
@@ -51,6 +53,7 @@ protected:
 
 private:	
 	const int m_id;
+	const PlayerSpecializationType m_specialization;
 	const PlayerTeamId m_teamId;
 	PlayerLifeState m_lifeState;
 	PlayerGameSessionStats m_gameSessionStats;
