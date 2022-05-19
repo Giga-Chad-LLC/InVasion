@@ -31,25 +31,30 @@ void Session::start() {
         m_requestQueue->produce(std::move(request));
     });
 
-    
+    m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
+
     m_sessionRemover.setTimeout(MATCH_DURATION_MS, [this]() {
         // send notification to players that the session is closing
         std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
         
         // users cannot connect to the session anymore
         m_isAvailable.store(false);
-        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
-
-        CountDownLatch latch(static_cast <uint32_t> (m_connections.size()));
-        for (auto [ client, clientResponseQueue ] : m_connections) {
-            // clientResponseQueue->produce(...);
+        std::shared_ptr <CountDownLatch> latch = nullptr;
+        {
+            std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+            latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
+            for (auto [ client, clientResponseQueue ] : m_connections) {
+                // clientResponseQueue->produce(...);
+            }
         }
-
+        
         // wait for notification to be send to every player
-        latch.await();
+        std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+        latch->await();
+        std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+    
         stop();
     });
-    m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 }
 
 void Session::stop() {
