@@ -216,7 +216,14 @@ void Session::addClient(
             shared_from_this()
         );
 
-        executionService.first->run();
+        try {
+            executionService.first->run();
+        }
+        catch (const std::exception& error) {
+            std::cerr << "Session error: " << error.what() << std::endl;
+            removeClient(client->getClientId());
+        }
+
         std::cout << "Client (" << client->getSocket()->remote_endpoint() << ") thread exits" << std::endl;
     });
 

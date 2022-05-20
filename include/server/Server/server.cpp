@@ -49,7 +49,12 @@ void Server::start(std::string host, short port) {
         m_sessions.erase(end, m_sessions.end());
     });
 
-    m_ios.run();
+    try {
+        m_ios.run();
+    }
+    catch (const std::exception& error) {
+        std::cerr << "Server error: unable to start a server (`m_ios.run()`), Message: " << error.what() << std::endl;
+    }
 }
 
 void Server::stop() {
