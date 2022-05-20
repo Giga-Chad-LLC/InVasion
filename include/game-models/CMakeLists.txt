@@ -16,6 +16,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/AbilityEndowedPlayer/ability-endowed-player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Support/support.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Medic/medic.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayersFactory/players-factory.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Bullet/bullet.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Weapon/weapon.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/GameWorldStorage/game-world-storage.cpp

@@ -13,7 +13,7 @@
 
 
 namespace invasion::game_models {
-	
+
 
 class Player : public KinematicObject {
 public:
