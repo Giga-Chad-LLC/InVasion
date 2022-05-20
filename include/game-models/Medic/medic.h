@@ -14,6 +14,10 @@ public:
 	explicit Medic(Vector2D position, int playerId, PlayerTeamId teamId);
 	void applyAbility() override;
 
+	~Medic() {
+		std::cout << "Medic dtor called" << std::endl;
+	}
+
 	inline static const double DAMAGE = 12.0;
 	inline static const double INITIAL_HIT_POINTS = 150.0;
 private:

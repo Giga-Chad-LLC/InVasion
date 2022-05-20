@@ -14,6 +14,10 @@ class Sentinel : public Player {
 public:
 	explicit Sentinel(Vector2D position, int playerId, PlayerTeamId teamId);
 
+	~Sentinel() {
+		std::cout << "Sentinel dtor called" << std::endl;
+	}
+
 	inline static const double MASS = 80.0;
 	inline static const double MAX_SPEED = 90.0;
 	inline static const double INITIAL_HIT_POINTS = 200;
