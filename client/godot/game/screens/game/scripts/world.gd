@@ -8,6 +8,7 @@ onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var Player = $YSort/Player
 onready var UI = $UI
+onready var game_timer = $UI/Timer/TimerLabel
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -75,6 +76,7 @@ func _process(_delta):
 	match received_packet.message_type:
 		Global.ResponseModels.PlayerInfoResponseModel:
 			Player.set_player_info(received_packet)
+			game_timer.init(3, 50) # (minuts, seconds)
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -107,6 +109,7 @@ func _process(_delta):
 # producer
 func _handle_connection_opened() -> void:
 	producer.init(funcref(self, "_produce"))
+	
 
 func _produce(worker: Worker) -> void:
 	while true:

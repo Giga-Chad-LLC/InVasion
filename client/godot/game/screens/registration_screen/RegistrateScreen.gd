@@ -2,12 +2,12 @@ extends Control
 
 
 signal scene_changed(scene_name)
-onready var start_game_button = $CenterContainer/VBoxContainer/Button
+
 onready var label_error = $"./LabelOfError"
 onready var http_request = $CheckButton/HTTPRequest
 
 func _ready():
-	http_request.connect("request_completed", self, "_http_request_completed")
+	#http_request.connect("request_completed", self, "_on_HTTPRequest_request_completed")
 	label_error.set("custom_colors/font_color", Color(1,0,0))
 	label_error.visible = false	
 

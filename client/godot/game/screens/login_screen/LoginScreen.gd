@@ -2,7 +2,7 @@ extends Control
 
 
 signal scene_changed(scene_name)
-onready var start_game_button = $CenterContainer/VBoxContainer/Button
+
 onready var label_error = $"./LabelOfError"
 onready var http_request = $CheckButton/HTTPRequest
 

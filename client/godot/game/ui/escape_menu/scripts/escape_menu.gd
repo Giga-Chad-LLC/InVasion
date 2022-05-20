@@ -26,3 +26,7 @@ func set_is_active(value):
 func _on_Resume_pressed():
 	self.is_active = false
 	emit_signal("toggle_escape_menu", self.is_active)
+
+
+func _on_Quit_pressed():
+	emit_signal("scene_changed", "game_menu")
