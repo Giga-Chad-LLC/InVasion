@@ -36,9 +36,11 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/shoot-request-model.proto
 		./src/proto/request-models/respawn-player-request-model.proto
 		./src/proto/request-models/game-session-ended-request-model.proto
+		./src/proto/request-models/select-player-specialization-request-model.proto
 		
 		# utils
         ./src/proto/utils/vector2d.proto
+		./src/proto/utils/player-specialization.proto
 
 		# response-models
         ./src/proto/response-models/player-info-response-model.proto
@@ -52,6 +54,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/game-session-stats-response-model.proto
 		./src/proto/response-models/player-game-session-stats-response-model.proto
 		./src/proto/response-models/game-over-response-model.proto
+		./src/proto/response-models/player-specialization-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

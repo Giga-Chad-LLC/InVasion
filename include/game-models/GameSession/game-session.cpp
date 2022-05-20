@@ -52,7 +52,7 @@ GameSession::GameSession()
 			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
 		}
 	}
-	std::cout << "Static files uploaded in GameSession, count of static objects is " << obstacles.size() << std::endl;
+	std::cout << "Static files uploaded in GameSession, static objects count: " << obstacles.size() << std::endl;
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package response_models;
+import "player-specialization.proto";
+
+message PlayerSpecializationResponseModel {
+	int32 player_id = 1;
+	util_models.PlayerSpecialization specialization = 2; 
+}
