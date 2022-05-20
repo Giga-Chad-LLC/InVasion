@@ -17,6 +17,7 @@
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Player/player-team-id-enum.h"
+#include "game-models/Player/player-game-session-stats.h"
 #include "game-models/PlayerManager/player-manager.h"
 #include "game-models/PlayersFactory/players-factory.h"
 #include "game-models/BulletManager/bullet-manager.h"
@@ -224,6 +225,27 @@ void GameSession::removePlayerById(const int playerId) {
 	else {
 		m_gameStatistics.decrementSecondTeamPlayersCount();
 	}
+}
+
+
+void GameSession::changePlayerSpecialization(int playerId, PlayerSpecialization specialization) {
+	std::shared_ptr<Player> player = this->getPlayer(playerId);
+	// removing player
+	this->removePlayerById(playerId);
+
+	const Vector2D position = player->getPosition();
+	const PlayerTeamId teamId = player->getTeamId();
+
+	// updating specialization
+	std::shared_ptr<Player> updatedPlayer = PlayersFactory::createPlayer(position, playerId, teamId, specialization);
+	
+	// copying stats
+	PlayerGameSessionStats& stats = updatedPlayer->getGameSessionStats();
+	stats.copy(player->getGameSessionStats());
+
+	// inserting updated player
+	std::vector<std::shared_ptr<Player>> &players = this->getPlayers();
+	players.push_back(updatedPlayer);
 }
 
 

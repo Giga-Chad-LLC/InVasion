@@ -37,6 +37,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/respawn-player-request-model.proto
 		./src/proto/request-models/game-session-ended-request-model.proto
 		./src/proto/request-models/select-player-specialization-request-model.proto
+		./src/proto/request-models/change-player-specialization-request-model.proto
 		
 		# utils
         ./src/proto/utils/vector2d.proto

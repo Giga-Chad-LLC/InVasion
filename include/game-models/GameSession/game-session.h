@@ -39,7 +39,8 @@ public:
 	std::vector<std::shared_ptr<StaticObject>>& getObstacles();
 
 	void removePlayerById(int playerId);
-
+	void changePlayerSpecialization(int playerId, PlayerSpecialization specialization);
+	
 	void updateGameState();
 
 	const GameSessionStats& getGameStatistics();
