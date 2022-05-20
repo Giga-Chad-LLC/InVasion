@@ -56,7 +56,7 @@ public:
 
 private:
     const std::size_t MAX_CLIENT_COUNT = 8U;
-    const std::size_t MATCH_DURATION_MS = 1000 * 10; // 10 seconds
+    const std::size_t MATCH_DURATION_MS = 1000 * 30;
     std::atomic_bool m_isActive = false;
     std::atomic_bool m_isAvailable = true;
     uint32_t m_sessionId;
