@@ -13,7 +13,7 @@ const TCPStreamParser = preload("res://network/tcp_stream_parser.gd")
 
 var connection: Network = Network.new()
 var reader: TCPStreamParser = TCPStreamParser.new()
-
+var is_connection_closed: bool = false
 
 func _ready():
 	add_child(connection)
@@ -25,6 +25,7 @@ func open_connection(host: String = HOST, port: int = PORT) -> void:
 	connection.connect_to_host(host, port)
 
 func close_connection():
+	is_connection_closed = true
 	connection.disconnect_from_host()
 
 
@@ -99,8 +100,10 @@ func _handle_client_connected() -> void:
 
 func _handle_client_disconnected() -> void:
 	print("Client disconnected from server.")
-	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
+	if (!is_connection_closed):
+		_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
 
 func _handle_client_error() -> void:
 	print("Client connection error.")
-	_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
+	if (!is_connection_closed):
+		_connect_after_timeout(RECONNECT_TIMEOUT) # Try to reconnect after 3 seconds
