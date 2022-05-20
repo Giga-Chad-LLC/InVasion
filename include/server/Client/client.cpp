@@ -1,5 +1,6 @@
 #include <memory>
 #include <sstream>
+#include <iostream>
 #include "client.h"
 #include "server/Session/session.h"
 #include "server/NetworkPacket/network-packet.h"
@@ -11,7 +12,7 @@ using boost::asio::ip::tcp;
 Client::Client(
     std::shared_ptr <tcp::socket> socket,
     int clientId,
-    std::shared_ptr <SafeQueue<
+    std::weak_ptr <SafeQueue<
         std::pair<
             std::shared_ptr <NetworkPacketResponse>,
             std::shared_ptr <LatchCaller>
@@ -24,6 +25,7 @@ Client::Client(
 Client::~Client() {
     stop();
     delete[] m_readBuffer;
+    std::cout << "Client " << m_clientId << " destroyed" << std::endl;
 }
 
 void Client::start(
@@ -51,7 +53,12 @@ void Client::stop() {
     
     m_isActive.store(false);
     // notify client to check his `m_isActive`
-    m_clientResponseQueue->finish(); 
+    if (!m_clientResponseQueue.expired()) {
+        m_clientResponseQueue.lock()->finish();
+    }
+    else {
+        std::cout << "Client error: response queue is nullptr before client (id: " << m_clientId << ") destroy" << std::endl; 
+    }
     m_canStartNextWriteAction = true;
     cv_writeNextPacket.notify_one();
 
@@ -106,7 +113,12 @@ void Client::receiveNextPacket(
             );
             
             requestQueue->produce(std::move(packet));
-            receiveNextPacket(requestQueue, session);
+            if (m_isActive.load()) {
+                receiveNextPacket(requestQueue, session);
+            }
+            else {
+                std::cout << "Stop client (" << m_socket->remote_endpoint() << ") reading calls" << std::endl;
+            }
         });
     });
 }
@@ -120,7 +132,7 @@ void Client::sendNextPacket(
         std::shared_ptr <LatchCaller>
     > data;
 
-    while (m_isActive.load() && m_clientResponseQueue->consumeSync(data)) {
+    while (m_isActive.load() && !m_clientResponseQueue.expired() && m_clientResponseQueue.lock()->consumeSync(data)) {
         auto [ response, latchCaller ] = data;
 
         uint32_t messageLength = response->totalSize();

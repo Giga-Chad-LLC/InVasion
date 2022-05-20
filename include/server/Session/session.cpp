@@ -19,6 +19,7 @@ Session::Session(uint32_t sessionId): m_sessionId(sessionId) {}
 
 Session::~Session() {
     stop();
+    std::cout << "Session " << m_sessionId << " destroyed" << std::endl;
 }
 
 void Session::start() {
@@ -29,12 +30,17 @@ void Session::start() {
     m_isActive.store(true);
     m_tickController.start([this]() mutable {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
-        m_requestQueue->produce(std::move(request));
+        if (m_requestQueue) {
+            m_requestQueue->produce(std::move(request));
+        }
+        else {
+            std::cout << "Session error: request queue is nullptr when tried to put data" << std::endl;
+        }
     });
 
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 
-    m_sessionRemover.setTimeout(MATCH_DURATION_MS, [this]() {
+    m_gameTimer.setTimeout(MATCH_DURATION_MS, [this]() {
         // send notification to players that the session is closing
         std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
         
@@ -82,26 +88,33 @@ void Session::stop() {
     m_tickController.stop();
     std::cout << "Stopping events dispatcher" << std::endl;
     m_gameEventsDispatcher->stop();
-
+    
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     assert(m_clientsThreadPool.size() == m_connections.size());
 
-    std::cout << "Stopping clients" << std::endl;
-    for (auto [ client, clientResponseQueue ] : m_connections) {
-        client->stop();
-    }
+    std::cout << "Stopping clients and their workers (total connected clients: " << m_connections.size() << ")" << std::endl;
+    
+    while (!m_connections.empty()) {
+        auto client = m_connections.back().first;
+        auto clientResponseQueue = m_connections.back().second;
+        auto ios = m_clientsThreadPool.back().first;
 
-    std::cout << "Stopping workers" << std::endl;
-    for (auto [ ios, work ] : m_clientsThreadPool) {
-        // we want to finish all sending/receiving data processes (on a client side and inside a `m_gameEventsDispatcher` we will stop adding any more network packets)
-        // work.reset(); // does not work for some reason (maybe I don't get something about it)
-
-        // for force stop we might user `ios->stop()` - the last packet will be discarded mid-air (not good, because client will not get full network packet and won't be able to parse it correctly)
-        ios->stop();
+        std::cout << "Removing client: " << client->getClientId() << std::endl;
+        m_gameSession->removePlayerById(client->getClientId());
+        client->stop(); // stop client's threads
+        ios->stop(); // stop ios
+        m_connections.pop_back();
+        m_clientsThreadPool.pop_back();
+        return;
     }
 }
 
 bool Session::isAvailable() const noexcept {
     return MAX_CLIENT_COUNT > m_connections.size() && m_isAvailable.load();
+}
+
+bool Session::isActive() const noexcept {
+    return m_isActive.load();
 }
 
 

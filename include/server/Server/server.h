@@ -94,7 +94,7 @@ private:
     std::unique_ptr <Acceptor> m_acceptor;
     boost::asio::io_service m_ios;
     std::shared_ptr <boost::asio::io_service::work> m_work;
-    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60); // invokes every minute
+    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(5000); // invokes every minute
     std::vector <std::shared_ptr <Session>> m_sessions;
     std::mutex mtx_sessions;
     
