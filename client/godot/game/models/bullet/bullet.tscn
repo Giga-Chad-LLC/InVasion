@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 2.5, 2.5 )
 
-[node name="Bullet" type="Node2D"]
+[node name="Bullet" type="KinematicBody2D"]
 scale = Vector2( 0.4, 0.4 )
 script = ExtResource( 2 )
 
@@ -28,7 +28,5 @@ collision_mask = 9
 
 [node name="CollisionShape2D" parent="Sprite/Hitbox" index="0"]
 shape = SubResource( 1 )
-
-[connection signal="body_entered" from="Sprite/Hitbox" to="." method="_on_Hitbox_body_entered"]
 
 [editable path="Sprite/Hitbox"]

@@ -6,8 +6,9 @@
 namespace invasion::game_models {
 
 
-struct Vector2D {
-	Vector2D() = default;
+class Vector2D {
+public:
+	explicit Vector2D() = default;
 	explicit Vector2D(double x, double y);
 
 	void setX(double x);
@@ -21,22 +22,22 @@ struct Vector2D {
 	Vector2D normalize() const;
 
 	// static methods
-	static Vector2D clampMagnitude(const Vector2D& vec1, const double limit);
+	static Vector2D clampMagnitude(const Vector2D& vector, double magnitude);
 
 	// operators
 	Vector2D operator+(const Vector2D& other) const;
 	Vector2D& operator+=(const Vector2D& other);
 
-	friend Vector2D operator*(const Vector2D& vec, double value);
-	friend Vector2D operator*(double value, const Vector2D& vec);
-	friend Vector2D operator/(const Vector2D& vec, double value);
-	friend std::ostream& operator<<(std::ostream& os, const Vector2D& vec);
+	friend Vector2D operator*(const Vector2D& vector, double value);
+	friend Vector2D operator*(double value, const Vector2D& vector);
+	friend Vector2D operator/(const Vector2D& vector, double value);
+	friend std::ostream& operator<<(std::ostream& os, const Vector2D& vector);
 
+	// static members
 	const static Vector2D ZERO;
-
-private:
 	static const double EPS;
 
+private:
 	double m_x = 0.0;
 	double m_y = 0.0;
 };

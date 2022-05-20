@@ -4,7 +4,7 @@
 
 [sub_resource type="Theme" id=1]
 
-[node name="LoginWindow" type="Control"]
+[node name="Login" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -23,9 +23,6 @@ margin_top = 144.0
 margin_right = 190.0
 margin_bottom = 164.0
 text = "check"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PasswordEdit" type="LineEdit" parent="CheckButton"]
 margin_left = -22.0
@@ -53,10 +50,7 @@ margin_top = 116.0
 margin_right = 268.0
 margin_bottom = 130.0
 theme = SubResource( 1 )
-text = "Wrong username or password!"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+text = "This login is already taken!"
 
 [node name="LabelOfUsername" type="Label" parent="."]
 margin_left = 126.0
@@ -84,18 +78,15 @@ __meta__ = {
 margin_right = 41.0
 margin_bottom = 20.0
 text = "back"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="."]
-margin_left = 126.0
-margin_top = 5.0
-margin_right = 170.0
-margin_bottom = 19.0
+margin_left = 127.0
+margin_top = 4.0
+margin_right = 202.0
+margin_bottom = 18.0
 rect_scale = Vector2( 1.5, 1.5 )
 text = "LOGIN"
 
-[connection signal="pressed" from="CheckButton" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="CheckButton" to="." method="_on_CheckButton_pressed"]
 [connection signal="request_completed" from="CheckButton/HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="GotoBack" to="." method="_on_GotoBack_pressed"]

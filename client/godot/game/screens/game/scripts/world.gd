@@ -1,53 +1,149 @@
 extends Node2D
 
-export(int) var left_bound = -1000
-export(int) var right_bound = 1000
-export(int) var up_bound = -1000
-export(int) var down_bound = 1000
+
+signal scene_changed(scene_name)
+
+# Nodes
+onready var bullets_parent_node = $YSort/Bullets
+onready var players_parent_node = $YSort/OtherPlayers
+onready var Player = $YSort/Player
+onready var UI = $UI
+
+var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
+onready var players_state_manager = PlayersStateManager.new()
+var BulletsStateManager = preload("res://models/bullet/scripts/bullets_state_manager.gd")
+onready var bullets_state_manager = BulletsStateManager.new()
+
+# Godobuf
+const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
+const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
+
+const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
+const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
+const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
+
+# Network
+const Connection = preload("res://player/scripts/client_connection.gd")
+var client_connection: Connection = Connection.new()
+
+const Worker = preload("res://network/worker.gd")
+var producer: Worker = Worker.new() # thread that stores events from client
+var consumer: Worker = Worker.new() # thread that will read data from the server into a buffer
+									# and put correct network packets to the thread-safe-queue
 
 
+# scene/ui changing
+func _on_Quit_pressed():
+	emit_signal("scene_changed", "game_menu")
 
-# Test out godobuf functionality
-#const TestProto = preload("res://test_proto.gd")
-#
-#func test_godobuf():
-#	# Create packed class (message)
-#	var a = TestProto.A.new()
-#	# Example, set field f1
-#	a.set_f1(3.14159)
-#	# Pack message A
-#	# Use to_bytes() method, it's return PoolByteArray
-#	var packed_bytes = a.to_bytes()
-#	print("Serialized: ", packed_bytes)
-#
-#	# Create unpacked class (message)
-#	var b = TestProto.A.new()
-#	# Unpack byte sequence to class (message) A.
-#	# Use from_bytes(PoolByteArray my_byte_sequence) method
-#	var result_code = b.from_bytes(packed_bytes)
-#	# result_code must be checked (see Unpack result codes section)
-#	if result_code == TestProto.PB_ERR.NO_ERRORS:
-#		print("OK")
-#	else:
-#		print("Failed")
-#		return
-#	# Use class 'a' fields. Example, get field f1
-#	var f1 = b.get_f1()
-#	print("Deserialized: ", f1)
+# disable player movements when escape menu is opened
+func _on_EscapeMenu_toggle_escape_menu(is_escaped):
+	Player.is_active = !is_escaped	
+
+# player want to respawn - send required request model for that
+func _on_RespawnButton_pressed():
+	if (client_connection and client_connection.is_connected_to_host() and producer):
+		producer.push_data(Player.get_respawn_player_request())
+
 
 func _ready():
-	# Должно напечатать число Пи (по какой-то причине дважды, тут уже вопросы к методу _ready())
-#	test_godobuf()
-#	test_out_gdnative()
-	pass
+	# Establish connection to server
+	client_connection.connection.connect("connected", self, "_handle_connection_opened")
+	add_child(client_connection)
+	client_connection.open_connection()
 
-#func test_out_gdnative():
-#	# GDNative attached to another node
-#	var node = get_tree().get_root().get_node("World/TestOnly")
-#	print(node)
-#	node.test_method("Hello from Dimechik!")
-#
-#
-#func _on_TestOnly_position_changed(node: Sprite, new_pos: Vector2):
-#	print("New position: ", new_pos)
-#	print("Node name: ", node.filename)
+	# Run consumer (thread that reads data from server)
+	consumer.init(funcref(self, "_consumer_receive_data"))
+	add_child(producer)
+	add_child(consumer)
+	
+	# attach UI to the players state manager
+	players_state_manager.UI = UI
+
+func _process(_delta):
+#	Send player movements to server
+	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
+		# send actions to server
+		producer.push_data(Player.get_player_move_request())
+		producer.push_data(Player.get_player_shoot_request())
+	
+#	Receive data from server
+	var received_packet = consumer.pop_data()
+	if (received_packet == null):
+		return
+	
+	match received_packet.message_type:
+		Global.ResponseModels.PlayerInfoResponseModel:
+			Player.set_player_info(received_packet)
+		Global.ResponseModels.GameStateResponseModel:
+			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
+			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
+			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack game update model")
+			else:
+				# update other players
+				players_state_manager.update_players_states(new_game_state.get_players(), Player, players_parent_node)
+				# update damaged players
+				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
+				# update illed players
+				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
+				# update bullets
+				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+		Global.ResponseModels.ShootingStateResponseModel:
+			# Update our ammo count, gun reloading state
+			# print("We shot a bullet!")
+			pass
+		Global.ResponseModels.RespawnPlayerResponseModel:
+			print("Server said to respawn a player")
+			if (!Player.is_active):
+				Player.visible = true
+				Player.is_active = true
+				UI.get_node("RespawnMenu").toggle(false)
+		_:
+			print("Unknown message type: ", received_packet.message_type)
+
+
+
+# producer
+func _handle_connection_opened() -> void:
+	producer.init(funcref(self, "_produce"))
+
+func _produce(worker: Worker) -> void:
+	while true:
+		if (worker.queue.is_empty()):
+			worker.semaphore.wait()
+
+		worker.mutex.lock()
+		var should_exit: bool = worker.exit_thread
+		worker.mutex.unlock()
+
+		if should_exit:
+			break
+
+		var network_packet = worker.queue.pop()
+		if (!network_packet):
+			print("Network packet is invalid: ", network_packet)
+			continue
+		if (!client_connection.send_packed_data(network_packet)):
+			print("Error while sending packet: ", network_packet.get_bytes())
+
+
+# consumer
+func _consumer_receive_data(worker: Worker):
+	client_connection.connection.connect("receive", self, "_handle_data_received", [worker])
+
+func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
+	client_connection.reader.add_data(data)
+	var chunk: Array = client_connection.reader.get_next_packet_sequence()
+	while (!chunk.empty()):
+		var network_packet = client_connection._unpack_data(chunk)
+		if (network_packet):
+			worker.push_data(network_packet)
+		chunk = client_connection.reader.get_next_packet_sequence()
+	client_connection.reader.flush()
+
+
+
+
+
+

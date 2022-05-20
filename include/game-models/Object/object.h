@@ -8,16 +8,19 @@
 
 namespace invasion::game_models {
 
-struct Object {
-	explicit Object(Vector2D collider_size, Vector2D initial_pos);
+class Object {
+public:
+	explicit Object(Vector2D shapeColliderSize, Vector2D hitboxColliderSize, Vector2D initialPosition);
 
 	Vector2D getPosition() const;
-	void setPosition(Vector2D pos);
+	void setPosition(Vector2D position);
 
-	bool collidesWith(const Object* const other) const;
+	bool collidesWithHitbox(const Object* const other, const Vector2D& offset = Vector2D::ZERO) const;
+	bool collidesWithShape(const Object* const other) const;
 
 protected:
-	const BoxCollider m_collider;
+	const BoxCollider m_shapeCollider;
+	const BoxCollider m_hitboxCollider;
 	Vector2D m_position;
 };
 

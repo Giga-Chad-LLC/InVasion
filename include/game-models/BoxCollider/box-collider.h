@@ -11,13 +11,13 @@
 namespace invasion::game_models {
 
 
-struct BoxCollider {
-	BoxCollider() = default;
+class BoxCollider {
+public:
+	explicit BoxCollider() = default;
 	explicit BoxCollider(Vector2D size);
-
+	
 	Vector2D size() const;
-
-	bool collidesWith(const Vector2D& center, const BoxCollider* const other, const Vector2D& other_center) const;
+	bool collidesWith(const Vector2D& center, const BoxCollider* const other, const Vector2D& otherCenter) const;
 
 
 private:

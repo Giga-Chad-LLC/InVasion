@@ -2,67 +2,141 @@ cmake_minimum_required(VERSION 3.15)
 
 project(InVasionServers CXX)
 
-# adding subdirs
+#### adding subdirs
 add_subdirectory(./include/)
 add_subdirectory(./tests/)
 
-# variables propagations
-# GAME-MODEL-SRCS - propagated from ./include/game-models
+#### variables propagations
+# GAME-MODELS-SRCS - propagated from ./include/game-models
 # INTERACTORS-SRCS - propagated from ./include/interactors
-
+# CONTROLLERS-SRCS - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
+# GAME-SERVER-SRCS - propagated from ./include/server
+# UTILS-SRCS - propagated from ./include/utils
 
 
-# setting names for executables
-set(GAME-TARGET game)
-set(GAME-MODELS-TESTS-TARGET game-models-tests)
+#### setting names for executables
+set(GAME_MODELS_TESTS_TARGET game-models-tests)
+set(SERVER_TARGET server)
+
+#### setting global props
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-# configuring GAME-TARGET:
+#### Protobuf
+find_package(Protobuf REQUIRED)
 
-# add_executable(${GAME-TARGET} 
-# 	src/game.cpp 
-# 	${GAME-MODEL-SRCS}
-# )
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
+		# request-models
+        ./src/proto/request-models/move-request-model.proto
+        ./src/proto/request-models/update-game-state-request-model.proto
+		./src/proto/request-models/rotate-weapon-request-model.proto
+		./src/proto/request-models/shoot-request-model.proto
+		./src/proto/request-models/respawn-player-request-model.proto
+		./src/proto/request-models/game-session-ended-request-model.proto
+		
+		# utils
+        ./src/proto/utils/vector2d.proto
 
-# target_include_directories(${GAME-TARGET} PUBLIC 
-# 	./include
-# )
+		# response-models
+        ./src/proto/response-models/player-info-response-model.proto
+        ./src/proto/response-models/player-position-response-model.proto
+        ./src/proto/response-models/shooting-state-response-model.proto
+		./src/proto/response-models/bullet-position-response-model.proto
+		./src/proto/response-models/game-state-response-model.proto
+		./src/proto/response-models/damaged-player-response-model.proto
+		./src/proto/response-models/killed-player-response-model.proto
+		./src/proto/response-models/respawn-player-response-model.proto
+		./src/proto/response-models/game-session-stats-response-model.proto
+		./src/proto/response-models/player-game-session-stats-response-model.proto
+		)
 
-# target_compile_options(${GAME-TARGET} PUBLIC
-# 	-Wall 
-# 	-Wextra 
-# 	-Werror
-# )
+message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
+message(NOTICE "Bin dir: " ${CMAKE_CURRENT_BINARY_DIR})
+message(NOTICE "Proto Source: " ${PROTO_SRCS})
+message(NOTICE "Proto Headers: " ${PROTO_HDRS})
+message(NOTICE "Proto Libraries: " ${Protobuf_LIBRARIES})
 
-# set_target_properties(${GAME-TARGET} PROPERTIES
-# 	CXX_STANDARD 17
-#     CXX_STANDARD_REQUIRED ON
-# )
+#### compile options for all targets
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(
+            /experimental:external /external:I ${Protobuf_INCLUDE_DIR}/google/protobuf /external:W0)
+    # /W4 /WX)
+else ()
+    # lots of warnings and all warnings as errors
+    # add_compile_options(-Wall -Wextra -Werror)
+endif ()
 
 
+#### configuring GAME_MODELS_TESTS_TARGET:
+add_executable(${GAME_MODELS_TESTS_TARGET}
+        src/doctest_main.cpp
+        ${GAME-MODELS-TESTS-SRCS}
+        ${GAME-MODELS-SRCS}
+        ${INTERACTORS-SRCS}
+        ${CONTROLLERS-SRCS}
+		${UTILS-SRCS}
 
-# configuring GAME-MODELS-TESTS-TARGET:
+        ${PROTO_SRCS}
+        ${PROTO_HDRS}
+        )
 
-add_executable(${GAME-MODELS-TESTS-TARGET}
-	src/doctest_main.cpp
-	${GAME-MODELS-TESTS-SRCS}
-	${GAME-MODEL-SRCS}
-	${INTERACTORS-SRCS}
-)
+target_include_directories(${GAME_MODELS_TESTS_TARGET} PUBLIC
+        ./doctest
+        ./include
+        ${Protobuf_INCLUDE_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}
+        )
 
-target_include_directories(${GAME-MODELS-TESTS-TARGET} PUBLIC 
-	./doctest
-	./include
-)
+if (WIN32 AND NOT MSVC AND NOT BORLAND)
+    target_link_libraries(${GAME_MODELS_TESTS_TARGET} ws2_32 ${Protobuf_LIBRARIES})
+else ()
+    find_package(Threads REQUIRED)
+    target_link_libraries(${GAME_MODELS_TESTS_TARGET} PRIVATE Threads::Threads ${Protobuf_LIBRARIES})
+endif ()
 
-target_compile_options(${GAME-MODELS-TESTS-TARGET} PUBLIC
-	-Wall
-	-Wextra
-	-Werror
-)
 
-set_target_properties(${GAME-MODELS-TESTS-TARGET} PROPERTIES
-	CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON
-)
+#### configuring SERVER_TARGET:
+
+add_executable(${SERVER_TARGET}
+        src/main.cpp
+        src/server.cpp
+		include/http-server/http-server.cpp
+        ${GAME-MODELS-SRCS}
+        ${INTERACTORS-SRCS}
+        ${CONTROLLERS-SRCS}
+        ${GAME-SERVER-SRCS}
+		${UTILS-SRCS}
+
+		${PROTO_SRCS}
+        ${PROTO_HDRS}
+        )
+
+# including Protobuf dirs to server target
+target_include_directories(${SERVER_TARGET} PUBLIC
+        ./doctest
+        ./include
+        ${Protobuf_INCLUDE_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}
+        )
+
+# including thread libs for Linux and Windows GCC Compiler
+if (MSVC) # WIN32 AND NOT MSVC AND NOT BORLAND
+    target_compile_definitions(${SERVER_TARGET} PRIVATE -D_WIN32_WINNT=0x0A00)
+    target_link_libraries(${SERVER_TARGET} PRIVATE
+            # ws2_32
+            ${Protobuf_LIBRARIES}
+            )
+else ()
+    find_package(Threads REQUIRED)
+    target_link_libraries(${SERVER_TARGET} PRIVATE
+            Threads::Threads
+			#==== for http-server ======
+			gcov
+			sqlite3
+			#==========
+            ${Protobuf_LIBRARIES}
+            )
+endif ()
