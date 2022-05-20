@@ -1,15 +1,22 @@
-#include "session.h"
 #include <cassert>
 #include <thread>
 #include <iterator>
+
+#include "session.h"
+
+// server
 #include "server/Server/server.h"
 #include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
-// game-models
+// response-models
 #include "player-info-response-model.pb.h"
-#include "update-game-state-request-model.pb.h"
 #include "game-over-response-model.pb.h"
+// request-models
+#include "update-game-state-request-model.pb.h"
+// game-models
+#include "game-models/GameSession/game-session.h"
+#include "game-models/Player/player-specialization-enum.h"
 
 
 namespace invasion::server {
@@ -178,7 +185,9 @@ void Session::addClient(
         >
     >> ();
 
-    auto client = std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue);
+    auto client = std::make_shared<Client>(socket,
+										   m_gameSession->createPlayerAndReturnId(game_models::PlayerSpecialization::Stormtrooper), 
+										   clientResponseQueue);
     m_connections.push_back({
         client,
         clientResponseQueue

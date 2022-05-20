@@ -15,8 +15,10 @@
 #include "game-session-stats.h"
 // game-models
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/PlayerManager/player-manager.h"
+#include "game-models/PlayersFactory/players-factory.h"
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/StaticObject/static-object.h"
@@ -57,7 +59,7 @@ GameSession::GameSession()
 
 
 // returns id of created player
-int GameSession::createPlayerAndReturnId() {
+int GameSession::createPlayerAndReturnId(PlayerSpecialization specialization) {
 	std::vector<std::shared_ptr<Player>>& players = m_storage.getPlayers();
 
 	// assigning team to new player
@@ -88,7 +90,9 @@ int GameSession::createPlayerAndReturnId() {
 		m_gameStatistics.incrementSecondTeamPlayersCount();
 	}
 
-	players.push_back(std::make_shared<Player>(Vector2D::ZERO, m_nextPlayerId, teamId));
+	std::shared_ptr<Player> player = PlayersFactory::createPlayer(Vector2D::ZERO, m_nextPlayerId,
+																  teamId, specialization);
+	players.push_back(player);
 	return m_nextPlayerId++;
 }
 
