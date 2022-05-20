@@ -17,6 +17,7 @@
 #include "game-models/GameSession/game-session-stats.h"
 // interactors
 #include "interactors/SelectPlayerSpecializationInteractor/select-player-specialization-interactor.h"
+#include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 // controllers
 #include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 // request-models
@@ -37,6 +38,53 @@ using namespace request_models;
 using namespace response_models;
 
 
+TEST_CASE("Change player specialization") {
+	GameSession session;
+	
+	const auto spec1 = util_models::PlayerSpecialization::Stormtrooper;
+	const auto spec2 = util_models::PlayerSpecialization::Sentinel;
+	const auto spec3 = util_models::PlayerSpecialization::Support;
+	const auto spec4 = util_models::PlayerSpecialization::Medic;
+
+	std::vector<util_models::PlayerSpecialization> specializationModels = {
+		spec1, spec2, spec3, spec4
+	};
+
+	int playerId = -1;
+	// creating player
+	{
+		SelectPlayerSpecializationInteractor interactor;
+
+		SelectPlayerSpecializationRequestModel req;
+		req.set_specialization(util_models::PlayerSpecialization::Stormtrooper);
+		auto res = interactor.execute(req, session);
+		playerId = res.player_id();
+	}
+
+	std::vector<PlayerSpecialization> specializations = {
+		PlayerSpecialization::Stormtrooper,
+		PlayerSpecialization::Sentinel,
+		PlayerSpecialization::Support,
+		PlayerSpecialization::Medic,
+	};
+
+	// changing specs
+	ChangePlayerSpecializationInteractor interactor;
+
+	for(int i = 0; i < specializationModels.size(); i++) {
+		const auto p = specializationModels[i];
+		ChangePlayerSpecializationRequestModel req;
+		req.set_specialization(p);
+		req.set_player_id(playerId);
+		interactor.execute(req, session);
+
+		const auto player = session.getPlayer(playerId);
+		CHECK(player->getSpecialization() == specializations[i]);
+	}
+}
+
+
+/*
 TEST_CASE("Player creating with specialization system") {
 	GameSession session;
 	SelectPlayerSpecializationInteractor interactor;
@@ -58,15 +106,16 @@ TEST_CASE("Player creating with specialization system") {
 	}
 
 	for(const auto& res : responses) {
-		//std::cout << "playerId: " << res.player_id() << " spec: " << res.specialization() << std::endl;
+		std::cout << "playerId: " << res.player_id() << " spec: " << res.specialization() << std::endl;
 	}
+	std::cout << std::endl;
 
 	std::vector<std::shared_ptr<Player>> &players = session.getPlayers();
 
 	for(auto player : players) {
 		std::cout << "playerId: " << player->getId() << " spec: " << static_cast<int>(player->getSpecialization()) << std::endl;
 	}
-}
+}*/
 
 
 
