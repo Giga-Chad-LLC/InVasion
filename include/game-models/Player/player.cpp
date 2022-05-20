@@ -39,6 +39,11 @@ int Player::getId() const {
 }
 
 
+PlayerSpecialization Player::getSpecialization() const {
+	return m_specialization;
+}
+
+
 PlayerTeamId Player::getTeamId() const {
 	return m_teamId;
 }

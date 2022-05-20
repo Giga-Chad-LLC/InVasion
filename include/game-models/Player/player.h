@@ -33,6 +33,7 @@ public:
 	virtual ~Player() = default; // for polymorphism
 
 	int getId() const;
+	PlayerSpecialization getSpecialization() const;
 	PlayerTeamId getTeamId() const;
 	PlayerLifeState& getLifeState();
 	PlayerGameSessionStats& getGameSessionStats();
