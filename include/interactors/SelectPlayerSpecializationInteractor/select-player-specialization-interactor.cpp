@@ -5,6 +5,8 @@
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player-specialization-enum.h"
+// utils
+#include "utils/PlayerSpecializationUtilities/player-specialization-utilities.h"
 // request-models
 #include "select-player-specialization-request-model.pb.h"
 // response-models
@@ -21,30 +23,8 @@ using namespace request_models;
 PlayerSpecializationResponseModel SelectPlayerSpecializationInteractor::execute(
 	const SelectPlayerSpecializationRequestModel& req, GameSession& session) const {
 	
-	game_models::PlayerSpecialization specialization;
-
 	// selecting specialization according to provided one in req
-	switch (req.specialization()) {
-		case util_models::PlayerSpecialization::Stormtrooper: {
-			specialization = game_models::PlayerSpecialization::Stormtrooper;
-			break;
-		}
-		case util_models::PlayerSpecialization::Sentinel: {
-			specialization = game_models::PlayerSpecialization::Sentinel;
-			break;
-		}
-		case util_models::PlayerSpecialization::Support: {
-			specialization = game_models::PlayerSpecialization::Support;
-			break;
-		}
-		case util_models::PlayerSpecialization::Medic: {
-			specialization = game_models::PlayerSpecialization::Medic;
-			break;
-		}
-		default: {
-			throw std::runtime_error("SelectPlayerSpecializationInteractor cannot create player with provided in the request specialization");
-		}
-	}
+	game_models::PlayerSpecialization specialization = utils::PlayerSpecializationUtilities::mapSpecializations(req.specialization());
 
 	const int playerId = session.createPlayerAndReturnId(specialization);
 
