@@ -10,6 +10,7 @@
 #include "game-models/PlayerManager/player-manager.h"
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/StaticObject/static-object.h"
 
@@ -23,7 +24,7 @@ class GameSession {
 public:
 	explicit GameSession();
 
-	int createPlayerAndReturnId();
+	int createPlayerAndReturnId(PlayerSpecialization specialization);
 	int createIdForNewBullet();
 	
 	int addBullet(std::shared_ptr<Bullet> bullet);
