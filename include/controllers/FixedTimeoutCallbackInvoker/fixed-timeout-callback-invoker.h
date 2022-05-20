@@ -19,7 +19,6 @@ public:
 			callback();
 		}));
 
-		thread.detach();
 		m_createdThreads.push_back(std::move(thread));
 	}
 

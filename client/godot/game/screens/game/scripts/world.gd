@@ -96,6 +96,10 @@ func _process(_delta):
 			pass
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
+			# Stop the client and show the results table
+			client_connection.close_connection()
+			Player.set_is_active(false)
+			
 		Global.ResponseModels.RespawnPlayerResponseModel:
 			print("Server said to respawn a player")
 			if (!Player.is_active):

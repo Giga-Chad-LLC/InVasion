@@ -23,7 +23,7 @@ public:
     Client(
         std::shared_ptr <tcp::socket> socket,
         int clientId,
-        std::shared_ptr <SafeQueue<
+        std::weak_ptr <SafeQueue<
             std::pair<
                 std::shared_ptr <NetworkPacketResponse>,
                 std::shared_ptr <LatchCaller>
@@ -84,7 +84,7 @@ private:
     const std::size_t MAX_MESSAGE_LENGTH = 1024U;
 
 
-    std::shared_ptr<SafeQueue<
+    std::weak_ptr<SafeQueue<
             std::pair<
                 std::shared_ptr <NetworkPacketResponse>,
                 std::shared_ptr <LatchCaller>

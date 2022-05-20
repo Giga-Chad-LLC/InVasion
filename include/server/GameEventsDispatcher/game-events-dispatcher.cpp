@@ -22,10 +22,14 @@
 
 
 namespace invasion::server {
+GameEventsDispatcher::~GameEventsDispatcher() {
+    std::cout << "Game events dispatcher destroyed" << std::endl;
+}
+
 void GameEventsDispatcher::start(
-    std::shared_ptr <Session> session,
-    std::shared_ptr <game_models::GameSession> gameSession,
-    std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> requestQueue
+    std::weak_ptr <Session> session,
+    std::weak_ptr <game_models::GameSession> gameSession,
+    std::weak_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> requestQueue
 ) {
     if (m_isActive.load()) {
         return;
@@ -38,7 +42,7 @@ void GameEventsDispatcher::start(
         while (m_isActive.load()) {
             std::shared_ptr <NetworkPacketRequest> request;
 
-            if (requestQueue->consume(request)) {
+            if (!requestQueue.expired() && requestQueue.lock()->consume(request)) {
                 dispatchEvent(session, gameSession, request);
             }
         }
@@ -58,10 +62,22 @@ void GameEventsDispatcher::stop() {
 
 
 void GameEventsDispatcher::dispatchEvent(
-    std::shared_ptr <Session> session,
-    std::shared_ptr <game_models::GameSession> gameSession,
+    std::weak_ptr <Session> sessionWeakPtr,
+    std::weak_ptr <game_models::GameSession> gameSessionWeakPtr,
     std::shared_ptr <NetworkPacketRequest> request
 ) {
+    if (gameSessionWeakPtr.expired()) {
+        std::cout << "Game events dispatcher error: game session in nullptr before event dispatch" << std::endl;
+        return;
+    }
+    if (sessionWeakPtr.expired()) {
+        std::cout << "Game events dispatcher error: session in nullptr before event dispatch" << std::endl;
+        return;
+    }
+
+    auto gameSession = gameSessionWeakPtr.lock();
+    auto session = sessionWeakPtr.lock();
+    
     switch (request->getMessageType()) {
         case RequestModel_t::UpdateGameStateRequestModel: {
             gameSession->updateGameState();
