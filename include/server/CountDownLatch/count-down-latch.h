@@ -47,8 +47,9 @@ public:
     void operator()() {
         if (!m_isCalled) {
             m_isCalled = true;
+            std::cout << "Decrease latch counter from " << m_latch->getCount();
             m_latch->countDown();
-            std::cout << "Decrease latch counter to " << m_latch->getCount() << std::endl;
+            std::cout << " to " << m_latch->getCount() << std::endl;
         }
     }
 
