@@ -50,8 +50,7 @@ public:
                 std::shared_ptr <LatchCaller>
             >
         >> clientResponseQueue,
-        uint32_t playerId,
-        game_models::PlayerTeamId teamId
+        uint32_t playerId
     );
 
 private:

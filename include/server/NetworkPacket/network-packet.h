@@ -22,6 +22,7 @@ namespace invasion::server {
 		RespawnPlayerResponseModel = 1004,
         GameOverResponseModel = 1005,
         PlayerSpecializationResponseModel = 1006,
+        HandshakeResponseModel = 1007,
         UnknownResponseModel
     };
 

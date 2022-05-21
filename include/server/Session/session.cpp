@@ -10,13 +10,15 @@
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 // response-models
-#include "player-info-response-model.pb.h"
 #include "game-over-response-model.pb.h"
+#include "handshake-response-model.pb.h"
 // request-models
 #include "update-game-state-request-model.pb.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player-specialization-enum.h"
+// interactors
+#include "interactors/HandshakeResponseInteractor/handshake-response-interactor.h"
 
 
 namespace invasion::server {
@@ -177,23 +179,16 @@ void Session::makeHandshakeWithClient(
                 std::shared_ptr <LatchCaller>
             >
         >> clientResponseQueue,
-    uint32_t playerId,
-    game_models::PlayerTeamId teamId
+    uint32_t playerId
 ) {
     // send to client his ID
-    std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
-    response_models::PlayerInfoResponseModel response;
-    response.set_player_id(playerId);
-
-    if (teamId == game_models::PlayerTeamId::FirstTeam) {
-        response.set_team_id(response_models::PlayerInfoResponseModel::FirstTeam);
-    } else {
-        response.set_team_id(response_models::PlayerInfoResponseModel::SecondTeam);
-    }
+    // std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
+    interactors::HandshakeResponseInteractor interactor;
+    auto response = interactor.execute(*m_gameSession, playerId);
 
     auto packet = std::make_shared<NetworkPacketResponse> (
         NetworkPacket::serialize(response),
-        ResponseModel_t::PlayerInfoResponseModel,
+        ResponseModel_t::HandshakeResponseModel,
         response.ByteSizeLong()
     );
 
@@ -234,12 +229,7 @@ void Session::addClient(
         executionService
     );
 
-    makeHandshakeWithClient(
-        clientResponseQueue,
-        client->getClientId(),
-        m_gameSession->getPlayer(client->getClientId())->getTeamId()
-    );
-
+    makeHandshakeWithClient(clientResponseQueue, client->getClientId());
 
     std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
         std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
