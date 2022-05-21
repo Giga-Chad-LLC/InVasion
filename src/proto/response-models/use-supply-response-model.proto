@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package response_models;
+import "supply-type.proto";
+
+message UseSupplyResponseModel {
+	int32 player_id = 1;
+	int32 supply_id = 2;
+	util_models.SupplyType applied_supply_type = 3;
+	int32 left_supply_capacity = 4;
+	bool is_active = 5;
+}
