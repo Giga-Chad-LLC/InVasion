@@ -176,6 +176,11 @@ std::vector<std::shared_ptr<StaticObject>>& GameSession::getObstacles() {
 }
 
 
+std::vector<std::shared_ptr<StaticSupply>>& GameSession::getSupplies() {
+	return m_storage.getSupplies();
+}
+
+
 void GameSession::removePlayerById(const int playerId) {
 	auto& players = m_storage.getPlayers();
 	

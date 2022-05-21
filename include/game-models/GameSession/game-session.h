@@ -13,6 +13,7 @@
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/StaticObject/static-object.h"
+#include "game-models/StaticSupply/static-supply.h"
 
 #include "game-session-stats.h"
 
@@ -37,6 +38,7 @@ public:
 	std::vector<std::shared_ptr<Player>>& getKilledPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
 	std::vector<std::shared_ptr<StaticObject>>& getObstacles();
+	std::vector<std::shared_ptr<StaticSupply>>& getSupplies();
 
 	void removePlayerById(int playerId);
 	void changePlayerSpecialization(int playerId, PlayerSpecialization specialization);
