@@ -24,6 +24,7 @@
 #include "game-state-response-model.pb.h"
 #include "respawn-player-response-model.pb.h"
 #include "player-specialization-response-model.pb.h"
+#include "supply-model.pb.h"
 
 namespace invasion::server {
 GameEventsDispatcher::~GameEventsDispatcher() {
@@ -157,6 +158,19 @@ void GameEventsDispatcher::dispatchEvent(
             std::cout << "Client " << abilityModel.player_id() << " used ability" << std::endl;
             interactors::ApplyAbilityInteractor interactor;
             
+            auto responseModel = interactor.execute(abilityModel, *gameSession);
+            if (!responseModel.has_value()) {
+                std::cout << "Ability is unavailable" << std::endl;
+                break;
+            }
+    
+            auto response = std::make_shared<NetworkPacketResponse>(
+                NetworkPacket::serialize(responseModel.value()),
+                ResponseModel_t::SupplyResponseModel,
+                responseModel.value().ByteSizeLong()
+            );
+
+            session->putDataToAllClients(response);
             break;
         }
         case RequestModel_t::ShootRequestModel: {

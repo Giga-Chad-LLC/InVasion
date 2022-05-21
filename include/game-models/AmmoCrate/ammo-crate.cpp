@@ -20,7 +20,7 @@ AmmoCrate::AmmoCrate(Vector2D initialPosition,
 		AmmoCrate::SHAPE_COLLIDER_SIZE,
 		initialPosition,
 		supplyId,
-		StaticSupplyType::AidKit,
+		StaticSupplyType::AmmoCrate,
 		playerId,
 		AmmoCrate::INITIAL_SUPPLY_CAPACITY
 	) {}

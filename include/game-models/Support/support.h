@@ -21,7 +21,7 @@ public:
 
 	inline static int INITIAL_AMMO = 120;
 private:
-	inline static long long ABILITY_COOL_DOWN_MS = 10 * 1000; // 10 sec
+	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
 };
 
 } // namespace invasion::game_models

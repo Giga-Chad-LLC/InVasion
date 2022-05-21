@@ -20,7 +20,7 @@ public:
 	inline static const int DAMAGE = 12;
 	inline static const int INITIAL_HIT_POINTS = 150;
 private:
-	inline static long long ABILITY_COOL_DOWN_MS = 10 * 1000; // 10 sec
+	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
 };
 
 } // namespace invasion::game_models

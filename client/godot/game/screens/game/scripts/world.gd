@@ -6,6 +6,7 @@ signal scene_changed(scene_name)
 # Nodes
 onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
+onready var supplies_parent_node = $YSort/Supplies
 onready var Player = $YSort/Player
 onready var UI = $UI
 onready var RespawnMenu = $UI/RespawnMenu
@@ -15,6 +16,9 @@ var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd
 onready var players_state_manager = PlayersStateManager.new()
 var BulletsStateManager = preload("res://models/bullet/scripts/bullets_state_manager.gd")
 onready var bullets_state_manager = BulletsStateManager.new()
+var SuppliesStateManager = preload("res://models/supplies/scripts/supplies_state_manager.gd")
+onready var supplies_state_manager = SuppliesStateManager.new()
+
 
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
@@ -25,6 +29,9 @@ const PlayerPositionResponseModel = preload("res://proto/response-models/player_
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
 const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
+const SupplyResponseModel = preload("res://proto/response-models/supply_response_model.gd")
+const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.proto.gd")
+
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -84,12 +91,22 @@ func _process(_delta):
 		return
 	
 	match received_packet.message_type:
-		Global.ResponseModels.HandshakeResponseModel: # PlayerInfoResponseModel
-			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
-			# set player specialization (as default for now)
-			print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
-#			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
-			RespawnMenu.toggle(true, "Select specialization")
+		Global.ResponseModels.HandshakeResponseModel: 
+			var handshake_model = HandshakeResponseModel.HandshakeResponseModel.new()
+			var result_code = handshake_model.from_bytes(received_packet.get_bytes())
+			if (result_code != HandshakeResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack handshake")
+			else:
+				# we only know team_id and player_id (we need specialization as well)
+				Player.set_player_info(
+					handshake_model.get_player_id(),
+					handshake_model.get_team_id()
+				)
+				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
+				# set player specialization (as default for now)
+				print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
+	#			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
+				RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
@@ -119,6 +136,13 @@ func _process(_delta):
 				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+		Global.ResponseModels.SupplyResponseModel:
+			var new_supplies_state = SupplyResponseModel.SupplyResponseModel.new()
+			var result_code = new_supplies_state.from_bytes(received_packet.get_bytes())
+			if (result_code != GameStateResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack game update model")
+			else:
+				supplies_state_manager.update_supplies_states([new_supplies_state.get_supply()], supplies_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")

@@ -608,6 +608,8 @@ position = Vector2( 272, 32 )
 
 [node name="OtherPlayers" type="YSort" parent="YSort"]
 
+[node name="Supplies" type="YSort" parent="YSort"]
+
 [connection signal="pressed" from="UI/RespawnMenu/RespawnButtonContainer/RespawnButton" to="." method="_on_RespawnButton_pressed"]
 [connection signal="toggle_escape_menu" from="UI/EscapeMenu" to="." method="_on_EscapeMenu_toggle_escape_menu"]
 [connection signal="pressed" from="UI/EscapeMenu/CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]

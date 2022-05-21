@@ -25,6 +25,11 @@ _global_script_classes=[ {
 "path": "res://player/scripts/players_state_manager.gd"
 }, {
 "base": "Reference",
+"class": "SuppliesStateManager",
+"language": "GDScript",
+"path": "res://models/supplies/scripts/supplies_state_manager.gd"
+}, {
+"base": "Reference",
 "class": "TCPStreamParser",
 "language": "GDScript",
 "path": "res://network/tcp_stream_parser.gd"
@@ -33,6 +38,7 @@ _global_script_class_icons={
 "BulletsStateManager": "",
 "NetworkPacket": "",
 "PlayersStateManager": "",
+"SuppliesStateManager": "",
 "TCPStreamParser": ""
 }
 

@@ -44,3 +44,9 @@ enum SpecializationTypes {
 	Medic = 3,
 	UNDEFINED,
 }
+
+enum SupplyType {
+	AidKit = 0,
+	AmmoCrate = 1,
+}
+

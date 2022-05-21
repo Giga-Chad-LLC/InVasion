@@ -13,7 +13,6 @@ const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_abili
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
-const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.proto.gd")
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -101,8 +100,16 @@ func start_ability_cooldown():
 func _on_AbilityCooldownTimer_timeout():
 	is_ability_cooldown = false
 
+func has_ability():
+	if (
+		player_specialization == Global.SpecializationTypes.Medic   or
+		player_specialization == Global.SpecializationTypes.Support
+	):
+		return true
+	return false
+
 func get_apply_ability_request():
-	if (Input.is_action_pressed("apply_ability") and not is_ability_cooldown):
+	if (has_ability() and Input.is_action_pressed("apply_ability") and not is_ability_cooldown):
 		print("Use ability!")
 		var ability = ApplyAbilityRequestModel.ApplyAbilityRequestModel.new()
 		ability.set_player_id(player_id)
@@ -146,15 +153,10 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 
 
 # Set player id retrieved from server
-func set_player_info(packet: NetworkPacket) -> void:
-	var handshake_model = HandshakeResponseModel.HandshakeResponseModel.new()
-	var result_code = handshake_model.from_bytes(packet.get_bytes())
-	if (result_code != HandshakeResponseModel.PB_ERR.NO_ERRORS):
-		print("Error while receiving: ", "cannot unpack handshake")
-	else:
-		player_id = handshake_model.get_player_id()
-		team_id = handshake_model.get_team_id()
-		print("Set my id: ", player_id)
-		print("Set my team id: ", team_id)
+func set_player_info(new_player_id, new_team_id) -> void:
+	player_id = new_player_id
+	team_id = new_team_id
+	print("Set my id: ", player_id)
+	print("Set my team id: ", team_id)
 
 
