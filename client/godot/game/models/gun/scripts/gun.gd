@@ -9,8 +9,11 @@ var is_cooldown = false
 var should_follow_mouse: bool = false
 
 func instance_bullet(rotation: float):
-	var bullet_model_instance = Global.instance_node_at_location(bullet_model,
-							  bullet_spawning_node, shoot_point.global_position)
+	var bullet_model_instance = Global.instance_node_at_location(
+		bullet_model,
+		bullet_spawning_node,
+		shoot_point.global_position
+	)
 	bullet_model_instance.rotation = rotation
 
 func start_cooldown():

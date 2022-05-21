@@ -12,11 +12,13 @@
 #include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
 #include "interactors/RespawnPlayerInteractor/respawn-player-interactor.h"
 #include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
+#include "interactors/ApplyAbilityInteractor/apply-ability-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
 #include "respawn-player-request-model.pb.h"
 #include "change-player-specialization-request-model.pb.h"
+#include "apply-ability-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
@@ -146,6 +148,15 @@ void GameEventsDispatcher::dispatchEvent(
             );
 
             session->putDataToAllClients(response);
+            break;
+        }
+        case RequestModel_t::ApplyAbilityRequestModel: {
+            request_models::ApplyAbilityRequestModel abilityModel;
+            NetworkPacket::deserialize(abilityModel, request);
+
+            std::cout << "Client " << abilityModel.player_id() << " used ability" << std::endl;
+            interactors::ApplyAbilityInteractor interactor;
+            
             break;
         }
         case RequestModel_t::ShootRequestModel: {

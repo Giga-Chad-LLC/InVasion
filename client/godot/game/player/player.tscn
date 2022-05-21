@@ -30,3 +30,7 @@ material = SubResource( 35 )
 
 [node name="AnimationTree" parent="." index="3"]
 parameters/playback = SubResource( 1 )
+
+[node name="AbilityCooldownTimer" type="Timer" parent="." index="5"]
+
+[connection signal="timeout" from="AbilityCooldownTimer" to="." method="_on_AbilityCooldownTimer_timeout"]

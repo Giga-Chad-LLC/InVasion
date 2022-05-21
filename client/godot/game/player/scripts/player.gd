@@ -9,6 +9,7 @@ const MoveRequestModel = preload("res://proto/request-models/move_request_model.
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
 const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_player_request_model.gd")
 const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
+const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_ability_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
@@ -19,6 +20,10 @@ var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var previous_specialization = -1
 var is_active: bool setget set_is_active
 var is_dead: bool setget set_is_dead
+
+# abilities
+var is_ability_cooldown: bool = false
+onready var ability_cooldown_timer = $AbilityCooldownTimer
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -87,6 +92,27 @@ func get_player_shoot_request():
 			return network_packet 
 		return null
 
+
+# Ability managment
+func start_ability_cooldown():
+	is_ability_cooldown = true
+	ability_cooldown_timer.start()
+
+func _on_AbilityCooldownTimer_timeout():
+	is_ability_cooldown = false
+
+func get_apply_ability_request():
+	if (Input.is_action_pressed("apply_ability") and not is_ability_cooldown):
+		print("Use ability!")
+		var ability = ApplyAbilityRequestModel.ApplyAbilityRequestModel.new()
+		ability.set_player_id(player_id)
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(ability.to_bytes(), Global.RequestModels.ApplyAbilityRequestModel)
+		start_ability_cooldown()
+		if (network_packet):
+			return network_packet
+		return null
+
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 	var packed_player_action = MoveRequestModel.MoveRequestModel.new()
@@ -116,6 +142,8 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 		packed_player_action.set_current_event(packed_player_action.MoveEvent.Idle)
 	
 	return packed_player_action
+
+
 
 # Set player id retrieved from server
 func set_player_info(packet: NetworkPacket) -> void:
