@@ -1,3 +1,6 @@
+#include <cassert>
+#include <algorithm>
+
 #include "player-life-state.h"
 
 namespace invasion::game_models {
@@ -26,6 +29,9 @@ void PlayerLifeState::applyDamage(const double damage, const int playerId) {
 	m_isDamagedOnLastUpdate = true;
 }
 
+double PlayerLifeState::getInitialHitPoints() const {
+	return m_initialHitPoints;
+}
 
 double PlayerLifeState::getHitPoints() const {
 	return m_hitPoints;
@@ -43,6 +49,13 @@ bool PlayerLifeState::isInDamagedState() const {
 
 void PlayerLifeState::removeDamagedState() {
 	m_isDamagedOnLastUpdate = false;
+}
+
+
+void PlayerLifeState::applyHealing(double healPoints) {
+	assert(healPoints >= 0);
+	m_hitPoints += healPoints;
+	m_hitPoints = std::min(m_hitPoints, m_initialHitPoints);
 }
 
 

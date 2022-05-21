@@ -9,10 +9,13 @@ public:
 	explicit PlayerLifeState(double initialHitPoints);
 
 	void applyDamage(double damage, int playerId);
+	double getInitialHitPoints() const;
 	double getHitPoints() const;
 	bool isInDeadState() const;
 	bool isInDamagedState() const;
 	void removeDamagedState();
+
+	void applyHealing(double healPoints);
 
 	int killedBy() const;
 	int damagedBy() const;
