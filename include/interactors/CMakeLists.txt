@@ -14,6 +14,7 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/GameSessionStatsInteractor/game-session-stats-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SelectPlayerSpecializationInteractor/select-player-specialization-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ApplyAbilityInteractor/apply-ability-interactor.cpp
 
 	PARENT_SCOPE
 )
