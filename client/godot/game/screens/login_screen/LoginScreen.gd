@@ -17,8 +17,8 @@ func _on_GotoBack_pressed():
 
 func _on_CheckButton_pressed():
 	label_error.visible = false
-	var password = $"./CheckButton/PasswordEdit".get_text()
-	var username = $"./CheckButton/UsernameEdit".get_text()
+	var password = $"./PasswordEdit".get_text()
+	var username = $"./UsernameEdit".get_text()
 	var body = {"nickname" : username, "password" : password}
 	http_request.request("http://0.0.0.0:5555/login", PoolStringArray([]),
 		false, HTTPClient.METHOD_GET, to_json(body))
