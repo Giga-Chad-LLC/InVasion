@@ -12,20 +12,21 @@ script = ExtResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.847059 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ExitButton" type="Button" parent="."]
-margin_right = 12.0
-margin_bottom = 20.0
+margin_left = 7.0
+margin_top = 5.0
+margin_right = 73.0
+margin_bottom = 25.0
+rect_scale = Vector2( 0.5, 0.5 )
 text = "Exit"
 
 [node name="connectServerButton" type="Button" parent="."]
 margin_left = 105.0
-margin_top = 69.0
-margin_right = 220.0
-margin_bottom = 103.0
+margin_top = 70.0
+margin_right = 321.0
+margin_bottom = 120.0
+rect_scale = Vector2( 0.5, 0.5 )
 text = "START"
 
 [connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]
