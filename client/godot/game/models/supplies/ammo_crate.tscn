@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://models/ammo_crate/images/HeartUIFull.png" type="Texture" id=1]
+[ext_resource path="res://models/supplies/images/HeartUIFull.png" type="Texture" id=1]
 
 [node name="AmmoCrate" type="Node2D"]
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 0, 0.93, 0.0799219, 1 )
+self_modulate = Color( 0.0784314, 1, 0, 1 )
 texture = ExtResource( 1 )
