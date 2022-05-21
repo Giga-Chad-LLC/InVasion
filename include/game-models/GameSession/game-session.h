@@ -46,6 +46,7 @@ public:
 	
 	void updateGameState();
 
+	bool playerExists(int playerId);
 	const GameSessionStats& getGameStatistics();
 
 	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;

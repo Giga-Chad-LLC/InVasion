@@ -36,7 +36,6 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/shoot-request-model.proto
 		./src/proto/request-models/respawn-player-request-model.proto
 		./src/proto/request-models/game-session-ended-request-model.proto
-		./src/proto/request-models/select-player-specialization-request-model.proto
 		./src/proto/request-models/change-player-specialization-request-model.proto
 		./src/proto/request-models/apply-ability-request-model.proto
 		./src/proto/request-models/use-supply-request-model.proto

@@ -19,7 +19,7 @@ Client::Client(
         >
     >> clientResponseQueue
 ): m_socket(socket), m_clientId(clientId), m_clientResponseQueue(clientResponseQueue) {
-    std::cout << "Created new client" << std::endl;   
+    std::cout << "Created new client with id: " << m_clientId << std::endl;   
 }
 
 Client::~Client() {

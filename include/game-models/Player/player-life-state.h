@@ -24,6 +24,7 @@ public:
 	void setActiveState(bool state);
 
 	void reset();
+	void copyDeadState(const PlayerLifeState& other);
 
 private:
 	const int m_initialHitPoints;

@@ -17,10 +17,6 @@ public:
 	explicit Medic(Vector2D position, int playerId, PlayerTeamId teamId);
 	std::shared_ptr<StaticSupply> applyAbility(int supplyId) override;
 
-	~Medic() {
-		std::cout << "Medic dtor called" << std::endl;
-	}
-
 	inline static const int DAMAGE = 12;
 	inline static const int INITIAL_HIT_POINTS = 150;
 private:

@@ -94,7 +94,7 @@ private:
     std::condition_variable cv_writeNextPacket;
     std::mutex mtx_writeNextPacket;
     std::thread m_writeThread;
-    int m_clientId;
+    int m_clientId = -1;
     std::atomic_bool m_isActive = false;
     std::shared_ptr <tcp::socket> m_socket;
     char* m_readBuffer = new char[MAX_MESSAGE_LENGTH]; // needed to use pure pointer, cuz boost (or me) is damn stupid...
