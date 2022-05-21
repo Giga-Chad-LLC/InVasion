@@ -13,7 +13,7 @@ StaticSupply::StaticSupply(Vector2D shapeColliderSize,
 						int supplyId,
 						StaticSupplyType supplyType,
 						int playerId,
-						double initialSupplyCapacity)
+						int initialSupplyCapacity)
 	: StaticObject(shapeColliderSize, shapeColliderSize, initialPosition),
 		m_leftSupplyCapacity(initialSupplyCapacity),
 	  	m_isActive(true),
@@ -27,7 +27,7 @@ bool StaticSupply::isActive() const {
 }
 
 
-double StaticSupply::getLeftSupplyCapacity() const {
+int StaticSupply::getLeftSupplyCapacity() const {
 	return m_leftSupplyCapacity;
 }
 

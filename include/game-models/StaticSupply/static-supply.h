@@ -19,18 +19,18 @@ public:
 						int supplyId,
 						StaticSupplyType supplyType,
 						int playerId,
-						double initialSupplyCapacity);
+						int initialSupplyCapacity);
 
 	bool isActive() const;
 
 	virtual void supply(std::shared_ptr<Player> player) = 0;
 
-	double getLeftSupplyCapacity() const;
+	int getLeftSupplyCapacity() const;
 
 	StaticSupplyType getSupplyType() const;
 
 protected:
-	double m_leftSupplyCapacity;
+	int m_leftSupplyCapacity;
 	bool m_isActive;
 
 private:

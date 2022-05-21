@@ -22,7 +22,7 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 	PlayerTeamId teamId,
 	int initialHitPoints,
 	int initialAmmo,
-	double damage,
+	int damage,
 	long long abilityCoolDown_ms
 ) :
 	Player(
