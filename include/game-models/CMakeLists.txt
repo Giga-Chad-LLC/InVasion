@@ -25,7 +25,9 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/GameSession/game-session-stats.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerManager/player-manager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletManager/bullet-manager.cpp
-	# ${CMAKE_CURRENT_SOURCE_DIR}/StaticSupply/static-supply.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StaticSupply/static-supply.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AidKit/aid-kit.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AmmoCrate/ammo-crate.cpp
 
 	PARENT_SCOPE
 )
