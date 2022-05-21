@@ -36,7 +36,8 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 		teamId,
 		initialHitPoints,
 		initialAmmo,
-		damage
+		damage,
+		true // hasAbility
 	),
 	m_lastAbilityUseTimestamp_ms(utils::TimeUtilities::getCurrentTime_ms()),
 	m_abilityCoolDown_ms(abilityCoolDown_ms) {}

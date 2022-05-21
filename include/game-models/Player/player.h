@@ -28,7 +28,8 @@ public:
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
-		int damage
+		int damage,
+		bool hasAbility = false
 	);
 	virtual ~Player() = default; // for polymorphism
 
@@ -39,6 +40,8 @@ public:
 	PlayerGameSessionStats& getGameSessionStats();
 	Weapon& getWeapon();
 	void respawn(Vector2D position);
+
+	bool hasAbility() const;
 
 
 	inline static const double MAX_SPEED = 100.0;
@@ -54,6 +57,7 @@ protected:
 
 private:	
 	const int m_id;
+	const bool m_hasAbility;
 	const PlayerSpecialization m_specialization;
 	const PlayerTeamId m_teamId;
 	PlayerLifeState m_lifeState;
