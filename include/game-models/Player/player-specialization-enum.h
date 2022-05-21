@@ -5,10 +5,10 @@
 namespace invasion::game_models {
 	
 enum class PlayerSpecialization {
-	Stormtrooper,
-	Sentinel,
-	Support,
-	Medic,
+	Stormtrooper = 0,
+	Sentinel = 1,
+	Support = 2,
+	Medic = 3,
 	UNDEFINED,
 };
 

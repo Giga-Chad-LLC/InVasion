@@ -14,10 +14,6 @@ public:
 	explicit Support(Vector2D position, int playerId, PlayerTeamId teamId);
 	void applyAbility() override;
 
-	~Support() {
-		std::cout << "Support dtor called" << std::endl;
-	}
-
 	inline static int INITIAL_AMMO = 120;
 private:
 	inline static long long ABILITY_COOL_DOWN_MS = 10 * 1000; // 10 sec
