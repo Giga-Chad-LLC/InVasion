@@ -1,18 +1,23 @@
 #ifndef SUPPORT_H_
 #define SUPPORT_H_
 
+#include <memory>
+
 // game-models
 #include "game-models/AbilityEndowedPlayer/ability-endowed-player.h"
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/StaticSupply/static-supply.h"
+#include "game-models/AmmoCrate/ammo-crate.h"
+
 
 namespace invasion::game_models {
 	
 class Support : public AbilityEndowedPlayer {
 public:
 	explicit Support(Vector2D position, int playerId, PlayerTeamId teamId);
-	void applyAbility() override;
+	std::shared_ptr<StaticSupply> applyAbility(int supplyId) override;
 
 	~Support() {
 		std::cout << "Support dtor called" << std::endl;

@@ -49,4 +49,9 @@ bool AbilityEndowedPlayer::isAbleToApplyAbility() const {
 }
 
 
+void AbilityEndowedPlayer::setCoolDown() {
+	m_lastAbilityUseTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
+}
+
+
 } // namespace invasion::game_models
