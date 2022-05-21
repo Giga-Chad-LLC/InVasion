@@ -28,7 +28,7 @@ public:
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
-		double damage
+		int damage
 	);
 	virtual ~Player() = default; // for polymorphism
 
@@ -44,8 +44,8 @@ public:
 	inline static const double MAX_SPEED = 100.0;
 	inline static const double MASS = 60.0;
 	inline static const int INITIAL_AMMO = 180;
-	inline static const double DAMAGE = 15.0;
-	inline static const double INITIAL_HIT_POINTS = 100.0;
+	inline static const int DAMAGE = 15;
+	inline static const int INITIAL_HIT_POINTS = 100;
 	inline static const Vector2D HITBOX_POSITION_OFFSET = Vector2D(0, -8);
 
 protected:

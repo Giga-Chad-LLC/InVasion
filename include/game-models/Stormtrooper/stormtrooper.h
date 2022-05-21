@@ -20,9 +20,9 @@ public:
 	}
 
 	inline static const double MAX_SPEED = 110.0;
-	inline static const double INITIAL_HIT_POINTS = 120;
+	inline static const int INITIAL_HIT_POINTS = 120;
+	inline static const int DAMAGE = 20;
 	inline static const int INITIAL_AMMO = 120;
-	inline static const double DAMAGE = 20;
 };
 
 

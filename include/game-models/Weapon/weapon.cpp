@@ -20,7 +20,7 @@ const long long Weapon::DELAY_BETWEEN_SHOTS_MS = 74;
 const int Weapon::MAGAZINE = 1000;
 
 
-Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage) 
+Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage) 
 	: m_leftMagazine(Weapon::MAGAZINE),
 	  m_leftAmmo(ammo),
 	  m_initialAmmo(ammo),

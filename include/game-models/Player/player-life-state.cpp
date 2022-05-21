@@ -6,7 +6,7 @@
 namespace invasion::game_models {
 	
 
-PlayerLifeState::PlayerLifeState(double initialHitPoints)
+PlayerLifeState::PlayerLifeState(int initialHitPoints)
 	: m_initialHitPoints(initialHitPoints),
 	  m_hitPoints(initialHitPoints),
 	  m_isDead(false),
@@ -16,7 +16,7 @@ PlayerLifeState::PlayerLifeState(double initialHitPoints)
 	  m_isActive(true) {}
 
 
-void PlayerLifeState::applyDamage(const double damage, const int playerId) {
+void PlayerLifeState::applyDamage(const int damage, const int playerId) {
 	if(m_hitPoints <= damage) {
 		m_hitPoints = 0.0;
 		m_isDead = true;
@@ -29,11 +29,11 @@ void PlayerLifeState::applyDamage(const double damage, const int playerId) {
 	m_isDamagedOnLastUpdate = true;
 }
 
-double PlayerLifeState::getInitialHitPoints() const {
+int PlayerLifeState::getInitialHitPoints() const {
 	return m_initialHitPoints;
 }
 
-double PlayerLifeState::getHitPoints() const {
+int PlayerLifeState::getHitPoints() const {
 	return m_hitPoints;
 }
 
@@ -52,7 +52,7 @@ void PlayerLifeState::removeDamagedState() {
 }
 
 
-void PlayerLifeState::applyHealing(double healPoints) {
+void PlayerLifeState::applyHealing(int healPoints) {
 	assert(healPoints >= 0);
 	m_hitPoints += healPoints;
 	m_hitPoints = std::min(m_hitPoints, m_initialHitPoints);

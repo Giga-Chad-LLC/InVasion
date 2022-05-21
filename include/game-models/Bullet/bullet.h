@@ -12,12 +12,12 @@ namespace invasion::game_models {
 
 class Bullet : public KinematicObject {
 public:
-	explicit Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, double damage);
+	explicit Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, int damage);
 
 	int getId() const;
 	int getPlayerId() const;
 	PlayerTeamId getPlayerTeamId() const;
-	double getDamage() const;
+	int getDamage() const;
 	bool isInCrushedState() const;
 	void setCrushedState(bool state);
 
@@ -29,7 +29,7 @@ private:
 	const int m_id;
 	const int m_playerId;
 	const PlayerTeamId m_playerTeamId;
-	const double m_damage;
+	const int m_damage;
 	bool m_isCrushed;
 };
 

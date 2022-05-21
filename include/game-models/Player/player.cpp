@@ -24,7 +24,7 @@ Player::Player(
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
-		double damage
+		int damage
 	) :
 		KinematicObject(shapeColliderSize, hitboxColliderSize, position, mass, maxSpeed), 
 		m_id(playerId),

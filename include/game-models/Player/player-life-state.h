@@ -6,16 +6,16 @@ namespace invasion::game_models {
 	
 class PlayerLifeState {
 public:
-	explicit PlayerLifeState(double initialHitPoints);
+	explicit PlayerLifeState(int initialHitPoints);
 
-	void applyDamage(double damage, int playerId);
-	double getInitialHitPoints() const;
-	double getHitPoints() const;
+	void applyDamage(int damage, int playerId);
+	int getInitialHitPoints() const;
+	int getHitPoints() const;
 	bool isInDeadState() const;
 	bool isInDamagedState() const;
 	void removeDamagedState();
 
-	void applyHealing(double healPoints);
+	void applyHealing(int healPoints);
 
 	int killedBy() const;
 	int damagedBy() const;
@@ -26,8 +26,8 @@ public:
 	void reset();
 
 private:
-	const double m_initialHitPoints;
-	double m_hitPoints;
+	const int m_initialHitPoints;
+	int m_hitPoints;
 	bool m_isDead;
 	int m_killedBy;
 	bool m_isDamagedOnLastUpdate;

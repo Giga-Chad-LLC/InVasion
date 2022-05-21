@@ -18,8 +18,8 @@ public:
 		std::cout << "Medic dtor called" << std::endl;
 	}
 
-	inline static const double DAMAGE = 12.0;
-	inline static const double INITIAL_HIT_POINTS = 150.0;
+	inline static const int DAMAGE = 12;
+	inline static const int INITIAL_HIT_POINTS = 150;
 private:
 	inline static long long ABILITY_COOL_DOWN_MS = 10 * 1000; // 10 sec
 };

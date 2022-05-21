@@ -13,7 +13,7 @@ const Vector2D Bullet::COLLIDER_SIZE(1, 1);
 
 
 
-Bullet::Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, double damage)
+Bullet::Bullet(Vector2D initialPosition, int bulletId, int playerId, PlayerTeamId teamId, int damage)
 	: KinematicObject(
 		Bullet::COLLIDER_SIZE, 
 		Bullet::COLLIDER_SIZE,
@@ -40,7 +40,7 @@ PlayerTeamId Bullet::getPlayerTeamId() const {
 	return m_playerTeamId;
 }
 
-double Bullet::getDamage() const {
+int Bullet::getDamage() const {
 	return m_damage;
 }
 
