@@ -8,6 +8,7 @@ onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var Player = $YSort/Player
 onready var UI = $UI
+onready var RespawnMenu = $UI/RespawnMenu
 onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelector
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
@@ -87,8 +88,8 @@ func _process(_delta):
 			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
 			# set player specialization (as default for now)
 			print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
-			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
-			
+#			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
+			RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
@@ -131,10 +132,9 @@ func _process(_delta):
 		Global.ResponseModels.RespawnPlayerResponseModel:
 			Player.set_is_dead(false)
 			Player.set_is_active(true)
-			UI.get_node("RespawnMenu").toggle(false)
+			RespawnMenu.toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
-
 
 
 # producer
