@@ -24,9 +24,12 @@ public:
 	void setDirection(const Vector2D& dir);
 	void reset();
 
+	void addAmmo(int ammo);
+
 	// getters
 	int getLeftMagazine() const;
 	int getLeftAmmo() const;
+	int getInitialAmmo() const;
 	long long getReloadingStartTimestamp_ms() const;
 	Vector2D getDirection() const;
 

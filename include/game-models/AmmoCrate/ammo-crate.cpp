@@ -28,7 +28,19 @@ AmmoCrate::AmmoCrate(Vector2D initialPosition,
 
 void AmmoCrate::supply(std::shared_ptr<Player> player) {
 	Weapon& weapon = player->getWeapon();
-	// TODO
+	
+	const int initialAmmo = weapon.getInitialAmmo();
+	const int currentAmmo = weapon.getLeftAmmo();
+
+	int addon = std::max(initialAmmo - currentAmmo, AmmoCrate::SUPPLY_PORTION);
+
+	if(addon >= m_leftSupplyCapacity) {
+		addon = m_leftSupplyCapacity;
+		m_isActive = false;
+	}
+
+	m_leftSupplyCapacity -= addon;
+	weapon.addAmmo(addon);
 }
 
 } // namespace invasion::game_models

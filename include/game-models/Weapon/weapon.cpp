@@ -2,6 +2,7 @@
 #include <cassert>
 #include <chrono>
 #include <memory>
+#include <algorithm>
 
 #include "weapon.h"
 
@@ -102,6 +103,12 @@ void Weapon::reset() {
 }
 
 
+void Weapon::addAmmo(int ammo) {
+	assert(ammo >= 0);
+	m_leftAmmo = std::min(m_leftAmmo + ammo, m_initialAmmo);
+}
+
+
 // getters
 int Weapon::getLeftMagazine() const {
 	return m_leftMagazine;
@@ -112,6 +119,9 @@ int Weapon::getLeftAmmo() const {
 	return m_leftAmmo;
 }
 
+int Weapon::getInitialAmmo() const {
+	return m_initialAmmo;
+}
 
 long long Weapon::getReloadingStartTimestamp_ms() const {
 	return m_reloadingStartTimestamp_ms;
