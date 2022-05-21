@@ -77,8 +77,10 @@ void BulletManager::collideBulletWithPlayers(std::shared_ptr<Bullet> bullet,
 
 	// searching for collided player
 	for (const auto& player : players) {
-		if (
-			player->getLifeState().isInDeadState() == false &&
+		const bool dead = player->getLifeState().isInDeadState();
+		const bool active = player->getLifeState().isInActiveState();
+
+		if (!dead && active &&
 			player->getId() != playerId &&
 			player->getTeamId() != teamId &&
 			player->collidesWithHitbox(bullet.get(), Player::HITBOX_POSITION_OFFSET)

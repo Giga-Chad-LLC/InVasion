@@ -23,7 +23,10 @@ void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& respons
 	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 	
 	for(const auto& player_ptr : players) {
-		if(player_ptr->getLifeState().isInDeadState()) {
+		const bool dead = player_ptr->getLifeState().isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
+
+		if(dead || !active) {
 			continue;
 		}
 

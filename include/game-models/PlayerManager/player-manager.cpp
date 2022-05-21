@@ -18,7 +18,9 @@ void PlayerManager::updatePlayersPositions(
 	
 	for (auto& player_ptr : players) {
 		const bool killed = player_ptr->getLifeState().isInDeadState();
-		if(!killed) {
+		const bool active = player_ptr->getLifeState().isInActiveState();
+
+		if(!killed && active) {
 			this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
 			this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
 			this->updatePlayerPhysicsOnObstacleCollision(obstacles, player_ptr, dt);
@@ -37,8 +39,9 @@ void PlayerManager::findDamagedPlayers(std::vector<std::shared_ptr<Player>>& pla
 		
 		const bool damaged = lifeState.isInDamagedState();
 		const bool killed = lifeState.isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
 
-		if (damaged && !killed) {
+		if (damaged && !killed && active) {
 			damagedPlayers.push_back(player_ptr);
 			lifeState.removeDamagedState();
 		}
@@ -55,8 +58,9 @@ void PlayerManager::findKilledPlayers(std::vector<std::shared_ptr<Player>>& play
 
 		const bool damaged = lifeState.isInDamagedState();
 		const bool killed = lifeState.isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
 
-		if(damaged && killed) {
+		if(damaged && killed && active) {
 			killedPlayers.push_back(player_ptr);
 			lifeState.removeDamagedState();
 		}
@@ -72,16 +76,21 @@ void PlayerManager::updatePlayersGameSessionStats(std::vector<std::shared_ptr<Pl
 		const int killedBy = killedPlayer->getLifeState().killedBy();
 
 		for (auto& player : players) {
-			const int playerId = player->getId();
-			PlayerGameSessionStats& stats = player->getGameSessionStats();
+			const bool active = player->getLifeState().isInActiveState();
+			
+			if(active) {
+				const int playerId = player->getId();
+				PlayerGameSessionStats& stats = player->getGameSessionStats();
 
-			if (playerId == killedPlayerId) {
-				stats.incrementDeaths();
+				if (playerId == killedPlayerId) {
+					stats.incrementDeaths();
+				}
+
+				if (playerId == killedBy) {
+					stats.incrementKills();
+				}
 			}
 
-			if (playerId == killedBy) {
-				stats.incrementKills();
-			}
 		}
 	}
 
