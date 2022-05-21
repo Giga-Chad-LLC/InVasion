@@ -35,7 +35,8 @@ namespace invasion::game_models {
 GameSession::GameSession() 
 	: m_lastGameStateUpdate_ms(0),
 	  m_nextBulletId(0),
-	  m_nextPlayerId(0) {
+	  m_nextPlayerId(0),
+	  m_nextSupplyId(0) {
 	
 	controllers::DirectoryFilesContainer container(TILEMAPS_ASSETS_DIRECTORY);
 	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
@@ -100,6 +101,11 @@ int GameSession::createPlayerAndReturnId(PlayerSpecialization specialization) {
 
 int GameSession::createIdForNewBullet() {
 	return m_nextBulletId++;
+}
+
+
+int GameSession::createIdForNewSupply() {
+	return m_nextSupplyId++;
 }
 
 

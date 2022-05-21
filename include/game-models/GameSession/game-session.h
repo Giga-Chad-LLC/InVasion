@@ -27,6 +27,7 @@ public:
 
 	int createPlayerAndReturnId(PlayerSpecialization specialization);
 	int createIdForNewBullet();
+	int createIdForNewSupply();
 	
 	int addBullet(std::shared_ptr<Bullet> bullet);
 
@@ -54,6 +55,7 @@ private:
 	long long m_lastGameStateUpdate_ms;
 	int m_nextBulletId;
 	int m_nextPlayerId;
+	int m_nextSupplyId;
 	GameSessionStats m_gameStatistics;
 	GameWorldStorage m_storage;
 	PlayerManager m_playerManager;
