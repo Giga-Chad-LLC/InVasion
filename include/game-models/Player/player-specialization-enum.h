@@ -9,6 +9,7 @@ enum class PlayerSpecialization {
 	Sentinel,
 	Support,
 	Medic,
+	UNDEFINED,
 };
 
 } // namespace invasion::game_models

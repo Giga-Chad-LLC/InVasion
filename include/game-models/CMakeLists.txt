@@ -13,6 +13,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Player/player-game-session-stats.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Stormtrooper/stormtrooper.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Sentinel/sentinel.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UnspecializedPlayer/unspecialized-player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AbilityEndowedPlayer/ability-endowed-player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Support/support.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Medic/medic.cpp
@@ -24,6 +25,7 @@ set(GAME-MODELS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/GameSession/game-session-stats.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerManager/player-manager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletManager/bullet-manager.cpp
+	# ${CMAKE_CURRENT_SOURCE_DIR}/StaticSupply/static-supply.cpp
 
 	PARENT_SCOPE
 )

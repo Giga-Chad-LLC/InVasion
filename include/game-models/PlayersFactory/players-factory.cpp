@@ -8,6 +8,7 @@
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/UnspecializedPlayer/unspecialized-player.h"
 #include "game-models/Stormtrooper/stormtrooper.h"
 #include "game-models/Sentinel/sentinel.h"
 #include "game-models/Support/support.h"
@@ -32,6 +33,9 @@ std::shared_ptr<Player> PlayersFactory::createPlayer(const Vector2D position,
 		}
 		case PlayerSpecialization::Medic: {
 			return std::make_shared<Medic>(position, playerId, teamId);
+		}
+		case PlayerSpecialization::UNDEFINED: {
+			return std::make_shared<UnspecializedPlayer>(position, playerId, teamId);
 		}
 		default: {
 			throw std::runtime_error("PlayersFactory could not create player with provided specialization"); 
