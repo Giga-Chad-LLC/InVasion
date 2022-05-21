@@ -22,7 +22,6 @@ const ShootRequestModel = preload("res://proto/request-models/shoot_request_mode
 const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
-const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
 const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
@@ -50,9 +49,9 @@ func _on_EscapeMenu_toggle_escape_menu(is_escaped):
 func _on_RespawnButton_pressed():
 	if (client_connection and client_connection.is_connected_to_host() and producer):
 		 # will be null if specialization did not change
-		producer.push_data(Player.get_player_specialization_request(
-			RespawnSpecializationSelector.selected_specialization
-		))
+		var spec_packet = Player.get_player_specialization_request(RespawnSpecializationSelector.selected_specialization)
+		if (spec_packet):
+			producer.push_data(spec_packet)
 		producer.push_data(Player.get_respawn_player_request())
 
 
@@ -84,7 +83,7 @@ func _process(_delta):
 		return
 	
 	match received_packet.message_type:
-		Global.ResponseModels.PlayerInfoResponseModel:
+		Global.ResponseModels.HandshakeResponseModel: # PlayerInfoResponseModel
 			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
 			# set player specialization (as default for now)
 			print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)

@@ -11,9 +11,8 @@ const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_pl
 const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
-const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
-
+const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.proto.gd")
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -120,13 +119,13 @@ func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
 
 # Set player id retrieved from server
 func set_player_info(packet: NetworkPacket) -> void:
-	var player_info_model = PlayerInfoResponseModel.PlayerInfoResponseModel.new()
-	var result_code = player_info_model.from_bytes(packet.get_bytes())
-	if (result_code != PlayerInfoResponseModel.PB_ERR.NO_ERRORS):
-		print("Error while receiving: ", "cannot unpack player id")
+	var handshake_model = HandshakeResponseModel.HandshakeResponseModel.new()
+	var result_code = handshake_model.from_bytes(packet.get_bytes())
+	if (result_code != HandshakeResponseModel.PB_ERR.NO_ERRORS):
+		print("Error while receiving: ", "cannot unpack handshake")
 	else:
-		player_id = player_info_model.get_player_id()
-		team_id = player_info_model.get_team_id()
+		player_id = handshake_model.get_player_id()
+		team_id = handshake_model.get_team_id()
 		print("Set my id: ", player_id)
 		print("Set my team id: ", team_id)
 
