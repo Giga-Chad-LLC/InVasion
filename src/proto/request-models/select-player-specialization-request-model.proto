@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package request_models;
-import "player-specialization.proto";
-
-message SelectPlayerSpecializationRequestModel {
-	util_models.PlayerSpecialization specialization = 1; 
-}
