@@ -83,7 +83,7 @@ public:
     void removeSession(uint32_t sessionId);
 private:
     // session remove time interval 
-    const std::size_t SESSION_REMOVER_TIME_INTERVAL_MS = 10000;
+    const std::size_t SESSION_REMOVER_TIME_INTERVAL_MS = 1000 * 60 * 1;
     // next session id
     uint32_t m_nextSessionId = 0U;
     // callback is invoked when the client connected successfully 
