@@ -59,6 +59,9 @@ RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
     else if (type == static_cast<uint32_t> (RequestModel_t::ChangePlayerSpecializationRequestModel)) {
         return RequestModel_t::ChangePlayerSpecializationRequestModel;
     }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ApplyAbilityRequestModel)) {
+        return RequestModel_t::ApplyAbilityRequestModel;
+    }
 
     return RequestModel_t::UnknownRequestModel;
 }
