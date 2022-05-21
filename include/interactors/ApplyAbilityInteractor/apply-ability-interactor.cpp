@@ -8,6 +8,7 @@
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/AbilityEndowedPlayer/ability-endowed-player.h"
+#include "game-models/StaticObject/static-object.h"
 #include "game-models/StaticSupply/static-supply.h"
 #include "game-models/StaticSupply/static-supply-enum.h"
 #include "game-models/Vector2D/vector2d.h"
@@ -51,8 +52,15 @@ std::optional<SupplyResponseModel> ApplyAbilityInteractor::execute(const ApplyAb
 	const int supplyId = session.createIdForNewSupply();
 	std::shared_ptr<StaticSupply> supply = player->applyAbility(supplyId);
 
+
+	// pushing to supplies
 	std::vector<std::shared_ptr<StaticSupply>>& supplies = session.getSupplies();
 	supplies.push_back(supply);
+
+	// pushing to obstalces
+	std::vector<std::shared_ptr<StaticObject>>& obstacles = session.getObstacles();
+	obstacles.emplace_back(supply.get());
+
 
 	// creating response
 	SupplyResponseModel response;
