@@ -18,6 +18,8 @@ public:
 	bool collidesWithHitbox(const Object* const other, const Vector2D& offset = Vector2D::ZERO) const;
 	bool collidesWithShape(const Object* const other) const;
 
+	double calculateClosestDistanceBetween(const Object* const other) const;
+
 protected:
 	const BoxCollider m_shapeCollider;
 	const BoxCollider m_hitboxCollider;
