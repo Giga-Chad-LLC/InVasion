@@ -11,13 +11,11 @@
 #include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
 #include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
 #include "interactors/RespawnPlayerInteractor/respawn-player-interactor.h"
-#include "interactors/SelectPlayerSpecializationInteractor/select-player-specialization-interactor.h"
 #include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
 #include "respawn-player-request-model.pb.h"
-#include "select-player-specialization-request-model.pb.h"
 #include "change-player-specialization-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"

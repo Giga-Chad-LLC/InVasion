@@ -63,6 +63,8 @@ func _ready():
 	# attach UI to the players state manager
 	players_state_manager.UI = UI
 
+var test_dead_update = false
+
 func _process(_delta):
 #	Send player movements to server
 	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
@@ -79,7 +81,7 @@ func _process(_delta):
 		Global.ResponseModels.PlayerInfoResponseModel:
 			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
 			# set player specialization (as default for now)
-			print("Select specilization: ", ChangePlayerSpecializationRequestModel.PlayerSpecialization.Stormtrooper)
+			print("We set player info, send specialization: ", ChangePlayerSpecializationRequestModel.PlayerSpecialization.Stormtrooper)
 			var spec_model = ChangePlayerSpecializationRequestModel.ChangePlayerSpecializationRequestModel.new()
 			spec_model.set_specialization(ChangePlayerSpecializationRequestModel.PlayerSpecialization.Stormtrooper)
 			spec_model.set_player_id(Player.player_id)
@@ -100,8 +102,8 @@ func _process(_delta):
 				Player,
 				players_parent_node
 			)
-			Player.set_is_active(true)
-			pass
+			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
+				Player.set_is_active(true)
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -114,6 +116,16 @@ func _process(_delta):
 				players_state_manager.update_damaged_players_states(new_game_state.get_damaged_players(), Player, players_parent_node)
 				# update illed players
 				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
+				if (Player.is_dead and !test_dead_update):
+					test_dead_update = true
+					print("Change specilization after death (player " + str(Player.player_id) + "): ", ChangePlayerSpecializationRequestModel.PlayerSpecialization.Medic)
+					var spec_model = ChangePlayerSpecializationRequestModel.ChangePlayerSpecializationRequestModel.new()
+					spec_model.set_specialization(ChangePlayerSpecializationRequestModel.PlayerSpecialization.Medic)
+					spec_model.set_player_id(Player.player_id)
+
+					var network_packet = NetworkPacket.new()
+					network_packet.set_data(spec_model.to_bytes(), Global.RequestModels.ChangePlayerSpecializationRequestModel)
+					producer.push_data(network_packet)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 		Global.ResponseModels.ShootingStateResponseModel:
@@ -127,9 +139,10 @@ func _process(_delta):
 			Player.set_is_active(false)
 		Global.ResponseModels.RespawnPlayerResponseModel:
 			print("Server said to respawn a player")
-			if (!Player.is_active):
-#				Player.visible = true
+			if (Player.is_dead):
+				Player.is_dead = false
 				Player.set_is_active(true)
+				test_dead_update = false
 				UI.get_node("RespawnMenu").toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)

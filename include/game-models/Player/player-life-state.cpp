@@ -74,4 +74,9 @@ void PlayerLifeState::reset() {
 }
 
 
+void PlayerLifeState::copyDeadState(const PlayerLifeState& other) {
+	m_isDead = other.m_isDead;	
+}
+
+
 } // namespace invasion::game_models

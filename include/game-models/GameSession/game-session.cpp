@@ -243,9 +243,11 @@ void GameSession::changePlayerSpecialization(int playerId, PlayerSpecialization 
 	// updating specialization
 	std::shared_ptr<Player> updatedPlayer = PlayersFactory::createPlayer(position, playerId, teamId, specialization);
 	
-	// copying stats
+	// copying stats and state
 	PlayerGameSessionStats& stats = updatedPlayer->getGameSessionStats();
 	stats.copy(player->getGameSessionStats());
+	PlayerLifeState& lifeState = updatedPlayer->getLifeState();
+	lifeState.copyDeadState(player->getLifeState());
 
 	// inserting updated player
 	std::vector<std::shared_ptr<Player>> &players = this->getPlayers();

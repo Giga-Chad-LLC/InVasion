@@ -5,6 +5,7 @@ class_name PlayersStateManager
 var player_scene = preload("res://player/player_template.tscn")
 var UI
 
+
 func spawn_player(data, players_parent_node, location):
 	var spawned_player = Global.instance_node_at_location(player_scene, players_parent_node, location)
 	spawned_player.name = str(data['player_id'])
@@ -78,8 +79,8 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 		
 		if (killed_player.get_player_id() == main_player.player_id):
 			print("Sadly, but we died")
-			main_player.is_active = false # Deactivate player
-			main_player.visible = false # Make player invisible
+			main_player.is_dead = true
+			main_player.set_is_active(false) # Deactivate player
 			UI.get_node("RespawnMenu").toggle(true) # Show respawn screen
 		else:
 			despawn_player(killed_player.get_player_id(), players_parent_node)
