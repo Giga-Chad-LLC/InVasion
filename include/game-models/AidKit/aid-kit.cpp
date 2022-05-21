@@ -27,12 +27,12 @@ AidKit::AidKit(Vector2D initialPosition,
 
 
 void AidKit::supply(std::shared_ptr<Player> player) {
-	PlayerLifeState lifeState = player->getLifeState();
+	PlayerLifeState& lifeState = player->getLifeState();
 
 	const int initialHitPoints = lifeState.getInitialHitPoints();
 	const int currentHitPoints = lifeState.getHitPoints();
 
-	int addon = std::max(initialHitPoints - currentHitPoints, AidKit::SUPPLY_PORTION);
+	int addon = std::min(initialHitPoints - currentHitPoints, AidKit::SUPPLY_PORTION);
 
 	if(addon >= m_leftSupplyCapacity) {
 		addon = m_leftSupplyCapacity;

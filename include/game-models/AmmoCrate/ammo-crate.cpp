@@ -32,7 +32,7 @@ void AmmoCrate::supply(std::shared_ptr<Player> player) {
 	const int initialAmmo = weapon.getInitialAmmo();
 	const int currentAmmo = weapon.getLeftAmmo();
 
-	int addon = std::max(initialAmmo - currentAmmo, AmmoCrate::SUPPLY_PORTION);
+	int addon = std::min(initialAmmo - currentAmmo, AmmoCrate::SUPPLY_PORTION);
 
 	if(addon >= m_leftSupplyCapacity) {
 		addon = m_leftSupplyCapacity;
