@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=62 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://ui/respawn_menu/respawn_menu.tscn" type="PackedScene" id=9]
 [ext_resource path="res://screens/game/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
 [ext_resource path="res://screens/game/scripts/bushes.gd" type="Script" id=11]
+[ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -494,6 +495,21 @@ script = ExtResource( 8 )
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
 
+[node name="SpecializationSelector" parent="UI/RespawnMenu" index="2"]
+specialization_button_group = ExtResource( 12 )
+
+[node name="StormtrooperButton" parent="UI/RespawnMenu/SpecializationSelector" index="0"]
+group = ExtResource( 12 )
+
+[node name="SentinelButton" parent="UI/RespawnMenu/SpecializationSelector" index="1"]
+group = ExtResource( 12 )
+
+[node name="SupportButton" parent="UI/RespawnMenu/SpecializationSelector" index="2"]
+group = ExtResource( 12 )
+
+[node name="MedicButton" parent="UI/RespawnMenu/SpecializationSelector" index="3"]
+group = ExtResource( 12 )
+
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
 visible = false
 
@@ -597,4 +613,5 @@ position = Vector2( 272, 32 )
 [connection signal="pressed" from="UI/EscapeMenu/CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
 
 [editable path="UI/RespawnMenu"]
+[editable path="UI/RespawnMenu/SpecializationSelector"]
 [editable path="UI/EscapeMenu"]

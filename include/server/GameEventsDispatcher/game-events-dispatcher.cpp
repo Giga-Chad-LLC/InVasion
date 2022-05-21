@@ -11,15 +11,17 @@
 #include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
 #include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
 #include "interactors/RespawnPlayerInteractor/respawn-player-interactor.h"
+#include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
 #include "respawn-player-request-model.pb.h"
+#include "change-player-specialization-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
 #include "respawn-player-response-model.pb.h"
-
+#include "player-specialization-response-model.pb.h"
 
 namespace invasion::server {
 GameEventsDispatcher::~GameEventsDispatcher() {
@@ -126,6 +128,24 @@ void GameEventsDispatcher::dispatchEvent(
             interactors::MoveInteractor interactor;
             interactor.execute(move, *gameSession);
 
+            break;
+        }
+        case RequestModel_t::ChangePlayerSpecializationRequestModel: {
+            request_models::ChangePlayerSpecializationRequestModel specializationModel;
+            NetworkPacket::deserialize(specializationModel, request);
+
+            std::cout << "Client " << specializationModel.player_id() << " changed specialization to " << specializationModel.specialization() << std::endl;
+
+            interactors::ChangePlayerSpecializationInteractor interactor;
+            response_models::PlayerSpecializationResponseModel responseModel = interactor.execute(specializationModel, *gameSession);
+
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(responseModel),
+                ResponseModel_t::PlayerSpecializationResponseModel,
+                responseModel.ByteSizeLong()
+            );
+
+            session->putDataToAllClients(response);
             break;
         }
         case RequestModel_t::ShootRequestModel: {

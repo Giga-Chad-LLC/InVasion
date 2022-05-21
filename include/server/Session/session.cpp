@@ -107,7 +107,11 @@ void Session::stop() {
         auto ios = m_clientsThreadPool.back().first;
 
         std::cout << "Removing client: " << client->getClientId() << std::endl;
-        m_gameSession->removePlayerById(client->getClientId());
+        
+        if (m_gameSession->playerExists(client->getClientId())) {
+            m_gameSession->removePlayerById(client->getClientId());
+        }
+
         client->stop(); // stop client's threads
         ios->stop(); // stop ios
         m_connections.pop_back();
@@ -139,11 +143,28 @@ void Session::removeClient(uint32_t clientId) {
 
         if (client->getClientId() == clientId) {
             std::cout << "Removing client: " << clientId << std::endl;
-            m_gameSession->removePlayerById(clientId);
+            
+            std::cout << "All clients: ";
+            const auto& players = m_gameSession->getPlayers();
+            for (auto p : players) {
+                std::cout << p->getId() << ", ";
+            }
+            std::cout << std::endl;
+
+            if (m_gameSession->playerExists(client->getClientId())) {
+                m_gameSession->removePlayerById(clientId);
+            }
+            else {
+                std::cout << "Client with id: " << clientId << " was not found and not removed" << std::endl;
+            }
+            std::cout << "Total clients in game session: " << players.size() << std::endl;
+
             client->stop(); // stop client's threads
             ios->stop(); // stop ios
+
             m_connections.erase(std::next(m_connections.begin(), i));
             m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
+            
             return;
         }
     }
@@ -160,7 +181,7 @@ void Session::makeHandshakeWithClient(
     game_models::PlayerTeamId teamId
 ) {
     // send to client his ID
-    std::cout << "Send client his ID: " << playerId << std::endl;
+    std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
     response_models::PlayerInfoResponseModel response;
     response.set_player_id(playerId);
 
@@ -198,9 +219,12 @@ void Session::addClient(
         >
     >> ();
 
-    auto client = std::make_shared<Client>(socket,
-										   m_gameSession->createPlayerAndReturnId(game_models::PlayerSpecialization::Stormtrooper), 
-										   clientResponseQueue);
+    auto client = std::make_shared <Client> (
+        socket,
+        m_gameSession->createPlayerAndReturnId(game_models::PlayerSpecialization::UNDEFINED), 
+        clientResponseQueue
+    );
+
     m_connections.push_back({
         client,
         clientResponseQueue
@@ -245,7 +269,7 @@ void Session::putDataToSingleClient(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        if (client->getClientId() == clientId) {       
+        if (client->getClientId() == clientId && m_gameSession->playerExists(client->getClientId())) {       
             clientResponseQueue->produce({ std::move(response), nullptr });
             return;
         }
@@ -257,7 +281,12 @@ void Session::putDataToAllClients(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        clientResponseQueue->produce({ std::move(std::shared_ptr <NetworkPacketResponse> (response)), nullptr });
+        if (m_gameSession->playerExists(client->getClientId())) {
+            clientResponseQueue->produce({
+                std::move(std::shared_ptr <NetworkPacketResponse> (response)),
+                nullptr
+            });
+        }
     }
 }
 }

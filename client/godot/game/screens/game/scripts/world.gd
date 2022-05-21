@@ -8,6 +8,7 @@ onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var Player = $YSort/Player
 onready var UI = $UI
+onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelector
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -17,11 +18,13 @@ onready var bullets_state_manager = BulletsStateManager.new()
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
+const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
+const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -31,7 +34,7 @@ const Worker = preload("res://network/worker.gd")
 var producer: Worker = Worker.new() # thread that stores events from client
 var consumer: Worker = Worker.new() # thread that will read data from the server into a buffer
 									# and put correct network packets to the thread-safe-queue
-
+var is_game_running = true
 
 # scene/ui changing
 func _on_Quit_pressed():
@@ -39,11 +42,16 @@ func _on_Quit_pressed():
 
 # disable player movements when escape menu is opened
 func _on_EscapeMenu_toggle_escape_menu(is_escaped):
-	Player.is_active = !is_escaped	
+	if (is_game_running): # if the game has not ended yet
+		Player.set_is_active(!is_escaped)
 
 # player want to respawn - send required request model for that
 func _on_RespawnButton_pressed():
 	if (client_connection and client_connection.is_connected_to_host() and producer):
+		 # will be null if specialization did not change
+		producer.push_data(Player.get_player_specialization_request(
+			RespawnSpecializationSelector.selected_specialization
+		))
 		producer.push_data(Player.get_respawn_player_request())
 
 
@@ -61,6 +69,7 @@ func _ready():
 	# attach UI to the players state manager
 	players_state_manager.UI = UI
 
+
 func _process(_delta):
 #	Send player movements to server
 	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
@@ -75,7 +84,26 @@ func _process(_delta):
 	
 	match received_packet.message_type:
 		Global.ResponseModels.PlayerInfoResponseModel:
-			Player.set_player_info(received_packet)
+			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
+			# set player specialization (as default for now)
+			print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
+			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
+			
+		Global.ResponseModels.PlayerSpecializationResponseModel:
+			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
+			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
+			if (result_code != PlayerSpecializationResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack player specialization model")
+			
+			players_state_manager.change_player_specialization(
+				new_player_specialization.get_player_id(),
+				new_player_specialization.get_specialization(),
+				Player,
+				players_parent_node
+			)
+			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
+				Player.set_is_active(true)
+				Player.visible = true
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -98,14 +126,12 @@ func _process(_delta):
 			print("Game over!")
 			# Stop the client and show the results table
 			client_connection.close_connection()
+			is_game_running = false
 			Player.set_is_active(false)
-			
 		Global.ResponseModels.RespawnPlayerResponseModel:
-			print("Server said to respawn a player")
-			if (!Player.is_active):
-				Player.visible = true
-				Player.is_active = true
-				UI.get_node("RespawnMenu").toggle(false)
+			Player.set_is_dead(false)
+			Player.set_is_active(true)
+			UI.get_node("RespawnMenu").toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 
@@ -148,7 +174,6 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 			worker.push_data(network_packet)
 		chunk = client_connection.reader.get_next_packet_sequence()
 	client_connection.reader.flush()
-
 
 
 

@@ -8,14 +8,18 @@ onready var player_gun = $Gun
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
 const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_player_request_model.gd")
+const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
+
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
+var previous_specialization = -1
 var is_active: bool setget set_is_active
+var is_dead: bool setget set_is_dead
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -23,8 +27,13 @@ const NetworkPacket = preload("res://network/data_types.gd")
 
 # Built-in functions
 func _ready():
-	self.is_active = true # call the setter (gun will start rotating as well)
+	self.is_active = false # call the setter (gun will start rotating as well)
+	is_dead = false # don't call the setter
+	visible = false
 
+func set_is_dead(value):
+	is_dead = value
+	visible = !value
 
 func set_is_active(value):
 	is_active = value
@@ -39,6 +48,20 @@ func get_respawn_player_request():
 		return network_packet 
 	return null
 
+func get_player_specialization_request(new_specialization):
+	if (player_specialization != new_specialization):
+		var spec_model = ChangePlayerSpecializationRequestModel.ChangePlayerSpecializationRequestModel.new()
+		spec_model.set_specialization(new_specialization)
+		spec_model.set_player_id(player_id)
+
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(spec_model.to_bytes(), Global.RequestModels.ChangePlayerSpecializationRequestModel)
+		if (network_packet):
+			return network_packet
+	return null
+
+
+
 func get_player_move_request():
 	var action: MoveRequestModel.MoveRequestModel = get_packed_move_action()
 	if (action.get_current_event() != MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -49,7 +72,7 @@ func get_player_move_request():
 		
 		if (network_packet):
 			return network_packet
-		return null
+	return null
 
 func get_player_shoot_request():
 	if (Input.is_action_pressed("shoot") and not player_gun.is_cooldown):
@@ -106,3 +129,5 @@ func set_player_info(packet: NetworkPacket) -> void:
 		team_id = player_info_model.get_team_id()
 		print("Set my id: ", player_id)
 		print("Set my team id: ", team_id)
+
+

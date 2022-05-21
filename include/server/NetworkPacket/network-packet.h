@@ -10,6 +10,8 @@ namespace invasion::server {
         UpdateGameStateRequestModel = 1,
         ShootRequestModel = 2,
 		RespawnPlayerRequestModel = 3,
+        SelectPlayerSpecializationRequestModel = 4,
+        ChangePlayerSpecializationRequestModel = 5,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {
@@ -19,6 +21,7 @@ namespace invasion::server {
 		GameStateResponseModel = 1003,
 		RespawnPlayerResponseModel = 1004,
         GameOverResponseModel = 1005,
+        PlayerSpecializationResponseModel = 1006,
         UnknownResponseModel
     };
 

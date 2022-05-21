@@ -43,6 +43,7 @@ public:
 	
 	void updateGameState();
 
+	bool playerExists(int playerId);
 	const GameSessionStats& getGameStatistics();
 
 

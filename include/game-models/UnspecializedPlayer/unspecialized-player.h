@@ -14,10 +14,6 @@ namespace invasion::game_models {
 class UnspecializedPlayer : public Player {
 public:
 	explicit UnspecializedPlayer(Vector2D position, int playerId, PlayerTeamId teamId);
-
-	~UnspecializedPlayer() {
-		std::cout << "UnspecializedPlayer dtor called" << std::endl;
-	}
 };
 
 
