@@ -62,6 +62,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/player-specialization-response-model.proto
 		./src/proto/response-models/supply-response-model.proto
 		./src/proto/response-models/use-supply-response-model.proto
+		./src/proto/response-models/handshake-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
