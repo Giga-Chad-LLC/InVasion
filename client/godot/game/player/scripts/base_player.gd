@@ -9,6 +9,7 @@ onready var sprite = $Sprite
 var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
+var player_specialization: int = -1
 
 
 func set_sprite_color(color: Color):
@@ -30,7 +31,9 @@ func update_player_position(player_state_model):
 	velocity = Vector2(player_state_model.get_velocity().get_x(), player_state_model.get_velocity().get_y())
 	global_position = Vector2(player_state_model.get_position().get_x(), player_state_model.get_position().get_y())
 
-
+func update_player_specialization(new_player_specialization):
+	player_specialization = new_player_specialization
+	print("Set specialization of player ", player_id, " to ", player_specialization)
 
 func play_hit_animation():
 	hitAnimationPlayer.play("Hit")

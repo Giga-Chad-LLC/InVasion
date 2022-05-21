@@ -86,8 +86,11 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
 
 
-
-
+func change_player_specialization(player_id, player_specialization: int, main_player, players_parent_node):
+	if (player_id == main_player.player_id):
+		main_player.update_player_specialization(player_specialization)
+	elif (players_parent_node.has_node(str(player_id))): 
+		players_parent_node.get_node(str(player_id)).update_player_specialization(player_specialization)
 
 
 

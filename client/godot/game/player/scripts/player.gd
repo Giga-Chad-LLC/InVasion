@@ -13,6 +13,7 @@ const PlayerPositionResponseModel = preload("res://proto/response-models/player_
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
+
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var is_active: bool setget set_is_active
@@ -23,11 +24,12 @@ const NetworkPacket = preload("res://network/data_types.gd")
 
 # Built-in functions
 func _ready():
-	self.is_active = true # call the setter (gun will start rotating as well)
-
+	self.is_active = false # call the setter (gun will start rotating as well)
+	visible = false
 
 func set_is_active(value):
 	is_active = value
+	visible = value
 	$Gun.should_follow_mouse = is_active
 
 func get_respawn_player_request():
@@ -106,3 +108,5 @@ func set_player_info(packet: NetworkPacket) -> void:
 		team_id = player_info_model.get_team_id()
 		print("Set my id: ", player_id)
 		print("Set my team id: ", team_id)
+
+

@@ -19,7 +19,9 @@ enum RequestModels {
 	UpdateGameStateRequestModel = 1,
 	ShootRequestModel = 2,
 	RespawnPlayerRequestModel = 3,
-	UnknownRequestModel = 100
+	SelectPlayerSpecializationRequestModel = 4,
+	ChangePlayerSpecializationRequestModel = 5,
+	UnknownRequestModel
 }
 # Server sends to client
 enum ResponseModels {
@@ -29,5 +31,6 @@ enum ResponseModels {
 	GameStateResponseModel = 1003,
 	RespawnPlayerResponseModel = 1004,
 	GameOverResponseModel = 1005,
+	PlayerSpecializationResponseModel = 1006,
 	UnknownResponseModel
 }

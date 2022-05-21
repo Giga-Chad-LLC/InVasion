@@ -17,11 +17,13 @@ onready var bullets_state_manager = BulletsStateManager.new()
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
 const ShootRequestModel = preload("res://proto/request-models/shoot_request_model.gd")
+const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const PlayerInfoResponseModel = preload("res://proto/response-models/player_info_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
+const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -75,7 +77,31 @@ func _process(_delta):
 	
 	match received_packet.message_type:
 		Global.ResponseModels.PlayerInfoResponseModel:
-			Player.set_player_info(received_packet)
+			Player.set_player_info(received_packet) # we only know team_id and player_id (we need specialization as well)
+			# set player specialization (as default for now)
+			print("Select specilization: ", ChangePlayerSpecializationRequestModel.PlayerSpecialization.Stormtrooper)
+			var spec_model = ChangePlayerSpecializationRequestModel.ChangePlayerSpecializationRequestModel.new()
+			spec_model.set_specialization(ChangePlayerSpecializationRequestModel.PlayerSpecialization.Stormtrooper)
+			spec_model.set_player_id(Player.player_id)
+
+			var network_packet = NetworkPacket.new()
+			network_packet.set_data(spec_model.to_bytes(), Global.RequestModels.ChangePlayerSpecializationRequestModel)
+			producer.push_data(network_packet)
+			
+		Global.ResponseModels.PlayerSpecializationResponseModel:
+			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
+			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
+			if (result_code != PlayerSpecializationResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack player specialization model")
+			
+			players_state_manager.change_player_specialization(
+				new_player_specialization.get_player_id(),
+				new_player_specialization.get_specialization(),
+				Player,
+				players_parent_node
+			)
+			Player.set_is_active(true)
+			pass
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -99,12 +125,11 @@ func _process(_delta):
 			# Stop the client and show the results table
 			client_connection.close_connection()
 			Player.set_is_active(false)
-			
 		Global.ResponseModels.RespawnPlayerResponseModel:
 			print("Server said to respawn a player")
 			if (!Player.is_active):
-				Player.visible = true
-				Player.is_active = true
+#				Player.visible = true
+				Player.set_is_active(true)
 				UI.get_node("RespawnMenu").toggle(false)
 		_:
 			print("Unknown message type: ", received_packet.message_type)
