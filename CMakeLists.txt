@@ -48,7 +48,6 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/utils/supply-type.proto
 
 		# response-models
-        ./src/proto/response-models/player-info-response-model.proto
         ./src/proto/response-models/player-position-response-model.proto
         ./src/proto/response-models/shooting-state-response-model.proto
 		./src/proto/response-models/bullet-position-response-model.proto
