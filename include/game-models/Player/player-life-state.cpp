@@ -9,7 +9,8 @@ PlayerLifeState::PlayerLifeState(double initialHitPoints)
 	  m_isDead(false),
 	  m_killedBy(-1),
 	  m_isDamagedOnLastUpdate(false),
-	  m_damagedBy(-1) {}
+	  m_damagedBy(-1),
+	  m_isActive(true) {}
 
 
 void PlayerLifeState::applyDamage(const double damage, const int playerId) {
@@ -54,11 +55,22 @@ int PlayerLifeState::damagedBy() const {
 }
 
 
+bool PlayerLifeState::isInActiveState() const {
+	return m_isActive;
+}
+
+
+void PlayerLifeState::setActiveState(bool state) {
+	m_isActive = state;
+}
+
+
 void PlayerLifeState::reset() {
 	m_hitPoints = m_initialHitPoints;
 	m_isDead = false;
 	m_isDamagedOnLastUpdate = false;
 	m_killedBy = m_damagedBy = -1;
+	m_isActive = true;
 }
 
 

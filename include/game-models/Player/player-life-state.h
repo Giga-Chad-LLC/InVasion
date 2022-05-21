@@ -17,6 +17,9 @@ public:
 	int killedBy() const;
 	int damagedBy() const;
 
+	bool isInActiveState() const;
+	void setActiveState(bool state);
+
 	void reset();
 
 private:
@@ -26,6 +29,7 @@ private:
 	int m_killedBy;
 	bool m_isDamagedOnLastUpdate;
 	int m_damagedBy;
+	int m_isActive;
 };
 
 } // namespace invasion::game_models
