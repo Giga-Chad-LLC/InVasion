@@ -32,9 +32,12 @@ int StaticSupply::getLeftSupplyCapacity() const {
 }
 
 
-StaticSupplyType StaticSupply::getSupplyType() const {
+StaticSupplyType StaticSupply::getType() const {
 	return m_type;
 }
 
+int StaticSupply::getId() const {
+	return m_id;
+}
 
 } // namespace invasion::game_models

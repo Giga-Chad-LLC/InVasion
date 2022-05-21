@@ -27,7 +27,9 @@ public:
 
 	int getLeftSupplyCapacity() const;
 
-	StaticSupplyType getSupplyType() const;
+	StaticSupplyType getType() const;
+
+	int getId() const;
 
 protected:
 	int m_leftSupplyCapacity;

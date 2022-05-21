@@ -75,7 +75,7 @@ std::optional<SupplyResponseModel> ApplyAbilityInteractor::execute(const ApplyAb
 	}
 
 	// supply type
-	const StaticSupplyType supplyType = supply->getSupplyType();
+	const StaticSupplyType supplyType = supply->getType();
 	if(supplyType == StaticSupplyType::AidKit) {
 		supplyModel->set_supply_type(util_models::SupplyType::AidKit);
 	}
