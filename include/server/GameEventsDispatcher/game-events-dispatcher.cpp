@@ -134,6 +134,8 @@ void GameEventsDispatcher::dispatchEvent(
             request_models::ChangePlayerSpecializationRequestModel specializationModel;
             NetworkPacket::deserialize(specializationModel, request);
 
+            std::cout << "Client " << specializationModel.player_id() << " changed specialization to " << specializationModel.specialization() << std::endl;
+
             interactors::ChangePlayerSpecializationInteractor interactor;
             response_models::PlayerSpecializationResponseModel responseModel = interactor.execute(specializationModel, *gameSession);
 

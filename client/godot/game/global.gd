@@ -34,3 +34,11 @@ enum ResponseModels {
 	PlayerSpecializationResponseModel = 1006,
 	UnknownResponseModel
 }
+
+enum SpecializationTypes {
+	Stormtrooper = 0,
+	Sentinel = 1,
+	Support = 2,
+	Medic = 3,
+	UNDEFINED,
+}
