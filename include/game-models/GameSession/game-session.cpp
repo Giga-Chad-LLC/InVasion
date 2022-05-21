@@ -91,8 +91,12 @@ int GameSession::createPlayerAndReturnId(PlayerSpecialization specialization) {
 		m_gameStatistics.incrementSecondTeamPlayersCount();
 	}
 
-	std::shared_ptr<Player> player = PlayersFactory::createPlayer(Vector2D::ZERO, m_nextPlayerId,
-																  teamId, specialization);
+	std::shared_ptr<Player> player = PlayersFactory::createPlayer(
+		Vector2D::ZERO,
+		m_nextPlayerId,
+		teamId,
+		specialization
+	);
 	players.push_back(player);
 	return m_nextPlayerId++;
 }
@@ -246,6 +250,13 @@ void GameSession::changePlayerSpecialization(int playerId, PlayerSpecialization 
 	// inserting updated player
 	std::vector<std::shared_ptr<Player>> &players = this->getPlayers();
 	players.push_back(updatedPlayer);
+	
+	if (teamId == PlayerTeamId::FirstTeam) {
+		m_gameStatistics.incrementFirstTeamPlayersCount();
+	}
+	else if (teamId == PlayerTeamId::SecondTeam) {
+		m_gameStatistics.incrementSecondTeamPlayersCount();
+	}
 }
 
 
@@ -268,6 +279,16 @@ void GameSession::updateGameState() {
 	m_playerManager.updatePlayersGameSessionStats(players, killedPlayers);
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
+}
+
+bool GameSession::playerExists(int playerId) {
+	const auto& players = getPlayers();
+	for (auto player : players) {
+		if (player->getId() == playerId) {
+			return true;
+		}
+	}
+	return false;
 }
 
 
