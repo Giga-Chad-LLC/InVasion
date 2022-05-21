@@ -22,6 +22,8 @@
 #include "player-team-id.pb.h"
 
 
+#include "game-models/Medic/medic.h"
+
 namespace invasion::interactors {
 using namespace invasion::game_models;
 using namespace response_models;
@@ -40,8 +42,8 @@ std::optional<SupplyResponseModel> ApplyAbilityInteractor::execute(const ApplyAb
 	assert(player_ptr->hasAbility());
 	
 	// downcasing player
-	assert(dynamic_cast<AbilityEndowedPlayer*>(player_ptr.get()));
-	std::shared_ptr<AbilityEndowedPlayer> player(static_cast<AbilityEndowedPlayer*>(player_ptr.get()));
+	assert(std::dynamic_pointer_cast<AbilityEndowedPlayer>(player_ptr));
+	std::shared_ptr<AbilityEndowedPlayer> player = std::dynamic_pointer_cast<AbilityEndowedPlayer>(player_ptr);
 
 	// if cool down has not finished
 	if(!player->isAbleToApplyAbility()) {
@@ -58,8 +60,9 @@ std::optional<SupplyResponseModel> ApplyAbilityInteractor::execute(const ApplyAb
 	supplies.push_back(supply);
 
 	// pushing to obstalces
+	std::shared_ptr<StaticObject> supplyCasted = std::dynamic_pointer_cast<StaticObject>(supply);
 	std::vector<std::shared_ptr<StaticObject>>& obstacles = session.getObstacles();
-	obstacles.emplace_back(supply.get());
+	obstacles.emplace_back(supplyCasted);
 
 
 	// creating response
