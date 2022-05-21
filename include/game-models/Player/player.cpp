@@ -24,10 +24,12 @@ Player::Player(
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
-		double damage
+		int damage,
+		bool hasAbility
 	) :
 		KinematicObject(shapeColliderSize, hitboxColliderSize, position, mass, maxSpeed), 
 		m_id(playerId),
+		m_hasAbility(hasAbility),
 		m_specialization(specialization),
 		m_teamId(teamId),
 		m_lifeState(initialHitPoints),
@@ -74,6 +76,11 @@ void Player::respawn(Vector2D position) {
 	this->setMovingState(false);
 	this->setResultForce(Vector2D::ZERO);
 	this->setVelocity(Vector2D::ZERO);
+}
+
+
+bool Player::hasAbility() const {
+	return m_hasAbility;
 }
 
 

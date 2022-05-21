@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package response_models;
+import "supply-model.proto";
+
+message SupplyResponseModel {
+	int32 player_id = 1;
+	optional util_models.SupplyModel supply = 2;
+}

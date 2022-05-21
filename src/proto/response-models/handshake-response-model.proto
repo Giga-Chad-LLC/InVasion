@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package response_models;
+import "player-team-id.proto";
+import "supply-model.proto";
+
+
+message HandshakeResponseModel {
+	int32 player_id = 1;
+	util_models.PlayerTeamId team_id = 2;
+	repeated util_models.SupplyModel supplies = 3;
+}

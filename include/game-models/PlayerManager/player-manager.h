@@ -29,11 +29,11 @@ private:
 	void applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Player> player_ptr, double dt) const;
 	
 	void updatePlayerPhysicsOnPlayerCollision(std::vector<std::shared_ptr<Player>>& players,
-											  std::shared_ptr<Player> consideredPlayer_ptr,
+											  std::shared_ptr<Player> consideredPlayer,
 											  double dt) const;
 
 	void updatePlayerPhysicsOnObstacleCollision(std::vector<std::shared_ptr<StaticObject>>& obstacles,
-												std::shared_ptr<Player> consideredPlayer_ptr,
+												std::shared_ptr<Player> consideredPlayer,
 												double dt) const;
 };
 

@@ -19,7 +19,7 @@ void DamagedPlayersResponseInteractor::execute(GameStateResponseModel& response,
 
 	for(const auto& player_ptr : damagedPlayers) {
 		const int playerId = player_ptr->getId();
-		const double hitPoints = player_ptr->getLifeState().getHitPoints();
+		const int hitPoints = player_ptr->getLifeState().getHitPoints();
 		const int damagedBy = player_ptr->getLifeState().damagedBy();
 
 		DamagedPlayerResponseModel* playerModel = response.add_damaged_players();

@@ -73,7 +73,7 @@ void BulletManager::collideBulletWithPlayers(std::shared_ptr<Bullet> bullet,
 
 	const int playerId = bullet->getPlayerId();
 	const PlayerTeamId teamId = bullet->getPlayerTeamId();
-	const double damage = bullet->getDamage();
+	const int damage = bullet->getDamage();
 
 	// searching for collided player
 	for (const auto& player : players) {

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package request_models;
+
+message ApplyAbilityRequestModel {
+	int32 player_id = 1;
+}

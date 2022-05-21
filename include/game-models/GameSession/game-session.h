@@ -13,6 +13,7 @@
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/StaticObject/static-object.h"
+#include "game-models/StaticSupply/static-supply.h"
 
 #include "game-session-stats.h"
 
@@ -26,6 +27,7 @@ public:
 
 	int createPlayerAndReturnId(PlayerSpecialization specialization);
 	int createIdForNewBullet();
+	int createIdForNewSupply();
 	
 	int addBullet(std::shared_ptr<Bullet> bullet);
 
@@ -37,6 +39,7 @@ public:
 	std::vector<std::shared_ptr<Player>>& getKilledPlayers();
 	std::vector<std::shared_ptr<Bullet>>& getBullets();
 	std::vector<std::shared_ptr<StaticObject>>& getObstacles();
+	std::vector<std::shared_ptr<StaticSupply>>& getSupplies();
 
 	void removePlayerById(int playerId);
 	void changePlayerSpecialization(int playerId, PlayerSpecialization specialization);
@@ -46,13 +49,14 @@ public:
 	bool playerExists(int playerId);
 	const GameSessionStats& getGameStatistics();
 
-
+	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;
 private:
 	inline static const std::string TILEMAPS_ASSETS_DIRECTORY = "client/godot/game/assets/statics/";
 
 	long long m_lastGameStateUpdate_ms;
 	int m_nextBulletId;
 	int m_nextPlayerId;
+	int m_nextSupplyId;
 	GameSessionStats m_gameStatistics;
 	GameWorldStorage m_storage;
 	PlayerManager m_playerManager;

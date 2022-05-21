@@ -1,3 +1,4 @@
+#include <memory>
 #include <iostream>
 
 #include "medic.h"
@@ -8,6 +9,8 @@
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
+#include "game-models/StaticSupply/static-supply.h"
+#include "game-models/AidKit/aid-kit.h"
 
 namespace invasion::game_models {
 	
@@ -27,8 +30,11 @@ Medic::Medic(Vector2D position, int playerId, PlayerTeamId teamId)
 		Medic::ABILITY_COOL_DOWN_MS
 	) {}
 
-void Medic::applyAbility() {
+std::shared_ptr<StaticSupply> Medic::applyAbility(const int supplyId) {
 	std::cout << "applying ability of Medic class" << std::endl;
+	this->setCoolDown();
+	const int playerId = this->getId();
+	return std::make_shared<AidKit>(m_position, supplyId, playerId);
 }
 
 } // namespace invasion::game_models

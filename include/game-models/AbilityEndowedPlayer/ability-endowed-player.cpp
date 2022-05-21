@@ -22,7 +22,7 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 	PlayerTeamId teamId,
 	int initialHitPoints,
 	int initialAmmo,
-	double damage,
+	int damage,
 	long long abilityCoolDown_ms
 ) :
 	Player(
@@ -36,7 +36,8 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 		teamId,
 		initialHitPoints,
 		initialAmmo,
-		damage
+		damage,
+		true // hasAbility
 	),
 	m_lastAbilityUseTimestamp_ms(utils::TimeUtilities::getCurrentTime_ms()),
 	m_abilityCoolDown_ms(abilityCoolDown_ms) {}
@@ -45,6 +46,11 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 bool AbilityEndowedPlayer::isAbleToApplyAbility() const {
 	const long long currentTime_ms = utils::TimeUtilities::getCurrentTime_ms();
 	return (currentTime_ms - m_lastAbilityUseTimestamp_ms >= m_abilityCoolDown_ms);
+}
+
+
+void AbilityEndowedPlayer::setCoolDown() {
+	m_lastAbilityUseTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
 
 

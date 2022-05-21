@@ -15,7 +15,7 @@ namespace invasion::game_models {
 
 class Weapon {
 public:
-	explicit Weapon(int playerId, PlayerTeamId teamId, int ammo, double damage);
+	explicit Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage);
 
 	std::shared_ptr<Bullet> shoot(Vector2D playerPosition, int bulletId);
 	bool isAbleToShoot() const;
@@ -24,9 +24,12 @@ public:
 	void setDirection(const Vector2D& dir);
 	void reset();
 
+	void addAmmo(int ammo);
+
 	// getters
 	int getLeftMagazine() const;
 	int getLeftAmmo() const;
+	int getInitialAmmo() const;
 	long long getReloadingStartTimestamp_ms() const;
 	Vector2D getDirection() const;
 
@@ -38,7 +41,7 @@ private:
 	int m_leftMagazine;
 	int m_leftAmmo;
 	const int m_initialAmmo;
-	const double m_damage;
+	const int m_damage;
 
 	long long m_reloadingStartTimestamp_ms;
 	// long long m_lastShotTimestamp_ms;
