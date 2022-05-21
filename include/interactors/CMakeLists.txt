@@ -15,6 +15,6 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ApplyAbilityInteractor/apply-ability-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UseSupplyInteractor/use-supply-interactor.cpp
-	
+	${CMAKE_CURRENT_SOURCE_DIR}/HandshakeResponseInteractor/handshake-response-interactor.cpp
 	PARENT_SCOPE
 )
