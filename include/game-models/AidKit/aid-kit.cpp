@@ -36,13 +36,11 @@ void AidKit::supply(std::shared_ptr<Player> player) {
 
 	if(addon >= m_leftSupplyCapacity) {
 		addon = m_leftSupplyCapacity;
-		m_leftSupplyCapacity = 0;
 		m_isActive = false;
 	}
-	else {
-		m_leftSupplyCapacity -= addon;
-	}
 
+	m_leftSupplyCapacity -= addon;
+	
 	lifeState.applyHealing(addon);
 }
 
