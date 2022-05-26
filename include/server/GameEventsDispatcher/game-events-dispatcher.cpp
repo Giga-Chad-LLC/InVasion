@@ -16,6 +16,8 @@
 #include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 #include "interactors/ApplyAbilityInteractor/apply-ability-interactor.h"
 #include "interactors/UseSupplyInteractor/use-supply-interactor.h"
+#include "interactors/UpdatePlayerHitpointsResponseInteractor/update-player-hitpoints-response-interactor.h"
+#include "interactors/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -199,13 +201,20 @@ void GameEventsDispatcher::dispatchEvent(
 
             session->putDataToAllClients(response);
 
-            // controllers::SupplyTypeModelChecker controller;
-            // StaticSupplyType type = controller.getType(responseModel.value().supply_id(), *gameSession);
-            // if (type == StaticSupplyType::AidKit) {
-            //     ...
-            // }
-            // else {
-            // }
+            controllers::SupplyTypeModelChecker controller;
+
+            // controller.getType(responseModel.value().supply_id(), *gameSession);
+            const int supplyId = responseModel.value().supply_id();
+			const int playerId = responseModel.value().player_id();
+
+			if (controller.isAidKitType(supplyId, *gameSession)) {
+                interactors::UpdatePlayerHitpointsResponseInteractor interactor;
+				response_models::UpdatePlayerHitpointsResponseModel response = interactor.execute(playerId, *gameSession);
+            }
+            else if (controller.isAmmoCrateType(supplyId, *gameSession)) {
+				interactors::UpdatePlayerAmmoResponseInteractor interactor;
+				response_models::UpdatePlayerAmmoResponseModel response = interactor.execute(playerId, *gameSession);
+            }
 
             break;
         }
