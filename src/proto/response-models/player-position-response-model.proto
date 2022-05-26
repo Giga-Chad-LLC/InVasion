@@ -11,9 +11,4 @@ message PlayerPositionResponseModel {
   util_models.PlayerTeamId team_id = 2;
   util_models.Vector2D position = 3;
   util_models.Vector2D velocity = 4;
-
-//   enum TeamId {
-//     FirstTeam = 0;
-//     SecondTeam = 1;
-//   }
 }

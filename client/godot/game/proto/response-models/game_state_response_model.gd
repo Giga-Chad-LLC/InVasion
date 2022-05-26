@@ -871,6 +871,11 @@ class KilledPlayerResponseModel:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+enum PlayerTeamId {
+	FirstTeam = 0,
+	SecondTeam = 1
+}
+
 class PlayerPositionResponseModel:
 	func _init():
 		var service
@@ -936,11 +941,6 @@ class PlayerPositionResponseModel:
 	func new_velocity() -> Vector2D:
 		_velocity.value = Vector2D.new()
 		return _velocity.value
-	
-	enum TeamId {
-		FirstTeam = 0,
-		SecondTeam = 1
-	}
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)
