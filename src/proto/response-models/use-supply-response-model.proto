@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package response_models;
+/**/
 import "supply-type.proto";
 
 message UseSupplyResponseModel {
@@ -10,3 +11,19 @@ message UseSupplyResponseModel {
 	int32 left_supply_capacity = 4;
 	bool is_active = 5;
 }
+
+
+/* for godobuf only 
+
+enum SupplyType {
+	AidKit = 0;
+	AmmoCrate = 1;
+}
+message UseSupplyResponseModel {
+	int32 player_id = 1;
+	int32 supply_id = 2;
+	SupplyType applied_supply_type = 3;
+	int32 left_supply_capacity = 4;
+	bool is_active = 5;
+}
+*/

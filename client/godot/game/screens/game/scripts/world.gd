@@ -31,7 +31,9 @@ const GameOverResponseModel = preload("res://proto/response-models/game_over_res
 const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
 const SupplyResponseModel = preload("res://proto/response-models/supply_response_model.gd")
 const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.proto.gd")
-
+const UpdatePlayerHitpointsResponseModel = preload("res://proto/response-models/update_player_hitpoints_response_model.gd")
+const UpdatePlayerAmmoResponseModel = preload("res://proto/response-models/update_player_ammo_response_model.gd")
+const UseSupplyResponseModel = preload("res://proto/response-models/use_supply_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -150,10 +152,34 @@ func _process(_delta):
 			pass
 		Global.ResponseModels.UseSupplyResponseModel:
 			print("Someone used supply!")
+			var used_supply = UseSupplyResponseModel.UseSupplyResponseModel.new()
+			var result_code = used_supply.from_bytes(received_packet.get_bytes())
+			if (result_code != UseSupplyResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack use supply model")
+			else:
+				var supply_name
+				if (used_supply.get_applied_supply_type() == Global.SupplyType.AidKit):
+					supply_name = "AidKit"
+				elif(used_supply.get_applied_supply_type() == Global.SupplyType.AmmoCrate):
+					supply_name = "AmmoCrate"
+				
+				print("Player ", used_supply.get_player_id(),
+					  " used supply ", used_supply.get_supply_id(), " with type '", supply_name, "'")
+				print("Left supply capacity: ", used_supply.get_left_supply_capacity(), ", is active: ", used_supply.get_is_active())
 		Global.ResponseModels.UpdatePlayerAmmoResponseModel:
-			print("Update our ammo")
+			var new_ammo = UpdatePlayerAmmoResponseModel.UpdatePlayerAmmoResponseModel.new()
+			var result_code = new_ammo.from_bytes(received_packet.get_bytes())
+			if (result_code != UpdatePlayerAmmoResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack update player ammo model")
+			else:
+				print("Our new ammo capacity: ", new_ammo.get_new_ammo())
 		Global.ResponseModels.UpdatePlayerHitpointsResponseModel:
-			print("Update our hitpoints")
+			var new_hitpoints = UpdatePlayerHitpointsResponseModel.UpdatePlayerHitpointsResponseModel.new()
+			var result_code = new_hitpoints.from_bytes(received_packet.get_bytes())
+			if (result_code != UpdatePlayerHitpointsResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack update player hitpoints model")
+			else:
+				print("Update our hitpoints", "New hitpoints: ", new_hitpoints.get_new_hitpoints())
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			# Stop the client and show the results table
