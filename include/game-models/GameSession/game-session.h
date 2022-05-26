@@ -33,6 +33,7 @@ public:
 
 	std::shared_ptr<Player> getPlayer(int playerId);
 	std::shared_ptr<Bullet> getBullet(int bulletId);
+	std::shared_ptr<StaticSupply> getSupply(int supplyId);
 
 	std::vector<std::shared_ptr<Player>>& getPlayers();
 	std::vector<std::shared_ptr<Player>>& getDamagedPlayers();

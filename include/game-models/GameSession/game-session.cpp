@@ -141,7 +141,7 @@ std::shared_ptr<Player> GameSession::getPlayer(const int playerId) {
 
 
 std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
-	std::vector<std::shared_ptr<Bullet>>& bullets = m_storage.getBullets();
+	const std::vector<std::shared_ptr<Bullet>>& bullets = m_storage.getBullets();
 	std::shared_ptr<Bullet> bullet_ptr = nullptr;
 
 	for(const auto& bullet : bullets) {
@@ -152,13 +152,32 @@ std::shared_ptr<Bullet> GameSession::getBullet(int bulletId) {
 	}
 
 	if(bullet_ptr == nullptr) {
-		std::cout << "Cannot find bullet with id: " << bulletId << " in GameSession::getPlayer" << std::endl;
+		std::cout << "Cannot find bullet with id: " << bulletId << " in GameSession::getBullet" << std::endl;
 	}
 
 	assert(bullet_ptr != nullptr);
 	return bullet_ptr;
 }
 
+
+std::shared_ptr<StaticSupply> GameSession::getSupply(int supplyId) {
+	const std::vector<std::shared_ptr<StaticSupply>>& supplies = m_storage.getSupplies();
+	std::shared_ptr<StaticSupply> supply_ptr = nullptr;
+
+	for (const auto& supply : supplies) {
+		if (supply->getId() == supplyId) {
+			supply_ptr = supply;
+			break;
+		}
+	}
+
+	if(supply_ptr == nullptr) {
+		std::cout << "Cannot find supply with id: " << supplyId << " in GameSession::getSupply" << std::endl;
+	}
+
+	assert(supply_ptr != nullptr);
+	return supply_ptr;
+}
 
 
 std::vector<std::shared_ptr<Player>>& GameSession::getPlayers() {
