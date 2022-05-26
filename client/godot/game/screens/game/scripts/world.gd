@@ -84,6 +84,7 @@ func _process(_delta):
 		producer.push_data(Player.get_player_move_request())
 		producer.push_data(Player.get_player_shoot_request())
 		producer.push_data(Player.get_apply_ability_request())
+		producer.push_data(Player.get_use_supply_request())
 	
 #	Receive data from server
 	var received_packet = consumer.pop_data()

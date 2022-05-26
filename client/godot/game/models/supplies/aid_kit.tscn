@@ -5,5 +5,4 @@
 [node name="AidKit" type="Node2D"]
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 5.96046e-08, 1.19209e-07 )
 texture = ExtResource( 1 )

@@ -10,6 +10,7 @@ const ShootRequestModel = preload("res://proto/request-models/shoot_request_mode
 const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_player_request_model.gd")
 const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_ability_request_model.gd")
+const UseSupplyRequestModel = preload("res://proto/request-models/use_supply_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
@@ -21,8 +22,11 @@ var is_active: bool setget set_is_active
 var is_dead: bool setget set_is_dead
 
 # abilities
-var is_ability_cooldown: bool = false
-onready var ability_cooldown_timer = $AbilityCooldownTimer
+var is_apply_ability_cooldown: bool = false
+onready var apply_ability_cooldown_timer = $ApplyAbilityCooldownTimer
+
+var is_use_supply_cooldown: bool = false
+onready var use_supply_cooldown_timer = $UseSupplyCooldownTimer
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -93,12 +97,19 @@ func get_player_shoot_request():
 
 
 # Ability managment
-func start_ability_cooldown():
-	is_ability_cooldown = true
-	ability_cooldown_timer.start()
+func start_apply_ability_cooldown():
+	is_apply_ability_cooldown = true
+	apply_ability_cooldown_timer.start()
 
 func _on_AbilityCooldownTimer_timeout():
-	is_ability_cooldown = false
+	is_apply_ability_cooldown = false
+
+func start_use_supply_cooldown():
+	is_use_supply_cooldown = true
+	use_supply_cooldown_timer.start()
+
+func _on_UseSupplyCooldownTimer_timeout():
+	is_use_supply_cooldown = false
 
 func has_ability():
 	if (
@@ -109,16 +120,30 @@ func has_ability():
 	return false
 
 func get_apply_ability_request():
-	if (has_ability() and Input.is_action_pressed("apply_ability") and not is_ability_cooldown):
-		print("Use ability!")
+	if (has_ability() and Input.is_action_pressed("apply_ability") and not is_apply_ability_cooldown):
 		var ability = ApplyAbilityRequestModel.ApplyAbilityRequestModel.new()
 		ability.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(ability.to_bytes(), Global.RequestModels.ApplyAbilityRequestModel)
-		start_ability_cooldown()
+		start_apply_ability_cooldown()
 		if (network_packet):
 			return network_packet
 		return null
+
+
+func get_use_supply_request():
+	if (Input.is_action_pressed("use_supply") and not is_use_supply_cooldown):
+		print("Use supply")
+		var supply = UseSupplyRequestModel.UseSupplyRequestModel.new()
+		supply.set_player_id(player_id)
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(supply.to_bytes(), Global.RequestModels.UseSupplyRequestModel)
+		start_use_supply_cooldown()
+		if (network_packet):
+			return network_packet
+		return null
+
+
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:
@@ -158,5 +183,6 @@ func set_player_info(new_player_id, new_team_id) -> void:
 	team_id = new_team_id
 	print("Set my id: ", player_id)
 	print("Set my team id: ", team_id)
+
 
 

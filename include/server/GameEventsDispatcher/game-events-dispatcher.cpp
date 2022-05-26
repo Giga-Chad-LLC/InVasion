@@ -3,6 +3,8 @@
 #include "game-events-dispatcher.h"
 #include "server/Session/session.h"
 
+// controllers
+#include "controllers/SupplyTypeModelChecker/supply-type-model-checker.h"
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
@@ -13,18 +15,22 @@
 #include "interactors/RespawnPlayerInteractor/respawn-player-interactor.h"
 #include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 #include "interactors/ApplyAbilityInteractor/apply-ability-interactor.h"
+#include "interactors/UseSupplyInteractor/use-supply-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
 #include "respawn-player-request-model.pb.h"
 #include "change-player-specialization-request-model.pb.h"
 #include "apply-ability-request-model.pb.h"
+#include "use-supply-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
 #include "respawn-player-response-model.pb.h"
 #include "player-specialization-response-model.pb.h"
 #include "supply-model.pb.h"
+#include "use-supply-response-model.pb.h"
+
 
 namespace invasion::server {
 GameEventsDispatcher::~GameEventsDispatcher() {
@@ -171,6 +177,36 @@ void GameEventsDispatcher::dispatchEvent(
             );
 
             session->putDataToAllClients(response);
+            break;
+        }
+        case RequestModel_t::UseSupplyRequestModel: {
+            request_models::UseSupplyRequestModel supplyModel;
+            NetworkPacket::deserialize(supplyModel, request);
+
+            std::cout << "Client " << supplyModel.player_id() << " used supply" << std::endl;
+
+            interactors::UseSupplyInteractor interactor;
+            auto responseModel = interactor.execute(supplyModel, *gameSession);
+
+            if (!responseModel.has_value()) {
+                break;
+            }
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(responseModel.value()),
+                ResponseModel_t::UseSupplyResponseModel,
+                responseModel.value().ByteSizeLong()
+            );
+
+            session->putDataToAllClients(response);
+
+            // controllers::SupplyTypeModelChecker controller;
+            // StaticSupplyType type = controller.getType(responseModel.value().supply_id(), *gameSession);
+            // if (type == StaticSupplyType::AidKit) {
+            //     ...
+            // }
+            // else {
+            // }
+
             break;
         }
         case RequestModel_t::ShootRequestModel: {

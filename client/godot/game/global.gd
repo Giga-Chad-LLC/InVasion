@@ -22,6 +22,7 @@ enum RequestModels {
 	SelectPlayerSpecializationRequestModel = 4,
 	ChangePlayerSpecializationRequestModel = 5,
 	ApplyAbilityRequestModel = 6,
+	UseSupplyRequestModel = 7,
 	UnknownRequestModel
 }
 # Server sends to client

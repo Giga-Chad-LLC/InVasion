@@ -13,6 +13,7 @@ namespace invasion::server {
         SelectPlayerSpecializationRequestModel = 4,
         ChangePlayerSpecializationRequestModel = 5,
         ApplyAbilityRequestModel = 6,
+        UseSupplyRequestModel = 7,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {
@@ -24,6 +25,7 @@ namespace invasion::server {
         PlayerSpecializationResponseModel = 1006,
         HandshakeResponseModel = 1007,
         SupplyResponseModel = 1008,
+        UseSupplyResponseModel = 1009,
         UnknownResponseModel
     };
 

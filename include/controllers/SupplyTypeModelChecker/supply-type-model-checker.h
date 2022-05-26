@@ -10,8 +10,21 @@ using namespace util_models;
 
 class SupplyTypeModelChecker {
 public:
-	bool isAidKit(const SupplyModel& supply) const;
-	bool isAmmoCrate(const SupplyModel& supply) const;
+
+// StaticSupply
+// StaticSupplyType getType(supplyId, session) {
+// 	auto& supplies = session.getSupplies();
+
+// 	type = null;
+// 	for(supply : supplies) {
+// 		if(supply->getId() == supplyId) {
+// 			type = supply->getType();
+// 		}
+// 	}
+
+// 	return type;
+// }
+
 };
 
 } // namespace invasion::controllers
