@@ -13,7 +13,7 @@ using namespace response_models;
 
 class HandshakeResponseInteractor {
 public:
-	HandshakeResponseModel execute(GameSession& session, int playerId) const;
+	HandshakeResponseModel execute(std::size_t remainingSessionTime_ms, GameSession& session, int playerId) const;
 };
 
 

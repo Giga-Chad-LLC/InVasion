@@ -47,6 +47,11 @@ void Session::start() {
         }
     });
 
+    // set time of the match start
+    MATCH_START_TIMESTAMP_MS = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 
     m_gameTimer.setTimeout(MATCH_DURATION_MS, [this]() {
@@ -184,7 +189,9 @@ void Session::makeHandshakeWithClient(
     // send to client his ID
     // std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
     interactors::HandshakeResponseInteractor interactor;
-    auto response = interactor.execute(*m_gameSession, playerId);
+    
+    std::cout << "Send left time: " << getRemainingSessionTime_ms() << std::endl;
+    auto response = interactor.execute(getRemainingSessionTime_ms(), *m_gameSession, playerId);
 
     auto packet = std::make_shared<NetworkPacketResponse> (
         NetworkPacket::serialize(response),
@@ -279,4 +286,17 @@ void Session::putDataToAllClients(
         }
     }
 }
+
+std::size_t Session::getRemainingSessionTime_ms() const noexcept {
+    std::chrono::milliseconds now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::size_t remainingTime_ms = std::max(
+        0ULL,
+        MATCH_DURATION_MS - (now_ms - MATCH_START_TIMESTAMP_MS).count()
+    );
+
+    return remainingTime_ms;
+} 
 }

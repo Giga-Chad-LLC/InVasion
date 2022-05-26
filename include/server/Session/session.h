@@ -5,6 +5,7 @@
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
 #include <vector>
+#include <chrono>
 #include <memory>
 #include <atomic>
 #include <mutex>
@@ -55,6 +56,7 @@ public:
 
 private:
     const std::size_t MAX_CLIENT_COUNT = 8U;
+    std::chrono::milliseconds MATCH_START_TIMESTAMP_MS;
     const std::size_t MATCH_DURATION_MS = 1000 * 60 * 10;
     std::atomic_bool m_isActive = false;
     std::atomic_bool m_isAvailable = true;
@@ -83,6 +85,7 @@ private:
     controllers::FixedTimeoutCallbackInvoker m_gameTimer;
     std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher = std::make_shared <GameEventsDispatcher> ();
     std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> m_requestQueue = std::make_shared <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> ();
+    std::size_t getRemainingSessionTime_ms() const noexcept; 
 };
 }
 

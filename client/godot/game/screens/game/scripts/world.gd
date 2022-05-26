@@ -11,6 +11,7 @@ onready var Player = $YSort/Player
 onready var UI = $UI
 onready var RespawnMenu = $UI/RespawnMenu
 onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelector
+onready var SessionTimer = $UI/SessionTimer
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -108,7 +109,9 @@ func _process(_delta):
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization (as default for now)
 				print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
-	#			producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
+				print("Match time left in seconds: ", handshake_model.get_remaining_session_time_ms() / 1000)
+				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
+				# producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
 				RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()

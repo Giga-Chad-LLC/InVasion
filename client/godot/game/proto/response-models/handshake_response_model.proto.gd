@@ -866,7 +866,12 @@ class HandshakeResponseModel:
 		service.field = _team_id
 		data[_team_id.tag] = service
 		
-		_supplies = PBField.new("supplies", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 3, true, [])
+		_remaining_session_time_ms = PBField.new("remaining_session_time_ms", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _remaining_session_time_ms
+		data[_remaining_session_time_ms.tag] = service
+		
+		_supplies = PBField.new("supplies", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 4, true, [])
 		service = PBServiceField.new()
 		service.field = _supplies
 		service.func_ref = funcref(self, "add_supplies")
@@ -892,11 +897,20 @@ class HandshakeResponseModel:
 	func set_team_id(value) -> void:
 		_team_id.value = value
 	
+	var _remaining_session_time_ms: PBField
+	func get_remaining_session_time_ms() -> int:
+		return _remaining_session_time_ms.value
+	func clear_remaining_session_time_ms() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_remaining_session_time_ms.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_remaining_session_time_ms(value : int) -> void:
+		_remaining_session_time_ms.value = value
+	
 	var _supplies: PBField
 	func get_supplies() -> Array:
 		return _supplies.value
 	func clear_supplies() -> void:
-		data[3].state = PB_SERVICE_STATE.UNFILLED
+		data[4].state = PB_SERVICE_STATE.UNFILLED
 		_supplies.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 	func add_supplies() -> SupplyModel:
 		var element = SupplyModel.new()

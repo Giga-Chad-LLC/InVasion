@@ -21,13 +21,14 @@ namespace invasion::interactors {
 using namespace invasion::game_models;
 using namespace response_models;
 	
-HandshakeResponseModel HandshakeResponseInteractor::execute(GameSession& session, const int playerId) const {
+HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainingSessionTime_ms, GameSession& session, const int playerId) const {
 	std::shared_ptr<Player> player = session.getPlayer(playerId);
 
 	HandshakeResponseModel response;
 	
 
 	response.set_player_id(playerId);
+	response.set_remaining_session_time_ms(remainingSessionTime_ms);
 
 	// setting team id	
 	const PlayerTeamId teamId = player->getTeamId();

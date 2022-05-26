@@ -2,17 +2,19 @@ syntax = "proto3";
 
 package response_models;
 
+/**/
 import "player-team-id.proto";
 import "supply-model.proto";
 
 message HandshakeResponseModel {
 	int32 player_id = 1;
 	util_models.PlayerTeamId team_id = 2;
-	repeated util_models.SupplyModel supplies = 3;
+	int32 remaining_session_time_ms = 3;
+	repeated util_models.SupplyModel supplies = 4;
 }
 
 
-/* // for Godobuf
+/* // for Godobuf 
 enum PlayerTeamId {
 	FirstTeam = 0;
 	SecondTeam = 1;
@@ -42,6 +44,7 @@ message SupplyModel {
 message HandshakeResponseModel {
 	int32 player_id = 1;
 	PlayerTeamId team_id = 2;
-	repeated SupplyModel supplies = 3;
+	int32 remaining_session_time_ms = 3;
+	repeated SupplyModel supplies = 4;
 }
 */
