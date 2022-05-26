@@ -166,6 +166,13 @@ func _process(_delta):
 				print("Player ", used_supply.get_player_id(),
 					  " used supply ", used_supply.get_supply_id(), " with type '", supply_name, "'")
 				print("Left supply capacity: ", used_supply.get_left_supply_capacity(), ", is active: ", used_supply.get_is_active())
+				
+				# update used supply
+				supplies_state_manager.update_used_supply(
+					used_supply.get_supply_id(),
+					supplies_parent_node
+				)
+		
 		Global.ResponseModels.UpdatePlayerAmmoResponseModel:
 			var new_ammo = UpdatePlayerAmmoResponseModel.UpdatePlayerAmmoResponseModel.new()
 			var result_code = new_ammo.from_bytes(received_packet.get_bytes())
@@ -179,7 +186,7 @@ func _process(_delta):
 			if (result_code != UpdatePlayerHitpointsResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack update player hitpoints model")
 			else:
-				print("Update our hitpoints", "New hitpoints: ", new_hitpoints.get_new_hitpoints())
+				print("Our new hitpoints: ", new_hitpoints.get_new_hitpoints())
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			# Stop the client and show the results table

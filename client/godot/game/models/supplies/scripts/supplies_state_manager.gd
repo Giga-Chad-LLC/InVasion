@@ -7,23 +7,22 @@ var ammo_crate_scene = preload("res://models/supplies/ammo_crate.tscn")
 
 func spawn_supply(data, supplies_parent_node, location):
 	# data = { supply_type, supply_id }
-	print("Supply: ", data)
 	var supply_type = data["supply_type"]
 	var supply_id = data["supply_id"]
 	
 	var supply_scene = null
 	if (supply_type == Global.SupplyType.AidKit):
 		supply_scene = aid_kit_scene
-		print("Aid kit")
 	elif (supply_type == Global.SupplyType.AmmoCrate):
 		supply_scene = ammo_crate_scene
-		print("Ammo crate")
 	else:
 		print("Unknown supply type: ", supply_type)
 		return
 	
 	var supply = Global.instance_node_at_location(supply_scene, supplies_parent_node, location)
 	supply.name = str(supply_id)
+	supply.supply_id = supply_id
+	supply.supply_type = supply_type
 
 var supplies_on_map = [] # ids of supplies on map
 func update_supplies_states(supplies: Array, supplies_parent_node):
@@ -43,3 +42,9 @@ func update_supplies_states(supplies: Array, supplies_parent_node):
 					supply.get_position().get_y()
 				)
 			)
+
+func update_used_supply(supply_id, supplies_parent_node):
+	var supply = supplies_parent_node.get_node(str(supply_id))
+	if (supply):
+		supply.play_use_animation()
+	
