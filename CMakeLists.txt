@@ -62,6 +62,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/supply-response-model.proto
 		./src/proto/response-models/use-supply-response-model.proto
 		./src/proto/response-models/handshake-response-model.proto
+		./src/proto/response-models/update-player-ammo-response-model.proto
+		./src/proto/response-models/update-player-hitpoints-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
