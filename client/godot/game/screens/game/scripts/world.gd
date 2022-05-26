@@ -148,6 +148,12 @@ func _process(_delta):
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")
 			pass
+		Global.ResponseModels.UseSupplyResponseModel:
+			print("Someone used supply!")
+		Global.ResponseModels.UpdatePlayerAmmoResponseModel:
+			print("Update our ammo")
+		Global.ResponseModels.UpdatePlayerHitpointsResponseModel:
+			print("Update our hitpoints")
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			# Stop the client and show the results table
