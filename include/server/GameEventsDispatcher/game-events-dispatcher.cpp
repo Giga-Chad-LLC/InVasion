@@ -32,6 +32,8 @@
 #include "player-specialization-response-model.pb.h"
 #include "supply-model.pb.h"
 #include "use-supply-response-model.pb.h"
+#include "update-player-ammo-response-model.pb.h"
+#include "update-player-hitpoints-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -209,11 +211,29 @@ void GameEventsDispatcher::dispatchEvent(
 
 			if (controller.isAidKitType(supplyId, *gameSession)) {
                 interactors::UpdatePlayerHitpointsResponseInteractor interactor;
-				response_models::UpdatePlayerHitpointsResponseModel response = interactor.execute(playerId, *gameSession);
+				response_models::UpdatePlayerHitpointsResponseModel responseAidKit = interactor.execute(playerId, *gameSession);
+
+                session->putDataToSingleClient(
+                    playerId,
+                    std::make_shared <NetworkPacketResponse> (
+                        NetworkPacket::serialize(responseAidKit),
+                        ResponseModel_t::UpdatePlayerHitpointsResponseModel,
+                        responseAidKit.ByteSizeLong()
+                    )
+                );
             }
             else if (controller.isAmmoCrateType(supplyId, *gameSession)) {
 				interactors::UpdatePlayerAmmoResponseInteractor interactor;
-				response_models::UpdatePlayerAmmoResponseModel response = interactor.execute(playerId, *gameSession);
+				response_models::UpdatePlayerAmmoResponseModel responseAmmoCrate = interactor.execute(playerId, *gameSession);
+
+                session->putDataToSingleClient(
+                    playerId,
+                    std::make_shared <NetworkPacketResponse> (
+                        NetworkPacket::serialize(responseAmmoCrate),
+                        ResponseModel_t::UpdatePlayerAmmoResponseModel,
+                        responseAmmoCrate.ByteSizeLong()
+                    )
+                );
             }
 
             break;

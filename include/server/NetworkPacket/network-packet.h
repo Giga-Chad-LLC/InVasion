@@ -26,6 +26,8 @@ namespace invasion::server {
         HandshakeResponseModel = 1007,
         SupplyResponseModel = 1008,
         UseSupplyResponseModel = 1009,
+        UpdatePlayerAmmoResponseModel = 1010,
+        UpdatePlayerHitpointsResponseModel = 1011,
         UnknownResponseModel
     };
 
