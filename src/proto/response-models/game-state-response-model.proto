@@ -32,7 +32,7 @@ message BulletPositionResponseModel {
 message DamagedPlayerResponseModel {
 	int32 player_id = 1;
 	int32 damaged_by = 2; // id of player that made damage
-	double new_hitpoints = 3;
+	int32 new_hitpoints = 3;
 }
 message KilledPlayerResponseModel {
 	int32 player_id = 1;
@@ -56,4 +56,3 @@ message GameStateResponseModel {
 	repeated KilledPlayerResponseModel killed_players = 4;
 }
 */
-

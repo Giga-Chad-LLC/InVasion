@@ -761,7 +761,7 @@ class DamagedPlayerResponseModel:
 		service.field = _damaged_by
 		data[_damaged_by.tag] = service
 		
-		_new_hitpoints = PBField.new("new_hitpoints", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		_new_hitpoints = PBField.new("new_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
 		service.field = _new_hitpoints
 		data[_new_hitpoints.tag] = service
@@ -787,12 +787,12 @@ class DamagedPlayerResponseModel:
 		_damaged_by.value = value
 	
 	var _new_hitpoints: PBField
-	func get_new_hitpoints() -> float:
+	func get_new_hitpoints() -> int:
 		return _new_hitpoints.value
 	func clear_new_hitpoints() -> void:
 		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_new_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
-	func set_new_hitpoints(value : float) -> void:
+		_new_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_new_hitpoints(value : int) -> void:
 		_new_hitpoints.value = value
 	
 	func to_string() -> String:
