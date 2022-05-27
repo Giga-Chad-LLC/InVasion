@@ -36,6 +36,7 @@ const HandshakeResponseModel = preload("res://proto/response-models/handshake_re
 const UpdatePlayerHitpointsResponseModel = preload("res://proto/response-models/update_player_hitpoints_response_model.gd")
 const UpdatePlayerAmmoResponseModel = preload("res://proto/response-models/update_player_ammo_response_model.gd")
 const UseSupplyResponseModel = preload("res://proto/response-models/use_supply_response_model.gd")
+const WeaponDirectionResponseModel = preload("res://proto/response-models/weapon_direction_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -85,10 +86,21 @@ func _process(_delta):
 #	Send player movements to server
 	if (client_connection and client_connection.is_connected_to_host() and Player.is_active): # means that we have made sucessfull handshake with the server
 		# send actions to server
-		producer.push_data(Player.get_player_move_request())
-		producer.push_data(Player.get_player_shoot_request())
-		producer.push_data(Player.get_apply_ability_request())
-		producer.push_data(Player.get_use_supply_request())
+		var move_request = Player.get_player_move_request()
+		if (move_request):
+			producer.push_data(move_request)
+		var shoot_request = Player.get_player_shoot_request()
+		if (shoot_request):
+			producer.push_data(shoot_request)
+		var apply_ability_request = Player.get_apply_ability_request()
+		if (apply_ability_request):
+			producer.push_data(apply_ability_request)
+		var use_supply_request = Player.get_use_supply_request()
+		if (use_supply_request):
+			producer.push_data(use_supply_request)
+		var gun_rotation_request = Player.get_player_gun_rotation_request()
+		if (gun_rotation_request):
+			producer.push_data(gun_rotation_request)
 	
 #	Receive data from server
 	var received_packet = consumer.pop_data()
@@ -167,6 +179,18 @@ func _process(_delta):
 			# Update our ammo count, gun reloading state
 			# print("We shot a bullet!")
 			pass
+		Global.ResponseModels.WeaponDirectionResponseModel:
+			var player_weapon_direction = WeaponDirectionResponseModel.WeaponDirectionResponseModel.new()
+			var result_code = player_weapon_direction.from_bytes(received_packet.get_bytes())
+			if (result_code != WeaponDirectionResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack weapon direction model")
+			else:
+				players_state_manager.change_player_gun_rotation(
+					player_weapon_direction.get_player_id(),
+					player_weapon_direction.get_direction(),
+					Player,
+					players_parent_node
+				)
 		Global.ResponseModels.UseSupplyResponseModel:
 			var used_supply = UseSupplyResponseModel.UseSupplyResponseModel.new()
 			var result_code = used_supply.from_bytes(received_packet.get_bytes())

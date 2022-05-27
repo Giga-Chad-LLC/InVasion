@@ -5,6 +5,7 @@ onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 onready var hitAnimationPlayer = $Sprite/HitAnimation
 onready var sprite = $Sprite
+onready var player_gun = $Gun
 
 var velocity = Vector2.ZERO
 var player_id: int = -1
@@ -34,6 +35,9 @@ func update_player_position(player_state_model):
 func update_player_specialization(new_player_specialization):
 	player_specialization = new_player_specialization
 #	print("Set specialization of player ", player_id, " to ", player_specialization)
+
+func update_player_gun_rotation(direction):
+	player_gun.set_gun_rotation(direction)
 
 func play_hit_animation():
 	hitAnimationPlayer.play("Hit")

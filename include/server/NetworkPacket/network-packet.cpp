@@ -65,6 +65,9 @@ RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
     else if (type == static_cast<uint32_t> (RequestModel_t::UseSupplyRequestModel)) {
         return RequestModel_t::UseSupplyRequestModel;
     }
+    else if (type == static_cast<uint32_t> (RequestModel_t::WeaponDirectionRequestModel)) {
+        return RequestModel_t::WeaponDirectionRequestModel;
+    }
 
     return RequestModel_t::UnknownRequestModel;
 }

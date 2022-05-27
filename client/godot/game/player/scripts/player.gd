@@ -1,8 +1,6 @@
 #extends KinematicBody2D
 extends "res://player/scripts/base_player.gd"
 
-# Animations
-onready var player_gun = $Gun
 
 # Godobuf
 const MoveRequestModel = preload("res://proto/request-models/move_request_model.gd")
@@ -11,6 +9,7 @@ const RespawnPlayerRequestModel = preload("res://proto/request-models/respawn_pl
 const ChangePlayerSpecializationRequestModel = preload("res://proto/request-models/change_player_specialization_request_model.gd")
 const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_ability_request_model.gd")
 const UseSupplyRequestModel = preload("res://proto/request-models/use_supply_request_model.gd")
+const WeaponDirectionRequestModel = preload("res://proto/request-models/weapon_direction_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
@@ -18,6 +17,7 @@ const GameStateResponseModel = preload("res://proto/response-models/game_state_r
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var previous_specialization = -1
+var previous_gun_rotation: float = PI
 var is_active: bool setget set_is_active
 var is_dead: bool setget set_is_dead
 
@@ -27,6 +27,10 @@ onready var apply_ability_cooldown_timer = $ApplyAbilityCooldownTimer
 
 var is_use_supply_cooldown: bool = false
 onready var use_supply_cooldown_timer = $UseSupplyCooldownTimer
+
+# gun rotation
+var is_gun_rotation_cooldown: bool = false
+onready var gun_rotation_cooldown_timer = $GunRotationCooldownTimer
 
 # Network
 const NetworkPacket = preload("res://network/data_types.gd")
@@ -93,7 +97,7 @@ func get_player_shoot_request():
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
 		if (network_packet):
 			return network_packet 
-		return null
+	return null
 
 
 # Ability managment
@@ -128,7 +132,7 @@ func get_apply_ability_request():
 		start_apply_ability_cooldown()
 		if (network_packet):
 			return network_packet
-		return null
+	return null
 
 
 func get_use_supply_request():
@@ -140,9 +144,34 @@ func get_use_supply_request():
 		start_use_supply_cooldown()
 		if (network_packet):
 			return network_packet
-		return null
+	return null
 
 
+
+func _on_GunRotationCooldownTimer_timeout():
+	is_gun_rotation_cooldown = false
+
+func start_gun_rotation_cooldown():
+	is_gun_rotation_cooldown = true
+	gun_rotation_cooldown_timer.start()
+
+func get_player_gun_rotation_request():
+	var new_gun_rotation: Vector2 = player_gun.get_gun_rotation()
+	if (not is_gun_rotation_cooldown and previous_gun_rotation != new_gun_rotation.angle()):
+		var weapon_direction = WeaponDirectionRequestModel.WeaponDirectionRequestModel.new()
+		weapon_direction.set_player_id(player_id)
+		weapon_direction.new_direction()
+		weapon_direction.get_direction().set_x(new_gun_rotation.x)
+		weapon_direction.get_direction().set_y(new_gun_rotation.y)
+
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(weapon_direction.to_bytes(), Global.RequestModels.WeaponDirectionRequestModel)
+		# create new gun rotation request model
+		start_gun_rotation_cooldown()
+		previous_gun_rotation = new_gun_rotation.angle()
+		if (network_packet):
+			return network_packet
+	return null
 
 # save pressed key to the model object
 func get_packed_move_action() -> MoveRequestModel.MoveRequestModel:

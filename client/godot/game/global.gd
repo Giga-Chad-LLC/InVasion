@@ -23,6 +23,7 @@ enum RequestModels {
 	ChangePlayerSpecializationRequestModel = 5,
 	ApplyAbilityRequestModel = 6,
 	UseSupplyRequestModel = 7,
+	WeaponDirectionRequestModel = 8,
 	UnknownRequestModel
 }
 # Server sends to client
@@ -38,6 +39,7 @@ enum ResponseModels {
 	UseSupplyResponseModel = 1009,
 	UpdatePlayerAmmoResponseModel = 1010,
 	UpdatePlayerHitpointsResponseModel = 1011,
+	WeaponDirectionResponseModel = 1012,
 	UnknownResponseModel
 }
 
