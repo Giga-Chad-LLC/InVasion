@@ -97,7 +97,7 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 			UI.get_node("RespawnMenu").toggle(true) # Show respawn screen
 		else:
 			despawn_player(killed_player.get_player_id(), players_parent_node)
-			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
+#			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
 
 func get_killed_players_info(killed_players: Array, main_player, players_parent_node):
 	var killed_player_info = []

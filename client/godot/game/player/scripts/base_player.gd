@@ -33,7 +33,7 @@ func update_player_position(player_state_model):
 
 func update_player_specialization(new_player_specialization):
 	player_specialization = new_player_specialization
-	print("Set specialization of player ", player_id, " to ", player_specialization)
+#	print("Set specialization of player ", player_id, " to ", player_specialization)
 
 func play_hit_animation():
 	hitAnimationPlayer.play("Hit")

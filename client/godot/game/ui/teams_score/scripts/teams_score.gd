@@ -14,9 +14,13 @@ func update_teams_score(killed_players, our_team_id):
 			team1_kills += 1
 	show_score()
 
-func set_teams_score(team1_score, team2_score):
-	team1_score = team1_score
-	team2_score = team2_score
+func set_teams_score(first_team_score, second_team_score, our_team):
+	if (our_team == 0):
+		team1_kills = first_team_score
+		team2_kills = second_team_score
+	else:
+		team1_kills = second_team_score
+		team2_kills = first_team_score
 	show_score()
 
 func show_score():

@@ -110,7 +110,11 @@ func _process(_delta):
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
-				TeamsScore.set_teams_score(0, 0) # change for the real score
+				TeamsScore.set_teams_score(
+					handshake_model.get_first_team_kills_count(),
+					handshake_model.get_second_team_kills_count(),
+					Player.team_id
+				) # change for the real score
 				# producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
 				RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
@@ -169,15 +173,6 @@ func _process(_delta):
 			if (result_code != UseSupplyResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack use supply model")
 			else:
-#				var supply_name
-#				if (used_supply.get_applied_supply_type() == Global.SupplyType.AidKit):
-#					supply_name = "AidKit"
-#				elif(used_supply.get_applied_supply_type() == Global.SupplyType.AmmoCrate):
-#					supply_name = "AmmoCrate"
-#
-#				print("Player ", used_supply.get_player_id(),
-#					  " used supply ", used_supply.get_supply_id(), " with type '", supply_name, "'")
-#				print("Left supply capacity: ", used_supply.get_left_supply_capacity(), ", is active: ", used_supply.get_is_active())
 				# update used supply
 				supplies_state_manager.update_used_supply(
 					used_supply.get_supply_id(),
