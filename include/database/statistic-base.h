@@ -8,16 +8,9 @@
 #include <functional>
 #include <optional>
 #include <cassert>
-
+#include "user-statistics-per-match.h"
 
 namespace invasion::statistic_base {
-
-    struct UserStatisticsPerMatch {
-        std::string nickname;
-        int kills = 0;
-        int deaths = 0;
-        bool winThisMatch = false;
-    };
 
     struct UserStatistics {
         int id;
@@ -64,28 +57,12 @@ namespace invasion::statistic_base {
             oldStats.winRate = (double) oldStats.numberWins / oldStats.numberOfMatches;
         }
 
-    public:
-
-        static bool checkAvailabilityUser(const std::string &nickname) {
-            auto table = DatabaseManager::getTable();
-            auto usr = table.get_all<UserStatistics>(where(c(&UserStatistics::nickname) == nickname), limit(1));
-            return !usr.empty();
-        }
-
         static void insertNewLine(const UserStatisticsPerMatch &userStatistic) {
             UserStatistics userStatistics;
             userStatistics.nickname = userStatistic.nickname;
 //            changeStats(userStatistics, userStatistic);
             auto table = DatabaseManager::getTable();
             table.insert(userStatistics);
-        }
-
-        static void addOrUpdateLine(const UserStatisticsPerMatch &userStatisticsPerMatch) {
-            if (checkAvailabilityUser(userStatisticsPerMatch.nickname)) {
-                updateLine(userStatisticsPerMatch);
-            } else {
-                insertNewLine(userStatisticsPerMatch);
-            }
         }
 
         static void updateLine(const UserStatisticsPerMatch &userStatisticsPerMatch) {
@@ -101,6 +78,24 @@ namespace invasion::statistic_base {
             table.update(userStatistics);
             table.commit();
         }
+
+    public:
+
+        static bool checkAvailabilityUser(const std::string &nickname) {
+            auto table = DatabaseManager::getTable();
+            auto usr = table.get_all<UserStatistics>(where(c(&UserStatistics::nickname) == nickname), limit(1));
+            return !usr.empty();
+        }
+
+
+        static void addOrUpdateLine(const UserStatisticsPerMatch &userStatisticsPerMatch) {
+            if (checkAvailabilityUser(userStatisticsPerMatch.nickname)) {
+                updateLine(userStatisticsPerMatch);
+            } else {
+                insertNewLine(userStatisticsPerMatch);
+            }
+        }
+
 
         static UserStatistics getUserStatistic(const std::string &nickname) {
             auto table = DatabaseManager::getTable();

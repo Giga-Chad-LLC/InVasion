@@ -6,16 +6,17 @@
 #include <regex>
 #include <thread>
 
+namespace invasion::http_server {
+    class HttpServer {
+    private:
+        std::thread thread_;
 
-class HttpServer {
-private:
-    std::thread thread_;
+    public:
+        HttpServer() {}
 
-public:
-    HttpServer() {}
+        void start();
 
-    void start();
-
-    void stop();
-};
+        void stop();
+    };
+}
 #endif//INVASIONSERVERS_HTTP_SERVER_H

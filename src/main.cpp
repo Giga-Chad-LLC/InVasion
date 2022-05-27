@@ -12,7 +12,8 @@
 
 int main() {
     try {
-        HttpServer httpServer;
+
+        invasion::http_server::HttpServer httpServer;
         httpServer.start();
 
         bool shouldStop = false;
