@@ -3,6 +3,7 @@
 #include <chrono>
 #include <memory>
 #include <algorithm>
+#include <thread>
 
 #include "weapon.h"
 
@@ -17,7 +18,7 @@
 namespace invasion::game_models {
 // following data was taken from M16A4 shooting stats (Call of Duty)
 const long long Weapon::RELOAD_DURATION_MS = 2100;
-const long long Weapon::DELAY_BETWEEN_SHOTS_MS = 74;
+// const long long Weapon::DELAY_BETWEEN_SHOTS_MS = 74;
 const int Weapon::MAGAZINE = 1000;
 
 
@@ -71,6 +72,9 @@ void Weapon::reload() {
 	}
 
 	m_reloadingStartTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
+
+	// reloading/sleeping
+	std::this_thread::sleep_for(std::chrono::milliseconds(Weapon::RELOAD_DURATION_MS));
 	
 	if(m_leftAmmo < Weapon::MAGAZINE - m_leftMagazine) {
 		m_leftMagazine += m_leftAmmo;

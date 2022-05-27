@@ -35,7 +35,7 @@ public:
 
 private:
 	static const long long RELOAD_DURATION_MS;
-	static const long long DELAY_BETWEEN_SHOTS_MS;
+	// static const long long DELAY_BETWEEN_SHOTS_MS;
 	static const int MAGAZINE;
 
 	int m_leftMagazine;
