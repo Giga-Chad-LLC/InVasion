@@ -40,7 +40,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/apply-ability-request-model.proto
 		./src/proto/request-models/use-supply-request-model.proto
 		./src/proto/request-models/weapon-direction-request-model.proto
-		
+		./src/proto/request-models/reload-weapon-request-model.proto
 		# utils
         ./src/proto/utils/vector2d.proto
 		./src/proto/utils/player-specialization.proto
