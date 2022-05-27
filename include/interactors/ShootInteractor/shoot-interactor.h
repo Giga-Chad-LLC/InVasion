@@ -18,7 +18,7 @@ using namespace request_models;
 
 class ShootInteractor {
 public:
-	ShootingStateResponse execute(const ShootRequestModel& req, GameSession& session) const;
+	ShootingStateResponseModel execute(const ShootRequestModel& req, GameSession& session) const;
 };
 
 

@@ -243,7 +243,7 @@ void GameEventsDispatcher::dispatchEvent(
             NetworkPacket::deserialize(shootAction, request);
 
             interactors::ShootInteractor interactor;
-            response_models::ShootingStateResponse responseModel = interactor.execute(shootAction, *gameSession);
+            response_models::ShootingStateResponseModel responseModel = interactor.execute(shootAction, *gameSession);
 
             // serialize
             auto response = std::make_shared<NetworkPacketResponse>(
