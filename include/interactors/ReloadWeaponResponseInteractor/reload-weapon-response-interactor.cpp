@@ -32,7 +32,6 @@ std::optional<WeaponStateResponseModel> ReloadWeaponResponseInteractor::execute(
 	Weapon& weapon = player->getWeapon();
 	
 	// sleeps for Weapon::RELOAD_DURATION_MS
-	
 	// if reloading has not started
 	if(!weapon.reload()) {
 		return std::nullopt;

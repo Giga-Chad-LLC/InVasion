@@ -19,7 +19,6 @@
 namespace invasion::game_models {
 // following data was taken from M16A4 shooting stats (Call of Duty)
 const long long Weapon::RELOAD_DURATION_MS = 2100;
-// const long long Weapon::DELAY_BETWEEN_SHOTS_MS = 74;
 const int Weapon::MAGAZINE = 10;
 
 
@@ -28,8 +27,6 @@ Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage)
 	  m_leftAmmo(ammo),
 	  m_initialAmmo(ammo),
 	  m_damage(damage),
-	//   m_reloadingStartTimestamp_ms(0),
-	//   m_lastShotTimestamp_ms(0),
 	  m_direction(1.0, 0.0),
 	  m_playerId(playerId),
 	  m_playerTeamId(teamId),
@@ -40,8 +37,7 @@ Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage)
 std::shared_ptr<Bullet> Weapon::shoot(const Vector2D playerPosition, const int bulletId) {
 	assert(isAbleToShoot());
 	
-	m_leftMagazine--; 
-	// m_lastShotTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
+	m_leftMagazine--;
 
 	std::shared_ptr<Bullet> bullet_ptr = std::make_shared<Bullet>(
 		std::move(playerPosition), 
@@ -63,8 +59,6 @@ bool Weapon::isAbleToShoot() const {
 	std::unique_lock ul{ mtx_reload };
 	return (
 		m_leftMagazine > 0 && !m_isReloading.load()
-		// now > m_lastShotTimestamp_ms + Weapon::DELAY_BETWEEN_SHOTS_MS &&
-		// now > m_reloadingStartTimestamp_ms + Weapon::RELOAD_DURATION_MS
 	);
 }
 
@@ -78,7 +72,6 @@ bool Weapon::reload() {
 	
 	m_isReloading.store(true);
 	ul.unlock();
-	// m_reloadingStartTimestamp_ms = utils::TimeUtilities::getCurrentTime_ms();
 
 	// reloading/sleeping
 	std::this_thread::sleep_for(std::chrono::milliseconds(Weapon::RELOAD_DURATION_MS));
@@ -105,8 +98,6 @@ void Weapon::setDirection(const Vector2D& dir) {
 
 
 bool Weapon::isReloading() const {
-	// const long long now = utils::TimeUtilities::getCurrentTime_ms();
-	// return now < m_reloadingStartTimestamp_ms + Weapon::RELOAD_DURATION_MS;
 	std::unique_lock ul{ mtx_reload };
 	return m_isReloading.load();
 }
@@ -117,8 +108,6 @@ void Weapon::reset() {
 
 	m_leftMagazine = Weapon::MAGAZINE;
 	m_leftAmmo = m_initialAmmo;
-	// m_reloadingStartTimestamp_ms = 0;
-	// m_lastShotTimestamp_ms = 0;
 	m_isReloading.store(false);
 	m_direction = std::move(Vector2D(1.0, 0.0));
 }

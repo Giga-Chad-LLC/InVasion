@@ -36,17 +36,12 @@ public:
 
 private:
 	static const long long RELOAD_DURATION_MS;
-	// static const long long DELAY_BETWEEN_SHOTS_MS;
 	static const int MAGAZINE;
 
 	int m_leftMagazine;
 	int m_leftAmmo;
 	const int m_initialAmmo;
 	const int m_damage;
-
-	// long long m_reloadingStartTimestamp_ms;
-	// long long m_lastShotTimestamp_ms;
-
 	
 	Vector2D m_direction;
 	const int m_playerId;
