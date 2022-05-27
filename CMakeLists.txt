@@ -50,7 +50,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 
 		# response-models
         ./src/proto/response-models/player-position-response-model.proto
-        ./src/proto/response-models/shooting-state-response-model.proto
+        ./src/proto/response-models/weapon-state-response-model.proto
 		./src/proto/response-models/bullet-position-response-model.proto
 		./src/proto/response-models/game-state-response-model.proto
 		./src/proto/response-models/damaged-player-response-model.proto

@@ -18,7 +18,7 @@ namespace invasion::server {
     };
     enum class ResponseModel_t : uint32_t {
         PlayerPositionResponseModel = 1001,
-        ShootingStateResponseModel = 1002, 
+        WeaponStateResponseModel = 1002, 
         GameStateResponseModel = 1003,
         RespawnPlayerResponseModel = 1004,
         GameOverResponseModel = 1005,

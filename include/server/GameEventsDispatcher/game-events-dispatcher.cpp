@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+
 #include "game-events-dispatcher.h"
 #include "server/Session/session.h"
 
@@ -34,6 +35,7 @@
 #include "use-supply-response-model.pb.h"
 #include "update-player-ammo-response-model.pb.h"
 #include "update-player-hitpoints-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -243,12 +245,12 @@ void GameEventsDispatcher::dispatchEvent(
             NetworkPacket::deserialize(shootAction, request);
 
             interactors::ShootInteractor interactor;
-            response_models::ShootingStateResponseModel responseModel = interactor.execute(shootAction, *gameSession);
+            response_models::WeaponStateResponseModel responseModel = interactor.execute(shootAction, *gameSession);
 
             // serialize
             auto response = std::make_shared<NetworkPacketResponse>(
                 NetworkPacket::serialize(responseModel),
-                ResponseModel_t::ShootingStateResponseModel,
+                ResponseModel_t::WeaponStateResponseModel,
                 responseModel.ByteSizeLong()
             );
 

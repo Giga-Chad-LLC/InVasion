@@ -3,7 +3,7 @@
 
 #include "shoot-interactor.h"
 // response-models
-#include "shooting-state-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -17,14 +17,14 @@ using namespace invasion::game_models;
 using namespace response_models;
 using namespace request_models;
 	
-ShootingStateResponseModel ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
+WeaponStateResponseModel ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
 	std::shared_ptr<Player> player_ptr = session.getPlayer(req.player_id());
 	Weapon& weapon = player_ptr->getWeapon();
 	
 	game_models::Vector2D direction(req.weapon_direction().x(), req.weapon_direction().y());
 	weapon.setDirection(std::move(direction));
 	
-	ShootingStateResponseModel response;
+	WeaponStateResponseModel response;
 	
 	response.set_player_id(player_ptr->getId());
 
