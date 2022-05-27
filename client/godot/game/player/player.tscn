@@ -32,8 +32,15 @@ material = SubResource( 35 )
 parameters/playback = SubResource( 1 )
 
 [node name="ApplyAbilityCooldownTimer" type="Timer" parent="." index="5"]
+one_shot = true
 
 [node name="UseSupplyCooldownTimer" type="Timer" parent="." index="6"]
+one_shot = true
+
+[node name="GunRotationCooldownTimer" type="Timer" parent="." index="7"]
+wait_time = 0.5
+one_shot = true
 
 [connection signal="timeout" from="ApplyAbilityCooldownTimer" to="." method="_on_AbilityCooldownTimer_timeout"]
 [connection signal="timeout" from="UseSupplyCooldownTimer" to="." method="_on_UseSupplyCooldownTimer_timeout"]
+[connection signal="timeout" from="GunRotationCooldownTimer" to="." method="_on_GunRotationCooldownTimer_timeout"]

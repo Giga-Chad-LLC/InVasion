@@ -124,7 +124,9 @@ func change_player_specialization(player_id, player_specialization: int, main_pl
 	players_specializations[player_id] = player_specialization
 
 
-
-
-
-
+func change_player_gun_rotation(player_id, new_gun_rotation, main_player, players_parent_node):
+	if (player_id != main_player.player_id):
+		if (players_parent_node.has_node(str(player_id))):
+			players_parent_node.get_node(str(player_id)).update_player_gun_rotation(
+				Vector2(new_gun_rotation.get_x(), new_gun_rotation.get_y())
+			)

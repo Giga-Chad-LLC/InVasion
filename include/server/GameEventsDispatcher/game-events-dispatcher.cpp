@@ -18,6 +18,7 @@
 #include "interactors/UseSupplyInteractor/use-supply-interactor.h"
 #include "interactors/UpdatePlayerHitpointsResponseInteractor/update-player-hitpoints-response-interactor.h"
 #include "interactors/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.h"
+#include "interactors/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -25,6 +26,7 @@
 #include "change-player-specialization-request-model.pb.h"
 #include "apply-ability-request-model.pb.h"
 #include "use-supply-request-model.pb.h"
+#include "weapon-direction-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
@@ -34,6 +36,7 @@
 #include "use-supply-response-model.pb.h"
 #include "update-player-ammo-response-model.pb.h"
 #include "update-player-hitpoints-response-model.pb.h"
+#include "weapon-direction-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -253,6 +256,22 @@ void GameEventsDispatcher::dispatchEvent(
             );
 
             session->putDataToSingleClient(responseModel.player_id(), response);
+            break;
+        }
+        case RequestModel_t::WeaponDirectionRequestModel: {
+            request_models::WeaponDirectionRequestModel weaponDirection;
+            NetworkPacket::deserialize(weaponDirection, request);
+
+            interactors::WeaponDirectionResponseInteractor interactor;
+            response_models::WeaponDirectionResponseModel responseModel = interactor.execute(weaponDirection, *gameSession);
+
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(responseModel),
+                ResponseModel_t::WeaponDirectionResponseModel,
+                responseModel.ByteSizeLong()
+            );
+
+            session->putDataToAllClients(response);
             break;
         }
         case RequestModel_t::RespawnPlayerRequestModel: {

@@ -14,6 +14,7 @@ namespace invasion::server {
         ChangePlayerSpecializationRequestModel = 5,
         ApplyAbilityRequestModel = 6,
         UseSupplyRequestModel = 7,
+        WeaponDirectionRequestModel = 8,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {
@@ -28,6 +29,7 @@ namespace invasion::server {
         UseSupplyResponseModel = 1009,
         UpdatePlayerAmmoResponseModel = 1010,
         UpdatePlayerHitpointsResponseModel = 1011,
+        WeaponDirectionResponseModel = 1012,
         UnknownResponseModel
     };
 

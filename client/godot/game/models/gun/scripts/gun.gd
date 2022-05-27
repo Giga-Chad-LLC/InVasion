@@ -7,6 +7,8 @@ onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 var is_cooldown = false
 var should_follow_mouse: bool = false
+var new_gun_rotation: float = 0
+
 
 func instance_bullet(rotation: float):
 	var bullet_model_instance = Global.instance_node_at_location(
@@ -17,10 +19,8 @@ func instance_bullet(rotation: float):
 	bullet_model_instance.rotation = rotation
 
 func start_cooldown():
-#	instance_bullet(rotation)
 	is_cooldown = true
 	cooldown_timer.start()
-#	emit_signal("shoot_weapon", Vector2(cos(global_rotation), sin(global_rotation)))
 
 
 func _on_CooldownTimer_timeout():
@@ -29,5 +29,12 @@ func _on_CooldownTimer_timeout():
 func _process(_delta):
 	if (should_follow_mouse):
 		look_at(get_global_mouse_position())
+	else:
+		# here are the other players, we want to animate their guns rotations
+		global_rotation = lerp(global_rotation, new_gun_rotation, 0.1)
 
-
+func set_gun_rotation(direction: Vector2):
+	new_gun_rotation = direction.angle()
+	
+func get_gun_rotation():
+	return Vector2(cos(global_rotation), sin(global_rotation))
