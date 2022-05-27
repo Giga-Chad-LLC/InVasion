@@ -1,7 +1,7 @@
 #include <utility>
 #include <memory>
 
-#include "shoot-interactor.h"
+#include "shoot-response-interactor.h"
 // response-models
 #include "weapon-state-response-model.pb.h"
 // game-models
@@ -17,7 +17,7 @@ using namespace invasion::game_models;
 using namespace response_models;
 using namespace request_models;
 	
-WeaponStateResponseModel ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
+WeaponStateResponseModel ShootResponseInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
 	std::shared_ptr<Player> player_ptr = session.getPlayer(req.player_id());
 	Weapon& weapon = player_ptr->getWeapon();
 	

@@ -9,7 +9,7 @@
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
-#include "interactors/ShootInteractor/shoot-interactor.h"
+#include "interactors/ShootResponseInteractor/shoot-response-interactor.h"
 #include "interactors/BulletsPositionsResponseInteractor/bullets-positions-response-interactor.h"
 #include "interactors/DamagedPlayersResponseInteractor/damaged-players-response-interactor.h"
 #include "interactors/KilledPlayersResponseInteractor/killed-players-response-interactor.h"
@@ -244,7 +244,7 @@ void GameEventsDispatcher::dispatchEvent(
             request_models::ShootRequestModel shootAction;
             NetworkPacket::deserialize(shootAction, request);
 
-            interactors::ShootInteractor interactor;
+            interactors::ShootResponseInteractor interactor;
             response_models::WeaponStateResponseModel responseModel = interactor.execute(shootAction, *gameSession);
 
             // serialize

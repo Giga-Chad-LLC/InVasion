@@ -16,7 +16,7 @@ using namespace invasion::game_models;
 using namespace response_models;
 using namespace request_models;
 
-class ShootInteractor {
+class ShootResponseInteractor {
 public:
 	WeaponStateResponseModel execute(const ShootRequestModel& req, GameSession& session) const;
 };
