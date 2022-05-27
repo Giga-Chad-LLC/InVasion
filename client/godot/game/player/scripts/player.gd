@@ -17,6 +17,7 @@ const GameStateResponseModel = preload("res://proto/response-models/game_state_r
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
 var previous_specialization = -1
+var previous_gun_rotation: float = PI
 var is_active: bool setget set_is_active
 var is_dead: bool setget set_is_dead
 
@@ -155,18 +156,19 @@ func start_gun_rotation_cooldown():
 	gun_rotation_cooldown_timer.start()
 
 func get_player_gun_rotation_request():
-	if (not is_gun_rotation_cooldown):
-		var gun_rotation: Vector2 = player_gun.get_gun_rotation()
+	var new_gun_rotation: Vector2 = player_gun.get_gun_rotation()
+	if (not is_gun_rotation_cooldown and previous_gun_rotation != new_gun_rotation.angle()):
 		var weapon_direction = WeaponDirectionRequestModel.WeaponDirectionRequestModel.new()
 		weapon_direction.set_player_id(player_id)
 		weapon_direction.new_direction()
-		weapon_direction.get_direction().set_x(gun_rotation.x)
-		weapon_direction.get_direction().set_y(gun_rotation.y)
+		weapon_direction.get_direction().set_x(new_gun_rotation.x)
+		weapon_direction.get_direction().set_y(new_gun_rotation.y)
 
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(weapon_direction.to_bytes(), Global.RequestModels.WeaponDirectionRequestModel)
 		# create new gun rotation request model
 		start_gun_rotation_cooldown()
+		previous_gun_rotation = new_gun_rotation.angle()
 		if (network_packet):
 			return network_packet
 	return null

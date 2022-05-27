@@ -31,7 +31,8 @@ func _process(_delta):
 		look_at(get_global_mouse_position())
 	else:
 		# here are the other players, we want to animate their guns rotations
-		global_rotation = lerp(global_rotation, new_gun_rotation, 0.1)
+		global_rotation = lerp_angle(global_rotation, new_gun_rotation, 0.1)
+
 
 func set_gun_rotation(direction: Vector2):
 	new_gun_rotation = direction.angle()
