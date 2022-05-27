@@ -18,5 +18,7 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/HandshakeResponseInteractor/handshake-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UpdatePlayerHitpointsResponseInteractor/update-player-hitpoints-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.cpp
 	PARENT_SCOPE
 )
