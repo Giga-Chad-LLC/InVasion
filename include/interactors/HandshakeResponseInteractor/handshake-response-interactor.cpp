@@ -16,6 +16,7 @@
 #include "player-team-id.pb.h"
 #include "supply-model.pb.h"
 #include "supply-type.pb.h"
+#include "player-health-model.pb.h"
 
 
 namespace invasion::interactors {
@@ -28,6 +29,11 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 	HandshakeResponseModel response;
 	
 	response.set_player_id(playerId);
+	
+	response.set_hitpoints(player->getLifeState().getInitialHitPoints());
+	response.set_magazine(player->getWeapon().getLeftMagazine());
+	response.set_ammo(player->getWeapon().getInitialAmmo());
+
 	response.set_remaining_session_time_ms(remainingSessionTime_ms);
 
 	// setting team id	
@@ -53,7 +59,7 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 	// retrieving supplies
 	const std::vector<std::shared_ptr<StaticSupply>>& supplies = session.getSupplies();
 
-	for(std::shared_ptr<StaticSupply> supply : supplies) {
+	for (std::shared_ptr<StaticSupply> supply : supplies) {
 		util_models::SupplyModel* supplyModel = response.add_supplies();
 
 		supplyModel->set_supply_id(supply->getId());
@@ -75,6 +81,18 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 
 		supplyModel->set_supply_capacity(supply->getLeftSupplyCapacity());
 		supplyModel->set_is_active(supply->isActive());
+	}
+
+	// retrieving players' health
+	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
+	
+	for (auto player_ptr : players) {
+		if(player_ptr->getId() != playerId) {
+			util_models::PlayerHealthModel *model = response.add_players_hitpoints();
+			model->set_player_id(player_ptr->getId());
+			model->set_current_hitpoints(player_ptr->getLifeState().getHitPoints());
+			model->set_initial_hitpoints(player_ptr->getLifeState().getInitialHitPoints());
+		}
 	}
 
 	return response;

@@ -19,7 +19,7 @@
 namespace invasion::game_models {
 // following data was taken from M16A4 shooting stats (Call of Duty)
 const long long Weapon::RELOAD_DURATION_MS = 2100;
-const int Weapon::MAGAZINE = 10;
+const int Weapon::MAGAZINE = 30;
 
 
 Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage) 

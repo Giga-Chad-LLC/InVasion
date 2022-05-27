@@ -15,6 +15,7 @@ namespace invasion::server {
         ApplyAbilityRequestModel = 6,
         UseSupplyRequestModel = 7,
         WeaponDirectionRequestModel = 8,
+        ReloadWeaponRequestModel = 9,
         UnknownRequestModel
     };
     enum class ResponseModel_t : uint32_t {

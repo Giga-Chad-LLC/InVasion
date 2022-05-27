@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package util_models;
+
+message PlayerHealthModel {
+    int32 player_id = 1;
+    int32 current_hitpoints = 2;
+    int32 initial_hitpoints = 3;
+}

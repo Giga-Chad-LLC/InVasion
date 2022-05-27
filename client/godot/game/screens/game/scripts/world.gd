@@ -13,6 +13,7 @@ onready var RespawnMenu = $UI/RespawnMenu
 onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelector
 onready var SessionTimer = $UI/HUD/Timer
 onready var TeamsScore = $UI/HUD/TeamsScore
+onready var AmmoStats = $UI/HUD/AmmoStats
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -32,11 +33,12 @@ const GameStateResponseModel = preload("res://proto/response-models/game_state_r
 const GameOverResponseModel = preload("res://proto/response-models/game_over_response_model.gd")
 const PlayerSpecializationResponseModel = preload("res://proto/response-models/player_specialization_response_model.gd")
 const SupplyResponseModel = preload("res://proto/response-models/supply_response_model.gd")
-const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.proto.gd")
+const HandshakeResponseModel = preload("res://proto/response-models/handshake_response_model.gd")
 const UpdatePlayerHitpointsResponseModel = preload("res://proto/response-models/update_player_hitpoints_response_model.gd")
 const UpdatePlayerAmmoResponseModel = preload("res://proto/response-models/update_player_ammo_response_model.gd")
 const UseSupplyResponseModel = preload("res://proto/response-models/use_supply_response_model.gd")
 const WeaponDirectionResponseModel = preload("res://proto/response-models/weapon_direction_response_model.gd")
+const WeaponStateResponseModel = preload("res://proto/response-models/weapon_state_response_model.proto.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -101,6 +103,9 @@ func _process(_delta):
 		var gun_rotation_request = Player.get_player_gun_rotation_request()
 		if (gun_rotation_request):
 			producer.push_data(gun_rotation_request)
+		var reload_gun_request = Player.get_reload_gun_request()
+		if (reload_gun_request):
+			producer.push_data(reload_gun_request)
 	
 #	Receive data from server
 	var received_packet = consumer.pop_data()
@@ -119,6 +124,10 @@ func _process(_delta):
 					handshake_model.get_player_id(),
 					handshake_model.get_team_id()
 				)
+				# set player gun stats
+				Player.set_gun_state(handshake_model.get_ammo(), handshake_model.get_magazine())
+				AmmoStats.show_ammo_stats(handshake_model.get_ammo(), handshake_model.get_magazine())
+				
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
@@ -175,10 +184,15 @@ func _process(_delta):
 				print("Error while receiving: ", "cannot unpack game update model")
 			else:
 				supplies_state_manager.update_supplies_states([new_supplies_state.get_supply()], supplies_parent_node)
-		Global.ResponseModels.ShootingStateResponseModel:
+		Global.ResponseModels.WeaponStateResponseModel:
 			# Update our ammo count, gun reloading state
-			# print("We shot a bullet!")
-			pass
+			var new_weapon_state = WeaponStateResponseModel.WeaponStateResponseModel.new()
+			var result_code = new_weapon_state.from_bytes(received_packet.get_bytes())
+			if (result_code != WeaponStateResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack weapon state model")
+			else:
+				print("Weapon state changed: ", new_weapon_state.to_string())
+				AmmoStats.show_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
 		Global.ResponseModels.WeaponDirectionResponseModel:
 			var player_weapon_direction = WeaponDirectionResponseModel.WeaponDirectionResponseModel.new()
 			var result_code = player_weapon_direction.from_bytes(received_packet.get_bytes())

@@ -24,12 +24,13 @@ enum RequestModels {
 	ApplyAbilityRequestModel = 6,
 	UseSupplyRequestModel = 7,
 	WeaponDirectionRequestModel = 8,
+	ReloadWeaponRequestModel = 9,
 	UnknownRequestModel
 }
 # Server sends to client
 enum ResponseModels {
 	PlayerPositionResponseModel = 1001,
-	ShootingStateResponseModel = 1002,
+	WeaponStateResponseModel = 1002,
 	GameStateResponseModel = 1003,
 	RespawnPlayerResponseModel = 1004,
 	GameOverResponseModel = 1005,

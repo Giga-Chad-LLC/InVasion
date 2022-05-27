@@ -660,16 +660,119 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
-enum PlayerTeamId {
-	FirstTeam = 0,
-	SecondTeam = 1
-}
-
-enum SupplyType {
-	AidKit = 0,
-	AmmoCrate = 1
-}
-
+class WeaponStateResponseModel:
+	func _init():
+		var service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_left_magazine = PBField.new("left_magazine", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _left_magazine
+		data[_left_magazine.tag] = service
+		
+		_left_ammo = PBField.new("left_ammo", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _left_ammo
+		data[_left_ammo.tag] = service
+		
+		_is_reloading_required = PBField.new("is_reloading_required", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
+		service = PBServiceField.new()
+		service.field = _is_reloading_required
+		data[_is_reloading_required.tag] = service
+		
+		_is_reloading = PBField.new("is_reloading", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
+		service = PBServiceField.new()
+		service.field = _is_reloading
+		data[_is_reloading.tag] = service
+		
+		_weapon_direction = PBField.new("weapon_direction", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 6, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _weapon_direction
+		service.func_ref = funcref(self, "new_weapon_direction")
+		data[_weapon_direction.tag] = service
+		
+	var data = {}
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _left_magazine: PBField
+	func get_left_magazine() -> int:
+		return _left_magazine.value
+	func clear_left_magazine() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_left_magazine.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_left_magazine(value : int) -> void:
+		_left_magazine.value = value
+	
+	var _left_ammo: PBField
+	func get_left_ammo() -> int:
+		return _left_ammo.value
+	func clear_left_ammo() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_left_ammo.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_left_ammo(value : int) -> void:
+		_left_ammo.value = value
+	
+	var _is_reloading_required: PBField
+	func get_is_reloading_required() -> bool:
+		return _is_reloading_required.value
+	func clear_is_reloading_required() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_is_reloading_required.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
+	func set_is_reloading_required(value : bool) -> void:
+		_is_reloading_required.value = value
+	
+	var _is_reloading: PBField
+	func get_is_reloading() -> bool:
+		return _is_reloading.value
+	func clear_is_reloading() -> void:
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		_is_reloading.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
+	func set_is_reloading(value : bool) -> void:
+		_is_reloading.value = value
+	
+	var _weapon_direction: PBField
+	func get_weapon_direction() -> Vector2D:
+		return _weapon_direction.value
+	func clear_weapon_direction() -> void:
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		_weapon_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_weapon_direction() -> Vector2D:
+		_weapon_direction.value = Vector2D.new()
+		return _weapon_direction.value
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
 class Vector2D:
 	func _init():
 		var service
@@ -703,247 +806,6 @@ class Vector2D:
 		_y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
 	func set_y(value : float) -> void:
 		_y.value = value
-	
-	func to_string() -> String:
-		return PBPacker.message_to_string(data)
-		
-	func to_bytes() -> PoolByteArray:
-		return PBPacker.pack_message(data)
-		
-	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
-		var cur_limit = bytes.size()
-		if limit != -1:
-			cur_limit = limit
-		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
-		if result == cur_limit:
-			if PBPacker.check_required(data):
-				if limit == -1:
-					return PB_ERR.NO_ERRORS
-			else:
-				return PB_ERR.REQUIRED_FIELDS
-		elif limit == -1 && result > 0:
-			return PB_ERR.PARSE_INCOMPLETE
-		return result
-	
-class SupplyModel:
-	func _init():
-		var service
-		
-		_supply_id = PBField.new("supply_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _supply_id
-		data[_supply_id.tag] = service
-		
-		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _player_id
-		data[_player_id.tag] = service
-		
-		_player_team_id = PBField.new("player_team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
-		service = PBServiceField.new()
-		service.field = _player_team_id
-		data[_player_team_id.tag] = service
-		
-		_supply_type = PBField.new("supply_type", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
-		service = PBServiceField.new()
-		service.field = _supply_type
-		data[_supply_type.tag] = service
-		
-		_position = PBField.new("position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
-		service = PBServiceField.new()
-		service.field = _position
-		service.func_ref = funcref(self, "new_position")
-		data[_position.tag] = service
-		
-		_supply_capacity = PBField.new("supply_capacity", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 6, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _supply_capacity
-		data[_supply_capacity.tag] = service
-		
-		_is_active = PBField.new("is_active", PB_DATA_TYPE.BOOL, PB_RULE.OPTIONAL, 7, true, DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL])
-		service = PBServiceField.new()
-		service.field = _is_active
-		data[_is_active.tag] = service
-		
-	var data = {}
-	
-	var _supply_id: PBField
-	func get_supply_id() -> int:
-		return _supply_id.value
-	func clear_supply_id() -> void:
-		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_supply_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_supply_id(value : int) -> void:
-		_supply_id.value = value
-	
-	var _player_id: PBField
-	func get_player_id() -> int:
-		return _player_id.value
-	func clear_player_id() -> void:
-		data[2].state = PB_SERVICE_STATE.UNFILLED
-		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_player_id(value : int) -> void:
-		_player_id.value = value
-	
-	var _player_team_id: PBField
-	func get_player_team_id():
-		return _player_team_id.value
-	func clear_player_team_id() -> void:
-		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_player_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-	func set_player_team_id(value) -> void:
-		_player_team_id.value = value
-	
-	var _supply_type: PBField
-	func get_supply_type():
-		return _supply_type.value
-	func clear_supply_type() -> void:
-		data[4].state = PB_SERVICE_STATE.UNFILLED
-		_supply_type.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-	func set_supply_type(value) -> void:
-		_supply_type.value = value
-	
-	var _position: PBField
-	func get_position() -> Vector2D:
-		return _position.value
-	func clear_position() -> void:
-		data[5].state = PB_SERVICE_STATE.UNFILLED
-		_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func new_position() -> Vector2D:
-		_position.value = Vector2D.new()
-		return _position.value
-	
-	var _supply_capacity: PBField
-	func get_supply_capacity() -> int:
-		return _supply_capacity.value
-	func clear_supply_capacity() -> void:
-		data[6].state = PB_SERVICE_STATE.UNFILLED
-		_supply_capacity.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_supply_capacity(value : int) -> void:
-		_supply_capacity.value = value
-	
-	var _is_active: PBField
-	func get_is_active() -> bool:
-		return _is_active.value
-	func clear_is_active() -> void:
-		data[7].state = PB_SERVICE_STATE.UNFILLED
-		_is_active.value = DEFAULT_VALUES_3[PB_DATA_TYPE.BOOL]
-	func set_is_active(value : bool) -> void:
-		_is_active.value = value
-	
-	func to_string() -> String:
-		return PBPacker.message_to_string(data)
-		
-	func to_bytes() -> PoolByteArray:
-		return PBPacker.pack_message(data)
-		
-	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
-		var cur_limit = bytes.size()
-		if limit != -1:
-			cur_limit = limit
-		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
-		if result == cur_limit:
-			if PBPacker.check_required(data):
-				if limit == -1:
-					return PB_ERR.NO_ERRORS
-			else:
-				return PB_ERR.REQUIRED_FIELDS
-		elif limit == -1 && result > 0:
-			return PB_ERR.PARSE_INCOMPLETE
-		return result
-	
-class HandshakeResponseModel:
-	func _init():
-		var service
-		
-		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _player_id
-		data[_player_id.tag] = service
-		
-		_team_id = PBField.new("team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
-		service = PBServiceField.new()
-		service.field = _team_id
-		data[_team_id.tag] = service
-		
-		_remaining_session_time_ms = PBField.new("remaining_session_time_ms", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _remaining_session_time_ms
-		data[_remaining_session_time_ms.tag] = service
-		
-		_first_team_kills_count = PBField.new("first_team_kills_count", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _first_team_kills_count
-		data[_first_team_kills_count.tag] = service
-		
-		_second_team_kills_count = PBField.new("second_team_kills_count", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _second_team_kills_count
-		data[_second_team_kills_count.tag] = service
-		
-		_supplies = PBField.new("supplies", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 6, true, [])
-		service = PBServiceField.new()
-		service.field = _supplies
-		service.func_ref = funcref(self, "add_supplies")
-		data[_supplies.tag] = service
-		
-	var data = {}
-	
-	var _player_id: PBField
-	func get_player_id() -> int:
-		return _player_id.value
-	func clear_player_id() -> void:
-		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_player_id(value : int) -> void:
-		_player_id.value = value
-	
-	var _team_id: PBField
-	func get_team_id():
-		return _team_id.value
-	func clear_team_id() -> void:
-		data[2].state = PB_SERVICE_STATE.UNFILLED
-		_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-	func set_team_id(value) -> void:
-		_team_id.value = value
-	
-	var _remaining_session_time_ms: PBField
-	func get_remaining_session_time_ms() -> int:
-		return _remaining_session_time_ms.value
-	func clear_remaining_session_time_ms() -> void:
-		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_remaining_session_time_ms.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_remaining_session_time_ms(value : int) -> void:
-		_remaining_session_time_ms.value = value
-	
-	var _first_team_kills_count: PBField
-	func get_first_team_kills_count() -> int:
-		return _first_team_kills_count.value
-	func clear_first_team_kills_count() -> void:
-		data[4].state = PB_SERVICE_STATE.UNFILLED
-		_first_team_kills_count.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_first_team_kills_count(value : int) -> void:
-		_first_team_kills_count.value = value
-	
-	var _second_team_kills_count: PBField
-	func get_second_team_kills_count() -> int:
-		return _second_team_kills_count.value
-	func clear_second_team_kills_count() -> void:
-		data[5].state = PB_SERVICE_STATE.UNFILLED
-		_second_team_kills_count.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_second_team_kills_count(value : int) -> void:
-		_second_team_kills_count.value = value
-	
-	var _supplies: PBField
-	func get_supplies() -> Array:
-		return _supplies.value
-	func clear_supplies() -> void:
-		data[6].state = PB_SERVICE_STATE.UNFILLED
-		_supplies.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func add_supplies() -> SupplyModel:
-		var element = SupplyModel.new()
-		_supplies.value.append(element)
-		return element
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)
