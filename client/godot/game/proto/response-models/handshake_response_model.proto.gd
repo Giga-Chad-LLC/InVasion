@@ -871,7 +871,17 @@ class HandshakeResponseModel:
 		service.field = _remaining_session_time_ms
 		data[_remaining_session_time_ms.tag] = service
 		
-		_supplies = PBField.new("supplies", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 4, true, [])
+		_first_team_kills_count = PBField.new("first_team_kills_count", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _first_team_kills_count
+		data[_first_team_kills_count.tag] = service
+		
+		_second_team_kills_count = PBField.new("second_team_kills_count", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _second_team_kills_count
+		data[_second_team_kills_count.tag] = service
+		
+		_supplies = PBField.new("supplies", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 6, true, [])
 		service = PBServiceField.new()
 		service.field = _supplies
 		service.func_ref = funcref(self, "add_supplies")
@@ -906,11 +916,29 @@ class HandshakeResponseModel:
 	func set_remaining_session_time_ms(value : int) -> void:
 		_remaining_session_time_ms.value = value
 	
+	var _first_team_kills_count: PBField
+	func get_first_team_kills_count() -> int:
+		return _first_team_kills_count.value
+	func clear_first_team_kills_count() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_first_team_kills_count.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_first_team_kills_count(value : int) -> void:
+		_first_team_kills_count.value = value
+	
+	var _second_team_kills_count: PBField
+	func get_second_team_kills_count() -> int:
+		return _second_team_kills_count.value
+	func clear_second_team_kills_count() -> void:
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		_second_team_kills_count.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_second_team_kills_count(value : int) -> void:
+		_second_team_kills_count.value = value
+	
 	var _supplies: PBField
 	func get_supplies() -> Array:
 		return _supplies.value
 	func clear_supplies() -> void:
-		data[4].state = PB_SERVICE_STATE.UNFILLED
+		data[6].state = PB_SERVICE_STATE.UNFILLED
 		_supplies.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 	func add_supplies() -> SupplyModel:
 		var element = SupplyModel.new()
