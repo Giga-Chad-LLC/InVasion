@@ -39,6 +39,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/change-player-specialization-request-model.proto
 		./src/proto/request-models/apply-ability-request-model.proto
 		./src/proto/request-models/use-supply-request-model.proto
+		./src/proto/request-models/weapon-direction-request-model.proto
 		
 		# utils
         ./src/proto/utils/vector2d.proto
@@ -64,6 +65,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/handshake-response-model.proto
 		./src/proto/response-models/update-player-ammo-response-model.proto
 		./src/proto/response-models/update-player-hitpoints-response-model.proto
+		./src/proto/response-models/weapon-direction-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
