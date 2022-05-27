@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 #include <cassert>
 
 #include "reload-weapon-response-interactor.h"
@@ -22,15 +23,20 @@ using namespace request_models;
 using namespace response_models;
 	
 
-WeaponStateResponseModel ReloadWeaponResponseInteractor::execute(
+std::optional<WeaponStateResponseModel> ReloadWeaponResponseInteractor::execute(
 	const ReloadWeaponRequestModel& req, std::shared_ptr<GameSession> session) const {
+	
 	const int playerId = req.player_id();
 	std::shared_ptr<Player> player = session->getPlayer(playerId);
 
 	Weapon& weapon = player->getWeapon();
 	
 	// sleeps for Weapon::RELOAD_DURATION_MS
-	weapon.reload();
+	
+	// if reloading has not started
+	if(!weapon.reload()) {
+		return std::nullopt;
+	}
 
 	const int leftMagazine = weapon.getLeftMagazine();
 	const int leftAmmo = weapon.getLeftAmmo();

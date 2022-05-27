@@ -4,6 +4,8 @@
 #include <chrono>
 #include <memory>
 #include <iostream>
+#include <atomic>
+#include <mutex>
 
 // game-models
 #include "game-models/Bullet/bullet.h"
@@ -19,7 +21,7 @@ public:
 
 	std::shared_ptr<Bullet> shoot(Vector2D playerPosition, int bulletId);
 	bool isAbleToShoot() const;
-	void reload();
+	bool reload();
 	bool isReloading() const;
 	void setDirection(const Vector2D& dir);
 	void reset();
@@ -30,7 +32,6 @@ public:
 	int getLeftMagazine() const;
 	int getLeftAmmo() const;
 	int getInitialAmmo() const;
-	long long getReloadingStartTimestamp_ms() const;
 	Vector2D getDirection() const;
 
 private:
@@ -43,13 +44,16 @@ private:
 	const int m_initialAmmo;
 	const int m_damage;
 
-	long long m_reloadingStartTimestamp_ms;
+	// long long m_reloadingStartTimestamp_ms;
 	// long long m_lastShotTimestamp_ms;
 
 	
 	Vector2D m_direction;
 	const int m_playerId;
 	const PlayerTeamId m_playerTeamId;
+
+	mutable std::atomic_bool m_isReloading;
+	mutable std::mutex mtx_reload;
 };
 
 
