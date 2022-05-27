@@ -12,7 +12,7 @@
 [ext_resource path="res://screens/game/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
 [ext_resource path="res://screens/game/scripts/bushes.gd" type="Script" id=11]
 [ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
-[ext_resource path="res://ui/timer/timer.tscn" type="PackedScene" id=13]
+[ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=14]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -493,7 +493,7 @@ script = ExtResource( 8 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="SessionTimer" parent="UI" instance=ExtResource( 13 )]
+[node name="HUD" parent="UI" instance=ExtResource( 14 )]
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
@@ -617,6 +617,8 @@ position = Vector2( 272, 32 )
 [connection signal="toggle_escape_menu" from="UI/EscapeMenu" to="." method="_on_EscapeMenu_toggle_escape_menu"]
 [connection signal="pressed" from="UI/EscapeMenu/CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
 
+[editable path="UI/HUD"]
+[editable path="UI/HUD/TeamsScore"]
 [editable path="UI/RespawnMenu"]
 [editable path="UI/RespawnMenu/SpecializationSelector"]
 [editable path="UI/EscapeMenu"]

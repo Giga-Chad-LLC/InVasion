@@ -5,7 +5,6 @@ export(ButtonGroup) var specialization_button_group
 var selected_specialization: int setget set_specialization
 
 func connect_buttons_signals():
-	print(specialization_button_group.get_buttons())
 	var buttons = specialization_button_group.get_buttons()
 	for i in range(0, buttons.size()):
 		buttons[i].connect("pressed", self, "set_specialization", [buttons[i].value])

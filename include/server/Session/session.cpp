@@ -189,8 +189,6 @@ void Session::makeHandshakeWithClient(
     // send to client his ID
     // std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
     interactors::HandshakeResponseInteractor interactor;
-    
-    std::cout << "Send left time: " << getRemainingSessionTime_ms() << std::endl;
     auto response = interactor.execute(getRemainingSessionTime_ms(), *m_gameSession, playerId);
 
     auto packet = std::make_shared<NetworkPacketResponse> (

@@ -7,7 +7,6 @@ var supply_id = -1
 var supply_type = -1
 
 func play_use_animation():
-	print("Supply ", supply_id, " was used!")
 	useAnimationPlayer.play("Use")
 
 

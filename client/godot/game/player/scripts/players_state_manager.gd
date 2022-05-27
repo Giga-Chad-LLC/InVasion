@@ -99,6 +99,26 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 			despawn_player(killed_player.get_player_id(), players_parent_node)
 			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
 
+func get_killed_players_info(killed_players: Array, main_player, players_parent_node):
+	var killed_player_info = []
+	for i in range(killed_players.size()):
+		var killed_player = killed_players[i]
+		var killed_player_id = killed_player.get_player_id()
+		
+		if (killed_player_id == main_player.player_id):
+			killed_player_info.push_back({
+				"player_id": killed_player_id,
+				"team_id": main_player.team_id
+			})
+		else:
+			var killed_player_node = players_parent_node.get_node(str(killed_player_id))
+			if (killed_player_node):
+				killed_player_info.push_back({
+					"player_id": killed_player.get_player_id(),
+					"team_id": killed_player_node.team_id
+				})
+	
+	return killed_player_info
 
 func change_player_specialization(player_id, player_specialization: int, main_player, players_parent_node):
 	players_specializations[player_id] = player_specialization

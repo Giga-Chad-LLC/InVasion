@@ -11,7 +11,8 @@ onready var Player = $YSort/Player
 onready var UI = $UI
 onready var RespawnMenu = $UI/RespawnMenu
 onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelector
-onready var SessionTimer = $UI/SessionTimer
+onready var SessionTimer = $UI/HUD/Timer
+onready var TeamsScore = $UI/HUD/TeamsScore
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -101,16 +102,15 @@ func _process(_delta):
 			if (result_code != HandshakeResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack handshake")
 			else:
-				# we only know team_id and player_id (we need specialization as well)
+				# here we only know team_id and player_id (we need specialization as well)
 				Player.set_player_info(
 					handshake_model.get_player_id(),
 					handshake_model.get_team_id()
 				)
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
-				# set player specialization (as default for now)
-				print("We set player info, send default specialization: ", Global.SpecializationTypes.Stormtrooper)
-				print("Match time left in seconds: ", handshake_model.get_remaining_session_time_ms() / 1000)
+				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
+				TeamsScore.set_teams_score(0, 0) # change for the real score
 				# producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
 				RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
@@ -142,6 +142,16 @@ func _process(_delta):
 				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
 				# update bullets
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+				# update scores
+				if (new_game_state.get_killed_players() and !new_game_state.get_killed_players().empty()):
+					TeamsScore.update_teams_score(
+						players_state_manager.get_killed_players_info(
+							new_game_state.get_killed_players(),
+							Player,
+							players_parent_node
+						),
+						Player.team_id
+					)
 		Global.ResponseModels.SupplyResponseModel:
 			var new_supplies_state = SupplyResponseModel.SupplyResponseModel.new()
 			var result_code = new_supplies_state.from_bytes(received_packet.get_bytes())
@@ -154,22 +164,20 @@ func _process(_delta):
 			# print("We shot a bullet!")
 			pass
 		Global.ResponseModels.UseSupplyResponseModel:
-			print("Someone used supply!")
 			var used_supply = UseSupplyResponseModel.UseSupplyResponseModel.new()
 			var result_code = used_supply.from_bytes(received_packet.get_bytes())
 			if (result_code != UseSupplyResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack use supply model")
 			else:
-				var supply_name
-				if (used_supply.get_applied_supply_type() == Global.SupplyType.AidKit):
-					supply_name = "AidKit"
-				elif(used_supply.get_applied_supply_type() == Global.SupplyType.AmmoCrate):
-					supply_name = "AmmoCrate"
-				
-				print("Player ", used_supply.get_player_id(),
-					  " used supply ", used_supply.get_supply_id(), " with type '", supply_name, "'")
-				print("Left supply capacity: ", used_supply.get_left_supply_capacity(), ", is active: ", used_supply.get_is_active())
-				
+#				var supply_name
+#				if (used_supply.get_applied_supply_type() == Global.SupplyType.AidKit):
+#					supply_name = "AidKit"
+#				elif(used_supply.get_applied_supply_type() == Global.SupplyType.AmmoCrate):
+#					supply_name = "AmmoCrate"
+#
+#				print("Player ", used_supply.get_player_id(),
+#					  " used supply ", used_supply.get_supply_id(), " with type '", supply_name, "'")
+#				print("Left supply capacity: ", used_supply.get_left_supply_capacity(), ", is active: ", used_supply.get_is_active())
 				# update used supply
 				supplies_state_manager.update_used_supply(
 					used_supply.get_supply_id(),
@@ -222,7 +230,7 @@ func _produce(worker: Worker) -> void:
 
 		var network_packet = worker.queue.pop()
 		if (!network_packet):
-			print("Network packet is invalid: ", network_packet)
+#			print("Network packet is invalid: ", network_packet)
 			continue
 		if (!client_connection.send_packed_data(network_packet)):
 			print("Error while sending packet: ", network_packet.get_bytes())

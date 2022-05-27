@@ -133,7 +133,6 @@ func get_apply_ability_request():
 
 func get_use_supply_request():
 	if (Input.is_action_pressed("use_supply") and not is_use_supply_cooldown):
-		print("Use supply")
 		var supply = UseSupplyRequestModel.UseSupplyRequestModel.new()
 		supply.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()

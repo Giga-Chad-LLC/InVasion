@@ -13,11 +13,11 @@ __meta__ = {
 [node name="Clock" type="Control" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -10.0
-margin_top = 8.0
-margin_right = 33.0
-margin_bottom = 20.0
-rect_scale = Vector2( 0.5, 0.5 )
+margin_left = -6.0
+margin_top = 18.0
+margin_right = 37.0
+margin_bottom = 30.0
+rect_scale = Vector2( 0.3, 0.3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/teams_score/scripts/score_box.gd" type="Script" id=1]
+
+[node name="Score" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -284.0
+margin_bottom = -162.0
+rect_scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.392157, 0.529412, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Score" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "0"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
