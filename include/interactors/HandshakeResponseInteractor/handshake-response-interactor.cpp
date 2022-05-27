@@ -5,6 +5,7 @@
 
 // game-models
 #include "game-models/GameSession/game-session.h"
+#include "game-models/GameSession/game-session-stats.h"
 #include "game-models/StaticSupply/static-supply.h"
 #include "game-models/StaticSupply/static-supply-enum.h"
 #include "game-models/Player/player.h"
@@ -26,7 +27,6 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 
 	HandshakeResponseModel response;
 	
-
 	response.set_player_id(playerId);
 	response.set_remaining_session_time_ms(remainingSessionTime_ms);
 
@@ -41,6 +41,14 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 		responseTeamId = util_models::PlayerTeamId::SecondTeam;
 	}
 	response.set_team_id(responseTeamId);
+
+	// setting teams' kills count
+	const GameSessionStats &stats = session.getGameStatistics();
+	const int firstTeamKillsCount = stats.getFirstTeamKillsCount();
+	const int secondTeamKillsCount = stats.getSecondTeamKillsCount();
+
+	response.set_first_team_kills_count(firstTeamKillsCount);
+	response.set_second_team_kills_count(secondTeamKillsCount);
 
 	// retrieving supplies
 	const std::vector<std::shared_ptr<StaticSupply>>& supplies = session.getSupplies();
