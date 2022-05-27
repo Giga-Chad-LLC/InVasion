@@ -16,20 +16,28 @@
 #include "game-models/Bullet/bullet.h"
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameSession/game-session-stats.h"
+#include "game-models/Weapon/weapon.h"
+// utils
+#include "utils/TimeUtilities/time-utilities.h"
 // interactors
 #include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
 #include "interactors/ApplyAbilityInteractor/apply-ability-interactor.h"
 #include "interactors/UseSupplyInteractor/use-supply-interactor.h"
+#include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
+#include "interactors/ShootResponseInteractor/shoot-response-interactor.h"
 // controllers
 #include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 // request-models
 #include "select-player-specialization-request-model.pb.h"
 #include "apply-ability-request-model.pb.h"
 #include "use-supply-request-model.pb.h"
+#include "reload-weapon-request-model.pb.h"
+#include "shoot-request-model.pb.h"
 // response-models
 #include "player-specialization-response-model.pb.h"
 #include "supply-response-model.pb.h"
 #include "use-supply-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
 // util-models
 #include "player-specialization.pb.h"
 #include "supply-model.pb.h"
@@ -42,10 +50,126 @@ namespace doctest {
 using namespace invasion::game_models;
 using namespace invasion::controllers;
 using namespace invasion::interactors;
+using namespace invasion::utils;
 using namespace request_models;
 using namespace response_models;
 
 
+TEST_CASE("Reloading with interactors using timeout invoker") {
+	auto session = std::make_shared<GameSession>();
+
+	const int id1 = session->createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	std::shared_ptr<Player> player = session->getPlayer(id1);
+
+	Weapon& weapon = player->getWeapon();
+	
+	const int shots = 10;
+	const int initialMagazine = weapon.getLeftMagazine();
+	const int initialAmmo = weapon.getInitialAmmo();
+
+
+	// shooting 
+	{
+		ShootResponseInteractor interactor;
+		ShootRequestModel req;
+
+		req.set_player_id(id1);
+		const Vector2D direction = weapon.getDirection();
+		req.mutable_weapon_direction()->set_x(direction.getX());
+		req.mutable_weapon_direction()->set_y(direction.getY());
+
+		for(int i = 0; i < shots; i++) {
+			interactor.execute(req, *session);
+		}
+	}
+
+	const int leftMagazine = weapon.getLeftMagazine();
+
+	CHECK(leftMagazine + shots == initialMagazine);
+
+	// reloading
+	{
+		ReloadWeaponResponseInteractor interactor;
+		
+		ReloadWeaponRequestModel req;
+		req.set_player_id(id1);
+
+		FixedTimeoutCallbackInvoker invoker;
+		invoker.setTimeout(0, [&]() {
+			long long start = TimeUtilities::getCurrentTime_ms();
+			std::cout << "executing interactor..." << std::endl;
+			
+			interactor.execute(req, session);
+
+			std::cout << "reloading has finished" << std::endl;
+
+			long long finish = TimeUtilities::getCurrentTime_ms();
+			std::cout << "reloading has taken: " << finish - start << "ms" << std::endl;
+		});
+
+		// to prevent invoker's dtor calling (request and session might be destroyed)
+		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+		std::cout << "finishing test..." << std::endl;
+	}
+}
+
+
+/*
+TEST_CASE("Reloading with interactors") {
+	auto session = std::make_shared<GameSession>();
+
+
+	const int id1 = session->createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	std::shared_ptr<Player> player = session->getPlayer(id1);
+
+	Weapon& weapon = player->getWeapon();
+	
+	const int shots = 10;
+	const int initialMagazine = weapon.getLeftMagazine();
+	const int initialAmmo = weapon.getInitialAmmo();
+
+
+	// shooting 
+	{
+		ShootResponseInteractor interactor;
+		ShootRequestModel req;
+
+		req.set_player_id(id1);
+		const Vector2D direction = weapon.getDirection();
+		req.mutable_weapon_direction()->set_x(direction.getX());
+		req.mutable_weapon_direction()->set_y(direction.getY());
+
+		for(int i = 0; i < shots; i++) {
+			interactor.execute(req, *session);
+		}
+	}
+
+	const int leftMagazine = weapon.getLeftMagazine();
+
+	CHECK(leftMagazine + shots == initialMagazine);
+
+	// reloading
+	{
+		ReloadWeaponResponseInteractor interactor;
+		ReloadWeaponRequestModel req;
+
+		req.set_player_id(id1);
+		interactor.execute(req, session);
+	}
+
+	const int currentLeftMagazine = weapon.getLeftMagazine();
+	const int currentLeftAmmo = weapon.getLeftAmmo();
+
+	CHECK(currentLeftMagazine == initialMagazine);
+	CHECK(currentLeftAmmo + shots == initialAmmo);
+	CHECK(leftMagazine + initialAmmo == currentLeftMagazine + currentLeftAmmo);
+}
+*/
+
+
+
+
+/*
 TEST_CASE("Supplies using") {
 	GameSession session;
 	const int id1 = session.createPlayerAndReturnId(PlayerSpecialization::Medic);
@@ -101,6 +225,8 @@ TEST_CASE("Supplies using") {
 		std::cout << response.left_supply_capacity() << std::endl;
 	}
 }
+*/
+
 
 
 /*
