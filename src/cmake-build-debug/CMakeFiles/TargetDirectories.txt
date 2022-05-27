@@ -1,3 +1,0 @@
-/home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/nikolai/Рабочий стол/project/InVasion/src/cmake-build-debug/CMakeFiles/Server.out.dir
