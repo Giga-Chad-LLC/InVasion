@@ -126,7 +126,7 @@ func _process(_delta):
 				)
 				# set player gun stats
 				Player.set_gun_state(handshake_model.get_ammo(), handshake_model.get_magazine())
-				AmmoStats.show_ammo_stats(handshake_model.get_ammo(), handshake_model.get_magazine())
+				AmmoStats.update_ammo_stats(handshake_model.get_ammo(), handshake_model.get_magazine())
 				
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
@@ -192,7 +192,7 @@ func _process(_delta):
 				print("Error while receiving: ", "cannot unpack weapon state model")
 			else:
 				print("Weapon state changed: ", new_weapon_state.to_string())
-				AmmoStats.show_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
+				AmmoStats.update_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
 		Global.ResponseModels.WeaponDirectionResponseModel:
 			var player_weapon_direction = WeaponDirectionResponseModel.WeaponDirectionResponseModel.new()
 			var result_code = player_weapon_direction.from_bytes(received_packet.get_bytes())
@@ -223,7 +223,8 @@ func _process(_delta):
 			if (result_code != UpdatePlayerAmmoResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack update player ammo model")
 			else:
-				print("Our new ammo capacity: ", new_ammo.get_new_ammo())
+				# print("Our new ammo capacity: ", new_ammo.get_new_ammo())
+				AmmoStats.update_ammo_stats(new_ammo.get_new_ammo())
 		Global.ResponseModels.UpdatePlayerHitpointsResponseModel:
 			var new_hitpoints = UpdatePlayerHitpointsResponseModel.UpdatePlayerHitpointsResponseModel.new()
 			var result_code = new_hitpoints.from_bytes(received_packet.get_bytes())
