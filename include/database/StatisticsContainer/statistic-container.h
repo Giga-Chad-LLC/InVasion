@@ -2,14 +2,17 @@
 #ifndef INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 #define INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 
-// libs
-#include "libs/crow/crow_all.h"
 #include <string>
 
-namespace invasion::statistic_base {
+// libs
+#include "libs/crow/crow_all.h"
+#include "libs/json/json.hpp"
 
+namespace invasion::statistic_base {
     struct StatisticContainer {
     private:
+		using json = nlohmann::json;
+
         std::string nickname;
         int kills = 0;
         int deaths = 0;
@@ -17,12 +20,19 @@ namespace invasion::statistic_base {
     public:
         StatisticContainer() = default;
 
+		StatisticContainer(const json& request) {
+			nickname = request["nickname"];
+			kills = request["kills"];
+			deaths = request["deaths"];
+			isVictory = request["isVictory"];
+		}
+
         StatisticContainer(const std::string &nickname_) : nickname(nickname_) {}
 
         template<class T>
         StatisticContainer(T request) : nickname(request["nickname"].s()), kills(request["kills"].i()),
                                         deaths(request["deaths"].i()),
-                                        isVictory(request["is_victory"].b()) {}
+                                        isVictory(request["isVictory"].b()) {}
 
         int getKills() const {
             return kills;
