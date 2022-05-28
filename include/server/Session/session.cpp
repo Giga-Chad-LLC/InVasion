@@ -136,6 +136,17 @@ bool Session::isActive() const noexcept {
 }
 
 
+void Session::setClientCredencials(uint32_t clientId, const std::string& username, const std::string& token) {
+    std::scoped_lock sl{ mtx_clientsThreadPool, mtx_connections };
+
+    for (auto [ client, clientResponseQueue ] : m_connections) {
+        if (client->getClientId() == clientId) {
+            client->storeCredencials(username, token);
+            break;
+        }
+    }
+}
+
 uint32_t Session::getSessionId() const noexcept {
     return m_sessionId;
 }

@@ -66,6 +66,19 @@ void Client::stop() {
     std::cout << "Stop client (" << m_socket->remote_endpoint() << "): " << m_clientId << std::endl;
 }
 
+void Client::storeCredencials(const std::string& username, const std::string& token) {
+    m_username = username;
+    m_token = token;
+}
+
+const std::string& Client::getClientAccessToken() const {
+    return m_token;
+}
+
+const std::string& Client::getClientUsername() const {
+    return m_username;
+}
+
 int Client::getClientId() const noexcept {
     return m_clientId;
 }

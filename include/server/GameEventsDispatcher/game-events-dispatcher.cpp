@@ -108,12 +108,17 @@ void GameEventsDispatcher::dispatchEvent(
             request_models::ClientCredentialsRequestModel credencialsModel;
             NetworkPacket::deserialize(credencialsModel, request);
             std::cout << "Client " << credencialsModel.player_id() << " wants to share his credencials:" << std::endl;
-            std::cout << "Username: " << credencialsModel.username() << ", token: " << credencialsModel.token() << std::endl;
+            std::cout << "Username: '" << credencialsModel.username() << "', token: '" << credencialsModel.token() << "'" << std::endl;
             
             interactors::SetPlayerUsernameInteractor interactor;
             interactor.execute(credencialsModel, *gameSession);
 
-            
+            if (session) {
+                session->setClientCredencials(credencialsModel.player_id(), credencialsModel.username(), credencialsModel.token());
+            }
+            else {
+                std::cout << "Game events dispatcher error: `session` is nullptr before we set the client credencials" << std::endl;
+            }
 
             break;
         }

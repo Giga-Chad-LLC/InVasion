@@ -7,6 +7,7 @@
 #include <vector>
 #include <chrono>
 #include <memory>
+#include <string>
 #include <atomic>
 #include <mutex>
 #include <functional>
@@ -43,6 +44,7 @@ public:
     void putDataToAllClients(std::shared_ptr <NetworkPacketResponse> response);
     bool isAvailable() const noexcept;
     bool isActive() const noexcept;
+    void setClientCredencials(uint32_t clientId, const std::string& username, const std::string& token);
     uint32_t getSessionId() const noexcept;
     void makeHandshakeWithClient(
         std::shared_ptr <SafeQueue<
