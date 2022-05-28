@@ -1,9 +1,12 @@
 
-#ifndef INVASIONSERVERS_AUTENTICATOR_H
-#define INVASIONSERVERS_AUTENTICATOR_H
+#ifndef INVASIONSERVERS_AUTENTICATOR_H_
+#define INVASIONSERVERS_AUTENTICATOR_H_
 
-#include "../../../3rd-party/common-header.h"
-#include "cassert"
+#include <cassert>
+
+// libs
+#include "libs/bcrypt/bcrypt.h"
+#include "libs/sqlite_orm/sqlite_orm.h"
 
 struct UserInfo {
     int id;
@@ -83,4 +86,5 @@ namespace invasion::token_authenticator {
         }
     };
 }
-#endif //INVASIONSERVERS_AUTENTICATOR_H
+
+#endif //INVASIONSERVERS_AUTENTICATOR_H_

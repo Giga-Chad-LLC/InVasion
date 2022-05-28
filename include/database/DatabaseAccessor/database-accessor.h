@@ -2,10 +2,12 @@
 #define INVASION_DATABASE_H
 
 #include <sqlite3.h>
-//#include <optional>
-#include "../../../3rd-party/common-header.h"
 #include <functional>
 #include <optional>
+
+// libs
+#include "libs/sqlite_orm/sqlite_orm.h"
+
 
 struct User {
     int id;

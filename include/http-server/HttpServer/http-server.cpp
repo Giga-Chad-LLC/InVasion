@@ -1,10 +1,15 @@
-#include "http-server.h"
-#include "../../3rd-party/crow_all.h"
-#include "database/AuthService/auth-service.h"
 #include <iostream>
 #include <regex>
+
+#include "http-server.h"
+
+// libs
+#include "libs/crow/crow_all.h"
+// database
+#include "database/AuthService/auth-service.h"
 #include "database/StatisticAccessor/statistic-accessor.h"
 #include "database/Authenticator/autenticator.h"
+
 
 namespace invasion::http_server {
     using namespace invasion::statistic_base;
@@ -39,7 +44,7 @@ namespace invasion::http_server {
                                 crow::json::wvalue responseJson;
                                 if (!requestJson || nickname.empty() || password.empty()) {
                                     responseJson["message"] = "Bad request";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(400, responseJson);
                                 } else if (!std::regex_match(password.c_str(), invalidSymbols)
                                            || !std::regex_match(nickname.c_str(), invalidSymbols)) {
                                     responseJson["message"] = "Invalid Symbols";
@@ -65,7 +70,7 @@ namespace invasion::http_server {
                                 std::string nickname = requestJson["nickname"].s();
                                 if (!requestJson || nickname.empty() || password.empty()) {
                                     responseJson["message"] = "Bad request";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(400, responseJson);
                                 } else if (!std::regex_match(password.c_str(), invalidSymbols) ||
                                            !std::regex_match(nickname.c_str(), invalidSymbols)) {
                                     responseJson["message"] = "Invalid Symbols";
@@ -88,11 +93,11 @@ namespace invasion::http_server {
                                 crow::json::wvalue responseJson;
                                 if (!requestJson || nickname.empty() || token.empty()) {
                                     responseJson["message"] = "Bad request";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(400, responseJson);
                                 }
                                 if (!Authenticator::checkTokenMatch(nickname, token)) {
                                     responseJson["message"] = "Entry not allowed";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(403, responseJson);
                                 }
                                 UserStatistics playerStatistic = StatisticAccessor::getUserStatistic(nickname);
                                 responseJson = statisticToJson(playerStatistic);
@@ -107,11 +112,11 @@ namespace invasion::http_server {
                                 crow::json::wvalue responseJson;
                                 if (!requestJson || nickname.empty() || token.empty()) {
                                     responseJson["message"] = "Bad request";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(400, responseJson);
                                 }
                                 if (!Authenticator::checkTokenMatch(nickname, token)) {
                                     responseJson["message"] = "Entry not allowed";
-                                    return crow::response(404, responseJson);
+                                    return crow::response(403, responseJson);
                                 }
                                 StatisticContainer statistic(requestJson);
                                 StatisticAccessor::addOrUpdateLine(statistic);

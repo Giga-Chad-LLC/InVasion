@@ -5,8 +5,11 @@
 #include <thread>
 #include <system_error>
 
+// controllers
 #include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
-#include "http-server/http-server.h"
+// http-server
+#include "http-server/HttpServer/http-server.h"
+// server (tcp)
 #include "server/Server/server.h"
 
 

@@ -1,7 +1,10 @@
 
-#ifndef INVASION_AUTH_SERVICE_H
-#define INVASION_AUTH_SERVICE_H
+#ifndef INVASION_AUTH_SERVICE_H_
+#define INVASION_AUTH_SERVICE_H_
 
+// libs
+#include "libs/bcrypt/bcrypt.h"
+// database
 #include "database/DatabaseAccessor/database-accessor.h"
 
 namespace invasion::database_interface {
@@ -42,4 +45,4 @@ namespace invasion::database_interface {
 
 }
 
-#endif //INVASION_AUTH_SERVICE_H
+#endif //INVASION_AUTH_SERVICE_H_

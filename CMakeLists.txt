@@ -7,13 +7,15 @@ add_subdirectory(./include/)
 add_subdirectory(./tests/)
 
 #### variables propagations
-# GAME-MODELS-SRCS - propagated from ./include/game-models
-# INTERACTORS-SRCS - propagated from ./include/interactors
-# CONTROLLERS-SRCS - propagated from ./include/controllers
+# GAME-MODELS-SRCS       - propagated from ./include/game-models
+# INTERACTORS-SRCS       - propagated from ./include/interactors
+# CONTROLLERS-SRCS       - propagated from ./include/controllers
 # GAME-MODELS-TESTS-SRCS - propagated from ./tests/game-models
 # CONTROLLERS-TESTS-SRCS - propagated from ./tests/controllers
-# GAME-SERVER-SRCS - propagated from ./include/server
-# UTILS-SRCS - propagated from ./include/utils
+# GAME-SERVER-SRCS       - propagated from ./include/server
+# UTILS-SRCS             - propagated from ./include/utils
+# DATABASE-SRCS          - propagated from ./include/database
+# HTTP-SERVER-SRCS       - propagated from ./include/http-server
 
 
 #### setting names for executables
@@ -104,12 +106,13 @@ endif ()
 
 add_executable(${SERVER_TARGET}
 		src/main.cpp
-		include/http-server/http-server.cpp
 		${GAME-MODELS-SRCS}
 		${INTERACTORS-SRCS}
 		${CONTROLLERS-SRCS}
 		${GAME-SERVER-SRCS}
 		${UTILS-SRCS}
+		${DATABASE-SRCS}
+		${HTTP-SERVER-SRCS}
 
 		${PROTO_SRCS}
 		${PROTO_HDRS}
