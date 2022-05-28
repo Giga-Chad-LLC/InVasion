@@ -13,6 +13,8 @@
 
 #include "game-session.h"
 #include "game-session-stats.h"
+#include "game-match-result-enum.h"
+
 // game-models
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-specialization-enum.h"
@@ -326,6 +328,23 @@ bool GameSession::playerExists(int playerId) {
 
 const GameSessionStats& GameSession::getGameStatistics() {
 	return m_gameStatistics;
+}
+
+
+GameMatchResult GameSession::getMatchResult() const {
+	const int firstTeamKillsCount = m_gameStatistics.getFirstTeamKillsCount();
+	const int secondTeamKillsCount = m_gameStatistics.getSecondTeamKillsCount();
+
+	GameMatchResult result = GameMatchResult::Draw;
+
+	if(firstTeamKillsCount > secondTeamKillsCount) {
+		result = GameMatchResult::FirstTeamVictory;
+	}
+	else if(firstTeamKillsCount < secondTeamKillsCount) {
+		result = GameMatchResult::SecondTeamVictory;
+	}
+
+	return result;
 }
 
 

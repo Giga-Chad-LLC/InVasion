@@ -16,6 +16,7 @@
 #include "game-models/StaticSupply/static-supply.h"
 
 #include "game-session-stats.h"
+#include "game-match-result-enum.h"
 
 
 namespace invasion::game_models {
@@ -49,6 +50,9 @@ public:
 
 	bool playerExists(int playerId);
 	const GameSessionStats& getGameStatistics();
+
+	GameMatchResult getMatchResult() const;
+
 
 	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;
 private:
