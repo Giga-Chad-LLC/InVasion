@@ -3,7 +3,7 @@
 
 #include <sqlite3.h>
 //#include <optional>
-#include "../../3rd-party/common-header.h"
+#include "../../../3rd-party/common-header.h"
 #include <functional>
 #include <optional>
 
@@ -73,7 +73,6 @@ namespace invasion::database_access{
         }
     };
 }
-
 
 
 #endif //INVASION_DATABASE_H

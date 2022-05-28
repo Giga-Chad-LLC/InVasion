@@ -1,1 +1,0 @@
-CMakeLists.txt not found in /home/nikolai/Рабочий стол/project/InVasion/include/server Select CMakeLists.txt
