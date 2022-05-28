@@ -12,9 +12,8 @@ struct UserInfo {
 };
 
 
-using namespace sqlite_orm;
-
 namespace invasion::token_authenticator {
+	using namespace sqlite_orm;
 
     class DatabaseManager {
     public:
