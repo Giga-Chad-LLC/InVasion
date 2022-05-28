@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/health_bar/heath_bar.tres" type="Theme" id=1]
+[ext_resource path="res://ui/health_bar/scripts/health_bar.gd" type="Script" id=2]
+
+[node name="HealthBar" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -195.0
+margin_bottom = -166.0
+rect_scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Health" type="ProgressBar" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -62.5
+margin_top = -7.0
+margin_right = 62.5
+margin_bottom = 7.0
+theme = ExtResource( 1 )
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}

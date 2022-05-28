@@ -12,6 +12,11 @@ var player_id: int = -1
 var team_id: int = -1
 var player_specialization: int = -1
 
+#var initial_hitpoints: int = 0
+#var current_hitpoints: int = 0
+#var magazine: int = 0
+#var ammo: int = 0
+
 
 func set_sprite_color(color: Color):
 	sprite.modulate = color

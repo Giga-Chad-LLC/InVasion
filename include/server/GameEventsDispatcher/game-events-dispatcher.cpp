@@ -221,8 +221,7 @@ void GameEventsDispatcher::dispatchEvent(
                 interactors::UpdatePlayerHitpointsResponseInteractor interactor;
 				response_models::UpdatePlayerHitpointsResponseModel responseAidKit = interactor.execute(playerId, *gameSession);
 
-                session->putDataToSingleClient(
-                    playerId,
+                session->putDataToAllClients(
                     std::make_shared <NetworkPacketResponse> (
                         NetworkPacket::serialize(responseAidKit),
                         ResponseModel_t::UpdatePlayerHitpointsResponseModel,

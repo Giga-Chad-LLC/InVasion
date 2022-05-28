@@ -15,10 +15,7 @@ message HandshakeResponseModel {
 	int32 first_team_kills_count = 4;
 	int32 second_team_kills_count = 5;
 	repeated util_models.SupplyModel supplies = 6;
-	int32 magazine = 7;
-	int32 ammo = 8;
-	int32 hitpoints = 9;
-	repeated util_models.PlayerHealthModel players_hitpoints = 10;
+	repeated util_models.PlayerHealthModel players_hitpoints = 7;
 }
 
 
@@ -64,9 +61,6 @@ message HandshakeResponseModel {
 	int32 first_team_kills_count = 4;
 	int32 second_team_kills_count = 5;
 	repeated SupplyModel supplies = 6;
-	int32 magazine = 7;
-	int32 ammo = 8;
-	int32 hitpoints = 9;
-	repeated PlayerHealthModel players_hitpoints = 10;
+	repeated PlayerHealthModel players_hitpoints = 7;
 }
 */
