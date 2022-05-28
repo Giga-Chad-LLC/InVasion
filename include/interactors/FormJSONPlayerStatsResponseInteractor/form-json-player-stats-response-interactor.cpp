@@ -1,4 +1,5 @@
 #include <memory>
+#include <string>
 
 #include "form-json-player-stats-response-interactor.h"
 
@@ -16,11 +17,14 @@ using namespace game_models;
 using json = nlohmann::json;
  
 
-json FormJSONPlayerStatsResponseInteractor::execute(const int playerId, GameSession& session) const {
+json FormJSONPlayerStatsResponseInteractor::execute(int playerId, const std::string& token, GameSession& session) const {
 	
 	std::shared_ptr<Player> player = session.getPlayer(playerId);
 
 	json response;
+
+	response["nickname"] = player->getGameSessionStats().getUsername();
+	response["token"] = token;
 
 	const PlayerTeamId teamId = player->getTeamId();
 	const GameMatchResult matchResult = session.getMatchResult();

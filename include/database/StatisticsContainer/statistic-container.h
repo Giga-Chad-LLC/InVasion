@@ -2,18 +2,18 @@
 #ifndef INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 #define INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 
-// #include "../../../3rd-party/crow_all.h"
 // libs
 #include "libs/crow/crow_all.h"
 #include <string>
 
 namespace invasion::statistic_base {
+
     struct StatisticContainer {
     private:
         std::string nickname;
         int kills = 0;
         int deaths = 0;
-        bool winThisMatch = false;
+        bool isVictory = false;
     public:
         StatisticContainer() = default;
 
@@ -22,7 +22,7 @@ namespace invasion::statistic_base {
         template<class T>
         StatisticContainer(T request) : nickname(request["nickname"].s()), kills(request["kills"].i()),
                                         deaths(request["deaths"].i()),
-                                        winThisMatch(request["win"].b()) {}
+                                        isVictory(request["is_victory"].b()) {}
 
         int getKills() const {
             return kills;
@@ -37,7 +37,7 @@ namespace invasion::statistic_base {
         }
 
         bool getWinThisMatch() const {
-            return winThisMatch;
+            return isVictory;
         }
 
     };

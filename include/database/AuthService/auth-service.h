@@ -23,7 +23,7 @@ namespace invasion::database_interface {
             if (DatabaseAccessor::checkUser(nickname)) {
                 return false;
             }
-            std::cout << "success registration\n";
+            std::cout << "successful registration\n";
             DatabaseAccessor::insertUser(User{-1, nickname, bcrypt::generateHash(password)});
             return true;
         }
