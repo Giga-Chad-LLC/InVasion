@@ -192,8 +192,8 @@ build
 
 cmake-build-debug
 src/cmake-build-debug
-src/http-
-cmake-build
+src/http-cmake-build
+include/database/cmake-build-debug
 cmake-debug-build
 cmake-release-build
 
