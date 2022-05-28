@@ -12,7 +12,6 @@ namespace invasion::http_server {
         std::thread thread_;
 
     public:
-        HttpServer() {}
 
         void start();
 
