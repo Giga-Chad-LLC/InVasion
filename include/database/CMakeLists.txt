@@ -8,11 +8,7 @@ set(DATABASE-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/DatabaseAccessor/database-accessor.h
 	${CMAKE_CURRENT_SOURCE_DIR}/StatisticAccessor/statistic-accessor.h
 	${CMAKE_CURRENT_SOURCE_DIR}/StatisticsContainer/statistic-container.h
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerStatisticsService/player-statistics-service.cpp
 
 	PARENT_SCOPE
 )
-
-# cmake_minimum_required(VERSION 3.2)
-# set(CMAKE_CXX_STANDARD 17)
-# add_executable(db test.cpp)
-# target_link_libraries(db sqlite3)

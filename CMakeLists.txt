@@ -5,6 +5,7 @@ project(InVasionServers CXX)
 #### adding subdirs
 add_subdirectory(./include/)
 add_subdirectory(./tests/)
+add_subdirectory(./include/libs/bcrypt)
 
 #### variables propagations
 # GAME-MODELS-SRCS       - propagated from ./include/game-models
@@ -16,6 +17,7 @@ add_subdirectory(./tests/)
 # UTILS-SRCS             - propagated from ./include/utils
 # DATABASE-SRCS          - propagated from ./include/database
 # HTTP-SERVER-SRCS       - propagated from ./include/http-server
+# BCRYPT-SRCS			 - propagated from ./include/libs/bcrypt
 
 
 #### setting names for executables
@@ -124,6 +126,9 @@ endif ()
 
 add_executable(${SERVER_TARGET}
 		src/main.cpp
+		${BCRYPT-SRCS}
+		# ./include/libs/bcrypt/src/bcrypt_impl.cpp
+		# ./include/libs/bcrypt/src/blowfish.cpp
 		${GAME-MODELS-SRCS}
 		${INTERACTORS-SRCS}
 		${CONTROLLERS-SRCS}

@@ -109,10 +109,13 @@ namespace invasion::http_server {
                     .methods("PUT"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
+
                                 std::string nickname = requestJson["nickname"].s();
                                 std::string token = requestJson["token"].s();
-                                crow::json::wvalue responseJson;
-                                if (!requestJson || nickname.empty() || token.empty()) {
+                                
+								crow::json::wvalue responseJson;
+                                
+								if (!requestJson || nickname.empty() || token.empty()) {
                                     responseJson["message"] = "Bad request";
                                     return crow::response(400, responseJson);
                                 }

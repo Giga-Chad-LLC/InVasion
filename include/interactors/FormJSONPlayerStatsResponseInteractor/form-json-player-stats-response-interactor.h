@@ -1,6 +1,7 @@
 #ifndef FORM_JSON_PLAYER_STATS_RESPONSE_INTERACTOR_H_
 #define FORM_JSON_PLAYER_STATS_RESPONSE_INTERACTOR_H_
 
+#include <string>
 
 /**
  * Forms json response with the following structure:
@@ -25,12 +26,11 @@ using json = nlohmann::json;
 
 class FormJSONPlayerStatsResponseInteractor {
 public:
-	json execute(int playerId, GameSession& session) const;
+	json execute(int playerId, const std::string& token, GameSession& session) const;
 };
 
  
 } // namespace invasion::interactors
- 
- 
- 
+
+
 #endif // FORM_JSON_PLAYER_STATS_RESPONSE_INTERACTOR_H_

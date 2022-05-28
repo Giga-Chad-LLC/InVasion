@@ -2,27 +2,37 @@
 #ifndef INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 #define INVASIONSERVERS_USERSTATISTICSPERMATCH_H
 
-// #include "../../../3rd-party/crow_all.h"
+#include <string>
+
 // libs
 #include "libs/crow/crow_all.h"
-#include <string>
+#include "libs/json/json.hpp"
 
 namespace invasion::statistic_base {
     struct StatisticContainer {
     private:
+		using json = nlohmann::json;
+
         std::string nickname;
         int kills = 0;
         int deaths = 0;
-        bool winThisMatch = false;
+        bool isVictory = false;
     public:
         StatisticContainer() = default;
+
+		StatisticContainer(const json& request) {
+			nickname = request["nickname"];
+			kills = request["kills"];
+			deaths = request["deaths"];
+			isVictory = request["isVictory"];
+		}
 
         StatisticContainer(const std::string &nickname_) : nickname(nickname_) {}
 
         template<class T>
         StatisticContainer(T request) : nickname(request["nickname"].s()), kills(request["kills"].i()),
                                         deaths(request["deaths"].i()),
-                                        winThisMatch(request["win"].b()) {}
+                                        isVictory(request["isVictory"].b()) {}
 
         int getKills() const {
             return kills;
@@ -37,7 +47,7 @@ namespace invasion::statistic_base {
         }
 
         bool getWinThisMatch() const {
-            return winThisMatch;
+            return isVictory;
         }
 
     };
