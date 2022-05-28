@@ -39,7 +39,7 @@
  * Bruce Schneier.
  */
 
-#include "node_blf.h"
+#include "libs/bcrypt/include/node_blf.h"
 
 #undef inline
 #ifdef __GNUC__
@@ -50,12 +50,12 @@
 
 /* Function for Feistel Networks */
 
-#define BLOWFISH_F(s, x) ((((s)[        (((x)>>24)&0xFF)]  \
+#define INVASION_F(s, x) ((((s)[        (((x)>>24)&0xFF)]  \
 		 + (s)[0x100 + (((x)>>16)&0xFF)]) \
 		 ^ (s)[0x200 + (((x)>> 8)&0xFF)]) \
 		 + (s)[0x300 + ( (x)     &0xFF)])
 
-#define BLFRND(s,p,i,j,n) (i ^= BLOWFISH_F(s,j) ^ (p)[n])
+#define BLFRND(s,p,i,j,n) (i ^= INVASION_F(s,j) ^ (p)[n])
 
 void
 Blowfish_encipher(blf_ctx *c, u_int32_t *xl, u_int32_t *xr)

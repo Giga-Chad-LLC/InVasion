@@ -9,6 +9,6 @@ namespace bcrypt {
 
     bool validatePassword(const std::string & password, const std::string & hash);
 
-} // namespace bcrypt
+}
 
 #endif // BCRYPT_FWD_H

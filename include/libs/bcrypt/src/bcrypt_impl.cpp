@@ -1,6 +1,3 @@
-#ifndef BCRYPT_ESSENTIAL_H_
-#define BCRYPT_ESSENTIAL_H_
-
 /*	$OpenBSD: bcrypt.c,v 1.31 2014/03/22 23:02:03 tedu Exp $	*/
 
 /*
@@ -40,13 +37,13 @@
 #include <sys/types.h>
 #include <string.h>
 
-#include "node_blf.h"
-
-#include "bcrypt_fwd.h"
-#include "openbsd.h"
+// libs
+#include "libs/bcrypt/include/node_blf.h"
+#include "libs/bcrypt/include/bcrypt_fwd.h"
+#include "libs/bcrypt/include/openbsd.h"
 
 #ifdef _WIN32
-#define snprintf _snprintf
+#define bcrypt_invasion_snprintf _snprintf
 #endif
 
 //#if !defined(__APPLE__) && !defined(__MACH__)
@@ -127,7 +124,7 @@ encode_salt(char *salt, u_int8_t *csalt, char minor, u_int16_t clen, u_int8_t lo
 	salt[3] = '$';
 
     // Max rounds are 31
-	snprintf(salt + 4, 4, "%2.2u$", logr & 0x001F);
+	bcrypt_invasion_snprintf(salt + 4, 4, "%2.2u$", logr & 0x001F);
 
 	encode_base64((u_int8_t *) salt + 7, csalt, clen);
 }
@@ -267,7 +264,7 @@ node_bcrypt(const char *key, size_t key_len, const char *salt, char *encrypted)
 		encrypted[i++] = minor;
 	encrypted[i++] = '$';
 
-	snprintf(encrypted + i, 4, "%2.2u$", logr & 0x001F);
+	bcrypt_invasion_snprintf(encrypted + i, 4, "%2.2u$", logr & 0x001F);
 
 	encode_base64((u_int8_t *) encrypted + i + 3, csalt, BCRYPT_MAXSALT);
 	encode_base64((u_int8_t *) encrypted + strlen(encrypted), ciphertext,
@@ -341,6 +338,3 @@ bool bcrypt::validatePassword(const std::string &password, const std::string &ha
     got.resize(60);
     return hash == got;
 }
-
-
-#endif // BCRYPT_ESSENTIAL_H_
