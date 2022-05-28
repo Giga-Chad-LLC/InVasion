@@ -17,6 +17,7 @@
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameSession/game-session-stats.h"
 #include "game-models/Weapon/weapon.h"
+#include "game-models/Sentinel/sentinel.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 // interactors
@@ -55,6 +56,27 @@ using namespace request_models;
 using namespace response_models;
 
 
+
+/*
+TEST_CASE("Hit points retrieving") {
+	GameSession session;
+	const int id = session.createPlayerAndReturnId(PlayerSpecialization::Sentinel);
+	std::shared_ptr<Player> player = session.getPlayer(id);
+
+	const int hitPoints = player->getLifeState().getHitPoints();
+	const int initHitPoints = player->getLifeState().getInitialHitPoints();
+
+	CHECK(hitPoints == Sentinel::INITIAL_HIT_POINTS);
+	CHECK(initHitPoints == Sentinel::INITIAL_HIT_POINTS);
+
+	std::cout << "HP: " << hitPoints << std::endl;
+	std::cout << "init HP: " << initHitPoints << std::endl;
+	std::cout << "Sentinel HP: " << Sentinel::INITIAL_HIT_POINTS << std::endl;
+}
+*/
+
+
+/*
 TEST_CASE("Reloading with interactors using timeout invoker") {
 	auto session = std::make_shared<GameSession>();
 
@@ -112,6 +134,7 @@ TEST_CASE("Reloading with interactors using timeout invoker") {
 		std::cout << "finishing test..." << std::endl;
 	}
 }
+*/
 
 
 /*
