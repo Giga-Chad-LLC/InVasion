@@ -193,4 +193,4 @@ cmake-build
 cmake-debug-build
 cmake-release-build
 
-src/grpc/out
+*.sqlite
