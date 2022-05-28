@@ -190,6 +190,7 @@ cmake
 !client/godot/game/bin
 build
 
+*/cmake-build-debug
 cmake-build-debug
 src/cmake-build-debug
 src/http-cmake-build

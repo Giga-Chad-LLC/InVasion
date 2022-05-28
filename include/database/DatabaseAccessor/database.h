@@ -3,7 +3,7 @@
 
 #include <sqlite3.h>
 //#include <optional>
-#include "../../3rd-party/common-header.h"
+#include "../../../3rd-party/common-header.h"
 #include <functional>
 #include <optional>
 
@@ -15,7 +15,7 @@ struct User {
 
 using namespace sqlite_orm;
 
-namespace invasion::database_access{
+namespace invasion::database_access {
     class DatabaseManager {
     public:
         static auto &getTable() {
@@ -72,7 +72,6 @@ namespace invasion::database_access{
         }
     };
 }
-
 
 
 #endif //INVASION_DATABASE_H

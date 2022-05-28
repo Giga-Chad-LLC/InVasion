@@ -2,7 +2,7 @@
 #ifndef INVASION_AUTH_SERVICE_H
 #define INVASION_AUTH_SERVICE_H
 
-#include "database.h"
+#include "database/DatabaseAccessor/database.h"
 
 namespace invasion::database_interface {
     using namespace database_access;
@@ -25,7 +25,8 @@ namespace invasion::database_interface {
             return true;
         }
 
-        // these methods for debugging only
+        // ====== debug-only =======
+
         static void printUsers() {
             auto arrayUsers = DatabaseManager::getTable().get_all<User>();
             for (auto &user: arrayUsers) {
