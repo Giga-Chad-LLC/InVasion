@@ -19,11 +19,11 @@ namespace invasion::token_authenticator {
     class DatabaseManager {
     public:
         static auto &getTable() {
-            auto table = make_table("users",
+            auto table = make_table("tokens",
                                     make_column("id", &UserInfo::id, primary_key(), autoincrement()),
                                     make_column("nickname", &UserInfo::nickname, unique()),
                                     make_column("token", &UserInfo::token));
-            static auto storage_ = make_storage("authenticator.sqlite", table);
+            static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
             return storage_;
         }

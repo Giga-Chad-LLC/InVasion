@@ -28,7 +28,7 @@ namespace invasion::statistic_base {
     class DatabaseManager {
     public:
         static auto &getTable() {
-            auto table = make_table("users",
+            auto table = make_table("statistic",
                                     make_column("id", &UserStatistics::id, primary_key(), autoincrement()),
                                     make_column("nickname", &UserStatistics::nickname, unique()),
                                     make_column("total_kills", &UserStatistics::totalKills),
@@ -36,7 +36,7 @@ namespace invasion::statistic_base {
                                     make_column("win_rate", &UserStatistics::winRate),
                                     make_column("number_of_matches", &UserStatistics::numberOfMatches),
                                     make_column("number_of_wins", &UserStatistics::numberWins));
-            static auto storage_ = make_storage("statistic.sqlite", table);
+            static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
             return storage_;
         }
