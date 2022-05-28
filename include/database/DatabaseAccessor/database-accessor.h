@@ -70,6 +70,23 @@ namespace invasion::database_access {
             }
             return false;
         }
+
+
+        // ======= debug-only ========
+
+
+        static void printAll() {
+            auto arrayUsers = DatabaseManager::getTable().get_all<User>();
+            for (auto &user: arrayUsers) {
+                std::cout << DatabaseManager::getTable().dump(user) << std::endl;
+            }
+        }
+
+        static void deleteAll() {
+            DatabaseManager::getTable().remove_all<User>();
+            DatabaseManager::getTable().sync_schema();
+        }
+
     };
 }
 
