@@ -32,10 +32,10 @@ json FormJSONPlayerStatsResponseInteractor::execute(int playerId, const std::str
 	// defining whether player has won the match
 	if(teamId == PlayerTeamId::FirstTeam  && matchResult == GameMatchResult::FirstTeamVictory ||
 	   teamId == PlayerTeamId::SecondTeam && matchResult == GameMatchResult::SecondTeamVictory) {
-		   response["is_victory"] = true;
+		   response["isVictory"] = true;
 	}
 	else {
-		response["is_victory"] = false;
+		response["isVictory"] = false;
 	}
 
 
