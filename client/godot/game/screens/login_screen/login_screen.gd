@@ -1,5 +1,6 @@
 extends Control
 
+var ENDPOINT = "http://127.0.0.1:5555"
 
 signal scene_changed(scene_name)
 
@@ -7,7 +8,7 @@ onready var label_error = $"./LabelOfError"
 onready var http_request = $CheckButton/HTTPRequest
 
 func _ready():
-	http_request.connect("request_completed", self, "_http_request_completed")
+	#http_request.connect("request_completed", self, "_http_request_completed")
 	label_error.set("custom_colors/font_color", Color(1,0,0))
 	label_error.visible = false	
 
@@ -20,11 +21,15 @@ func _on_CheckButton_pressed():
 	var password = $"./PasswordEdit".get_text()
 	var username = $"./UsernameEdit".get_text()
 	var body = {"nickname" : username, "password" : password}
-	http_request.request("http://0.0.0.0:5555/login", PoolStringArray([]),
+	http_request.request(ENDPOINT + "/login", PoolStringArray([]),
 		false, HTTPClient.METHOD_GET, to_json(body))
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if (response_code == 200):
+		var json = JSON.parse(body.get_string_from_utf8())
+		print(json.result)
+		print(json.result.token)
+		
 		emit_signal("scene_changed", "game_menu")
 	elif (response_code == 0):
 		label_error.text = "ERROR FROM SERVER"
