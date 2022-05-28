@@ -85,12 +85,7 @@ func _unhandled_input(event):
 		visible = true
 	else:
 		visible = false
-	if event.is_action_pressed('my_team'):
-		add_row("my", "my_team")
-	if event.is_action_pressed("enemy"):
-		add_row("b", "my_team")
-		increment_count_deaths("b")
-		increment_count_kills("b")
+
 
 
 
