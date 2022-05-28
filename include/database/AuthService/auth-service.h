@@ -2,7 +2,7 @@
 #ifndef INVASION_AUTH_SERVICE_H
 #define INVASION_AUTH_SERVICE_H
 
-#include "database/DatabaseAccessor/database.h"
+#include "database/DatabaseAccessor/database-accessor.h"
 
 namespace invasion::database_interface {
     using namespace database_access;

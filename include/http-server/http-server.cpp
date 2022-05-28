@@ -4,11 +4,13 @@
 #include <iostream>
 #include <regex>
 #include "database/StatisticAccessor/statistic-accessor.h"
+#include "database/Authenticator/autenticator.h"
 
 namespace invasion::http_server {
     using namespace invasion::statistic_base;
     using namespace invasion::database_access;
     using namespace invasion::database_interface;
+    using namespace invasion::token_authenticator;
 
     auto statisticToJson(const UserStatistics &playerStatistic) {
         crow::json::wvalue responseJson;
@@ -45,6 +47,7 @@ namespace invasion::http_server {
                                 } else if (AuthService::tryToRegisterUser(nickname,
                                                                           password)) {
                                     StatisticAccessor::addOrUpdateLine(StatisticContainer{nickname});
+                                    responseJson["token"] = Authenticator::createNewToken(nickname);
                                     responseJson["message"] = "Success registration!";
                                     return crow::response(200, responseJson);
                                 } else {
@@ -68,6 +71,7 @@ namespace invasion::http_server {
                                     responseJson["message"] = "Invalid Symbols";
                                     return crow::response(500, responseJson);
                                 } else if (AuthService::login(nickname, password)) {
+                                    responseJson["token"] = Authenticator::refreshOldToken(nickname);
                                     responseJson["message"] = "Success entry!";
                                     return crow::response(200, responseJson);
                                 } else {
@@ -80,9 +84,14 @@ namespace invasion::http_server {
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
                                 std::string nickname = requestJson["nickname"].s();
+                                std::string token = requestJson["token"].s();
                                 crow::json::wvalue responseJson;
-                                if (!requestJson || nickname.empty()) {
+                                if (!requestJson || nickname.empty() || token.empty()) {
                                     responseJson["message"] = "Bad request";
+                                    return crow::response(404, responseJson);
+                                }
+                                if (!Authenticator::checkTokenMatch(nickname, token)) {
+                                    responseJson["message"] = "Entry not allowed";
                                     return crow::response(404, responseJson);
                                 }
                                 UserStatistics playerStatistic = StatisticAccessor::getUserStatistic(nickname);
@@ -94,9 +103,14 @@ namespace invasion::http_server {
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
                                 std::string nickname = requestJson["nickname"].s();
+                                std::string token = requestJson["token"].s();
                                 crow::json::wvalue responseJson;
-                                if (!requestJson || nickname.empty()) {
+                                if (!requestJson || nickname.empty() || token.empty()) {
                                     responseJson["message"] = "Bad request";
+                                    return crow::response(404, responseJson);
+                                }
+                                if (!Authenticator::checkTokenMatch(nickname, token)) {
+                                    responseJson["message"] = "Entry not allowed";
                                     return crow::response(404, responseJson);
                                 }
                                 StatisticContainer statistic(requestJson);

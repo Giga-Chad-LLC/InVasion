@@ -193,7 +193,7 @@ build
 */cmake-build-debug
 cmake-build-debug
 src/cmake-build-debug
-src/http-cmake-build
+src/http-server/cmake-build-debug
 
 include/server/cmake-build-debug
 include/database/cmake-build-debug

@@ -69,7 +69,7 @@ namespace invasion::statistic_base {
             auto arrayUserStatistic = table.get_all<UserStatistics>(
                     where(c(&UserStatistics::nickname) == userStatisticsPerMatch.getNickname()), limit(1));
             assert(arrayUserStatistic.size() == 1);
-            auto userStatistics = arrayUserStatistic[0];
+            auto& userStatistics = arrayUserStatistic[0];
             changeStats(userStatistics, userStatisticsPerMatch);
 
             table.update(userStatistics);
