@@ -126,8 +126,10 @@ target_include_directories(${SERVER_TARGET} PUBLIC
 # including thread libs for Linux and Windows GCC Compiler
 if (MSVC) # WIN32 AND NOT MSVC AND NOT BORLAND
 	target_compile_definitions(${SERVER_TARGET} PRIVATE -D_WIN32_WINNT=0x0A00)
+	find_package(unofficial-sqlite3 CONFIG REQUIRED)
 	target_link_libraries(${SERVER_TARGET} PRIVATE
 			# ws2_32
+			unofficial::sqlite3::sqlite3
 			${Protobuf_LIBRARIES}
 			)
 else ()
