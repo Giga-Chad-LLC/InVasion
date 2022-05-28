@@ -1,7 +1,5 @@
 extends Control
 
-signal toggle_tab_statistic(is_active)
-
 onready var my_team = $AlliedTeam
 onready var enemy_team = $EnemyTeam
 var row = preload("res://ui/tab-statistic/row/row.tscn")
@@ -14,7 +12,6 @@ var count_teammates = 0
 var teammates_nicknames = []
 var enemy_nicknames = []
 
-var is_active = false setget set_is_active
 
 func _ready():
 	visible = false
@@ -79,12 +76,15 @@ func custom_comparator(a, b):
 	var ratio_b = get_ratio(b)
 	return ratio_a >= ratio_b
 
+
 # `tab` button pressed
 func _unhandled_input(event):
 	update_table("my_team")
 	update_table("enemy_team")
-	if event.is_action_pressed('tab'):
-		toggle(!is_active)
+	if Input.is_action_pressed("tab"):
+		visible = true
+	else:
+		visible = false
 	if event.is_action_pressed('my_team'):
 		add_row("my", "my_team")
 	if event.is_action_pressed("enemy"):
@@ -93,13 +93,5 @@ func _unhandled_input(event):
 		increment_count_kills("b")
 
 
-func toggle(value):
-	self.is_active = value
-	emit_signal("toggle_tab_statistic", self.is_active)
 
-
-# setters
-func set_is_active(value):
-	is_active = value
-	visible = value
 

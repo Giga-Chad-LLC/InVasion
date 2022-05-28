@@ -153,5 +153,4 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 
 
 
-func _on_Statistic2_toggle_tab_statistic(is_active):
-	statistic.visible = !is_active
+
