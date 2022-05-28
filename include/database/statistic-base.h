@@ -11,6 +11,7 @@
 #include "user-statistics-per-match.h"
 
 namespace invasion::statistic_base {
+	using namespace sqlite_orm;
 
     struct UserStatistics {
         int id;
@@ -23,10 +24,9 @@ namespace invasion::statistic_base {
     };
 
 
-    using namespace sqlite_orm;
-
     class DatabaseManager {
-    public:
+    
+	public:
         static auto &getTable() {
             auto table = make_table("users",
                                     make_column("id", &UserStatistics::id, primary_key(), autoincrement()),

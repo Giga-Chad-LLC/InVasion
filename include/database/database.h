@@ -13,9 +13,10 @@ struct User {
     std::string password;
 };
 
-using namespace sqlite_orm;
 
 namespace invasion::database_access{
+	using namespace sqlite_orm;
+	
     class DatabaseManager {
     public:
         static auto &getTable() {
