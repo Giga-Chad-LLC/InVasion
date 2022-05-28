@@ -22,7 +22,7 @@
 #include "interactors/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.h"
 #include "interactors/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.h"
 #include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
-
+#include "interactors/SetPlayerUsernameInteractor/set-player-username-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -32,6 +32,7 @@
 #include "use-supply-request-model.pb.h"
 #include "weapon-direction-request-model.pb.h"
 #include "reload-weapon-request-model.pb.h"
+#include "client-credentials-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
@@ -104,7 +105,16 @@ void GameEventsDispatcher::dispatchEvent(
     
     switch (request->getMessageType()) {
         case RequestModel_t::ClientCredentialsRequestModel: {
-            std::cout << "Client want to share his credencials" << std::endl;
+            request_models::ClientCredentialsRequestModel credencialsModel;
+            NetworkPacket::deserialize(credencialsModel, request);
+            std::cout << "Client " << credencialsModel.player_id() << " wants to share his credencials:" << std::endl;
+            std::cout << "Username: " << credencialsModel.username() << ", token: " << credencialsModel.token() << std::endl;
+            
+            interactors::SetPlayerUsernameInteractor interactor;
+            interactor.execute(credencialsModel, *gameSession);
+
+            
+
             break;
         }
         case RequestModel_t::UpdateGameStateRequestModel: {
