@@ -956,22 +956,7 @@ class HandshakeResponseModel:
 		service.func_ref = funcref(self, "add_supplies")
 		data[_supplies.tag] = service
 		
-		_magazine = PBField.new("magazine", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 7, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _magazine
-		data[_magazine.tag] = service
-		
-		_ammo = PBField.new("ammo", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 8, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _ammo
-		data[_ammo.tag] = service
-		
-		_hitpoints = PBField.new("hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 9, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _hitpoints
-		data[_hitpoints.tag] = service
-		
-		_players_hitpoints = PBField.new("players_hitpoints", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 10, true, [])
+		_players_hitpoints = PBField.new("players_hitpoints", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 7, true, [])
 		service = PBServiceField.new()
 		service.field = _players_hitpoints
 		service.func_ref = funcref(self, "add_players_hitpoints")
@@ -1035,38 +1020,11 @@ class HandshakeResponseModel:
 		_supplies.value.append(element)
 		return element
 	
-	var _magazine: PBField
-	func get_magazine() -> int:
-		return _magazine.value
-	func clear_magazine() -> void:
-		data[7].state = PB_SERVICE_STATE.UNFILLED
-		_magazine.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_magazine(value : int) -> void:
-		_magazine.value = value
-	
-	var _ammo: PBField
-	func get_ammo() -> int:
-		return _ammo.value
-	func clear_ammo() -> void:
-		data[8].state = PB_SERVICE_STATE.UNFILLED
-		_ammo.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_ammo(value : int) -> void:
-		_ammo.value = value
-	
-	var _hitpoints: PBField
-	func get_hitpoints() -> int:
-		return _hitpoints.value
-	func clear_hitpoints() -> void:
-		data[9].state = PB_SERVICE_STATE.UNFILLED
-		_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_hitpoints(value : int) -> void:
-		_hitpoints.value = value
-	
 	var _players_hitpoints: PBField
 	func get_players_hitpoints() -> Array:
 		return _players_hitpoints.value
 	func clear_players_hitpoints() -> void:
-		data[10].state = PB_SERVICE_STATE.UNFILLED
+		data[7].state = PB_SERVICE_STATE.UNFILLED
 		_players_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
 	func add_players_hitpoints() -> PlayerHealthModel:
 		var element = PlayerHealthModel.new()

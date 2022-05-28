@@ -6,8 +6,6 @@ onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 
-var magazine = 0
-var ammo = 0
 
 var is_cooldown = false
 var should_follow_mouse: bool = false

@@ -14,6 +14,7 @@ onready var RespawnSpecializationSelector = $UI/RespawnMenu/SpecializationSelect
 onready var SessionTimer = $UI/HUD/Timer
 onready var TeamsScore = $UI/HUD/TeamsScore
 onready var AmmoStats = $UI/HUD/AmmoStats
+onready var HealthStats = $UI/HUD/HealthStats
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
@@ -124,10 +125,11 @@ func _process(_delta):
 					handshake_model.get_player_id(),
 					handshake_model.get_team_id()
 				)
-				# set player gun stats
-				Player.set_gun_state(handshake_model.get_ammo(), handshake_model.get_magazine())
-				AmmoStats.update_ammo_stats(handshake_model.get_ammo(), handshake_model.get_magazine())
 				
+				players_state_manager.update_players_hitpoints(
+					handshake_model.get_players_hitpoints(),
+					players_parent_node
+				)
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
@@ -136,7 +138,6 @@ func _process(_delta):
 					handshake_model.get_second_team_kills_count(),
 					Player.team_id
 				) # change for the real score
-				# producer.push_data(Player.get_player_specialization_request(Global.SpecializationTypes.Stormtrooper))
 				RespawnMenu.toggle(true, "Select specialization")
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
@@ -145,14 +146,16 @@ func _process(_delta):
 				print("Error while receiving: ", "cannot unpack player specialization model")
 			
 			players_state_manager.change_player_specialization(
-				new_player_specialization.get_player_id(),
-				new_player_specialization.get_specialization(),
+				new_player_specialization,
 				Player,
 				players_parent_node
 			)
+			
 			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
 				Player.set_is_active(true)
 				Player.visible = true
+				AmmoStats.update_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
+				HealthStats.reset_health_stats(new_player_specialization.get_hitpoints(), new_player_specialization.get_hitpoints())
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -191,7 +194,6 @@ func _process(_delta):
 			if (result_code != WeaponStateResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack weapon state model")
 			else:
-				print("Weapon state changed: ", new_weapon_state.to_string())
 				AmmoStats.update_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
 		Global.ResponseModels.WeaponDirectionResponseModel:
 			var player_weapon_direction = WeaponDirectionResponseModel.WeaponDirectionResponseModel.new()
@@ -231,7 +233,15 @@ func _process(_delta):
 			if (result_code != UpdatePlayerHitpointsResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack update player hitpoints model")
 			else:
-				print("Our new hitpoints: ", new_hitpoints.get_new_hitpoints())
+				if (new_hitpoints.get_player_id() == Player.player_id):
+					print("We used aid kit, new HP: ", new_hitpoints.to_string())
+					HealthStats.update_current_hitpoints(new_hitpoints.get_new_hitpoints())
+				else:
+					players_state_manager.update_player_hitpoints(
+						new_hitpoints.get_player_id(),
+						new_hitpoints.get_new_hitpoints(),
+						players_parent_node
+					)
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			# Stop the client and show the results table
@@ -242,6 +252,7 @@ func _process(_delta):
 			Player.set_is_dead(false)
 			Player.set_is_active(true)
 			RespawnMenu.toggle(false)
+			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 

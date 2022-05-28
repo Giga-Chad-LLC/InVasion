@@ -674,6 +674,21 @@ class PlayerSpecializationResponseModel:
 		service.field = _specialization
 		data[_specialization.tag] = service
 		
+		_hitpoints = PBField.new("hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _hitpoints
+		data[_hitpoints.tag] = service
+		
+		_magazine = PBField.new("magazine", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _magazine
+		data[_magazine.tag] = service
+		
+		_ammo = PBField.new("ammo", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _ammo
+		data[_ammo.tag] = service
+		
 	var data = {}
 	
 	var _player_id: PBField
@@ -693,6 +708,33 @@ class PlayerSpecializationResponseModel:
 		_specialization.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
 	func set_specialization(value) -> void:
 		_specialization.value = value
+	
+	var _hitpoints: PBField
+	func get_hitpoints() -> int:
+		return _hitpoints.value
+	func clear_hitpoints() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_hitpoints(value : int) -> void:
+		_hitpoints.value = value
+	
+	var _magazine: PBField
+	func get_magazine() -> int:
+		return _magazine.value
+	func clear_magazine() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_magazine.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_magazine(value : int) -> void:
+		_magazine.value = value
+	
+	var _ammo: PBField
+	func get_ammo() -> int:
+		return _ammo.value
+	func clear_ammo() -> void:
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		_ammo.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_ammo(value : int) -> void:
+		_ammo.value = value
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)

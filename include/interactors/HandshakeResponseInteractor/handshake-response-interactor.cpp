@@ -29,11 +29,6 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 	HandshakeResponseModel response;
 	
 	response.set_player_id(playerId);
-	
-	response.set_hitpoints(player->getLifeState().getInitialHitPoints());
-	response.set_magazine(player->getWeapon().getLeftMagazine());
-	response.set_ammo(player->getWeapon().getInitialAmmo());
-
 	response.set_remaining_session_time_ms(remainingSessionTime_ms);
 
 	// setting team id	
@@ -87,7 +82,9 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 	
 	for (auto player_ptr : players) {
-		if(player_ptr->getId() != playerId) {
+		const bool active = player_ptr->getLifeState().isInActiveState();
+		
+		if(player_ptr->getId() != playerId && active) {
 			util_models::PlayerHealthModel *model = response.add_players_hitpoints();
 			model->set_player_id(player_ptr->getId());
 			model->set_current_hitpoints(player_ptr->getLifeState().getHitPoints());

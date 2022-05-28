@@ -51,11 +51,6 @@ func set_is_active(value):
 	is_active = value
 	$Gun.should_follow_mouse = is_active
 
-
-func set_gun_state(new_ammo, new_magazine):
-	player_gun.ammo = new_ammo
-	player_gun.magazine = new_magazine
-
 func get_respawn_player_request():
 	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()
 	action.set_player_id(player_id)
