@@ -28,13 +28,14 @@ text = "check"
 [node name="HTTPRequest" type="HTTPRequest" parent="CheckButton"]
 
 [node name="LabelOfError" type="Label" parent="."]
-margin_left = 100.0
+margin_left = 94.0
 margin_top = 116.0
-margin_right = 294.0
+margin_right = 288.0
 margin_bottom = 130.0
 rect_scale = Vector2( 0.7, 0.7 )
 theme = SubResource( 1 )
 text = "This login is already taken!"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -78,6 +79,7 @@ margin_right = 205.0
 margin_bottom = 17.0
 rect_scale = Vector2( 0.76, 0.7 )
 text = "REGISTER"
+align = 1
 
 [node name="PasswordEdit" type="LineEdit" parent="."]
 margin_left = 116.0
@@ -85,6 +87,7 @@ margin_top = 86.0
 margin_right = 298.0
 margin_bottom = 110.0
 rect_scale = Vector2( 0.5, 0.5 )
+secret = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
