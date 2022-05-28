@@ -55,37 +55,44 @@ void Session::start() {
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 
     m_gameTimer.setTimeout(MATCH_DURATION_MS, [this]() {
-        // send notification to players that the session is closing
-        std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
-        
-        // users cannot connect to the session anymore
-        m_isAvailable.store(false);
-        std::shared_ptr <CountDownLatch> latch = nullptr;
-        {
-            std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
-            latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
-            for (auto [ client, clientResponseQueue ] : m_connections) {
-                response_models::GameOverResponseModel gameOverModel;
-                auto response = std::make_shared <NetworkPacketResponse> (
-                    NetworkPacket::serialize(gameOverModel),
-                    ResponseModel_t::GameOverResponseModel,
-                    gameOverModel.ByteSizeLong()
-                );
-
-                clientResponseQueue->produce({
-                    std::move(response),
-                    std::make_shared <LatchCaller> (latch)
-                });
-            }
-        }
-        
-        // wait for notification to be send to every player
-        std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
-        latch->await();
-        std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
-    
-        stop();
+        this->onGameOver();
     });
+}
+
+void Session::onGameOver() {
+    // send notification to players that the session is closing
+    std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
+    
+    // users cannot connect to the session anymore
+    m_isAvailable.store(false);
+    std::shared_ptr <CountDownLatch> latch = nullptr;
+    {
+        // on a client side the end game screen will be shown
+        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+        latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
+        for (auto [ client, clientResponseQueue ] : m_connections) {
+            response_models::GameOverResponseModel gameOverModel;
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(gameOverModel),
+                ResponseModel_t::GameOverResponseModel,
+                gameOverModel.ByteSizeLong()
+            );
+
+            clientResponseQueue->produce({
+                std::move(response),
+                std::make_shared <LatchCaller> (latch)
+            });
+        }
+    }
+    
+    // wait for notification to be send to every player
+    std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+    latch->await();
+    std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+
+    // do the blocking database work (write all clients data)
+
+    stop();
 }
 
 void Session::stop() {
@@ -296,5 +303,5 @@ std::size_t Session::getRemainingSessionTime_ms() const noexcept {
     );
 
     return remainingTime_ms;
-} 
+}
 }
