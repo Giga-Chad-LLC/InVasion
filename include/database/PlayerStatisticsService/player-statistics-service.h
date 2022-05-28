@@ -11,7 +11,7 @@ using json = nlohmann::json;
 
 class PlayerStatisticsService {
 public:
-	void update(const json& request) const;
+	void update(json request) const;
 
 	json retrieve(const std::string username) const;
 };

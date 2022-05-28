@@ -13,7 +13,7 @@ namespace invasion::services {
 using json = nlohmann::json;
 
 
-void PlayerStatisticsService::update(const json& request) const {
+void PlayerStatisticsService::update(const json request) const {
 	std::string token = request["token"];
 
 	statistic_base::StatisticContainer data(request);

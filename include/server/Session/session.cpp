@@ -3,7 +3,10 @@
 #include <iterator>
 
 #include "session.h"
-
+// database
+#include "database/PlayerStatisticsService/player-statistics-service.h"
+// libs
+#include "libs/json/json.hpp"
 // server
 #include "server/Server/server.h"
 #include "server/CountDownLatch/count-down-latch.h"
@@ -19,6 +22,7 @@
 #include "game-models/Player/player-specialization-enum.h"
 // interactors
 #include "interactors/HandshakeResponseInteractor/handshake-response-interactor.h"
+#include "interactors/FormJSONPlayerStatsResponseInteractor/form-json-player-stats-response-interactor.h"
 
 
 namespace invasion::server {
@@ -55,38 +59,60 @@ void Session::start() {
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
 
     m_gameTimer.setTimeout(MATCH_DURATION_MS, [this]() {
-        // send notification to players that the session is closing
-        std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
-        
-        // users cannot connect to the session anymore
-        m_isAvailable.store(false);
-        std::shared_ptr <CountDownLatch> latch = nullptr;
-        {
-            std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
-            latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
-            for (auto [ client, clientResponseQueue ] : m_connections) {
-                response_models::GameOverResponseModel gameOverModel;
-                auto response = std::make_shared <NetworkPacketResponse> (
-                    NetworkPacket::serialize(gameOverModel),
-                    ResponseModel_t::GameOverResponseModel,
-                    gameOverModel.ByteSizeLong()
-                );
-
-                clientResponseQueue->produce({
-                    std::move(response),
-                    std::make_shared <LatchCaller> (latch)
-                });
-            }
-        }
-        
-        // wait for notification to be send to every player
-        std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
-        latch->await();
-        std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
-    
-        stop();
+        this->onGameOver();
     });
 }
+
+void Session::onGameOver() {
+    // send notification to players that the session is closing
+    std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
+    
+    // users cannot connect to the session anymore
+    m_isAvailable.store(false);
+    std::shared_ptr <CountDownLatch> latch = nullptr;
+    {
+        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+        latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
+        for (auto [ client, clientResponseQueue ] : m_connections) {
+            response_models::GameOverResponseModel gameOverModel;
+            auto response = std::make_shared <NetworkPacketResponse> (
+                NetworkPacket::serialize(gameOverModel),
+                ResponseModel_t::GameOverResponseModel,
+                gameOverModel.ByteSizeLong()
+            );
+
+            clientResponseQueue->produce({
+                std::move(response),
+                std::make_shared <LatchCaller> (latch)
+            });
+        }
+
+        interactors::FormJSONPlayerStatsResponseInteractor interactor;
+        services::PlayerStatisticsService service;
+
+        for (auto [ client, clientResponseQueue ] : m_connections) {
+            std::cout << "Make stats request for client: " << client->getClientId() << std::endl;
+            nlohmann::json request = interactor.execute(
+                client->getClientId(),
+                client->getClientAccessToken(),
+                *m_gameSession
+            );
+            std::cout << "Retrieved stats request: " << request["nickname"] << ", " << request["token"] << ", " << request["kills"] << ", " << request["deaths"] << std::endl;
+
+            std::cout << "Before service update" << std::endl;
+            service.update(request);
+            std::cout << "After service update" << std::endl;
+        }
+    }
+    
+    // wait for notification to be send to every player
+    std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+    latch->await();
+    std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+
+    stop();
+}
+
 
 void Session::stop() {
     if (!m_isActive.load()) {

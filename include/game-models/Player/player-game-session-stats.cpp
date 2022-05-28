@@ -42,6 +42,7 @@ void PlayerGameSessionStats::setUsername(std::string username) {
 void PlayerGameSessionStats::copy(const PlayerGameSessionStats& stats) {
 	m_kills = stats.m_kills;
 	m_deaths = stats.m_deaths;
+	m_username = stats.m_username;
 }
 
 } // namespace invasion::game_models

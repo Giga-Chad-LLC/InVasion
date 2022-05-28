@@ -66,9 +66,14 @@ namespace invasion::token_authenticator {
 
         static bool checkTokenMatch(const std::string &nickname, const std::string &token){
             auto &table = DatabaseManager::getTable();
-            auto userToken = table.select(&UserInfo::token,
-                    where(c(&UserInfo::nickname) == nickname), limit(1))[0];
-            return userToken == token;
+            auto tokenColumn = table.select(&UserInfo::token,
+                    where(c(&UserInfo::nickname) == nickname), limit(1)); // [0]
+
+            if (tokenColumn.empty()) {
+                return false;
+            }
+
+            return tokenColumn.at(0) == token;
         }
 
         // =========== debug-only ==============
