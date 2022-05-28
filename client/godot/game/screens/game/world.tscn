@@ -11,8 +11,8 @@
 [ext_resource path="res://ui/respawn_menu/respawn_menu.tscn" type="PackedScene" id=9]
 [ext_resource path="res://screens/game/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
 [ext_resource path="res://screens/game/scripts/bushes.gd" type="Script" id=11]
-[ext_resource path="res://screens/game/timer/Timer.tscn" type="PackedScene" id=12]
-[ext_resource path="res://screens/game/statistic_UI/Statistic.tscn" type="PackedScene" id=13]
+[ext_resource path="res://screens/game/timer/timer.tscn" type="PackedScene" id=12]
+[ext_resource path="res://ui/statistic/statistic.tscn" type="PackedScene" id=13]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
