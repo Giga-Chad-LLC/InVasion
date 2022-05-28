@@ -13,9 +13,6 @@ script = ExtResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.847059 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CheckButton" type="Button" parent="."]
 margin_left = 140.0
@@ -28,13 +25,14 @@ text = "check"
 [node name="HTTPRequest" type="HTTPRequest" parent="CheckButton"]
 
 [node name="LabelOfError" type="Label" parent="."]
-margin_left = 105.0
+margin_left = 96.0
 margin_top = 120.0
-margin_right = 299.0
+margin_right = 290.0
 margin_bottom = 134.0
 rect_scale = Vector2( 0.7, 0.7 )
 theme = SubResource( 1 )
 text = "This login is already taken!"
+align = 1
 
 [node name="LabelOfUsername" type="Label" parent="."]
 margin_left = 140.0
