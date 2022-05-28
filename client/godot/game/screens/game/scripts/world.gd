@@ -6,7 +6,8 @@ signal scene_changed(scene_name)
 # Nodes
 onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
-onready var Player = $YSort/Player
+onready var Player = $YSort/Player	
+onready var statistic = $UI/Statistic2
 onready var UI = $UI
 onready var game_timer = $UI/Timer/TimerLabel
 
@@ -150,3 +151,7 @@ func _handle_data_received(data: PoolByteArray, worker: Worker) -> void:
 
 
 
+
+
+func _on_Statistic2_toggle_tab_statistic(is_active):
+	statistic.visible = !is_active

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://ui/statistic/kill_counter.gd" type="Script" id=1]
-[ext_resource path="res://ui/statistic/dead_counter.gd" type="Script" id=2]
+[ext_resource path="res://ui/statistic_hud/dead_counter.gd" type="Script" id=1]
+[ext_resource path="res://ui/statistic_hud/kill_counter.gd" type="Script" id=2]
 
 [node name="Statistic" type="Control"]
 anchor_right = 1.0
@@ -19,7 +19,7 @@ margin_right = 70.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 custom_colors/font_outline_modulate = Color( 1, 0, 0, 1 )
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="DeadCounter" type="Label" parent="VBoxContainer"]
 margin_top = 18.0
@@ -27,4 +27,4 @@ margin_right = 70.0
 margin_bottom = 32.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
-script = ExtResource( 2 )
+script = ExtResource( 1 )

@@ -77,7 +77,7 @@ margin_top = 3.0
 margin_right = 205.0
 margin_bottom = 17.0
 rect_scale = Vector2( 0.76, 0.7 )
-text = "REGISTRATE"
+text = "REGISTER"
 
 [node name="PasswordEdit" type="LineEdit" parent="."]
 margin_left = 116.0
