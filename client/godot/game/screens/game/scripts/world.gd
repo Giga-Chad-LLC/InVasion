@@ -225,7 +225,6 @@ func _process(_delta):
 			if (result_code != UpdatePlayerAmmoResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack update player ammo model")
 			else:
-				# print("Our new ammo capacity: ", new_ammo.get_new_ammo())
 				AmmoStats.update_ammo_stats(new_ammo.get_new_ammo())
 		Global.ResponseModels.UpdatePlayerHitpointsResponseModel:
 			var new_hitpoints = UpdatePlayerHitpointsResponseModel.UpdatePlayerHitpointsResponseModel.new()
@@ -234,7 +233,6 @@ func _process(_delta):
 				print("Error while receiving: ", "cannot unpack update player hitpoints model")
 			else:
 				if (new_hitpoints.get_player_id() == Player.player_id):
-					print("We used aid kit, new HP: ", new_hitpoints.to_string())
 					HealthStats.update_current_hitpoints(new_hitpoints.get_new_hitpoints())
 				else:
 					players_state_manager.update_player_hitpoints(
@@ -242,17 +240,17 @@ func _process(_delta):
 						new_hitpoints.get_new_hitpoints(),
 						players_parent_node
 					)
+		Global.ResponseModels.RespawnPlayerResponseModel:
+			Player.set_is_dead(false)
+			Player.set_is_active(true)
+			RespawnMenu.toggle(false)
+			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			# Stop the client and show the results table
 			client_connection.close_connection()
 			is_game_running = false
 			Player.set_is_active(false)
-		Global.ResponseModels.RespawnPlayerResponseModel:
-			Player.set_is_dead(false)
-			Player.set_is_active(true)
-			RespawnMenu.toggle(false)
-			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 

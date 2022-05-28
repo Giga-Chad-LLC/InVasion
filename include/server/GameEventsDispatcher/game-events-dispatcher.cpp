@@ -215,7 +215,7 @@ void GameEventsDispatcher::dispatchEvent(
 
             // controller.getType(responseModel.value().supply_id(), *gameSession);
             const int supplyId = responseModel.value().supply_id();
-			const int playerId = responseModel.value().player_id();
+            const int playerId = responseModel.value().player_id();
 
 			if (controller.isAidKitType(supplyId, *gameSession)) {
                 interactors::UpdatePlayerHitpointsResponseInteractor interactor;
