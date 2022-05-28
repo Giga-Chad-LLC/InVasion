@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://screens/login_screen/LoginScreen.gd" type="Script" id=1]
+[ext_resource path="res://screens/registration_screen/registrate_screen.gd" type="Script" id=1]
 
 [sub_resource type="Theme" id=1]
 
-[node name="Login" type="Control"]
+[node name="RegistrationScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -19,70 +19,81 @@ __meta__ = {
 
 [node name="CheckButton" type="Button" parent="."]
 margin_left = 140.0
-margin_top = 143.0
-margin_right = 230.0
-margin_bottom = 163.0
+margin_top = 142.0
+margin_right = 226.0
+margin_bottom = 162.0
 rect_scale = Vector2( 0.5, 0.5 )
 text = "check"
 
 [node name="HTTPRequest" type="HTTPRequest" parent="CheckButton"]
 
 [node name="LabelOfError" type="Label" parent="."]
-margin_left = 105.0
-margin_top = 120.0
-margin_right = 299.0
-margin_bottom = 134.0
+margin_left = 100.0
+margin_top = 116.0
+margin_right = 294.0
+margin_bottom = 130.0
 rect_scale = Vector2( 0.7, 0.7 )
 theme = SubResource( 1 )
 text = "This login is already taken!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="LabelOfUsername" type="Label" parent="."]
-margin_left = 140.0
-margin_top = 34.0
-margin_right = 208.0
-margin_bottom = 48.0
+margin_left = 134.0
+margin_top = 31.0
+margin_right = 202.0
+margin_bottom = 45.0
 rect_scale = Vector2( 0.7, 0.7 )
 theme = SubResource( 1 )
 text = "username:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="LabelOfPassword" type="Label" parent="."]
-margin_left = 139.0
+margin_left = 137.0
 margin_top = 71.0
-margin_right = 207.0
+margin_right = 205.0
 margin_bottom = 85.0
 rect_scale = Vector2( 0.7, 0.7 )
 theme = SubResource( 1 )
 text = "password:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="GotoBack" type="Button" parent="."]
-margin_left = 3.0
+margin_left = 4.0
 margin_top = 3.0
-margin_right = 63.0
-margin_bottom = 23.0
+margin_right = 68.0
+margin_bottom = 25.0
 rect_scale = Vector2( 0.5, 0.5 )
 text = "back"
 
 [node name="Label" type="Label" parent="."]
-margin_left = 148.0
-margin_top = 6.0
-margin_right = 318.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 30, 0 )
-rect_scale = Vector2( 0.7, 0.5 )
-text = "LOGIN"
+margin_left = 130.0
+margin_top = 3.0
+margin_right = 205.0
+margin_bottom = 17.0
+rect_scale = Vector2( 0.76, 0.7 )
+text = "REGISTRATE"
 
 [node name="PasswordEdit" type="LineEdit" parent="."]
-margin_left = 115.0
+margin_left = 116.0
 margin_top = 86.0
-margin_right = 313.0
-margin_bottom = 114.0
+margin_right = 298.0
+margin_bottom = 110.0
 rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="UsernameEdit" type="LineEdit" parent="."]
 margin_left = 115.0
-margin_top = 48.0
-margin_right = 315.0
-margin_bottom = 72.0
+margin_top = 46.0
+margin_right = 301.0
+margin_bottom = 70.0
 rect_scale = Vector2( 0.5, 0.5 )
 
 [connection signal="pressed" from="CheckButton" to="." method="_on_CheckButton_pressed"]

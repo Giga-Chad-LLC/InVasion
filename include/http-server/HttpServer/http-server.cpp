@@ -29,6 +29,8 @@ namespace invasion::http_server {
 
     void HttpServer::start() {
         StatisticAccessor::clear(); // просто очистка БД для debug-режима
+        Authenticator::deleteAll();
+        DatabaseAccessor::deleteAll();
 
         thread_ = std::move(std::thread{[]() {
             static const std::regex invalidSymbols(R"([a-zA-Z0-9]*)");
