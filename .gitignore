@@ -200,5 +200,4 @@ include/database/cmake-build-debug
 cmake-debug-build
 cmake-release-build
 
-
-src/grpc/out
+*.sqlite
