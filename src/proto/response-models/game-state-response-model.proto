@@ -32,22 +32,21 @@ message BulletPositionResponseModel {
 message DamagedPlayerResponseModel {
 	int32 player_id = 1;
 	int32 damaged_by = 2; // id of player that made damage
-	double new_hitpoints = 3;
+	int32 new_hitpoints = 3;
 }
 message KilledPlayerResponseModel {
 	int32 player_id = 1;
 	int32 killed_by = 2; // id of player that made kill
 }
+enum PlayerTeamId {
+	FirstTeam = 0;
+	SecondTeam = 1;
+}
 message PlayerPositionResponseModel {
   int32 player_id = 1;
-  TeamId team_id = 2;
+  PlayerTeamId team_id = 2;
   Vector2D position = 3;
   Vector2D velocity = 4;
-
-  enum TeamId {
-    FirstTeam = 0;
-    SecondTeam = 1;
-  }
 }
 message GameStateResponseModel {
 	repeated PlayerPositionResponseModel players = 1;
@@ -56,4 +55,3 @@ message GameStateResponseModel {
 	repeated KilledPlayerResponseModel killed_players = 4;
 }
 */
-

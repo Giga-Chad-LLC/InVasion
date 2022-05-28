@@ -30,4 +30,8 @@ std::vector<std::shared_ptr<StaticObject>>& GameWorldStorage::getObstacles() {
 	return m_obstacles;
 }
 
+std::vector<std::shared_ptr<StaticSupply>>& GameWorldStorage::getSupplies() {
+	return m_supplies;
+}
+
 } // namespace invasion::game_models

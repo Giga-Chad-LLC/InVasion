@@ -1,9 +1,9 @@
 #include <utility>
 #include <memory>
 
-#include "shoot-interactor.h"
+#include "shoot-response-interactor.h"
 // response-models
-#include "shooting-state-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
@@ -17,14 +17,14 @@ using namespace invasion::game_models;
 using namespace response_models;
 using namespace request_models;
 	
-ShootingStateResponse ShootInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
+WeaponStateResponseModel ShootResponseInteractor::execute(const ShootRequestModel& req, GameSession& session) const {
 	std::shared_ptr<Player> player_ptr = session.getPlayer(req.player_id());
 	Weapon& weapon = player_ptr->getWeapon();
 	
 	game_models::Vector2D direction(req.weapon_direction().x(), req.weapon_direction().y());
 	weapon.setDirection(std::move(direction));
 	
-	ShootingStateResponse response;
+	WeaponStateResponseModel response;
 	
 	response.set_player_id(player_ptr->getId());
 
@@ -34,8 +34,11 @@ ShootingStateResponse ShootInteractor::execute(const ShootRequestModel& req, Gam
 	response.mutable_weapon_direction()->set_x(direction.getX());
 	response.mutable_weapon_direction()->set_y(direction.getY());
 
-	// if player is alive
-	if(player_ptr->getLifeState().isInDeadState() == false) {
+	// if player is alive and active
+	const bool dead = player_ptr->getLifeState().isInDeadState();
+	const bool active = player_ptr->getLifeState().isInActiveState();
+
+	if(!dead && active) {
 		if(weapon.isAbleToShoot()) {
 			const game_models::Vector2D position = player_ptr->getPosition();
 			const int bulletId = session.createIdForNewBullet();

@@ -11,8 +11,8 @@
 [ext_resource path="res://ui/respawn_menu/respawn_menu.tscn" type="PackedScene" id=9]
 [ext_resource path="res://screens/game/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
 [ext_resource path="res://screens/game/scripts/bushes.gd" type="Script" id=11]
-[ext_resource path="res://screens/game/timer/timer.tscn" type="PackedScene" id=12]
-[ext_resource path="res://ui/statistic/statistic.tscn" type="PackedScene" id=13]
+[ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
+[ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=14]
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -493,12 +493,25 @@ script = ExtResource( 8 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Statistic" parent="UI" instance=ExtResource( 13 )]
-
-[node name="Timer" parent="UI" instance=ExtResource( 12 )]
+[node name="HUD" parent="UI" instance=ExtResource( 14 )]
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
+
+[node name="SpecializationSelector" parent="UI/RespawnMenu" index="2"]
+specialization_button_group = ExtResource( 12 )
+
+[node name="StormtrooperButton" parent="UI/RespawnMenu/SpecializationSelector" index="0"]
+group = ExtResource( 12 )
+
+[node name="SentinelButton" parent="UI/RespawnMenu/SpecializationSelector" index="1"]
+group = ExtResource( 12 )
+
+[node name="SupportButton" parent="UI/RespawnMenu/SpecializationSelector" index="2"]
+group = ExtResource( 12 )
+
+[node name="MedicButton" parent="UI/RespawnMenu/SpecializationSelector" index="3"]
+group = ExtResource( 12 )
 
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
 visible = false
@@ -598,9 +611,14 @@ position = Vector2( 272, 32 )
 
 [node name="OtherPlayers" type="YSort" parent="YSort"]
 
+[node name="Supplies" type="YSort" parent="YSort"]
+
 [connection signal="pressed" from="UI/RespawnMenu/RespawnButtonContainer/RespawnButton" to="." method="_on_RespawnButton_pressed"]
 [connection signal="toggle_escape_menu" from="UI/EscapeMenu" to="." method="_on_EscapeMenu_toggle_escape_menu"]
 [connection signal="pressed" from="UI/EscapeMenu/CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
 
+[editable path="UI/HUD"]
+[editable path="UI/HUD/TeamsScore"]
 [editable path="UI/RespawnMenu"]
+[editable path="UI/RespawnMenu/SpecializationSelector"]
 [editable path="UI/EscapeMenu"]

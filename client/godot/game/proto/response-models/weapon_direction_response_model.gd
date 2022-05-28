@@ -660,7 +660,7 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
-class PlayerInfoResponseModel:
+class WeaponDirectionResponseModel:
 	func _init():
 		var service
 		
@@ -669,10 +669,11 @@ class PlayerInfoResponseModel:
 		service.field = _player_id
 		data[_player_id.tag] = service
 		
-		_team_id = PBField.new("team_id", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
+		_direction = PBField.new("direction", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
 		service = PBServiceField.new()
-		service.field = _team_id
-		data[_team_id.tag] = service
+		service.field = _direction
+		service.func_ref = funcref(self, "new_direction")
+		data[_direction.tag] = service
 		
 	var data = {}
 	
@@ -685,19 +686,70 @@ class PlayerInfoResponseModel:
 	func set_player_id(value : int) -> void:
 		_player_id.value = value
 	
-	var _team_id: PBField
-	func get_team_id():
-		return _team_id.value
-	func clear_team_id() -> void:
+	var _direction: PBField
+	func get_direction() -> Vector2D:
+		return _direction.value
+	func clear_direction() -> void:
 		data[2].state = PB_SERVICE_STATE.UNFILLED
-		_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
-	func set_team_id(value) -> void:
-		_team_id.value = value
+		_direction.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_direction() -> Vector2D:
+		_direction.value = Vector2D.new()
+		return _direction.value
 	
-	enum TeamId {
-		FirstTeam = 0,
-		SecondTeam = 1
-	}
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
+class Vector2D:
+	func _init():
+		var service
+		
+		_x = PBField.new("x", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = _x
+		data[_x.tag] = service
+		
+		_y = PBField.new("y", PB_DATA_TYPE.DOUBLE, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE])
+		service = PBServiceField.new()
+		service.field = _y
+		data[_y.tag] = service
+		
+	var data = {}
+	
+	var _x: PBField
+	func get_x() -> float:
+		return _x.value
+	func clear_x() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_x.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_x(value : float) -> void:
+		_x.value = value
+	
+	var _y: PBField
+	func get_y() -> float:
+		return _y.value
+	func clear_y() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_y.value = DEFAULT_VALUES_3[PB_DATA_TYPE.DOUBLE]
+	func set_y(value : float) -> void:
+		_y.value = value
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)

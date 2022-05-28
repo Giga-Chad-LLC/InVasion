@@ -1,12 +1,24 @@
 #include <cassert>
 #include <thread>
 #include <iterator>
-#include "server/Session/session.h"
+
+#include "session.h"
+
+// server
+#include "server/Server/server.h"
+#include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
-// game-models
-#include "player-info-response-model.pb.h"
+// response-models
+#include "game-over-response-model.pb.h"
+#include "handshake-response-model.pb.h"
+// request-models
 #include "update-game-state-request-model.pb.h"
+// game-models
+#include "game-models/GameSession/game-session.h"
+#include "game-models/Player/player-specialization-enum.h"
+// interactors
+#include "interactors/HandshakeResponseInteractor/handshake-response-interactor.h"
 
 
 namespace invasion::server {
@@ -16,6 +28,7 @@ Session::Session(uint32_t sessionId): m_sessionId(sessionId) {}
 
 Session::~Session() {
     stop();
+    std::cout << "Session " << m_sessionId << " destroyed" << std::endl;
 }
 
 void Session::start() {
@@ -26,9 +39,53 @@ void Session::start() {
     m_isActive.store(true);
     m_tickController.start([this]() mutable {
         auto request = std::make_shared <NetworkPacketRequest> (nullptr, RequestModel_t::UpdateGameStateRequestModel, 0U);
-        m_requestQueue->produce(std::move(request));
+        if (m_requestQueue) {
+            m_requestQueue->produce(std::move(request));
+        }
+        else {
+            std::cout << "Session error: request queue is nullptr when tried to put data" << std::endl;
+        }
     });
+
+    // set time of the match start
+    MATCH_START_TIMESTAMP_MS = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
     m_gameEventsDispatcher->start(shared_from_this(), m_gameSession, m_requestQueue);
+
+    m_gameTimer.setTimeout(MATCH_DURATION_MS, [this]() {
+        // send notification to players that the session is closing
+        std::cout << "Session " << m_sessionId << " expired, send notifications to players" << std::endl;
+        
+        // users cannot connect to the session anymore
+        m_isAvailable.store(false);
+        std::shared_ptr <CountDownLatch> latch = nullptr;
+        {
+            std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+            latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
+            for (auto [ client, clientResponseQueue ] : m_connections) {
+                response_models::GameOverResponseModel gameOverModel;
+                auto response = std::make_shared <NetworkPacketResponse> (
+                    NetworkPacket::serialize(gameOverModel),
+                    ResponseModel_t::GameOverResponseModel,
+                    gameOverModel.ByteSizeLong()
+                );
+
+                clientResponseQueue->produce({
+                    std::move(response),
+                    std::make_shared <LatchCaller> (latch)
+                });
+            }
+        }
+        
+        // wait for notification to be send to every player
+        std::cout << "Start latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+        latch->await();
+        std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
+    
+        stop();
+    });
 }
 
 void Session::stop() {
@@ -37,32 +94,45 @@ void Session::stop() {
     }
 
     m_isActive.store(false);
+    m_isAvailable.store(false);
+
     std::cout << "Stopping session: " << m_sessionId << std::endl;
 
     std::cout << "Stopping tick controller" << std::endl;
     m_tickController.stop();
     std::cout << "Stopping events dispatcher" << std::endl;
     m_gameEventsDispatcher->stop();
-
+    
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     assert(m_clientsThreadPool.size() == m_connections.size());
 
-    std::cout << "Stopping clients" << std::endl;
-    for (auto [ client, clientResponseQueue ] : m_connections) {
-        client->stop();
-    }
+    std::cout << "Stopping clients and their workers (total connected clients: " << m_connections.size() << ")" << std::endl;
+    
+    while (!m_connections.empty()) {
+        auto client = m_connections.back().first;
+        auto clientResponseQueue = m_connections.back().second;
+        auto ios = m_clientsThreadPool.back().first;
 
-    std::cout << "Stopping workers" << std::endl;
-    for (auto [ ios, work ] : m_clientsThreadPool) {
-        // we want to finish all sending/receiving data processes (on a client side and inside a `m_gameEventsDispatcher` we will stop adding any more network packets)
-        // work.reset(); // does not work for some reason (maybe I don't get something about it)
+        std::cout << "Removing client: " << client->getClientId() << std::endl;
+        
+        if (m_gameSession->playerExists(client->getClientId())) {
+            m_gameSession->removePlayerById(client->getClientId());
+        }
 
-        // for force stop we might user `ios->stop()` - the last packet will be discarded mid-air (not good, because client will not get full network packet and won't be able to parse it correctly)
-        ios->stop();
+        client->stop(); // stop client's threads
+        ios->stop(); // stop ios
+        m_connections.pop_back();
+        m_clientsThreadPool.pop_back();
+        return;
     }
 }
 
 bool Session::isAvailable() const noexcept {
-    return MAX_CLIENT_COUNT > m_connections.size();
+    return MAX_CLIENT_COUNT > m_connections.size() && m_isAvailable.load();
+}
+
+bool Session::isActive() const noexcept {
+    return m_isActive.load();
 }
 
 
@@ -80,38 +150,54 @@ void Session::removeClient(uint32_t clientId) {
 
         if (client->getClientId() == clientId) {
             std::cout << "Removing client: " << clientId << std::endl;
+            
+            std::cout << "All clients: ";
+            const auto& players = m_gameSession->getPlayers();
+            for (auto p : players) {
+                std::cout << p->getId() << ", ";
+            }
+            std::cout << std::endl;
+
+            if (m_gameSession->playerExists(client->getClientId())) {
+                m_gameSession->removePlayerById(clientId);
+            }
+            else {
+                std::cout << "Client with id: " << clientId << " was not found and not removed" << std::endl;
+            }
+            std::cout << "Total clients in game session: " << players.size() << std::endl;
+
             client->stop(); // stop client's threads
             ios->stop(); // stop ios
+
             m_connections.erase(std::next(m_connections.begin(), i));
             m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
+            
             return;
         }
     }
 }
 
 void Session::makeHandshakeWithClient(
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
-    uint32_t playerId,
-    game_models::PlayerTeamId teamId
+    std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue,
+    uint32_t playerId
 ) {
     // send to client his ID
-    std::cout << "Send client his ID: " << playerId << std::endl;
-    response_models::PlayerInfoResponseModel response;
-    response.set_player_id(playerId);
-
-    if (teamId == game_models::PlayerTeamId::FirstTeam) {
-        response.set_team_id(response_models::PlayerInfoResponseModel::FirstTeam);
-    } else {
-        response.set_team_id(response_models::PlayerInfoResponseModel::SecondTeam);
-    }
+    // std::cout << "Send client his info: id " << playerId << ", team " << static_cast<uint32_t> (teamId) << std::endl;
+    interactors::HandshakeResponseInteractor interactor;
+    auto response = interactor.execute(getRemainingSessionTime_ms(), *m_gameSession, playerId);
 
     auto packet = std::make_shared<NetworkPacketResponse> (
         NetworkPacket::serialize(response),
-        ResponseModel_t::PlayerInfoResponseModel,
+        ResponseModel_t::HandshakeResponseModel,
         response.ByteSizeLong()
     );
 
-    clientResponseQueue->produce(std::move(packet));
+    clientResponseQueue->produce({ std::move(packet), nullptr });
 }
 
 void Session::addClient(
@@ -126,8 +212,19 @@ void Session::addClient(
     // lock the mutexes
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
-    auto clientResponseQueue = std::make_shared <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> ();
-    auto client = std::make_shared <Client> (socket, m_gameSession->createPlayerAndReturnId(), clientResponseQueue);
+    auto clientResponseQueue = std::make_shared <SafeQueue<
+        std::pair<
+            std::shared_ptr <NetworkPacketResponse>,
+            std::shared_ptr <LatchCaller>
+        >
+    >> ();
+
+    auto client = std::make_shared <Client> (
+        socket,
+        m_gameSession->createPlayerAndReturnId(game_models::PlayerSpecialization::UNDEFINED), 
+        clientResponseQueue
+    );
+
     m_connections.push_back({
         client,
         clientResponseQueue
@@ -137,12 +234,7 @@ void Session::addClient(
         executionService
     );
 
-    makeHandshakeWithClient(
-        clientResponseQueue,
-        client->getClientId(),
-        m_gameSession->getPlayer(client->getClientId())->getTeamId()
-    );
-    
+    makeHandshakeWithClient(clientResponseQueue, client->getClientId());
 
     std::thread thread([this, socket, executionService, client, clientResponseQueue]() {
         std::cout << "Processing the client in detached thread: " << socket->remote_endpoint() << std::endl;
@@ -152,7 +244,14 @@ void Session::addClient(
             shared_from_this()
         );
 
-        executionService.first->run();
+        try {
+            executionService.first->run();
+        }
+        catch (const std::exception& error) {
+            std::cerr << "Session error: " << error.what() << std::endl;
+            removeClient(client->getClientId());
+        }
+
         std::cout << "Client (" << client->getSocket()->remote_endpoint() << ") thread exits" << std::endl;
     });
 
@@ -165,8 +264,8 @@ void Session::putDataToSingleClient(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        if (client->getClientId() == clientId) {       
-            clientResponseQueue->produce(std::move(response));
+        if (client->getClientId() == clientId && m_gameSession->playerExists(client->getClientId())) {       
+            clientResponseQueue->produce({ std::move(response), nullptr });
             return;
         }
     }
@@ -177,7 +276,25 @@ void Session::putDataToAllClients(
 ) {
     std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     for (auto [client, clientResponseQueue] : m_connections) {
-        clientResponseQueue->produce(std::move(std::shared_ptr <NetworkPacketResponse> (response)));
+        if (m_gameSession->playerExists(client->getClientId())) {
+            clientResponseQueue->produce({
+                std::move(std::shared_ptr <NetworkPacketResponse> (response)),
+                nullptr
+            });
+        }
     }
 }
+
+std::size_t Session::getRemainingSessionTime_ms() const noexcept {
+    std::chrono::milliseconds now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::size_t remainingTime_ms = std::max(
+        0ULL,
+        MATCH_DURATION_MS - (now_ms - MATCH_START_TIMESTAMP_MS).count()
+    );
+
+    return remainingTime_ms;
+} 
 }

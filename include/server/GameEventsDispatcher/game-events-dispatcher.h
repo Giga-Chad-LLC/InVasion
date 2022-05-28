@@ -5,7 +5,7 @@
 #include <memory>
 #include <thread>
 // server
-#include "server/Session/session_fwd.h"
+#include "server/Session/session-fwd.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 // game-models
@@ -15,16 +15,17 @@
 namespace invasion::server {
 class GameEventsDispatcher {
 public:
+    ~GameEventsDispatcher();
     void start(
-        std::shared_ptr <Session> session,
-        std::shared_ptr <game_models::GameSession> gameSession,
-        std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> requestQueue
+        std::weak_ptr <Session> session,
+        std::weak_ptr <game_models::GameSession> gameSession,
+        std::weak_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> requestQueue
     );
     void stop();
 private:
     void dispatchEvent(
-        std::shared_ptr <Session> session,
-        std::shared_ptr <game_models::GameSession> gameSession,
+        std::weak_ptr <Session> session,
+        std::weak_ptr <game_models::GameSession> gameSession,
         std::shared_ptr <NetworkPacketRequest> request
     );
     std::atomic_bool m_isActive = false;

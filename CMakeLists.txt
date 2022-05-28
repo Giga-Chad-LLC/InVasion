@@ -38,14 +38,22 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/request-models/shoot-request-model.proto
 		./src/proto/request-models/respawn-player-request-model.proto
 		./src/proto/request-models/game-session-ended-request-model.proto
-
+		./src/proto/request-models/change-player-specialization-request-model.proto
+		./src/proto/request-models/apply-ability-request-model.proto
+		./src/proto/request-models/use-supply-request-model.proto
+		./src/proto/request-models/weapon-direction-request-model.proto
+		./src/proto/request-models/reload-weapon-request-model.proto
 		# utils
-		./src/proto/utils/vector2d.proto
+        ./src/proto/utils/vector2d.proto
+		./src/proto/utils/player-specialization.proto
+		./src/proto/utils/player-team-id.proto
+		./src/proto/utils/supply-model.proto
+		./src/proto/utils/supply-type.proto
+		./src/proto/utils/player-health-model.proto
 
 		# response-models
-		./src/proto/response-models/player-info-response-model.proto
-		./src/proto/response-models/player-position-response-model.proto
-		./src/proto/response-models/shooting-state-response-model.proto
+        ./src/proto/response-models/player-position-response-model.proto
+        ./src/proto/response-models/weapon-state-response-model.proto
 		./src/proto/response-models/bullet-position-response-model.proto
 		./src/proto/response-models/game-state-response-model.proto
 		./src/proto/response-models/damaged-player-response-model.proto
@@ -53,6 +61,14 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/respawn-player-response-model.proto
 		./src/proto/response-models/game-session-stats-response-model.proto
 		./src/proto/response-models/player-game-session-stats-response-model.proto
+		./src/proto/response-models/game-over-response-model.proto
+		./src/proto/response-models/player-specialization-response-model.proto
+		./src/proto/response-models/supply-response-model.proto
+		./src/proto/response-models/use-supply-response-model.proto
+		./src/proto/response-models/handshake-response-model.proto
+		./src/proto/response-models/update-player-ammo-response-model.proto
+		./src/proto/response-models/update-player-hitpoints-response-model.proto
+		./src/proto/response-models/weapon-direction-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

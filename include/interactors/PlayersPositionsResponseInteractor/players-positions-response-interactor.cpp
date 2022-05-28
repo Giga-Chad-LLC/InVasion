@@ -13,6 +13,7 @@
 #include "game-state-response-model.pb.h"
 // utils
 #include "vector2d.pb.h"
+#include "player-team-id.pb.h"
 
 
 namespace invasion::interactors {
@@ -23,7 +24,10 @@ void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& respons
 	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 	
 	for(const auto& player_ptr : players) {
-		if(player_ptr->getLifeState().isInDeadState()) {
+		const bool dead = player_ptr->getLifeState().isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
+
+		if(dead || !active) {
 			continue;
 		}
 
@@ -32,10 +36,10 @@ void PlayersPositionsResponseInteractor::execute(GameStateResponseModel& respons
 		playerModel->set_player_id(player_ptr->getId());
 		
 		if(player_ptr->getTeamId() == PlayerTeamId::FirstTeam) {
-			playerModel->set_team_id(PlayerPositionResponseModel::FirstTeam);
+			playerModel->set_team_id(util_models::PlayerTeamId::FirstTeam);
 		}
 		else {
-			playerModel->set_team_id(PlayerPositionResponseModel::SecondTeam);
+			playerModel->set_team_id(util_models::PlayerTeamId::SecondTeam);
 		}
 
 		const Vector2D velocity = player_ptr->getVelocity();

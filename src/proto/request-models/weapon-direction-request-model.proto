@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package request_models;
+import "vector2d.proto";
+
+message WeaponDirectionRequestModel {
+	int32 player_id = 1;
+	util_models.Vector2D direction = 2;
+}

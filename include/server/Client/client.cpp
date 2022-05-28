@@ -1,5 +1,6 @@
 #include <memory>
 #include <sstream>
+#include <iostream>
 #include "client.h"
 #include "server/Session/session.h"
 #include "server/NetworkPacket/network-packet.h"
@@ -11,14 +12,20 @@ using boost::asio::ip::tcp;
 Client::Client(
     std::shared_ptr <tcp::socket> socket,
     int clientId,
-    std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue
+    std::weak_ptr <SafeQueue<
+        std::pair<
+            std::shared_ptr <NetworkPacketResponse>,
+            std::shared_ptr <LatchCaller>
+        >
+    >> clientResponseQueue
 ): m_socket(socket), m_clientId(clientId), m_clientResponseQueue(clientResponseQueue) {
-    std::cout << "Created new client" << std::endl;   
+    std::cout << "Created new client with id: " << m_clientId << std::endl;   
 }
 
 Client::~Client() {
     stop();
     delete[] m_readBuffer;
+    std::cout << "Client " << m_clientId << " destroyed" << std::endl;
 }
 
 void Client::start(
@@ -46,7 +53,12 @@ void Client::stop() {
     
     m_isActive.store(false);
     // notify client to check his `m_isActive`
-    m_clientResponseQueue->finish(); 
+    if (!m_clientResponseQueue.expired()) {
+        m_clientResponseQueue.lock()->finish();
+    }
+    else {
+        std::cout << "Client error: response queue is nullptr before client (id: " << m_clientId << ") destroy" << std::endl; 
+    }
     m_canStartNextWriteAction = true;
     cv_writeNextPacket.notify_one();
 
@@ -101,7 +113,12 @@ void Client::receiveNextPacket(
             );
             
             requestQueue->produce(std::move(packet));
-            receiveNextPacket(requestQueue, session);
+            if (m_isActive.load()) {
+                receiveNextPacket(requestQueue, session);
+            }
+            else {
+                std::cout << "Stop client (" << m_socket->remote_endpoint() << ") reading calls" << std::endl;
+            }
         });
     });
 }
@@ -109,10 +126,15 @@ void Client::receiveNextPacket(
 void Client::sendNextPacket(
     std::shared_ptr <Session> session
 ) {
-    // should be started in a separate thread
-    std::shared_ptr <NetworkPacketResponse> response;
+    // this method should be started in a separate thread
+    std::pair <
+        std::shared_ptr <NetworkPacketResponse>,
+        std::shared_ptr <LatchCaller>
+    > data;
 
-    while (m_isActive.load() && m_clientResponseQueue->consumeSync(response)) {
+    while (m_isActive.load() && !m_clientResponseQueue.expired() && m_clientResponseQueue.lock()->consumeSync(data)) {
+        auto [ response, latchCaller ] = data;
+
         uint32_t messageLength = response->totalSize();
         m_writeBuffer = response->serializeToByteArray();
         
@@ -122,10 +144,14 @@ void Client::sendNextPacket(
 
         write(
             messageLength,
-            [this, session](
+            [this, latchCaller = std::move(latchCaller), session](
                 const boost::system::error_code& errorCode,
                 std::size_t bytes_transferred
             ) {
+                if (latchCaller != nullptr) {
+                    (*latchCaller)(); // since we disconnect user if we fail to send the data, we must call the latcher counter even if the package sending fails 
+                }
+
                 if (errorCode.value() != 0) {
                     onError(errorCode, session);
                     return;
@@ -133,7 +159,8 @@ void Client::sendNextPacket(
 
                 m_canStartNextWriteAction = true;
                 cv_writeNextPacket.notify_one();
-        });
+            }
+        );
     }
 }
 

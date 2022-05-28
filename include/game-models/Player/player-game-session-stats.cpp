@@ -24,4 +24,10 @@ void PlayerGameSessionStats::incrementDeaths() {
 	++m_deaths;
 }
 
+
+void PlayerGameSessionStats::copy(const PlayerGameSessionStats& stats) {
+	m_kills = stats.m_kills;
+	m_deaths = stats.m_deaths;
+}
+
 } // namespace invasion::game_models

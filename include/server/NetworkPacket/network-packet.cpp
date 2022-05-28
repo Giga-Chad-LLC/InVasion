@@ -53,6 +53,24 @@ RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
     else if (type == static_cast<uint32_t> (RequestModel_t::RespawnPlayerRequestModel)) {
         return RequestModel_t::RespawnPlayerRequestModel;
     }
+    else if (type == static_cast<uint32_t> (RequestModel_t::SelectPlayerSpecializationRequestModel)) {
+        return RequestModel_t::SelectPlayerSpecializationRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ChangePlayerSpecializationRequestModel)) {
+        return RequestModel_t::ChangePlayerSpecializationRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ApplyAbilityRequestModel)) {
+        return RequestModel_t::ApplyAbilityRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::UseSupplyRequestModel)) {
+        return RequestModel_t::UseSupplyRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::WeaponDirectionRequestModel)) {
+        return RequestModel_t::WeaponDirectionRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ReloadWeaponRequestModel)) {
+        return RequestModel_t::ReloadWeaponRequestModel;
+    }
 
     return RequestModel_t::UnknownRequestModel;
 }

@@ -5,24 +5,44 @@
 #include <memory>
 #include <thread>
 #include <chrono>
-
+#include <optional>
 
 // game-models
 #include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-team-id-enum.h"
+#include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Weapon/weapon.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/GameSession/game-session.h"
 #include "game-models/GameSession/game-session-stats.h"
+#include "game-models/Weapon/weapon.h"
+#include "game-models/Sentinel/sentinel.h"
+// utils
+#include "utils/TimeUtilities/time-utilities.h"
 // interactors
-
+#include "interactors/ChangePlayerSpecializationInteractor/change-player-specialization-interactor.h"
+#include "interactors/ApplyAbilityInteractor/apply-ability-interactor.h"
+#include "interactors/UseSupplyInteractor/use-supply-interactor.h"
+#include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
+#include "interactors/ShootResponseInteractor/shoot-response-interactor.h"
 // controllers
 #include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
-
 // request-models
-
+#include "select-player-specialization-request-model.pb.h"
+#include "apply-ability-request-model.pb.h"
+#include "use-supply-request-model.pb.h"
+#include "reload-weapon-request-model.pb.h"
+#include "shoot-request-model.pb.h"
 // response-models
+#include "player-specialization-response-model.pb.h"
+#include "supply-response-model.pb.h"
+#include "use-supply-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
+// util-models
+#include "player-specialization.pb.h"
+#include "supply-model.pb.h"
+#include "supply-type.pb.h"
 
 #include "doctest.h"
 
@@ -30,17 +50,349 @@
 namespace doctest {
 using namespace invasion::game_models;
 using namespace invasion::controllers;
-// using namespace invasion::interactors;
-// using namespace request_models;
-// using namespace response_models;
+using namespace invasion::interactors;
+using namespace invasion::utils;
+using namespace request_models;
+using namespace response_models;
 
 
 
+/*
+TEST_CASE("Hit points retrieving") {
+	GameSession session;
+	const int id = session.createPlayerAndReturnId(PlayerSpecialization::Sentinel);
+	std::shared_ptr<Player> player = session.getPlayer(id);
+
+	const int hitPoints = player->getLifeState().getHitPoints();
+	const int initHitPoints = player->getLifeState().getInitialHitPoints();
+
+	CHECK(hitPoints == Sentinel::INITIAL_HIT_POINTS);
+	CHECK(initHitPoints == Sentinel::INITIAL_HIT_POINTS);
+
+	std::cout << "HP: " << hitPoints << std::endl;
+	std::cout << "init HP: " << initHitPoints << std::endl;
+	std::cout << "Sentinel HP: " << Sentinel::INITIAL_HIT_POINTS << std::endl;
+}
+*/
+
+
+/*
+TEST_CASE("Reloading with interactors using timeout invoker") {
+	auto session = std::make_shared<GameSession>();
+
+	const int id1 = session->createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	std::shared_ptr<Player> player = session->getPlayer(id1);
+
+	Weapon& weapon = player->getWeapon();
+	
+	const int shots = 10;
+	const int initialMagazine = weapon.getLeftMagazine();
+	const int initialAmmo = weapon.getInitialAmmo();
+
+
+	// shooting 
+	{
+		ShootResponseInteractor interactor;
+		ShootRequestModel req;
+
+		req.set_player_id(id1);
+		const Vector2D direction = weapon.getDirection();
+		req.mutable_weapon_direction()->set_x(direction.getX());
+		req.mutable_weapon_direction()->set_y(direction.getY());
+
+		for(int i = 0; i < shots; i++) {
+			interactor.execute(req, *session);
+		}
+	}
+
+	const int leftMagazine = weapon.getLeftMagazine();
+
+	CHECK(leftMagazine + shots == initialMagazine);
+
+	// reloading
+	{
+		ReloadWeaponResponseInteractor interactor;
+		
+		ReloadWeaponRequestModel req;
+		req.set_player_id(id1);
+
+		FixedTimeoutCallbackInvoker invoker;
+		invoker.setTimeout(0, [&]() {
+			long long start = TimeUtilities::getCurrentTime_ms();
+			std::cout << "executing interactor..." << std::endl;
+			
+			interactor.execute(req, session);
+
+			std::cout << "reloading has finished" << std::endl;
+
+			long long finish = TimeUtilities::getCurrentTime_ms();
+			std::cout << "reloading has taken: " << finish - start << "ms" << std::endl;
+		});
+
+		// to prevent invoker's dtor calling (request and session might be destroyed)
+		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+		std::cout << "finishing test..." << std::endl;
+	}
+}
+*/
+
+
+/*
+TEST_CASE("Reloading with interactors") {
+	auto session = std::make_shared<GameSession>();
+
+
+	const int id1 = session->createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	std::shared_ptr<Player> player = session->getPlayer(id1);
+
+	Weapon& weapon = player->getWeapon();
+	
+	const int shots = 10;
+	const int initialMagazine = weapon.getLeftMagazine();
+	const int initialAmmo = weapon.getInitialAmmo();
+
+
+	// shooting 
+	{
+		ShootResponseInteractor interactor;
+		ShootRequestModel req;
+
+		req.set_player_id(id1);
+		const Vector2D direction = weapon.getDirection();
+		req.mutable_weapon_direction()->set_x(direction.getX());
+		req.mutable_weapon_direction()->set_y(direction.getY());
+
+		for(int i = 0; i < shots; i++) {
+			interactor.execute(req, *session);
+		}
+	}
+
+	const int leftMagazine = weapon.getLeftMagazine();
+
+	CHECK(leftMagazine + shots == initialMagazine);
+
+	// reloading
+	{
+		ReloadWeaponResponseInteractor interactor;
+		ReloadWeaponRequestModel req;
+
+		req.set_player_id(id1);
+		interactor.execute(req, session);
+	}
+
+	const int currentLeftMagazine = weapon.getLeftMagazine();
+	const int currentLeftAmmo = weapon.getLeftAmmo();
+
+	CHECK(currentLeftMagazine == initialMagazine);
+	CHECK(currentLeftAmmo + shots == initialAmmo);
+	CHECK(leftMagazine + initialAmmo == currentLeftMagazine + currentLeftAmmo);
+}
+*/
+
+
+
+
+/*
+TEST_CASE("Supplies using") {
+	GameSession session;
+	const int id1 = session.createPlayerAndReturnId(PlayerSpecialization::Medic);
+	const int id2 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+
+	std::shared_ptr<Player> player1 = session.getPlayer(id1);
+	std::shared_ptr<Player> player2 = session.getPlayer(id2);
+
+	// applying player1's ability
+	{
+		ApplyAbilityInteractor interactor;
+		ApplyAbilityRequestModel req;
+		req.set_player_id(id1);
+		
+		std::this_thread::sleep_for(std::chrono::milliseconds(1100));
+
+		interactor.execute(req, session);
+		const auto& supplies = session.getSupplies();
+		CHECK(supplies.size() == 1u);
+	}
+
+	UseSupplyInteractor interactor;
+	UseSupplyRequestModel req;
+
+	{
+		req.set_player_id(id2);
+
+		player2->setPosition(Vector2D(100, 0));
+		std::optional<UseSupplyResponseModel> opt = interactor.execute(req, session);
+
+		CHECK(opt.has_value() == false);
+
+		player2->setPosition(Vector2D(15, 0));
+		opt = interactor.execute(req, session);
+
+		CHECK(opt.has_value());
+		UseSupplyResponseModel response = opt.value();
+
+		std::cout << response.left_supply_capacity() << std::endl;
+	}
+
+	{
+		req.set_player_id(id2);
+		const int HP = player2->getLifeState().getHitPoints();
+		player2->getLifeState().applyDamage(20, id1);
+
+		std::optional<UseSupplyResponseModel> opt = interactor.execute(req, session);
+
+		CHECK(opt.has_value());
+		UseSupplyResponseModel response = opt.value();
+
+		CHECK(player2->getLifeState().getHitPoints() == HP);
+		std::cout << response.left_supply_capacity() << std::endl;
+	}
+}
+*/
+
+
+
+/*
+TEST_CASE("Ability applying") {
+	GameSession session;
+	const int playerId = session.createPlayerAndReturnId(PlayerSpecialization::Medic);
+	auto player = session.getPlayer(playerId);
+
+	player->setPosition(Vector2D(10, 10));
+
+	ApplyAbilityInteractor interactor;
+	
+	ApplyAbilityRequestModel req;
+	req.set_player_id(playerId);
+
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(1100));
+
+	std::optional<SupplyResponseModel> opt = interactor.execute(req, session);
+
+	CHECK(opt.has_value());
+
+	SupplyResponseModel response = opt.value();
+	util_models::SupplyModel supplyModel = response.supply();
+
+	std::cout << "supply id: " << supplyModel.supply_id() << std::endl;
+	std::cout << "player id: " << supplyModel.player_id() << std::endl;
+
+	if(supplyModel.player_team_id() == util_models::PlayerTeamId::FirstTeam)
+		std::cout << "team id: " << "FirstTeam" << std::endl;
+	else if(supplyModel.player_team_id() == util_models::PlayerTeamId::SecondTeam)
+		std::cout << "team id: " << "SecondTeam" << std::endl; 
+
+	if(supplyModel.supply_type() == util_models::SupplyType::AidKit)
+		std::cout << "supply type: " << "AidKit" << std::endl;
+	else if(supplyModel.supply_type() == util_models::SupplyType::AmmoCrate)
+		std::cout << "supply type: " << "AmmoCrate" << std::endl;
+
+	std::cout << "position: " << Vector2D(supplyModel.position().x(), supplyModel.position().y()) << std::endl;
+	std::cout << "supply capacity: " << supplyModel.supply_capacity() << std::endl;
+	std::cout << "active: " << supplyModel.is_active() << std::endl;
+
+	opt = interactor.execute(req, session);
+	CHECK(opt.has_value() == false);
+
+	const auto& supplies = session.getSupplies();
+	CHECK(supplies.size() == 1u);
+
+	const auto& obstalces = session.getObstacles();
+	std::cout << "obstalces count: " << obstalces.size() << std::endl;
+}
+*/
+
+
+/*
+TEST_CASE("Change player specialization") {
+	GameSession session;
+	
+	const auto spec1 = util_models::PlayerSpecialization::Stormtrooper;
+	const auto spec2 = util_models::PlayerSpecialization::Sentinel;
+	const auto spec3 = util_models::PlayerSpecialization::Support;
+	const auto spec4 = util_models::PlayerSpecialization::Medic;
+
+	std::vector<util_models::PlayerSpecialization> specializationModels = {
+		spec1, spec2, spec3, spec4
+	};
+
+	int playerId = -1;
+	// creating player
+	{
+		SelectPlayerSpecializationInteractor interactor;
+
+		SelectPlayerSpecializationRequestModel req;
+		req.set_specialization(util_models::PlayerSpecialization::Stormtrooper);
+		auto res = interactor.execute(req, session);
+		playerId = res.player_id();
+	}
+
+	std::vector<PlayerSpecialization> specializations = {
+		PlayerSpecialization::Stormtrooper,
+		PlayerSpecialization::Sentinel,
+		PlayerSpecialization::Support,
+		PlayerSpecialization::Medic,
+	};
+
+	// changing specs
+	ChangePlayerSpecializationInteractor interactor;
+
+	for(int i = 0; i < specializationModels.size(); i++) {
+		const auto p = specializationModels[i];
+		ChangePlayerSpecializationRequestModel req;
+		req.set_specialization(p);
+		req.set_player_id(playerId);
+		interactor.execute(req, session);
+
+		const auto player = session.getPlayer(playerId);
+		CHECK(player->getSpecialization() == specializations[i]);
+	}
+}
+*/
+
+
+/*
+TEST_CASE("Player creating with specialization system") {
+	GameSession session;
+	SelectPlayerSpecializationInteractor interactor;
+
+	std::vector<util_models::PlayerSpecialization> specializations = {
+		util_models::PlayerSpecialization::Stormtrooper,
+		util_models::PlayerSpecialization::Sentinel,
+		util_models::PlayerSpecialization::Support,
+		util_models::PlayerSpecialization::Medic,
+	};
+
+	std::vector<PlayerSpecializationResponseModel> responses;
+
+	for(auto spec : specializations) {
+		SelectPlayerSpecializationRequestModel req;
+		req.set_specialization(spec);
+		auto res = interactor.execute(req, session);
+		responses.push_back(res);
+	}
+
+	for(const auto& res : responses) {
+		std::cout << "playerId: " << res.player_id() << " spec: " << res.specialization() << std::endl;
+	}
+	std::cout << std::endl;
+
+	std::vector<std::shared_ptr<Player>> &players = session.getPlayers();
+
+	for(auto player : players) {
+		std::cout << "playerId: " << player->getId() << " spec: " << static_cast<int>(player->getSpecialization()) << std::endl;
+	}
+}*/
+
+
+
+/*
 TEST_CASE("Decrementing players in teams") {
 	GameSession session;
 
-	const int id1 = session.createPlayerAndReturnId();
-	const int id2 = session.createPlayerAndReturnId();
+	const int id1 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	const int id2 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
 
 	const GameSessionStats& stats = session.getGameStatistics();
 
@@ -54,7 +406,7 @@ TEST_CASE("Decrementing players in teams") {
 	
 	const int n = 100;
 	for(int i = 0; i < n; i++) {
-		const int id = session.createPlayerAndReturnId();
+		const int id = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
 		ids.push_back(id);
 	}
 
@@ -82,7 +434,7 @@ TEST_CASE("Decrementing players in teams") {
 	CHECK(stats.getFirstTeamPlayersCount() == 0);
 	CHECK(stats.getSecondTeamPlayersCount() == 0);
 }
-
+*/
 
 
 /*
@@ -117,12 +469,12 @@ TEST_CASE("setTimeout testing") {
 TEST_CASE("Updating kills counts of teams") {
 	using namespace std::chrono_literals;
 	GameSession session;
-	std::shared_ptr<Player> player1 = session.getPlayer(session.createPlayerAndReturnId());
+	std::shared_ptr<Player> player1 = session.getPlayer(session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper));
 	Weapon& weapon = player1->getWeapon();
 	weapon.setDirection(Vector2D(0, 1));
 	const Vector2D position = player1->getPosition();
 
-	std::shared_ptr<Player> player2 = session.getPlayer(session.createPlayerAndReturnId());
+	std::shared_ptr<Player> player2 = session.getPlayer(session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper));
 	player2->setPosition(Vector2D(0, 15));
 
 	for(int i = 0; i < 10; i++) {
@@ -169,7 +521,7 @@ TEST_CASE("Distributing players by teams") {
 	GameSession session;
 
 	for(int i = 0; i < 1000; i++) {
-		session.createPlayerAndReturnId();
+		session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
 		// temporary method
 		GameSessionStats stats = session.getStats_debug();
 		const int count1 = stats.getFirstTeamPlayersCount();
@@ -194,10 +546,10 @@ TEST_CASE("Distributing players by teams") {
 /*
 TEST_CASE("Deleting players from GameSession") {
 	GameSession session;
-	const int id1 = session.createPlayerAndReturnId();
-	const int id2 = session.createPlayerAndReturnId();
-	const int id3 = session.createPlayerAndReturnId();
-	const int id4 = session.createPlayerAndReturnId();
+	const int id1 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	const int id2 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	const int id3 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
+	const int id4 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
 
 	std::vector<int> ids = {
 		id1, id2, id3, id4

@@ -79,7 +79,11 @@ public:
     void start(std::string host, short port);
     // stops the server and releases all resources
     void stop();
+    // removes session by id
+    void removeSession(uint32_t sessionId);
 private:
+    // session remove time interval 
+    const std::size_t SESSION_REMOVER_TIME_INTERVAL_MS = 1000 * 60 * 1;
     // next session id
     uint32_t m_nextSessionId = 0U;
     // callback is invoked when the client connected successfully 
@@ -88,13 +92,11 @@ private:
     std::shared_ptr<Session> getAvailableSession();
     // creates and adds new session
     std::shared_ptr<Session> addSession();
-    // removes session by id
-    void removeSession(uint32_t sessionId);
 
     std::unique_ptr <Acceptor> m_acceptor;
     boost::asio::io_service m_ios;
     std::shared_ptr <boost::asio::io_service::work> m_work;
-    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(1000 * 60); // invokes every minute
+    invasion::controllers::FixedTimeIntervalInvoker m_sessionRemover = controllers::FixedTimeIntervalInvoker(SESSION_REMOVER_TIME_INTERVAL_MS);
     std::vector <std::shared_ptr <Session>> m_sessions;
     std::mutex mtx_sessions;
     

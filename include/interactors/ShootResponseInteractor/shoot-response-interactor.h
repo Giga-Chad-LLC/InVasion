@@ -4,7 +4,7 @@
 // request-models
 #include "shoot-request-model.pb.h"
 // response-models
-#include "shooting-state-response-model.pb.h"
+#include "weapon-state-response-model.pb.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player.h"
@@ -16,9 +16,9 @@ using namespace invasion::game_models;
 using namespace response_models;
 using namespace request_models;
 
-class ShootInteractor {
+class ShootResponseInteractor {
 public:
-	ShootingStateResponse execute(const ShootRequestModel& req, GameSession& session) const;
+	WeaponStateResponseModel execute(const ShootRequestModel& req, GameSession& session) const;
 };
 
 

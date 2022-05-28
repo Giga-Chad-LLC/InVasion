@@ -5,11 +5,14 @@
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
 #include <vector>
+#include <chrono>
 #include <memory>
 #include <atomic>
 #include <mutex>
+#include <functional>
 // server
 #include "server/Client/client.h"
+#include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
 #include "server/GameEventsDispatcher/game-events-dispatcher.h"
@@ -17,6 +20,7 @@
 #include "game-models/GameSession/game-session.h"
 // controllers
 #include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
+#include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 
 namespace invasion::server {
 using boost::asio::ip::tcp;
@@ -38,16 +42,24 @@ public:
     void putDataToSingleClient(uint32_t clientId, std::shared_ptr <NetworkPacketResponse> response);
     void putDataToAllClients(std::shared_ptr <NetworkPacketResponse> response);
     bool isAvailable() const noexcept;
+    bool isActive() const noexcept;
     uint32_t getSessionId() const noexcept;
     void makeHandshakeWithClient(
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>> clientResponseQueue,
-        uint32_t playerId,
-        game_models::PlayerTeamId teamId
+        std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >> clientResponseQueue,
+        uint32_t playerId
     );
 
 private:
     const std::size_t MAX_CLIENT_COUNT = 8U;
+    std::chrono::milliseconds MATCH_START_TIMESTAMP_MS;
+    const std::size_t MATCH_DURATION_MS = 1000 * 60 * 10;
     std::atomic_bool m_isActive = false;
+    std::atomic_bool m_isAvailable = true;
     uint32_t m_sessionId;
     std::vector <
         std::pair <
@@ -57,7 +69,12 @@ private:
     > m_clientsThreadPool;
     std::vector <std::pair <
         std::shared_ptr <Client>,
-        std::shared_ptr <SafeQueue<std::shared_ptr <NetworkPacketResponse>>>
+        std::shared_ptr <SafeQueue<
+            std::pair<
+                std::shared_ptr <NetworkPacketResponse>,
+                std::shared_ptr <LatchCaller>
+            >
+        >>
     >> m_connections;
     std::mutex mtx_connections;
     std::mutex mtx_clientsThreadPool;
@@ -65,8 +82,10 @@ private:
     std::shared_ptr <game_models::GameSession> m_gameSession = std::make_shared <game_models::GameSession> ();
     // update the game each 30 milliseconds
     controllers::FixedTimeIntervalInvoker m_tickController = controllers::FixedTimeIntervalInvoker(30); 
+    controllers::FixedTimeoutCallbackInvoker m_gameTimer;
     std::shared_ptr <GameEventsDispatcher> m_gameEventsDispatcher = std::make_shared <GameEventsDispatcher> ();
     std::shared_ptr <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> m_requestQueue = std::make_shared <SafeQueue <std::shared_ptr <NetworkPacketRequest>>> ();
+    std::size_t getRemainingSessionTime_ms() const noexcept; 
 };
 }
 

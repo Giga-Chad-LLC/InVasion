@@ -5,12 +5,12 @@ onready var animationTree = $AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
 onready var hitAnimationPlayer = $Sprite/HitAnimation
 onready var sprite = $Sprite
-onready var healtyBar = $HealthyBar
- 
+onready var player_gun = $Gun
 
 var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
+var player_specialization: int = -1
 
 
 func set_sprite_color(color: Color):
@@ -32,16 +32,14 @@ func update_player_position(player_state_model):
 	velocity = Vector2(player_state_model.get_velocity().get_x(), player_state_model.get_velocity().get_y())
 	global_position = Vector2(player_state_model.get_position().get_x(), player_state_model.get_position().get_y())
 
-func initHealth():
-	healtyBar.value = 100
-	
-	
-func updateHealth():
-	var unitHealt = 15
-	healtyBar.value -= unitHealt
+func update_player_specialization(new_player_specialization):
+	player_specialization = new_player_specialization
+#	print("Set specialization of player ", player_id, " to ", player_specialization)
+
+func update_player_gun_rotation(direction):
+	player_gun.set_gun_rotation(direction)
 
 func play_hit_animation():
-	updateHealth()
 	hitAnimationPlayer.play("Hit")
 
 

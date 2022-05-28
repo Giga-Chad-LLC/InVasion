@@ -5,6 +5,7 @@ class_name PlayersStateManager
 var player_scene = preload("res://player/player_template.tscn")
 var UI
 
+
 func spawn_player(data, players_parent_node, location):
 	var spawned_player = Global.instance_node_at_location(player_scene, players_parent_node, location)
 	spawned_player.name = str(data['player_id'])
@@ -22,30 +23,56 @@ func despawn_player(player_id, players_parent_node):
 	if (players_parent_node and players_parent_node.has_node(str(player_id))):
 		players_parent_node.get_node(str(player_id)).queue_free()
 	else:
-		print("Error: Cannot despawn, players parent node is ", players_parent_node)
+		print("Error: Cannot despawn player with id " + str(player_id) + ", players parent node is ", players_parent_node)
 
 
-
+var players_on_map: Array = [] # stored ints (ids of players in godot nodes hierarchy)
+var players_specializations = {} # stores ints (types of players specializations)
+# this table requered, cuz the player specialization might come before the actual player
 func update_players_states(player_positions: Array, main_player, players_parent_node):
 	if (!players_parent_node):
 		print("Error: Players parent node is ", players_parent_node)
 		return
 	
+	var existing_players: Dictionary = {}
+	
 	for i in range(0, player_positions.size()):
 		var model = player_positions[i]
+		existing_players[model.get_player_id()] = true
 		
 		if (model.get_player_id() == main_player.player_id):
 			main_player.update_player_position(model)
-		elif (players_parent_node.has_node(str(model.get_player_id()))): 
-			players_parent_node.get_node(str(model.get_player_id())).update_player_position(model)
+			# update specialization
+			if (players_specializations.has(main_player.player_id)):
+				main_player.update_player_specialization(players_specializations.get(main_player.player_id))
+				players_specializations.erase(main_player.player_id)
 		else:
-			var data = {
-				'player_id': model.get_player_id(),
-				'player_team_id': model.get_team_id(),
-				'local_team_id': main_player.team_id
-			}
-			spawn_player(data, players_parent_node, Vector2(model.get_position().get_x(), model.get_position().get_y()))
-
+			if (players_parent_node.has_node(str(model.get_player_id()))): 
+				players_parent_node.get_node(str(model.get_player_id())).update_player_position(model)
+			else:
+				players_on_map.push_back(model.get_player_id())
+				var data = {
+					'player_id': model.get_player_id(),
+					'player_team_id': model.get_team_id(),
+					'local_team_id': main_player.team_id
+				}
+				spawn_player(data, players_parent_node, Vector2(model.get_position().get_x(), model.get_position().get_y()))
+			# update specialization
+			var player = players_parent_node.get_node(str(model.get_player_id()))
+			if (players_specializations.has(player.player_id)):
+				player.update_player_specialization(
+					players_specializations.get(player.player_id)
+				)
+				players_specializations.erase(player.player_id)
+	
+	# find players to delete from tree
+	var valid_players = []
+	for i in range(0, players_on_map.size()):
+		if (existing_players.get(players_on_map[i], false)):
+			valid_players.push_back(players_on_map[i])
+		else:
+			despawn_player(players_on_map[i], players_parent_node)
+	players_on_map = valid_players
 
 func update_damaged_players_states(damaged_players: Array, main_player, players_parent_node):
 	for i in range(damaged_players.size()):
@@ -68,20 +95,41 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 		var killed_player = killed_players[i]
 		
 		if (killed_player.get_player_id() == main_player.player_id):
-			print("Sadly, but we died")
-			main_player.is_active = false # Deactivate player
-			main_player.visible = false # Make player invisible
+			main_player.set_is_dead(true) # player will disappear
+			main_player.set_is_active(false) # Deactivate player (won't move the gun and send requests)
 			UI.get_node("RespawnMenu").toggle(true) # Show respawn screen
 		else:
 			despawn_player(killed_player.get_player_id(), players_parent_node)
-			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
+#			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
+
+func get_killed_players_info(killed_players: Array, main_player, players_parent_node):
+	var killed_player_info = []
+	for i in range(killed_players.size()):
+		var killed_player = killed_players[i]
+		var killed_player_id = killed_player.get_player_id()
+		
+		if (killed_player_id == main_player.player_id):
+			killed_player_info.push_back({
+				"player_id": killed_player_id,
+				"team_id": main_player.team_id
+			})
+		else:
+			var killed_player_node = players_parent_node.get_node(str(killed_player_id))
+			if (killed_player_node):
+				killed_player_info.push_back({
+					"player_id": killed_player.get_player_id(),
+					"team_id": killed_player_node.team_id
+				})
+	
+	return killed_player_info
+
+func change_player_specialization(player_id, player_specialization: int, main_player, players_parent_node):
+	players_specializations[player_id] = player_specialization
 
 
-
-
-
-
-
-
-
-
+func change_player_gun_rotation(player_id, new_gun_rotation, main_player, players_parent_node):
+	if (player_id != main_player.player_id):
+		if (players_parent_node.has_node(str(player_id))):
+			players_parent_node.get_node(str(player_id)).update_player_gun_rotation(
+				Vector2(new_gun_rotation.get_x(), new_gun_rotation.get_y())
+			)

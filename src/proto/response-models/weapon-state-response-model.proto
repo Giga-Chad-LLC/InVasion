@@ -3,7 +3,7 @@ syntax = "proto3";
 package response_models;
 import "vector2d.proto";
 
-message ShootingStateResponse {
+message WeaponStateResponseModel {
 	int32 player_id = 1;
 	int32 left_magazine = 2;
 	int32 left_ammo = 3;

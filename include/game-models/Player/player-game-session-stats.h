@@ -14,6 +14,8 @@ public:
 	int getDeaths() const;
 	void incrementDeaths();
 
+	void copy(const PlayerGameSessionStats& stats);
+
 private:
 	int m_kills;
 	int m_deaths;

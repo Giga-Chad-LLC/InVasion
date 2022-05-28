@@ -15,7 +15,7 @@
 // #include "interactors/MoveInteractor/move-interactor.h"
 // #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
 // #include "interactors/RotateWeaponInteractor/rotate-weapon-interactor.h"
-// #include "interactors/ShootInteractor/shoot-interactor.h"
+// #include "interactors/ShootResponseInteractor/shoot-response-interactor.h"
 // // controllers
 // #include "controllers/FixedTimeIntervalInvoker/fixed-time-interval-invoker.h"
 
@@ -49,7 +49,7 @@ using namespace std;
 /*
 
 	FixedTimeIntervalInvoker controller(10);
-	ShootInteractor shoot_interactor;
+	ShootResponseInteractor shoot_interactor;
 	GameSession session;
 	
 	const int id1 = session.createPlayerAndReturnId();
@@ -239,9 +239,9 @@ TEST_CASE("Team assigning") {
 
 
 /*
-TEST_CASE("ShootInteractor test") {
+TEST_CASE("ShootResponseInteractor test") {
 	FixedTimeIntervalInvoker controller(10);
-	ShootInteractor shoot_interactor;
+	ShootResponseInteractor shoot_interactor;
 	GameSession session;
 	Player& player = session.getPlayer(session.createPlayerAndReturnId());
 
