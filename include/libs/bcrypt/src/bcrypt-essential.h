@@ -1,3 +1,6 @@
+#ifndef BCRYPT_ESSENTIAL_H_
+#define BCRYPT_ESSENTIAL_H_
+
 /*	$OpenBSD: bcrypt.c,v 1.31 2014/03/22 23:02:03 tedu Exp $	*/
 
 /*
@@ -338,3 +341,6 @@ bool bcrypt::validatePassword(const std::string &password, const std::string &ha
     got.resize(60);
     return hash == got;
 }
+
+
+#endif // BCRYPT_ESSENTIAL_H_
