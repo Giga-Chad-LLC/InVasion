@@ -1,5 +1,8 @@
 extends Node
 
+var access_token: String = ""
+var username: String = ""
+
 func instance_node_at_location(node: Object, parent: Object, location: Vector2) -> Object:
 	var node_instance = instance_node(node, parent)
 	node_instance.global_position = location
@@ -25,6 +28,7 @@ enum RequestModels {
 	UseSupplyRequestModel = 7,
 	WeaponDirectionRequestModel = 8,
 	ReloadWeaponRequestModel = 9,
+	ClientCredentialsRequestModel = 10,
 	UnknownRequestModel
 }
 # Server sends to client

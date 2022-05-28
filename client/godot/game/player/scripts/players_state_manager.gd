@@ -154,7 +154,7 @@ func change_player_specialization(player_specialization, main_player, players_pa
 		"initial_hitpoints": player_specialization.get_hitpoints(),
 		"current_hitpoints": player_specialization.get_hitpoints()
 	}
-	print("change_player_specialization: ", players_hitpoints)
+	# print("change_player_specialization: ", players_hitpoints)
 
 
 func update_players_hitpoints(hitpoints, players_parent_node):
@@ -163,7 +163,7 @@ func update_players_hitpoints(hitpoints, players_parent_node):
 			"initial_hitpoints": hitpoints[i].get_initial_hitpoints(),
 			"current_hitpoints": hitpoints[i].get_current_hitpoints()
 		}
-	print("update_players_hitpoints: ", players_hitpoints)
+	# print("update_players_hitpoints: ", players_hitpoints)
 
 func update_player_hitpoints(player_id, new_hitpoints, players_parent_node):
 	if (players_hitpoints.has(player_id)):

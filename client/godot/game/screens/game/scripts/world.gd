@@ -115,6 +115,8 @@ func _process(_delta):
 	
 	match received_packet.message_type:
 		Global.ResponseModels.HandshakeResponseModel: 
+			print("Our access token: ", Global.access_token)
+			Player.username = Global.username
 			var handshake_model = HandshakeResponseModel.HandshakeResponseModel.new()
 			var result_code = handshake_model.from_bytes(received_packet.get_bytes())
 			if (result_code != HandshakeResponseModel.PB_ERR.NO_ERRORS):
@@ -139,6 +141,8 @@ func _process(_delta):
 					Player.team_id
 				) # change for the real score
 				RespawnMenu.toggle(true, "Select specialization")
+				# send our credencials
+				producer.push_data(Player.get_client_credentials_model())
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())

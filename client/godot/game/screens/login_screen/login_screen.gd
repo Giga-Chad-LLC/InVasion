@@ -16,10 +16,13 @@ func _on_GotoBack_pressed():
 	emit_signal("scene_changed", "start_menu")
 
 
+# VERY BAD !!!
+var password
+var username
 func _on_CheckButton_pressed():
 	label_error.visible = false
-	var password = $"./PasswordEdit".get_text()
-	var username = $"./UsernameEdit".get_text()
+	password = $"./PasswordEdit".get_text()
+	username = $"./UsernameEdit".get_text()
 	var body = {"nickname" : username, "password" : password}
 	http_request.request(ENDPOINT + "/login", PoolStringArray([]),
 		false, HTTPClient.METHOD_GET, to_json(body))
@@ -28,7 +31,9 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if (response_code == 200):
 		var json = JSON.parse(body.get_string_from_utf8())
 		print(json.result)
-		print(json.result.token)
+		print("Login response: ", json.result)
+		Global.access_token = json.result.token
+		Global.username = username
 		
 		emit_signal("scene_changed", "game_menu")
 	elif (response_code == 0):

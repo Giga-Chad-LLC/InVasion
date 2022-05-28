@@ -10,6 +10,7 @@ const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_abili
 const UseSupplyRequestModel = preload("res://proto/request-models/use_supply_request_model.gd")
 const WeaponDirectionRequestModel = preload("res://proto/request-models/weapon_direction_request_model.gd")
 const ReloadWeaponRequestModel = preload("res://proto/request-models/reload_weapon_request_model.gd")
+const ClientCredentialsRequestModel = preload("res://proto/request-models/client_credentials_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
@@ -50,6 +51,18 @@ func set_is_dead(value):
 func set_is_active(value):
 	is_active = value
 	$Gun.should_follow_mouse = is_active
+
+func get_client_credentials_model():
+	var credencials: ClientCredentialsRequestModel.ClientCredentialsRequestModel = ClientCredentialsRequestModel.ClientCredentialsRequestModel.new()
+	credencials.set_player_id(player_id)
+	credencials.set_username(username)
+	credencials.set_token(Global.access_token)
+	var network_packet = NetworkPacket.new()
+	network_packet.set_data(credencials.to_bytes(), Global.RequestModels.ClientCredentialsRequestModel)
+	if (network_packet):
+		return network_packet
+	return null
+
 
 func get_respawn_player_request():
 	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()

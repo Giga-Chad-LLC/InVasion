@@ -22,6 +22,7 @@
 #include "interactors/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.h"
 #include "interactors/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.h"
 #include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
+
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -102,6 +103,10 @@ void GameEventsDispatcher::dispatchEvent(
     auto session = sessionWeakPtr.lock();
     
     switch (request->getMessageType()) {
+        case RequestModel_t::ClientCredentialsRequestModel: {
+            std::cout << "Client want to share his credencials" << std::endl;
+            break;
+        }
         case RequestModel_t::UpdateGameStateRequestModel: {
             gameSession->updateGameState();
             response_models::GameStateResponseModel responseModel;

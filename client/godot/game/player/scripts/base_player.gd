@@ -11,6 +11,7 @@ var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
 var player_specialization: int = -1
+var username: String = ""
 
 #var initial_hitpoints: int = 0
 #var current_hitpoints: int = 0
