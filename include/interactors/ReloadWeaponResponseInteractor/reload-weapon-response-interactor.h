@@ -2,6 +2,7 @@
 #define RELOAD_WEAPON_RESPONSE_INTERACTOR_H_
 
 #include <memory>
+#include <optional>
 
 // game-models
 #include "game-models/GameSession/game-session.h"
@@ -19,7 +20,7 @@ using namespace response_models;
 
 class ReloadWeaponResponseInteractor {
 public:
-	WeaponStateResponseModel execute(const ReloadWeaponRequestModel& req, std::shared_ptr<GameSession> session) const;
+	std::optional<WeaponStateResponseModel> execute(const ReloadWeaponRequestModel& req, std::shared_ptr<GameSession> session) const;
 };
 
 } // namespace invasion::interactors

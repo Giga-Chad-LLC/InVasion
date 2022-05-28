@@ -6,6 +6,7 @@
 
 // controllers
 #include "controllers/SupplyTypeModelChecker/supply-type-model-checker.h"
+#include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
 // interactors
 #include "interactors/MoveInteractor/move-interactor.h"
 #include "interactors/PlayersPositionsResponseInteractor/players-positions-response-interactor.h"
@@ -20,6 +21,7 @@
 #include "interactors/UpdatePlayerHitpointsResponseInteractor/update-player-hitpoints-response-interactor.h"
 #include "interactors/UpdatePlayerAmmoResponseInteractor/update-player-ammo-response-interactor.h"
 #include "interactors/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.h"
+#include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -28,6 +30,7 @@
 #include "apply-ability-request-model.pb.h"
 #include "use-supply-request-model.pb.h"
 #include "weapon-direction-request-model.pb.h"
+#include "reload-weapon-request-model.pb.h"
 // response-models
 #include "player-position-response-model.pb.h"
 #include "game-state-response-model.pb.h"
@@ -87,11 +90,11 @@ void GameEventsDispatcher::dispatchEvent(
     std::shared_ptr <NetworkPacketRequest> request
 ) {
     if (gameSessionWeakPtr.expired()) {
-        std::cout << "Game events dispatcher error: game session in nullptr before event dispatch" << std::endl;
+        std::cout << "Game events dispatcher error: game session is nullptr before event dispatch" << std::endl;
         return;
     }
     if (sessionWeakPtr.expired()) {
-        std::cout << "Game events dispatcher error: session in nullptr before event dispatch" << std::endl;
+        std::cout << "Game events dispatcher error: session is nullptr before event dispatch" << std::endl;
         return;
     }
 
@@ -258,6 +261,31 @@ void GameEventsDispatcher::dispatchEvent(
             );
 
             session->putDataToSingleClient(responseModel.player_id(), response);
+            break;
+        }
+        case RequestModel_t::ReloadWeaponRequestModel: {
+            request_models::ReloadWeaponRequestModel reloadModel;
+            NetworkPacket::deserialize(reloadModel, request);
+
+            controllers::FixedTimeoutCallbackInvoker controller;
+            controller.setTimeoutDetached(0U, [session, reloadModel, gameSession]() {
+                interactors::ReloadWeaponResponseInteractor interactor;
+                auto responseModel = interactor.execute(reloadModel, gameSession);
+
+                if (session && responseModel.has_value()) {
+                    auto response = std::make_shared<NetworkPacketResponse>(
+                        NetworkPacket::serialize(responseModel.value()),
+                        ResponseModel_t::WeaponStateResponseModel,
+                        responseModel.value().ByteSizeLong()
+                    );
+                    
+                    session->putDataToSingleClient(
+                        responseModel.value().player_id(),
+                        response
+                    );
+                }
+            });
+
             break;
         }
         case RequestModel_t::WeaponDirectionRequestModel: {

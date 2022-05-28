@@ -10,9 +10,11 @@ const ChangePlayerSpecializationRequestModel = preload("res://proto/request-mode
 const ApplyAbilityRequestModel = preload("res://proto/request-models/apply_ability_request_model.gd")
 const UseSupplyRequestModel = preload("res://proto/request-models/use_supply_request_model.gd")
 const WeaponDirectionRequestModel = preload("res://proto/request-models/weapon_direction_request_model.gd")
+const ReloadWeaponRequestModel = preload("res://proto/request-models/reload_weapon_request_model.gd")
 
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
+
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -49,6 +51,11 @@ func set_is_dead(value):
 func set_is_active(value):
 	is_active = value
 	$Gun.should_follow_mouse = is_active
+
+
+func set_gun_state(new_ammo, new_magazine):
+	player_gun.ammo = new_ammo
+	player_gun.magazine = new_magazine
 
 func get_respawn_player_request():
 	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()
@@ -99,6 +106,15 @@ func get_player_shoot_request():
 			return network_packet 
 	return null
 
+func get_reload_gun_request():
+	if (Input.is_action_pressed("reload")):
+		var reload = ReloadWeaponRequestModel.ReloadWeaponRequestModel.new()
+		reload.set_player_id(player_id)
+		var network_packet = NetworkPacket.new()
+		network_packet.set_data(reload.to_bytes(), Global.RequestModels.ReloadWeaponRequestModel)
+		if (network_packet):
+			return network_packet
+	return null
 
 # Ability managment
 func start_apply_ability_cooldown():
