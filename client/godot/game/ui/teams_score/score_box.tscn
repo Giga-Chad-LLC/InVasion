@@ -12,6 +12,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+color = Color( 0.388235, 0.529412, 1, 1 )
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
