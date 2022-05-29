@@ -30,4 +30,4 @@ func _on_Resume_pressed():
 
 
 func _on_Quit_pressed():
-	emit_signal("scene_changed", "game_menu")
+	emit_signal("scene_changed", "game_lobby")

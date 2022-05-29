@@ -35,7 +35,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		Global.access_token = json.result.token
 		Global.username = username
 		
-		emit_signal("scene_changed", "game_menu")
+		emit_signal("scene_changed", "game_lobby")
 	elif (response_code == 0):
 		label_error.text = "ERROR FROM SERVER"
 	elif(response_code == 404):

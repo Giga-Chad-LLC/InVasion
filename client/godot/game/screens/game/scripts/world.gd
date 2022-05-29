@@ -53,7 +53,7 @@ var is_game_running = true
 
 # scene/ui changing
 func _on_Quit_pressed():
-	emit_signal("scene_changed", "game_menu")
+	emit_signal("scene_changed", "game_lobby")
 
 # disable player movements when escape menu is opened
 func _on_EscapeMenu_toggle_escape_menu(is_escaped):
