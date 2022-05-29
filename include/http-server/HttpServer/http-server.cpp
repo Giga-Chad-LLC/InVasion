@@ -43,20 +43,26 @@ namespace invasion::http_server {
                                 std::string password = requestJson["password"].s();
                                 std::string username = requestJson["username"].s();
                                 crow::json::wvalue responseJson;
+
                                 if (!requestJson || username.empty() || password.empty()) {
                                     responseJson["message"] = "Bad request";
                                     return crow::response(400, responseJson);
-                                } else if (!std::regex_match(password.c_str(), invalidSymbols)
-                                           || !std::regex_match(username.c_str(), invalidSymbols)) {
+                                }
+								else if (!std::regex_match(password.c_str(), invalidSymbols) ||
+										 !std::regex_match(username.c_str(), invalidSymbols)) {
                                     responseJson["message"] = "Invalid Symbols";
                                     return crow::response(500, responseJson);
-                                } else if (AuthService::tryToRegisterUser(username,
-                                                                          password)) {
+                                }
+								else if (AuthService::tryToRegisterUser(username, password)) {
                                     StatisticAccessor::addOrUpdateLine(StatisticContainer{username});
+
                                     responseJson["token"] = Authenticator::createNewToken(username);
+									responseJson["username"] = username;
                                     responseJson["message"] = "Successful registration!";
-                                    return crow::response(200, responseJson);
-                                } else {
+                                    
+									return crow::response(200, responseJson);
+                                }
+								else {
                                     responseJson["message"] = "This user already exists in the database!";
                                     return crow::response(400, responseJson);
                                 }
@@ -72,15 +78,19 @@ namespace invasion::http_server {
                                 if (!requestJson || username.empty() || password.empty()) {
                                     responseJson["message"] = "Bad request";
                                     return crow::response(400, responseJson);
-                                } else if (!std::regex_match(password.c_str(), invalidSymbols) ||
+                                }
+								else if (!std::regex_match(password.c_str(), invalidSymbols) ||
                                            !std::regex_match(username.c_str(), invalidSymbols)) {
                                     responseJson["message"] = "Invalid Symbols";
                                     return crow::response(500, responseJson);
-                                } else if (AuthService::login(username, password)) {
+                                }
+								else if (AuthService::login(username, password)) {
                                     responseJson["token"] = Authenticator::refreshOldToken(username);
-                                    responseJson["message"] = "Success entry!";
+									responseJson["username"] = username;
+                                    responseJson["message"] = "Successful login!";
                                     return crow::response(200, responseJson);
-                                } else {
+                                }
+								else {
                                     responseJson["message"] = "Wrong username or password!";
                                     return crow::response(400, responseJson);
                                 }
