@@ -1,6 +1,7 @@
 extends Control
 
 signal toggle_escape_menu(is_active)
+signal scene_changed(scene_name)
 
 var is_active = false setget set_is_active
 

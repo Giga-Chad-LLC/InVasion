@@ -10,7 +10,7 @@ onready var http_request = $CheckButton/HTTPRequest
 func _ready():
 	#http_request.connect("request_completed", self, "_http_request_completed")
 	label_error.set("custom_colors/font_color", Color(1,0,0))
-	label_error.visible = false	
+	label_error.visible = false
 
 func _on_GotoBack_pressed():
 	emit_signal("scene_changed", "start_menu")

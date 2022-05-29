@@ -67,7 +67,6 @@ func get_client_credentials_model():
 func get_respawn_player_request():
 	var action: RespawnPlayerRequestModel.RespawnPlayerRequestModel = RespawnPlayerRequestModel.RespawnPlayerRequestModel.new()
 	action.set_player_id(player_id)
-	#action.initHealth()
 	var network_packet = NetworkPacket.new()
 	network_packet.set_data(action.to_bytes(), Global.RequestModels.RespawnPlayerRequestModel)
 	if (network_packet):

@@ -102,13 +102,11 @@ func update_damaged_players_states(damaged_players: Array, main_player, players_
 		players_hitpoints[defender_id].current_hitpoints = new_defender_hitpoints
 		
 		if (defender_id == main_player.player_id):
-			#main_player.updateHealth(10)
 			main_player.play_hit_animation()
 			UI.get_node("HUD/HealthStats").update_current_hitpoints(new_defender_hitpoints)
 		else:
 			var other_player = players_parent_node.get_node(str(defender_id))
 			if (other_player):
-				#other_player.updateHealth(10)
 				other_player.play_hit_animation()
 				other_player.update_current_hitpoints(new_defender_hitpoints)
 
