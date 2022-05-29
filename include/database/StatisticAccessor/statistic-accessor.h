@@ -18,7 +18,7 @@ namespace invasion::statistic_base {
 
     struct UserStatistics {
         int id;
-        std::string nickname;
+        std::string username;
         int totalKills = 0;
         int totalDeaths = 0;
         double winRate = 0;
@@ -33,7 +33,7 @@ namespace invasion::statistic_base {
         static auto &getTable() {
             auto table = make_table("statistic",
                                     make_column("id", &UserStatistics::id, primary_key(), autoincrement()),
-                                    make_column("nickname", &UserStatistics::nickname, unique()),
+                                    make_column("username", &UserStatistics::username, unique()),
                                     make_column("total_kills", &UserStatistics::totalKills),
                                     make_column("total_deaths", &UserStatistics::totalDeaths),
                                     make_column("win_rate", &UserStatistics::winRate),
@@ -60,7 +60,7 @@ namespace invasion::statistic_base {
 
         static void insertNewLine(const StatisticContainer &userStatistic) {
             UserStatistics userStatistics;
-            userStatistics.nickname = userStatistic.getNickname();
+            userStatistics.username = userStatistic.getUsername();
             auto &table = DatabaseManager::getTable();
             table.insert(userStatistics);
         }
@@ -70,7 +70,7 @@ namespace invasion::statistic_base {
             table.begin_transaction();
 
             auto arrayUserStatistic = table.get_all<UserStatistics>(
-                    where(c(&UserStatistics::nickname) == userStatisticsPerMatch.getNickname()), limit(1));
+                    where(c(&UserStatistics::username) == userStatisticsPerMatch.getUsername()), limit(1));
             assert(arrayUserStatistic.size() == 1);
             auto& userStatistics = arrayUserStatistic[0];
             changeStats(userStatistics, userStatisticsPerMatch);
@@ -80,24 +80,24 @@ namespace invasion::statistic_base {
         }
 
         static void addOrUpdateLine(const StatisticContainer &userStatisticsPerMatch) {
-            if (checkAvailabilityUser(userStatisticsPerMatch.getNickname())) {
+            if (checkAvailabilityUser(userStatisticsPerMatch.getUsername())) {
                 updateLine(userStatisticsPerMatch);
             } else {
                 insertNewLine(userStatisticsPerMatch);
             }
         }
 
-        static UserStatistics getUserStatistic(const std::string &nickname) {
+        static UserStatistics getUserStatistic(const std::string &username) {
             auto &table = DatabaseManager::getTable();
-            auto userStatistic = table.get_all<UserStatistics>(where(c(&UserStatistics::nickname) == nickname),
+            auto userStatistic = table.get_all<UserStatistics>(where(c(&UserStatistics::username) == username),
                                                                limit(1));
             assert(userStatistic.size() == 1);
             return userStatistic[0];
         }
 
-        static bool checkAvailabilityUser(const std::string &nickname) {
+        static bool checkAvailabilityUser(const std::string &username) {
             auto &table = DatabaseManager::getTable();
-            auto usr = table.get_all<UserStatistics>(where(c(&UserStatistics::nickname) == nickname), limit(1));
+            auto usr = table.get_all<UserStatistics>(where(c(&UserStatistics::username) == username), limit(1));
             return !usr.empty();
         }
 

@@ -2,6 +2,8 @@
 #ifndef INVASION_AUTH_SERVICE_H_
 #define INVASION_AUTH_SERVICE_H_
 
+#include <iostream>
+
 // libs
 #include "libs/bcrypt/bcrypt.h"
 // database
@@ -11,20 +13,20 @@ namespace invasion::database_interface {
     using namespace database_access;
 
     struct AuthService {
-        static bool login(const std::string &nickname, const std::string &password) {
-            auto hashedPassword = DatabaseAccessor::getUserPassword(nickname);
+        static bool login(const std::string &username, const std::string &password) {
+            auto hashedPassword = DatabaseAccessor::getUserPassword(username);
             if (hashedPassword.has_value()) {
                 return bcrypt::validatePassword(password, hashedPassword.value());
             }
             return false;
         }
 
-        static bool tryToRegisterUser(const std::string &nickname, const std::string &password) {
-            if (DatabaseAccessor::checkUser(nickname)) {
+        static bool tryToRegisterUser(const std::string &username, const std::string &password) {
+            if (DatabaseAccessor::checkUser(username)) {
                 return false;
             }
             std::cout << "successful registration\n";
-            DatabaseAccessor::insertUser(User{-1, nickname, bcrypt::generateHash(password)});
+            DatabaseAccessor::insertUser(User{-1, username, bcrypt::generateHash(password)});
             return true;
         }
 

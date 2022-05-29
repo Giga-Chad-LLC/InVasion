@@ -24,7 +24,7 @@ func _on_CheckButton_pressed():
 	label_error.visible = false
 	password = $"./PasswordEdit".get_text()
 	username = $"./UsernameEdit".get_text()
-	var body = {"nickname" : username, "password" : password}
+	var body = {"username" : username, "password" : password}
 	http_request.request(ENDPOINT + "/registration", PoolStringArray([]),
 		false, HTTPClient.METHOD_POST, to_json(body))
 

@@ -11,7 +11,7 @@
 
 struct User {
     int id;
-    std::string nickname;
+    std::string username;
     std::string password;
 };
 
@@ -24,7 +24,7 @@ namespace invasion::database_access{
         static auto &getTable() {
             auto table = make_table("users",
                                     make_column("id", &User::id, primary_key(), autoincrement()),
-                                    make_column("nickname", &User::nickname, unique()),
+                                    make_column("username", &User::username, unique()),
                                     make_column("hashed password", &User::password));
             static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
@@ -35,23 +35,23 @@ namespace invasion::database_access{
     class DatabaseAccessor {
 
     public:
-        static std::optional<std::string> getUserPassword(const std::string &nickname) {
+        static std::optional<std::string> getUserPassword(const std::string &username) {
             auto table = DatabaseManager::getTable();
-            auto selectedUsersArray = table.select(&User::password, where(c(&User::nickname) == nickname), limit(1));
+            auto selectedUsersArray = table.select(&User::password, where(c(&User::username) == username), limit(1));
             if (selectedUsersArray.empty()) {
                 return {};
             }
             return selectedUsersArray[0];
         }
 
-        static bool checkUser(const std::string &nickname) {
+        static bool checkUser(const std::string &username) {
             auto table = DatabaseManager::getTable();
-            return getUserPassword(nickname).has_value();
+            return getUserPassword(username).has_value();
         }
 
-        static std::optional<User> getUser(const std::string &nickname) {
+        static std::optional<User> getUser(const std::string &username) {
             auto table = DatabaseManager::getTable();
-            auto selectedUsersArray = table.get_all<User>(where(c(&User::nickname) == nickname), limit(1));
+            auto selectedUsersArray = table.get_all<User>(where(c(&User::username) == username), limit(1));
             if (!selectedUsersArray.empty()) {
                 return {};
             }
@@ -64,9 +64,9 @@ namespace invasion::database_access{
             table.insert(user);
         }
 
-        static bool deleteUserByNickname(const std::string &nickname) {
+        static bool deleteUserByUsername(const std::string &username) {
             auto table = DatabaseManager::getTable();
-            auto userID = getUser(nickname);
+            auto userID = getUser(username);
             if (userID.has_value()) {
                 table.remove<User>(userID.value().id);
                 return true;

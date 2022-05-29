@@ -10,7 +10,7 @@
 
 struct UserInfo {
     int id;
-    std::string nickname;
+    std::string username;
     std::string token;
 };
 
@@ -23,7 +23,7 @@ namespace invasion::token_authenticator {
         static auto &getTable() {
             auto table = make_table("tokens",
                                     make_column("id", &UserInfo::id, primary_key(), autoincrement()),
-                                    make_column("nickname", &UserInfo::nickname, unique()),
+                                    make_column("username", &UserInfo::username, unique()),
                                     make_column("token", &UserInfo::token));
             static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
@@ -33,41 +33,41 @@ namespace invasion::token_authenticator {
 
     class Authenticator {
     private:
-        static void putTokenInTable(const std::string &nickname, const std::string &token) {
+        static void putTokenInTable(const std::string &username, const std::string &token) {
             auto &table = DatabaseManager::getTable();
-            table.insert(UserInfo{1, nickname, token});
+            table.insert(UserInfo{1, username, token});
         }
 
-        static std::string generateToken(const std::string &nickname) {
-            std::string token = bcrypt::generateHash(nickname);
+        static std::string generateToken(const std::string &username) {
+            std::string token = bcrypt::generateHash(username);
             return token;
         }
 
     public:
 
-        static std::string createNewToken(const std::string &nickname) {
-            std::string token = generateToken(nickname);
-            putTokenInTable(nickname, token);
+        static std::string createNewToken(const std::string &username) {
+            std::string token = generateToken(username);
+            putTokenInTable(username, token);
             return token;
         }
 
-        static std::string refreshOldToken(const std::string &nickname) {
+        static std::string refreshOldToken(const std::string &username) {
             auto &table = DatabaseManager::getTable();
             table.begin_transaction();
             auto user = table.get_all<UserInfo>(
-                    where(c(&UserInfo::nickname) == nickname), limit(1))[0];
+                    where(c(&UserInfo::username) == username), limit(1))[0];
 
-            std::string newToken = generateToken(nickname);
+            std::string newToken = generateToken(username);
             user.token = newToken;
             table.update(user);
             table.commit();
             return newToken;
         }
 
-        static bool checkTokenMatch(const std::string &nickname, const std::string &token){
+        static bool checkTokenMatch(const std::string &username, const std::string &token){
             auto &table = DatabaseManager::getTable();
             auto tokenColumn = table.select(&UserInfo::token,
-                    where(c(&UserInfo::nickname) == nickname), limit(1)); // [0]
+                    where(c(&UserInfo::username) == username), limit(1)); // [0]
 
             if (tokenColumn.empty()) {
                 return false;

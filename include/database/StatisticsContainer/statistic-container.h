@@ -13,7 +13,7 @@ namespace invasion::statistic_base {
     private:
 		using json = nlohmann::json;
 
-        std::string nickname;
+        std::string username;
         int kills = 0;
         int deaths = 0;
         bool isVictory = false;
@@ -21,16 +21,16 @@ namespace invasion::statistic_base {
         StatisticContainer() = default;
 
 		StatisticContainer(const json& request) {
-			nickname = request["nickname"];
+			username = request["username"];
 			kills = request["kills"];
 			deaths = request["deaths"];
 			isVictory = request["isVictory"];
 		}
 
-        StatisticContainer(const std::string &nickname_) : nickname(nickname_) {}
+        StatisticContainer(const std::string &username_) : username(username_) {}
 
         template<class T>
-        StatisticContainer(T request) : nickname(request["nickname"].s()), kills(request["kills"].i()),
+        StatisticContainer(T request) : username(request["username"].s()), kills(request["kills"].i()),
                                         deaths(request["deaths"].i()),
                                         isVictory(request["isVictory"].b()) {}
 
@@ -42,8 +42,8 @@ namespace invasion::statistic_base {
             return deaths;
         }
 
-        std::string getNickname() const {
-            return nickname;
+        std::string getUsername() const {
+            return username;
         }
 
         bool getWinThisMatch() const {

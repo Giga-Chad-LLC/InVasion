@@ -23,7 +23,7 @@ json FormJSONPlayerStatsResponseInteractor::execute(int playerId, const std::str
 
 	json response;
 
-	response["nickname"] = player->getGameSessionStats().getUsername();
+	response["username"] = player->getGameSessionStats().getUsername();
 	response["token"] = token;
 
 	const PlayerTeamId teamId = player->getTeamId();

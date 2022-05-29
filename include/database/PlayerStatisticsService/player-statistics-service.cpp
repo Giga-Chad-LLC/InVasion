@@ -18,7 +18,7 @@ void PlayerStatisticsService::update(const json request) const {
 
 	statistic_base::StatisticContainer data(request);
 	
-	bool isTokenValid = token_authenticator::Authenticator::checkTokenMatch(data.getNickname(), token);
+	bool isTokenValid = token_authenticator::Authenticator::checkTokenMatch(data.getUsername(), token);
 
 	if(isTokenValid) {
 		statistic_base::StatisticAccessor::addOrUpdateLine(data);
@@ -36,7 +36,7 @@ json PlayerStatisticsService::retrieve(const std::string username) const {
 	
 	json response;
 	
-	response["nickname"] = stats.nickname;
+	response["username"] = stats.username;
 	response["kills"] = stats.totalKills;
 	response["deaths"] = stats.totalDeaths;
 	response["matches"] = stats.numberOfMatches;

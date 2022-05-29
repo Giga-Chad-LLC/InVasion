@@ -97,7 +97,7 @@ void Session::onGameOver() {
                 client->getClientAccessToken(),
                 *m_gameSession
             );
-            std::cout << "Retrieved stats request: " << request["nickname"] << ", " << request["token"] << ", " << request["kills"] << ", " << request["deaths"] << std::endl;
+            std::cout << "Retrieved stats request: " << request["username"] << ", " << request["token"] << ", " << request["kills"] << ", " << request["deaths"] << std::endl;
 
             std::cout << "Before service update" << std::endl;
             service.update(request);
