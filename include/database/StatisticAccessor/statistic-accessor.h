@@ -34,11 +34,10 @@ namespace invasion::statistic_base {
             auto table = make_table("statistic",
                                     make_column("id", &UserStatistics::id, primary_key(), autoincrement()),
                                     make_column("username", &UserStatistics::username, unique()),
-                                    make_column("total_kills", &UserStatistics::totalKills),
-                                    make_column("total_deaths", &UserStatistics::totalDeaths),
-                                    make_column("win_rate", &UserStatistics::winRate),
-                                    make_column("number_of_matches", &UserStatistics::numberOfMatches),
-                                    make_column("number_of_wins", &UserStatistics::numberWins));
+                                    make_column("kills", &UserStatistics::totalKills),
+                                    make_column("deaths", &UserStatistics::totalDeaths),
+                                    make_column("matches", &UserStatistics::numberOfMatches),
+                                    make_column("victories", &UserStatistics::numberWins));
             static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
             return storage_;

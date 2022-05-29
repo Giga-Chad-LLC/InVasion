@@ -19,11 +19,10 @@ namespace invasion::http_server {
 
     auto statisticToJson(const UserStatistics &playerStatistic) {
         crow::json::wvalue responseJson;
-        responseJson["total_kills"] = playerStatistic.totalKills;
-        responseJson["total_deaths"] = playerStatistic.totalDeaths;
-        responseJson["win_rate"] = playerStatistic.winRate;
-        responseJson["number_of_matches"] = playerStatistic.numberOfMatches;
-        responseJson["number_of_wins"] = playerStatistic.numberWins;
+        responseJson["kills"] = playerStatistic.totalKills;
+        responseJson["deaths"] = playerStatistic.totalDeaths;
+        responseJson["matches"] = playerStatistic.numberOfMatches;
+        responseJson["victories"] = playerStatistic.numberWins;
         return responseJson;
     }
 
@@ -37,7 +36,7 @@ namespace invasion::http_server {
 
             AuthService::deleteAllUsers();
             crow::SimpleApp app;
-            CROW_ROUTE(app, "/registration")
+            CROW_ROUTE(app, "/register")
                     .methods("POST"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
@@ -55,7 +54,7 @@ namespace invasion::http_server {
                                                                           password)) {
                                     StatisticAccessor::addOrUpdateLine(StatisticContainer{username});
                                     responseJson["token"] = Authenticator::createNewToken(username);
-                                    responseJson["message"] = "Success registration!";
+                                    responseJson["message"] = "Successful registration!";
                                     return crow::response(200, responseJson);
                                 } else {
                                     responseJson["message"] = "This user already exists in the database!";

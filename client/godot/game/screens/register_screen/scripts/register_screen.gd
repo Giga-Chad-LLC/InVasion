@@ -32,7 +32,7 @@ func _on_SubmitButton_pressed():
 	hide_error()
 	var body = to_json({"username" : username, "password" : password})
 	var headers = PoolStringArray([])
-	http_request.method_post("/registration", headers, body)
+	http_request.method_post("/register", headers, body)
 	
 
 func _on_UsernameInput_text_changed(new_text):
