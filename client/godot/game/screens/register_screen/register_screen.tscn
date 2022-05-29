@@ -1,14 +1,15 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://screens/login_screen/scripts/login_screen.gd" type="Script" id=1]
+[ext_resource path="res://screens/register_screen/scripts/register_screen.gd" type="Script" id=1]
 
-[node name="LoginScreen" type="Control"]
+[node name="RegisterScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( -158, 41 )
 script = ExtResource( 1 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_editor_description_": ""
 }
 
 [node name="Background" type="ColorRect" parent="."]
@@ -119,7 +120,7 @@ margin_left = -90.0
 margin_top = 44.0
 margin_right = 90.0
 margin_bottom = 64.0
-text = "Login"
+text = "Register"
 __meta__ = {
 "_edit_use_anchors_": false
 }
