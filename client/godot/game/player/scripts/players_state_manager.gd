@@ -55,10 +55,11 @@ func update_players_states(player_positions: Array, main_player, players_parent_
 			else:
 				players_on_map.push_back(model.get_player_id())
 				# we will respawn player and set his hp to maximum
-				players_hitpoints[model.get_player_id()] = {
-					'initial_hitpoints': players_hitpoints[model.get_player_id()].initial_hitpoints,
-					'current_hitpoints': players_hitpoints[model.get_player_id()].initial_hitpoints
-				}
+				if (players_hitpoints[model.get_player_id()].current_hitpoints == 0):
+					players_hitpoints[model.get_player_id()] = {
+						'initial_hitpoints': players_hitpoints[model.get_player_id()].initial_hitpoints,
+						'current_hitpoints': players_hitpoints[model.get_player_id()].initial_hitpoints
+					}
 				
 				var data = {
 					'player_id': model.get_player_id(),
@@ -113,6 +114,8 @@ func update_damaged_players_states(damaged_players: Array, main_player, players_
 func update_killed_players_states(killed_players: Array, main_player, players_parent_node):
 	for i in range(killed_players.size()):
 		var killed_player = killed_players[i]
+		
+		players_hitpoints[killed_player.get_player_id()].current_hitpoints = 0
 		
 		if (killed_player.get_player_id() == main_player.player_id):
 			main_player.set_is_dead(true) # player will disappear
