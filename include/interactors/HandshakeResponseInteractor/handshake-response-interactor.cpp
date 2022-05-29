@@ -17,6 +17,7 @@
 #include "supply-model.pb.h"
 #include "supply-type.pb.h"
 #include "player-health-model.pb.h"
+#include "username-model.pb.h"
 
 
 namespace invasion::interactors {
@@ -78,17 +79,22 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 		supplyModel->set_is_active(supply->isActive());
 	}
 
-	// retrieving players' health
 	const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
-	
+
+
+	// retrieving players' health and usernames
 	for (auto player_ptr : players) {
 		const bool active = player_ptr->getLifeState().isInActiveState();
 		
 		if(player_ptr->getId() != playerId && active) {
-			util_models::PlayerHealthModel *model = response.add_players_hitpoints();
-			model->set_player_id(player_ptr->getId());
-			model->set_current_hitpoints(player_ptr->getLifeState().getHitPoints());
-			model->set_initial_hitpoints(player_ptr->getLifeState().getInitialHitPoints());
+			util_models::PlayerHealthModel *healthModel = response.add_players_hitpoints();
+			healthModel->set_player_id(player_ptr->getId());
+			healthModel->set_current_hitpoints(player_ptr->getLifeState().getHitPoints());
+			healthModel->set_initial_hitpoints(player_ptr->getLifeState().getInitialHitPoints());
+
+			util_models::UsernameModel *usernameModel = response.add_players_data();
+			usernameModel->set_player_id(player_ptr->getId());
+			usernameModel->set_username(player_ptr->getGameSessionStats().getUsername());
 		}
 	}
 

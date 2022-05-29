@@ -23,6 +23,7 @@
 #include "interactors/WeaponDirectionResponseInteractor/weapon-direction-response-interactor.h"
 #include "interactors/ReloadWeaponResponseInteractor/reload-weapon-response-interactor.h"
 #include "interactors/SetPlayerUsernameInteractor/set-player-username-interactor.h"
+#include "interactors/UsernameResponseInteractor/username-response-interactor.h"
 // request-models
 #include "move-request-model.pb.h"
 #include "shoot-request-model.pb.h"
@@ -44,6 +45,7 @@
 #include "update-player-hitpoints-response-model.pb.h"
 #include "weapon-state-response-model.pb.h"
 #include "weapon-direction-response-model.pb.h"
+#include "username-response-model.pb.h"
 
 
 namespace invasion::server {
@@ -115,7 +117,19 @@ void GameEventsDispatcher::dispatchEvent(
 
             if (session) {
                 session->setClientCredencials(credencialsModel.player_id(), credencialsModel.username(), credencialsModel.token());
-            }
+				
+				interactors::UsernameResponseInteractor interactor;
+				response_models::UsernameResponseModel responseModel = interactor.execute(credencialsModel.player_id(),
+																					 credencialsModel.username());
+
+				auto response = std::make_shared<NetworkPacketResponse>(
+					NetworkPacketResponse::serialize(responseModel),
+					ResponseModel_t::UsernameResponseModel,
+					responseModel.ByteSizeLong()
+				);
+
+				session->putDataToAllClients(response);
+			}
             else {
                 std::cout << "Game events dispatcher error: `session` is nullptr before we set the client credencials" << std::endl;
             }

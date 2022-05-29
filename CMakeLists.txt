@@ -54,6 +54,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/utils/supply-model.proto
 		./src/proto/utils/supply-type.proto
 		./src/proto/utils/player-health-model.proto
+		./src/proto/utils/username-model.proto
 
 		# response-models
         ./src/proto/response-models/player-position-response-model.proto
@@ -73,6 +74,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/update-player-ammo-response-model.proto
 		./src/proto/response-models/update-player-hitpoints-response-model.proto
 		./src/proto/response-models/weapon-direction-response-model.proto
+		./src/proto/response-models/username-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})

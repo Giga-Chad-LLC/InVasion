@@ -23,5 +23,6 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/RetrieveWeaponDirectionResponseInteractor/retrieve-weapon-direction-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SetPlayerUsernameInteractor/set-player-username-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FormJSONPlayerStatsResponseInteractor/form-json-player-stats-response-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/UsernameResponseInteractor/username-response-interactor.cpp
 	PARENT_SCOPE
 )
