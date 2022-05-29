@@ -25,7 +25,7 @@ namespace invasion::database_access{
             auto table = make_table("users",
                                     make_column("id", &User::id, primary_key(), autoincrement()),
                                     make_column("username", &User::username, unique()),
-                                    make_column("hashed password", &User::password));
+                                    make_column("password", &User::password));
             static auto storage_ = make_storage("db.sqlite", table);
             storage_.sync_schema();
             return storage_;
