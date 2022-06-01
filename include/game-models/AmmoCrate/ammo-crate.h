@@ -6,6 +6,7 @@
 // game-models
 #include "game-models/StaticSupply/static-supply.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
@@ -15,7 +16,8 @@ class AmmoCrate : public StaticSupply {
 public:
 	explicit AmmoCrate(Vector2D initialPosition,
 					int supplyId,
-					int playerId);
+					int playerId,
+					PlayerTeamId playerTeamId);
 
 	void supply(std::shared_ptr<Player> player) override;
 
