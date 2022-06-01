@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package util_models;
-
-message UsernameModel {
-	int32 player_id = 1;
-	string username = 2;
-}
