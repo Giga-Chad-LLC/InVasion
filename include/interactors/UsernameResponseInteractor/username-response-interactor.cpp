@@ -15,9 +15,8 @@ using namespace response_models;
 UsernameResponseModel UsernameResponseInteractor::execute(int playerId, const std::string& username) const {
 	UsernameResponseModel response;
 	
-	util_models::UsernameModel* model = response.mutable_player_data();
-	model->set_player_id(playerId);
-	model->set_username(username);
+	response.set_player_id(playerId);
+	response.set_username(username);
 
 	return response;
 }
