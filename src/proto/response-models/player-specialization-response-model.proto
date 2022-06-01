@@ -6,7 +6,7 @@ import "player-specialization.proto";
 message PlayerSpecializationResponseModel {
 	int32 player_id = 1;
 	util_models.PlayerSpecialization specialization = 2;
-	int32 hitpoints = 3;
+	int32 initial_hitpoints = 3;
 	int32 magazine = 4;
 	int32 ammo = 5;
 }
