@@ -496,9 +496,6 @@ script = ExtResource( 8 )
 
 [node name="HUD" parent="UI" instance=ExtResource( 14 )]
 
-[node name="Score2" parent="UI/HUD/TeamsScore" index="1"]
-color = Color( 1, 0.388235, 0.388235, 1 )
-
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
 
@@ -518,6 +515,7 @@ group = ExtResource( 12 )
 group = ExtResource( 12 )
 
 [node name="Leaderboard" parent="UI" instance=ExtResource( 13 )]
+visible = false
 
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
 visible = false

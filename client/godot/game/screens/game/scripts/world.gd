@@ -17,6 +17,7 @@ onready var AmmoStats = $UI/HUD/AmmoStats
 onready var HealthStats = $UI/HUD/HealthStats
 onready var Leaderboard = $UI/Leaderboard
 
+
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()
 var BulletsStateManager = preload("res://models/bullet/scripts/bullets_state_manager.gd")
@@ -41,6 +42,7 @@ const UpdatePlayerAmmoResponseModel = preload("res://proto/response-models/updat
 const UseSupplyResponseModel = preload("res://proto/response-models/use_supply_response_model.gd")
 const WeaponDirectionResponseModel = preload("res://proto/response-models/weapon_direction_response_model.gd")
 const WeaponStateResponseModel = preload("res://proto/response-models/weapon_state_response_model.proto.gd")
+const UsernameResponseModel = preload("res://proto/response-models/username_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -51,6 +53,13 @@ var producer: Worker = Worker.new() # thread that stores events from client
 var consumer: Worker = Worker.new() # thread that will read data from the server into a buffer
 									# and put correct network packets to the thread-safe-queue
 var is_game_running = true
+
+
+func _unhandled_input(event):
+	if (event.is_action_pressed("testing")):
+		print(players_state_manager.players_data)
+
+
 
 # scene/ui changing
 func _on_Quit_pressed():
@@ -129,10 +138,15 @@ func _process(_delta):
 					handshake_model.get_team_id()
 				)
 				
-				players_state_manager.update_players_hitpoints(
-					handshake_model.get_players_hitpoints(),
-					players_parent_node
-				)
+				# set usernames
+				players_state_manager.set_main_player_data(Player)
+				players_state_manager.set_players_data(handshake_model.get_players_data())
+				# players_state_manager.set_players_usernames(handshake_model.get_players_data())
+				
+#				players_state_manager.update_players_hitpoints(
+#					handshake_model.get_players_hitpoints(),
+#					players_parent_node
+#				)
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
@@ -144,6 +158,16 @@ func _process(_delta):
 				RespawnMenu.toggle(true, "Select specialization")
 				# send our credencials
 				producer.push_data(Player.get_client_credentials_model())
+		Global.ResponseModels.UsernameResponseModel:
+			var username_model = UsernameResponseModel.UsernameResponseModel.new()
+			var result_code = username_model.from_bytes(received_packet.get_bytes())
+			if (result_code != UsernameResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack username model")
+			else:
+				players_state_manager.set_players_usernames([{
+					"player_id": username_model.get_player_id(),
+					"username": username_model.get_username()
+				}])
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
@@ -160,7 +184,7 @@ func _process(_delta):
 				Player.set_is_active(true)
 				Player.visible = true
 				AmmoStats.update_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
-				HealthStats.reset_health_stats(new_player_specialization.get_hitpoints(), new_player_specialization.get_hitpoints())
+				HealthStats.reset_health_stats(new_player_specialization.get_initial_hitpoints(), new_player_specialization.get_initial_hitpoints())
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())

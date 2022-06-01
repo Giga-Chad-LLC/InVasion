@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package response_models;
+/**/
 import "player-specialization.proto";
 
 message PlayerSpecializationResponseModel {
@@ -10,3 +11,23 @@ message PlayerSpecializationResponseModel {
 	int32 magazine = 4;
 	int32 ammo = 5;
 }
+
+
+/* // for godobuf 
+
+enum PlayerSpecialization {
+	Stormtrooper = 0;
+	Sentinel = 1;
+	Support = 2;
+	Medic = 3;
+}
+
+message PlayerSpecializationResponseModel {
+	int32 player_id = 1;
+	PlayerSpecialization specialization = 2;
+	int32 initial_hitpoints = 3;
+	int32 magazine = 4;
+	int32 ammo = 5;
+}
+
+*/
