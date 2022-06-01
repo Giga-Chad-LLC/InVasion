@@ -15,6 +15,7 @@ onready var SessionTimer = $UI/HUD/Timer
 onready var TeamsScore = $UI/HUD/TeamsScore
 onready var AmmoStats = $UI/HUD/AmmoStats
 onready var HealthStats = $UI/HUD/HealthStats
+onready var Leaderboard = $UI/Leaderboard
 
 var PlayersStateManager = preload("res://player/scripts/players_state_manager.gd")
 onready var players_state_manager = PlayersStateManager.new()

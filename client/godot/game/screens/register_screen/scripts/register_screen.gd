@@ -50,8 +50,6 @@ func _handle_request_complete(response_code: int, headers: PoolStringArray, body
 		emit_signal("scene_changed", "game_lobby")
 	elif (response_code == 0):
 		show_error("Invalid request.")
-	elif(response_code == 404):
-		show_error("User not found. Check your credencials")
 	elif (response_code == 500):
 		show_error("Internal server error. Try again")
 	else:
