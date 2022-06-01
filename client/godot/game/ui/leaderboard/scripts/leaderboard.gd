@@ -4,7 +4,6 @@ onready var AllyTable = $Container/AllyTeam
 onready var FoeTable = $Container/FoeTeam
 var is_active: = true
 
-
 func _ready():
 	set_process_input(true)
 
@@ -15,6 +14,9 @@ func _input(event):
 	elif event.is_action_pressed("leaderboard"):
 		if (is_active):
 			visible = true
+
+func set_main_player_id(id: int):
+	AllyTable.main_player_id = id
 
 # Ally
 func add_user(id: int, username: String, team_id: int, local_team_id: int):
@@ -29,10 +31,10 @@ func remove_user(id: int):
 	AllyTable.remove_user(id)
 	FoeTable.remove_user(id)
 
-func add_kill(id: int):
-	AllyTable.add_kill(id)
-	FoeTable.add_kill(id)
+func add_kills(id: int, count: int):
+	AllyTable.add_kills(id, count)
+	FoeTable.add_kills(id, count)
 
-func add_death(id: int):
-	AllyTable.add_death(id)
-	FoeTable.add_death(id)
+func add_deaths(id: int, count: int):
+	AllyTable.add_deaths(id, count)
+	FoeTable.add_deaths(id, count)

@@ -142,7 +142,7 @@ func update_killed_players_states(killed_players: Array, main_player, players_pa
 #			print("Player ", killed_player.get_killed_by(), " killed player ", killed_player.get_player_id())
 
 func get_killed_players_info(killed_players: Array, main_player, players_parent_node):
-	var killed_player_info = []
+	var killed_player_info = [] # { player_id, team_id, killed_by_id, killed_by_team_id }
 	for i in range(killed_players.size()):
 		var killed_player = killed_players[i]
 		var killed_player_id = killed_player.get_player_id()
@@ -150,14 +150,18 @@ func get_killed_players_info(killed_players: Array, main_player, players_parent_
 		if (killed_player_id == main_player.player_id):
 			killed_player_info.push_back({
 				"player_id": killed_player_id,
-				"team_id": main_player.team_id
+				"team_id": main_player.team_id,
+				"killed_by_id": killed_player.get_killed_by(),
+				"killed_by_team_id": (main_player.team_id + 1) % 2,
 			})
 		else:
 			var killed_player_node = players_parent_node.get_node(str(killed_player_id))
 			if (killed_player_node):
 				killed_player_info.push_back({
 					"player_id": killed_player.get_player_id(),
-					"team_id": killed_player_node.team_id
+					"team_id": killed_player_node.team_id,
+					"killed_by_id": killed_player.get_killed_by(),
+					"killed_by_team_id": (killed_player_node.team_id + 1) % 2,
 				})
 	
 	return killed_player_info
@@ -192,5 +196,9 @@ func update_player_hitpoints(player_id, new_hitpoints, players_parent_node):
 			print("Error when tried to update health bar of player who updated his HPs, player is not is the scene tree")
 	else:
 		print("Error when using updating single player HPs: player is not in the `players_data` dictionary")
+
+
+
+
 
 

@@ -72,7 +72,7 @@ func _on_EscapeMenu_toggle_escape_menu(is_escaped):
 	if (is_game_running): # if the game has not ended yet
 		Player.set_is_active(!is_escaped)
 
-# player want to respawn - send required request model for that
+# player wants to respawn - send required request model for that
 func _on_RespawnButton_pressed():
 	if (client_connection and client_connection.is_connected_to_host() and producer):
 		 # will be null if specialization did not change
@@ -140,15 +140,13 @@ func _process(_delta):
 					handshake_model.get_team_id()
 				)
 				
+				# set main player id in a leaderboard
+				Leaderboard.set_main_player_id(handshake_model.get_player_id())
+				
 				# set usernames
 				players_state_manager.set_player_data(Player.player_id, Player.team_id)
 				players_state_manager.set_players_data(handshake_model.get_players_data())
-				# players_state_manager.set_players_usernames(handshake_model.get_players_data())
-				
-#				players_state_manager.update_players_hitpoints(
-#					handshake_model.get_players_hitpoints(),
-#					players_parent_node
-#				)
+				# update supplies positions
 				supplies_state_manager.update_supplies_states(handshake_model.get_supplies(), supplies_parent_node)
 				# set player specialization
 				SessionTimer.start(int(handshake_model.get_remaining_session_time_ms() / 1000))
@@ -156,7 +154,20 @@ func _process(_delta):
 					handshake_model.get_first_team_kills_count(),
 					handshake_model.get_second_team_kills_count(),
 					Player.team_id
-				) # change for the real score
+				)
+				
+				# set data in the leaderboard
+				var players_on_map = handshake_model.get_players_data()
+				for i in range(0, players_on_map.size()):
+					var player_id = players_on_map[i].get_player_id()
+					var username = players_on_map[i].get_username()
+					var team_id = players_on_map[i].get_team_id()
+					var kills = players_on_map[i].get_kills()
+					var deaths = players_on_map[i].get_deaths()
+					Leaderboard.add_user(player_id, username, team_id, Player.team_id)
+					Leaderboard.add_kills(player_id, kills)
+					Leaderboard.add_deaths(player_id, deaths)
+				
 				RespawnMenu.toggle(true, "Select specialization")
 				# send our credencials
 				producer.push_data(Player.get_client_credentials_model())
@@ -166,26 +177,33 @@ func _process(_delta):
 			if (result_code != ClientConnectedResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack player connected model")
 			else:
-				print("Client ", client_connected_model.get_player_id(), " joined the match!")
-				players_state_manager.set_player_data(client_connected_model.get_player_id(), client_connected_model.get_team_id())
+				var player_id = client_connected_model.get_player_id()
+				print("Client ", player_id, " joined the match!")
+				players_state_manager.set_player_data(player_id, client_connected_model.get_team_id())
 		Global.ResponseModels.ClientDisconnectedResponseModel:
 			var client_disconnected_model = ClientDisconnectedResponseModel.ClientDisconnectedResponseModel.new()
 			var result_code = client_disconnected_model.from_bytes(received_packet.get_bytes())
 			if (result_code != ClientDisconnectedResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack player connected model")
 			else:
-				print("Client ", client_disconnected_model.get_player_id(), " left the match!")
-				players_state_manager.remove_player_data(client_disconnected_model.get_player_id())
+				var player_id = client_disconnected_model.get_player_id()
+				print("Client ", player_id, " left the match!")
+				Leaderboard.remove_user(player_id)
+				players_state_manager.remove_player_data(player_id)
 		Global.ResponseModels.UsernameResponseModel:
 			var username_model = UsernameResponseModel.UsernameResponseModel.new()
 			var result_code = username_model.from_bytes(received_packet.get_bytes())
 			if (result_code != UsernameResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack username model")
 			else:
+				var player_id = username_model.get_player_id()
+				var team_id = players_state_manager.players_data[player_id].team_id
+				var username = username_model.get_username()
 				players_state_manager.set_players_usernames([{
-					"player_id": username_model.get_player_id(),
-					"username": username_model.get_username()
+					"player_id": player_id,
+					"username": username
 				}])
+				Leaderboard.add_user(player_id, username, team_id, Player.team_id)
 		Global.ResponseModels.PlayerSpecializationResponseModel:
 			var new_player_specialization = PlayerSpecializationResponseModel.PlayerSpecializationResponseModel.new()
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
@@ -219,14 +237,25 @@ func _process(_delta):
 				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
 				# update scores
 				if (new_game_state.get_killed_players() and !new_game_state.get_killed_players().empty()):
+					var killed_players_info = players_state_manager.get_killed_players_info(
+						new_game_state.get_killed_players(),
+						Player,
+						players_parent_node
+					)
+					
 					TeamsScore.update_teams_score(
-						players_state_manager.get_killed_players_info(
-							new_game_state.get_killed_players(),
-							Player,
-							players_parent_node
-						),
+						killed_players_info,
 						Player.team_id
 					)
+					
+					for i in range(0, killed_players_info.size()):
+						var player_id = killed_players_info[i].player_id
+						var team_id = killed_players_info[i].team_id
+						var killed_by_id = killed_players_info[i].killed_by_id
+						var killed_by_team_id = killed_players_info[i].killed_by_team_id
+						Leaderboard.add_kills(killed_by_id, 1)
+						Leaderboard.add_deaths(player_id, 1)
+					
 		Global.ResponseModels.SupplyResponseModel:
 			var new_supplies_state = SupplyResponseModel.SupplyResponseModel.new()
 			var result_code = new_supplies_state.from_bytes(received_packet.get_bytes())
@@ -291,6 +320,9 @@ func _process(_delta):
 					)
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
+			# show leaderboard when match ended
+			Leaderboard.is_active = false
+			Leaderboard.visible = true
 			# Stop the client and show the results table
 			client_connection.close_connection()
 			is_game_running = false
