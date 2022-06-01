@@ -2,7 +2,19 @@ extends Control
 
 onready var AllyTable = $Container/AllyTeam
 onready var FoeTable = $Container/FoeTeam
+var is_active: = true
 
+
+func _ready():
+	set_process_input(true)
+
+func _input(event):
+	if event.is_action_released("leaderboard"):
+		if (is_active):
+			visible = false
+	elif event.is_action_pressed("leaderboard"):
+		if (is_active):
+			visible = true
 
 # Ally
 func add_user(id: int, username: String, team_id: int, local_team_id: int):

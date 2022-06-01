@@ -495,7 +495,6 @@ script = ExtResource( 8 )
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UI" instance=ExtResource( 14 )]
-visible = false
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
