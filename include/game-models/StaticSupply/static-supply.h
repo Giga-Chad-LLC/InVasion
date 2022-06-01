@@ -7,6 +7,7 @@
 // game-models
 #include "game-models/StaticObject/static-object.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
@@ -19,6 +20,7 @@ public:
 						int supplyId,
 						StaticSupplyType supplyType,
 						int playerId,
+						PlayerTeamId playerTeamId,
 						int initialSupplyCapacity);
 
 	bool isActive() const;
@@ -31,6 +33,10 @@ public:
 
 	int getId() const;
 
+	int getPlayerId() const;
+
+	PlayerTeamId getPlayerTeamId() const;
+
 protected:
 	int m_leftSupplyCapacity;
 	bool m_isActive;
@@ -39,6 +45,7 @@ private:
 	const int m_id;
 	const StaticSupplyType m_type;
 	const int m_playerId;
+	const PlayerTeamId m_playerTeamId;
 };
 
 } // namespace invasion::game_models
