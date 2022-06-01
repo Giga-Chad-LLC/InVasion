@@ -5,8 +5,7 @@ package response_models;
 /**/
 import "player-team-id.proto";
 import "supply-model.proto";
-import "player-health-model.proto";
-import "username-model.proto";
+import "player-data-model.proto";
 
 
 message HandshakeResponseModel {
@@ -16,8 +15,7 @@ message HandshakeResponseModel {
 	int32 first_team_kills_count = 4;
 	int32 second_team_kills_count = 5;
 	repeated util_models.SupplyModel supplies = 6;
-	repeated util_models.PlayerHealthModel players_hitpoints = 7;
-	repeated util_models.UsernameModel players_data = 8;
+	repeated util_models.PlayerDataModel players_data = 7;
 }
 
 
