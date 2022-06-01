@@ -4,7 +4,7 @@
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/bush/bush.tscn" type="PackedScene" id=3]
 [ext_resource path="res://screens/game/images/cliff_tileset.png" type="Texture" id=4]
-[ext_resource path="res://screens/game/images/grass_background.png" type="Texture" id=5]
+[ext_resource path="res://assets/World/tilesets/GrassBackground.png" type="Texture" id=5]
 [ext_resource path="res://screens/game/images/dirt_tileset.png" type="Texture" id=6]
 [ext_resource path="res://ui/escape_menu/escape_menu.tscn" type="PackedScene" id=7]
 [ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
@@ -495,9 +495,7 @@ script = ExtResource( 8 )
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UI" instance=ExtResource( 14 )]
-
-[node name="Score2" parent="UI/HUD/TeamsScore" index="1"]
-color = Color( 1, 0.388235, 0.388235, 1 )
+visible = false
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
@@ -518,16 +516,17 @@ group = ExtResource( 12 )
 group = ExtResource( 12 )
 
 [node name="Leaderboard" parent="UI" instance=ExtResource( 13 )]
+visible = false
 
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
 visible = false
 
 [node name="Background" type="Sprite" parent="."]
-position = Vector2( -211, -161 )
+position = Vector2( -586, -664 )
 texture = ExtResource( 5 )
 centered = false
 region_enabled = true
-region_rect = Rect2( 0, 0, 932, 456 )
+region_rect = Rect2( -384, -464, 1500, 1500 )
 
 [node name="DirtPathTileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
