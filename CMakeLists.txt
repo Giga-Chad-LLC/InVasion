@@ -75,6 +75,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/response-models/update-player-hitpoints-response-model.proto
 		./src/proto/response-models/weapon-direction-response-model.proto
 		./src/proto/response-models/username-response-model.proto
+		./src/proto/response-models/client-connected-response-model.proto
+		./src/proto/response-models/client-disconnected-response-model.proto
 		)
 
 message(NOTICE "Protoc compiler: " ${Protobuf_PROTOC_EXECUTABLE})
