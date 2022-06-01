@@ -40,7 +40,7 @@ func add_user(id: int, username: String):
 			"username": username,
 			"kills": 0,
 			"deaths": 0,
-			"ratio": 0.0
+			"ratio": 1.0
 		}
 		
 		team_ids.push_back(id)
@@ -51,7 +51,7 @@ func calc_ratio(id):
 		return
 	
 	if (team_data[id].deaths == 0):
-		team_data[id].ratio = 0.0
+		team_data[id].ratio = 1.0
 	else:
 		team_data[id].ratio = float(team_data[id].kills) / float(team_data[id].deaths)
 

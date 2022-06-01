@@ -30,12 +30,193 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StartGameButton" type="Button" parent="CenterContainer"]
-margin_left = 265.0
-margin_top = 166.0
-margin_right = 374.0
-margin_bottom = 194.0
+[node name="Wrapper" type="Control" parent="CenterContainer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -206.0
+margin_top = -180.0
+margin_right = 206.0
+margin_bottom = 180.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Kills" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -105.0
+margin_right = -50.0
+margin_bottom = -91.0
+text = "Total kills:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="KillsValue" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 49.0
+margin_top = -105.0
+margin_right = 114.0
+margin_bottom = -91.0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Deaths" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -75.0
+margin_right = -33.0
+margin_bottom = -61.0
+text = "Total deaths:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeathsValue" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 49.0
+margin_top = -75.0
+margin_right = 114.0
+margin_bottom = -61.0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ratio" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -45.0
+margin_right = -33.0
+margin_bottom = -31.0
+text = "K/D:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RatioValue" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 49.0
+margin_top = -45.0
+margin_right = 114.0
+margin_bottom = -31.0
+text = "0.0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Victories" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -16.0
+margin_right = -33.0
+margin_bottom = -2.0
+text = "Victories:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VictoriesValue" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 49.0
+margin_top = -16.0
+margin_right = 114.0
+margin_bottom = -2.0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Matches" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = 12.0
+margin_right = -33.0
+margin_bottom = 26.0
+text = "Matches:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MatchesValue" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 49.0
+margin_top = 12.0
+margin_right = 114.0
+margin_bottom = 26.0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartGameButton" type="Button" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -114.0
+margin_top = 51.0
+margin_right = 114.0
+margin_bottom = 79.0
 text = "Start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ErrorLabel" type="Label" parent="CenterContainer/Wrapper"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -184.0
+margin_top = 105.0
+margin_right = 184.0
+margin_bottom = 119.0
+custom_colors/font_color = Color( 1, 0.360784, 0.360784, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Error happened"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -51,5 +232,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="CenterContainer/StartGameButton" to="." method="_on_StartGameButton_pressed"]
+[connection signal="pressed" from="CenterContainer/Wrapper/StartGameButton" to="." method="_on_StartGameButton_pressed"]
 [connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]
