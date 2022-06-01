@@ -43,6 +43,8 @@ const UseSupplyResponseModel = preload("res://proto/response-models/use_supply_r
 const WeaponDirectionResponseModel = preload("res://proto/response-models/weapon_direction_response_model.gd")
 const WeaponStateResponseModel = preload("res://proto/response-models/weapon_state_response_model.proto.gd")
 const UsernameResponseModel = preload("res://proto/response-models/username_response_model.gd")
+const ClientConnectedResponseModel = preload("res://proto/response-models/client_connected_response_model.gd")
+const ClientDisconnectedResponseModel = preload("res://proto/response-models/client_disconnected_response_model.gd")
 
 # Network
 const Connection = preload("res://player/scripts/client_connection.gd")
@@ -54,9 +56,9 @@ var consumer: Worker = Worker.new() # thread that will read data from the server
 									# and put correct network packets to the thread-safe-queue
 var is_game_running = true
 
-
+# for debugging purposes
 func _unhandled_input(event):
-	if (event.is_action_pressed("testing")):
+	if (event.is_action_pressed("print_info")):
 		print(players_state_manager.players_data)
 
 
@@ -139,7 +141,7 @@ func _process(_delta):
 				)
 				
 				# set usernames
-				players_state_manager.set_main_player_data(Player)
+				players_state_manager.set_player_data(Player.player_id, Player.team_id)
 				players_state_manager.set_players_data(handshake_model.get_players_data())
 				# players_state_manager.set_players_usernames(handshake_model.get_players_data())
 				
@@ -158,6 +160,22 @@ func _process(_delta):
 				RespawnMenu.toggle(true, "Select specialization")
 				# send our credencials
 				producer.push_data(Player.get_client_credentials_model())
+		Global.ResponseModels.ClientConnectedResponseModel:
+			var client_connected_model = ClientConnectedResponseModel.ClientConnectedResponseModel.new()
+			var result_code = client_connected_model.from_bytes(received_packet.get_bytes())
+			if (result_code != ClientConnectedResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack player connected model")
+			else:
+				print("Client ", client_connected_model.get_player_id(), " joined the match!")
+				players_state_manager.set_player_data(client_connected_model.get_player_id(), client_connected_model.get_team_id())
+		Global.ResponseModels.ClientDisconnectedResponseModel:
+			var client_disconnected_model = ClientDisconnectedResponseModel.ClientDisconnectedResponseModel.new()
+			var result_code = client_disconnected_model.from_bytes(received_packet.get_bytes())
+			if (result_code != ClientDisconnectedResponseModel.PB_ERR.NO_ERRORS):
+				print("Error while receiving: ", "cannot unpack player connected model")
+			else:
+				print("Client ", client_disconnected_model.get_player_id(), " left the match!")
+				players_state_manager.remove_player_data(client_disconnected_model.get_player_id())
 		Global.ResponseModels.UsernameResponseModel:
 			var username_model = UsernameResponseModel.UsernameResponseModel.new()
 			var result_code = username_model.from_bytes(received_packet.get_bytes())
@@ -183,7 +201,7 @@ func _process(_delta):
 			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
 				Player.set_is_active(true)
 				Player.visible = true
-				AmmoStats.update_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
+				AmmoStats.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
 				HealthStats.reset_health_stats(new_player_specialization.get_initial_hitpoints(), new_player_specialization.get_initial_hitpoints())
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
@@ -282,6 +300,7 @@ func _process(_delta):
 			Player.set_is_active(true)
 			RespawnMenu.toggle(false)
 			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
+			AmmoStats.maximize_magazine() # uses memorized Ammo
 		_:
 			print("Unknown message type: ", received_packet.message_type)
 

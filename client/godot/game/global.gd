@@ -46,6 +46,8 @@ enum ResponseModels {
 	UpdatePlayerHitpointsResponseModel = 1011,
 	WeaponDirectionResponseModel = 1012,
 	UsernameResponseModel = 1013,
+	ClientConnectedResponseModel = 1014,
+	ClientDisconnectedResponseModel = 1015,
 	UnknownResponseModel
 }
 
