@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package response_models;
+import "player-team-id.proto";
+
+message ClientConnectedResponseModel {
+	int32 player_id = 1;
+	util_models.PlayerTeamId team_id = 2;
+}
