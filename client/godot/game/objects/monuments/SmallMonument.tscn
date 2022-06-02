@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/World/props/TX Props.png" type="Texture" id=1]
+[ext_resource path="res://assets/World/shadows/LargeShadow.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 13, 12.625 )
+
+[node name="SmallMonument" type="StaticBody2D"]
+
+[node name="ShadowSprite" type="Sprite" parent="."]
+visible = false
+position = Vector2( 2, 14 )
+scale = Vector2( 0.9375, 0.7 )
+texture = ExtResource( 2 )
+region_rect = Rect2( 224, 192, 48, 32 )
+
+[node name="MonumentSprite" type="Sprite" parent="."]
+position = Vector2( 0, -8 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 224, 176, 32, 48 )
+
+[node name="RunesSprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 256, 192, 32, 32 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -0.375 )
+shape = SubResource( 1 )
