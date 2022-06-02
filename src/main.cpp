@@ -5,12 +5,20 @@
 #include <thread>
 #include <system_error>
 
-#include "server/Server/server.h"
+// controllers
 #include "controllers/FixedTimeoutCallbackInvoker/fixed-timeout-callback-invoker.h"
+// http-server
+#include "http-server/HttpServer/http-server.h"
+// server (tcp)
+#include "server/Server/server.h"
 
 
 int main() {
     try {
+
+        invasion::http_server::HttpServer httpServer;
+        httpServer.start();
+
         bool shouldStop = false;
         invasion::server::Server server;
         

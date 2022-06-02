@@ -33,8 +33,11 @@ Medic::Medic(Vector2D position, int playerId, PlayerTeamId teamId)
 std::shared_ptr<StaticSupply> Medic::applyAbility(const int supplyId) {
 	std::cout << "applying ability of Medic class" << std::endl;
 	this->setCoolDown();
+	
 	const int playerId = this->getId();
-	return std::make_shared<AidKit>(m_position, supplyId, playerId);
+	const PlayerTeamId teamId = this->getTeamId();
+
+	return std::make_shared<AidKit>(m_position, supplyId, playerId, teamId);
 }
 
 } // namespace invasion::game_models

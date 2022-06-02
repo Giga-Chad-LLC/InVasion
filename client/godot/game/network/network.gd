@@ -67,4 +67,3 @@ func send(data: PoolByteArray) -> bool:
 		print("Error writing to stream: ", result)
 		return false
 	return true
-

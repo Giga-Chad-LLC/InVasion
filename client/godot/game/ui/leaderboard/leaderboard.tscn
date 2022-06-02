@@ -1,0 +1,185 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/leaderboard/scripts/leaderboard_table.gd" type="Script" id=1]
+[ext_resource path="res://ui/leaderboard/scripts/leaderboard.gd" type="Script" id=2]
+
+[node name="Leaderboard" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -141, -24 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.462745 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -46.0
+margin_top = 8.0
+margin_right = 138.0
+margin_bottom = 22.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "Leaderboard"
+align = 1
+valign = 1
+
+[node name="Container" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 21.0
+margin_right = 320.0
+margin_bottom = 159.0
+rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="GridContainer" parent="Container"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -237.0
+margin_top = -157.0
+margin_right = 238.0
+margin_bottom = -143.0
+grow_horizontal = 2
+custom_constants/vseparation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="GridContainer" parent="Container/Header"]
+margin_right = 475.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+columns = 4
+
+[node name="Username" type="Label" parent="Container/Header/Header"]
+margin_right = 115.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "Username"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Kills" type="Label" parent="Container/Header/Header"]
+margin_left = 119.0
+margin_right = 234.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "Kills"
+align = 1
+valign = 1
+
+[node name="Deaths" type="Label" parent="Container/Header/Header"]
+margin_left = 238.0
+margin_right = 353.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "Deaths"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Ratio" type="Label" parent="Container/Header/Header"]
+margin_left = 357.0
+margin_right = 472.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "K/D"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AllyBackground" type="ColorRect" parent="Container"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 76.0
+margin_top = 36.0
+margin_right = -78.0
+margin_bottom = -176.0
+color = Color( 0.388235, 0.529412, 1, 0.156863 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AllyTeam" type="GridContainer" parent="Container"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -237.0
+margin_top = -123.0
+margin_right = 238.0
+margin_bottom = -17.0
+grow_horizontal = 2
+custom_constants/vseparation = 10
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Container/AllyTeam"]
+
+[node name="HSplitContainer2" type="HSplitContainer" parent="Container/AllyTeam"]
+margin_top = 10.0
+margin_bottom = 10.0
+
+[node name="FoeBackground" type="ColorRect" parent="Container"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 76.0
+margin_top = 168.0
+margin_right = -78.0
+margin_bottom = -44.0
+color = Color( 1, 0.388235, 0.388235, 0.156863 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FoeTeam" type="GridContainer" parent="Container"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -236.0
+margin_top = 9.0
+margin_right = 239.0
+margin_bottom = 115.0
+grow_horizontal = 2
+custom_constants/vseparation = 10
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Container/FoeTeam"]
+
+[node name="HSplitContainer2" type="HSplitContainer" parent="Container/FoeTeam"]
+margin_top = 10.0
+margin_bottom = 10.0

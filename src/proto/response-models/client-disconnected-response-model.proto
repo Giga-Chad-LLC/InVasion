@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package response_models;
+
+message ClientDisconnectedResponseModel {
+	int32 player_id = 1;
+}

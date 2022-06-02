@@ -37,8 +37,11 @@ public:
         std::shared_ptr <Session> session
     );
     void stop();
+    void storeCredencials(const std::string& username, const std::string& token);
 
     int getClientId() const noexcept;
+    const std::string& getClientAccessToken() const;
+    const std::string& getClientUsername() const;
 
     std::shared_ptr <tcp::socket> getSocket() const noexcept;
 
@@ -94,6 +97,9 @@ private:
     std::condition_variable cv_writeNextPacket;
     std::mutex mtx_writeNextPacket;
     std::thread m_writeThread;
+    
+    std::string m_token;
+    std::string m_username;
     int m_clientId = -1;
     std::atomic_bool m_isActive = false;
     std::shared_ptr <tcp::socket> m_socket;

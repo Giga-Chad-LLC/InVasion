@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package util_models;
+import "player-specialization.proto";
+
+
+message PlayerDataModel {
+    int32 player_id = 1;
+	int32 team_id = 2;
+	string username = 3;
+    int32 current_hitpoints = 4;
+    int32 initial_hitpoints = 5;
+	util_models.PlayerSpecialization specialization = 6;
+	int32 kills = 7;
+	int32 deaths = 8; 
+}

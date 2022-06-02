@@ -5,7 +5,7 @@ package response_models;
 /**/
 import "player-team-id.proto";
 import "supply-model.proto";
-import "player-health-model.proto";
+import "player-data-model.proto";
 
 
 message HandshakeResponseModel {
@@ -15,11 +15,11 @@ message HandshakeResponseModel {
 	int32 first_team_kills_count = 4;
 	int32 second_team_kills_count = 5;
 	repeated util_models.SupplyModel supplies = 6;
-	repeated util_models.PlayerHealthModel players_hitpoints = 7;
+	repeated util_models.PlayerDataModel players_data = 7;
 }
 
 
-/* // for Godobuf 
+/* // for Godobuf
 enum PlayerTeamId {
 	FirstTeam = 0;
 	SecondTeam = 1;
@@ -37,12 +37,6 @@ message Vector2D {
 }
 
 
-message PlayerHealthModel {
-    int32 player_id = 1;
-    int32 current_hitpoints = 2;
-    int32 initial_hitpoints = 3;
-}
-
 
 message SupplyModel {
 	int32 supply_id = 1;
@@ -54,6 +48,25 @@ message SupplyModel {
 	bool is_active = 7;
 }
 
+enum PlayerSpecialization {
+	Stormtrooper = 0;
+	Sentinel = 1;
+	Support = 2;
+	Medic = 3;
+}
+
+message PlayerDataModel {
+    int32 player_id = 1;
+	int32 team_id = 2;
+	string username = 3;
+    int32 current_hitpoints = 4;
+    int32 initial_hitpoints = 5;
+	PlayerSpecialization specialization = 6;
+	int32 kills = 7;
+	int32 deaths = 8; 
+}
+
+
 message HandshakeResponseModel {
 	int32 player_id = 1;
 	PlayerTeamId team_id = 2;
@@ -61,6 +74,6 @@ message HandshakeResponseModel {
 	int32 first_team_kills_count = 4;
 	int32 second_team_kills_count = 5;
 	repeated SupplyModel supplies = 6;
-	repeated PlayerHealthModel players_hitpoints = 7;
+	repeated PlayerDataModel players_data = 7;
 }
 */

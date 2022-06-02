@@ -1,22 +1,40 @@
 extends KinematicBody2D
 
-onready var animationPlayer = $AnimationPlayer
-onready var animationTree = $AnimationTree
+onready var animationTree = $Skin/Character/AnimationTree
 onready var animationState = animationTree.get("parameters/playback")
-onready var hitAnimationPlayer = $Sprite/HitAnimation
-onready var sprite = $Sprite
+onready var hitAnimationPlayer = $Skin/Character/Sprite/HitAnimation
+onready var sprite = $Skin/Character/Sprite
 onready var player_gun = $Gun
+onready var player_skin = $Skin
+
+const alien_skin = preload("res://player/alien_skin.tscn")
+const human_skin = preload("res://player/human_skin.tscn")
 
 var velocity = Vector2.ZERO
 var player_id: int = -1
 var team_id: int = -1
 var player_specialization: int = -1
+var username: String = ""
 
-#var initial_hitpoints: int = 0
-#var current_hitpoints: int = 0
-#var magazine: int = 0
-#var ammo: int = 0
 
+func change_skin():
+	var skin: Node2D = null
+	if (team_id == Global.TeamId.Aliens):
+		skin = alien_skin.instance()
+	else:
+		skin = human_skin.instance()
+	
+	if (!player_skin.get_children().empty()):
+		player_skin.get_children()[0].queue_free()
+	
+	player_skin.add_child(skin)
+	
+	animationTree = skin.get_node('AnimationTree')
+	animationTree.active = true
+	animationState = animationTree.get("parameters/playback")
+	hitAnimationPlayer = skin.get_node('Sprite/HitAnimation')
+	sprite = skin.get_node('Sprite')
+	sprite.material.set_shader_param("hit_opacity", 0)
 
 func set_sprite_color(color: Color):
 	sprite.modulate = color
@@ -47,6 +65,7 @@ func update_player_gun_rotation(direction):
 func play_hit_animation():
 	hitAnimationPlayer.play("Hit")
 
+
 func _process(_delta):
 	animate_player()
 
@@ -62,5 +81,11 @@ func _ready():
 
 
 
+
+
+
+
+
+	
 
 

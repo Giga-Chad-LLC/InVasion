@@ -38,7 +38,8 @@ PlayerSpecializationResponseModel ChangePlayerSpecializationInteractor::execute(
 	response.set_specialization(req.specialization());
 	response.set_ammo(player->getWeapon().getInitialAmmo());
 	response.set_magazine(player->getWeapon().getLeftMagazine());
-	response.set_hitpoints(player->getLifeState().getInitialHitPoints());
+	response.set_initial_hitpoints(player->getLifeState().getInitialHitPoints());
+
 	std::cout << "Select specialization for player " << player->getId() << ": " << static_cast<int>(player->getSpecialization()) << std::endl;
 	std::cout << "His new total hitpoints: " << player->getLifeState().getInitialHitPoints() << std::endl;
 

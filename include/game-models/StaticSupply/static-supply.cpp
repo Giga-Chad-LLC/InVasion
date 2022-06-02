@@ -13,13 +13,15 @@ StaticSupply::StaticSupply(Vector2D shapeColliderSize,
 						int supplyId,
 						StaticSupplyType supplyType,
 						int playerId,
+						PlayerTeamId playerTeamId,
 						int initialSupplyCapacity)
 	: StaticObject(shapeColliderSize, shapeColliderSize, initialPosition),
 		m_leftSupplyCapacity(initialSupplyCapacity),
 	  	m_isActive(true),
 		m_id(supplyId),
 		m_type(supplyType),
-		m_playerId(playerId) {}
+		m_playerId(playerId),
+		m_playerTeamId(playerTeamId) {}
 
 
 bool StaticSupply::isActive() const {
@@ -38,6 +40,14 @@ StaticSupplyType StaticSupply::getType() const {
 
 int StaticSupply::getId() const {
 	return m_id;
+}
+
+int StaticSupply::getPlayerId() const {
+	return m_playerId;
+}
+
+PlayerTeamId StaticSupply::getPlayerTeamId() const {
+	return m_playerTeamId;
 }
 
 } // namespace invasion::game_models

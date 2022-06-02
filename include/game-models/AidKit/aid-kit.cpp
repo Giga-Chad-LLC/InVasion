@@ -8,6 +8,7 @@
 #include "game-models/StaticSupply/static-supply-enum.h"
 #include "game-models/Player/player.h"
 #include "game-models/Player/player-life-state.h"
+#include "game-models/Player/player-team-id-enum.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
@@ -15,13 +16,15 @@ namespace invasion::game_models {
 	
 AidKit::AidKit(Vector2D initialPosition,
 				int supplyId,
-				int playerId)
+				int playerId,
+				PlayerTeamId playerTeamId)
 	: StaticSupply(
 		AidKit::SHAPE_COLLIDER_SIZE,
 		initialPosition,
 		supplyId,
 		StaticSupplyType::AidKit,
 		playerId,
+		playerTeamId,
 		AidKit::INITIAL_SUPPLY_CAPACITY
 	) {}
 

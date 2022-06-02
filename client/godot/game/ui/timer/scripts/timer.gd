@@ -8,7 +8,7 @@ onready var seconds_label = $Clock/Seconds
 
 
 func show_text():
-	var mins: int = remaining_time_sec / 60
+	var mins: int = int(remaining_time_sec / 60)
 	var secs: int = remaining_time_sec % 60
 	
 	minutes_label.text = get_text_for_time(mins)

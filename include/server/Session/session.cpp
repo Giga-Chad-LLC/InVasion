@@ -3,22 +3,31 @@
 #include <iterator>
 
 #include "session.h"
-
+// database
+#include "database/PlayerStatisticsService/player-statistics-service.h"
+// libs
+#include "libs/json/json.hpp"
 // server
 #include "server/Server/server.h"
 #include "server/CountDownLatch/count-down-latch.h"
 #include "server/NetworkPacket/network-packet.h"
 #include "server/safe-queue.h"
+// request-models
+#include "update-game-state-request-model.pb.h"
 // response-models
 #include "game-over-response-model.pb.h"
 #include "handshake-response-model.pb.h"
-// request-models
-#include "update-game-state-request-model.pb.h"
+#include "client-connected-response-model.pb.h"
+#include "client-disconnected-response-model.pb.h"
 // game-models
 #include "game-models/GameSession/game-session.h"
 #include "game-models/Player/player-specialization-enum.h"
 // interactors
 #include "interactors/HandshakeResponseInteractor/handshake-response-interactor.h"
+#include "interactors/FormJSONPlayerStatsResponseInteractor/form-json-player-stats-response-interactor.h"
+#include "interactors/ClientConnectedResponseInteractor/client-connected-response-interactor.h"
+#include "interactors/ClientDisconnectedResponseInteractor/client-disconnected-response-interactor.h"
+
 
 
 namespace invasion::server {
@@ -67,7 +76,6 @@ void Session::onGameOver() {
     m_isAvailable.store(false);
     std::shared_ptr <CountDownLatch> latch = nullptr;
     {
-        // on a client side the end game screen will be shown
         std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
         latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
         for (auto [ client, clientResponseQueue ] : m_connections) {
@@ -83,6 +91,23 @@ void Session::onGameOver() {
                 std::make_shared <LatchCaller> (latch)
             });
         }
+
+        interactors::FormJSONPlayerStatsResponseInteractor interactor;
+        services::PlayerStatisticsService service;
+
+        for (auto [ client, clientResponseQueue ] : m_connections) {
+            std::cout << "Make stats request for client: " << client->getClientId() << std::endl;
+            nlohmann::json request = interactor.execute(
+                client->getClientId(),
+                client->getClientAccessToken(),
+                *m_gameSession
+            );
+            std::cout << "Retrieved stats request: " << request["username"] << ", " << request["token"] << ", " << request["kills"] << ", " << request["deaths"] << std::endl;
+
+            std::cout << "Before service update" << std::endl;
+            service.update(request);
+            std::cout << "After service update" << std::endl;
+        }
     }
     
     // wait for notification to be send to every player
@@ -90,10 +115,9 @@ void Session::onGameOver() {
     latch->await();
     std::cout << "Stop latch for session: " << m_sessionId << " (count: " << latch->getCount() << ")" << std::endl;
 
-    // do the blocking database work (write all clients data)
-
     stop();
 }
+
 
 void Session::stop() {
     if (!m_isActive.load()) {
@@ -143,44 +167,69 @@ bool Session::isActive() const noexcept {
 }
 
 
+void Session::setClientCredencials(uint32_t clientId, const std::string& username, const std::string& token) {
+    std::scoped_lock sl{ mtx_clientsThreadPool, mtx_connections };
+
+    for (auto [ client, clientResponseQueue ] : m_connections) {
+        if (client->getClientId() == clientId) {
+            client->storeCredencials(username, token);
+            break;
+        }
+    }
+}
+
 uint32_t Session::getSessionId() const noexcept {
     return m_sessionId;
 }
 
 void Session::removeClient(uint32_t clientId) {
-    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
-    
-    for (std::size_t i = 0U; i < m_connections.size(); i++) {
-        auto client = m_connections[i].first;
-        auto clientResponseQueue = m_connections[i].second;
-        auto ios = m_clientsThreadPool[i].first;
+    // remove disconnected client
+    {
+        std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
+        for (std::size_t i = 0U; i < m_connections.size(); i++) {
+            auto client = m_connections[i].first;
+            auto clientResponseQueue = m_connections[i].second;
+            auto ios = m_clientsThreadPool[i].first;
 
-        if (client->getClientId() == clientId) {
-            std::cout << "Removing client: " << clientId << std::endl;
-            
-            std::cout << "All clients: ";
-            const auto& players = m_gameSession->getPlayers();
-            for (auto p : players) {
-                std::cout << p->getId() << ", ";
+            if (client->getClientId() == clientId) {
+                std::cout << "Removing client: " << clientId << std::endl;
+                
+                std::cout << "All clients: ";
+                const auto& players = m_gameSession->getPlayers();
+                for (auto p : players) {
+                    std::cout << p->getId() << ", ";
+                }
+                std::cout << std::endl;
+
+                if (m_gameSession->playerExists(client->getClientId())) {
+                    m_gameSession->removePlayerById(clientId);
+                }
+                else {
+                    std::cout << "Client with id: " << clientId << " was not found and not removed" << std::endl;
+                }
+                std::cout << "Total clients in game session: " << players.size() << std::endl;
+
+                client->stop(); // stop client's threads
+                ios->stop(); // stop ios
+
+                m_connections.erase(std::next(m_connections.begin(), i));
+                m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
+                
+                break;
             }
-            std::cout << std::endl;
-
-            if (m_gameSession->playerExists(client->getClientId())) {
-                m_gameSession->removePlayerById(clientId);
-            }
-            else {
-                std::cout << "Client with id: " << clientId << " was not found and not removed" << std::endl;
-            }
-            std::cout << "Total clients in game session: " << players.size() << std::endl;
-
-            client->stop(); // stop client's threads
-            ios->stop(); // stop ios
-
-            m_connections.erase(std::next(m_connections.begin(), i));
-            m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
-            
-            return;
         }
+    }
+
+    // notify other clients, that client have left the session
+    {
+        interactors::ClientDisconnectedResponseInteractor interactor;
+        auto response = interactor.execute(clientId, *m_gameSession);
+        auto packet = std::make_shared <NetworkPacketResponse> (
+            NetworkPacket::serialize(response),
+            ResponseModel_t::ClientDisconnectedResponseModel,
+            response.ByteSizeLong()
+        );
+        putDataToAllClients(packet);
     }
 }
 
@@ -215,9 +264,6 @@ void Session::addClient(
     > executionService
 ) {
     std::cout << "Adding client to the session: " << m_sessionId << std::endl;
-
-    // lock the mutexes
-    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     
     auto clientResponseQueue = std::make_shared <SafeQueue<
         std::pair<
@@ -232,6 +278,22 @@ void Session::addClient(
         clientResponseQueue
     );
 
+    // send packets to the existing clients that new connection arrived
+    {
+        interactors::ClientConnectedResponseInteractor interactor;
+        auto response = interactor.execute(client->getClientId(), *m_gameSession);
+
+        auto packet = std::make_shared<NetworkPacketResponse> (
+            NetworkPacket::serialize(response),
+            ResponseModel_t::ClientConnectedResponseModel,
+            response.ByteSizeLong()
+        );
+
+        putDataToAllClients(packet);
+    }
+
+    // lock the mutexes
+    std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
     m_connections.push_back({
         client,
         clientResponseQueue

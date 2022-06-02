@@ -7,6 +7,7 @@
 #include <vector>
 #include <chrono>
 #include <memory>
+#include <string>
 #include <atomic>
 #include <mutex>
 #include <functional>
@@ -43,6 +44,7 @@ public:
     void putDataToAllClients(std::shared_ptr <NetworkPacketResponse> response);
     bool isAvailable() const noexcept;
     bool isActive() const noexcept;
+    void setClientCredencials(uint32_t clientId, const std::string& username, const std::string& token);
     uint32_t getSessionId() const noexcept;
     void makeHandshakeWithClient(
         std::shared_ptr <SafeQueue<
@@ -59,7 +61,7 @@ private:
 
     const std::size_t MAX_CLIENT_COUNT = 8U;
     std::chrono::milliseconds MATCH_START_TIMESTAMP_MS;
-    const std::size_t MATCH_DURATION_MS = 1000 * 10;
+    const std::size_t MATCH_DURATION_MS = 1000 * 10 * 60;
     std::atomic_bool m_isActive = false;
     std::atomic_bool m_isAvailable = true;
     uint32_t m_sessionId;

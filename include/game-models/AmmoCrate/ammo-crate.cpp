@@ -15,13 +15,15 @@ namespace invasion::game_models {
 	
 AmmoCrate::AmmoCrate(Vector2D initialPosition,
 					int supplyId,
-					int playerId)
+					int playerId,
+					PlayerTeamId playerTeamId)
 	: StaticSupply(
 		AmmoCrate::SHAPE_COLLIDER_SIZE,
 		initialPosition,
 		supplyId,
 		StaticSupplyType::AmmoCrate,
 		playerId,
+		playerTeamId,
 		AmmoCrate::INITIAL_SUPPLY_CAPACITY
 	) {}
 

@@ -725,75 +725,6 @@ class Vector2D:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
-class PlayerHealthModel:
-	func _init():
-		var service
-		
-		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _player_id
-		data[_player_id.tag] = service
-		
-		_current_hitpoints = PBField.new("current_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _current_hitpoints
-		data[_current_hitpoints.tag] = service
-		
-		_initial_hitpoints = PBField.new("initial_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
-		service = PBServiceField.new()
-		service.field = _initial_hitpoints
-		data[_initial_hitpoints.tag] = service
-		
-	var data = {}
-	
-	var _player_id: PBField
-	func get_player_id() -> int:
-		return _player_id.value
-	func clear_player_id() -> void:
-		data[1].state = PB_SERVICE_STATE.UNFILLED
-		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_player_id(value : int) -> void:
-		_player_id.value = value
-	
-	var _current_hitpoints: PBField
-	func get_current_hitpoints() -> int:
-		return _current_hitpoints.value
-	func clear_current_hitpoints() -> void:
-		data[2].state = PB_SERVICE_STATE.UNFILLED
-		_current_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_current_hitpoints(value : int) -> void:
-		_current_hitpoints.value = value
-	
-	var _initial_hitpoints: PBField
-	func get_initial_hitpoints() -> int:
-		return _initial_hitpoints.value
-	func clear_initial_hitpoints() -> void:
-		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_initial_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_initial_hitpoints(value : int) -> void:
-		_initial_hitpoints.value = value
-	
-	func to_string() -> String:
-		return PBPacker.message_to_string(data)
-		
-	func to_bytes() -> PoolByteArray:
-		return PBPacker.pack_message(data)
-		
-	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
-		var cur_limit = bytes.size()
-		if limit != -1:
-			cur_limit = limit
-		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
-		if result == cur_limit:
-			if PBPacker.check_required(data):
-				if limit == -1:
-					return PB_ERR.NO_ERRORS
-			else:
-				return PB_ERR.REQUIRED_FIELDS
-		elif limit == -1 && result > 0:
-			return PB_ERR.PARSE_INCOMPLETE
-		return result
-	
 class SupplyModel:
 	func _init():
 		var service
@@ -921,6 +852,152 @@ class SupplyModel:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+enum PlayerSpecialization {
+	Stormtrooper = 0,
+	Sentinel = 1,
+	Support = 2,
+	Medic = 3
+}
+
+class PlayerDataModel:
+	func _init():
+		var service
+		
+		_player_id = PBField.new("player_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _player_id
+		data[_player_id.tag] = service
+		
+		_team_id = PBField.new("team_id", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 2, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _team_id
+		data[_team_id.tag] = service
+		
+		_username = PBField.new("username", PB_DATA_TYPE.STRING, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.STRING])
+		service = PBServiceField.new()
+		service.field = _username
+		data[_username.tag] = service
+		
+		_current_hitpoints = PBField.new("current_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _current_hitpoints
+		data[_current_hitpoints.tag] = service
+		
+		_initial_hitpoints = PBField.new("initial_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 5, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _initial_hitpoints
+		data[_initial_hitpoints.tag] = service
+		
+		_specialization = PBField.new("specialization", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 6, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
+		service = PBServiceField.new()
+		service.field = _specialization
+		data[_specialization.tag] = service
+		
+		_kills = PBField.new("kills", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 7, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _kills
+		data[_kills.tag] = service
+		
+		_deaths = PBField.new("deaths", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 8, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		service = PBServiceField.new()
+		service.field = _deaths
+		data[_deaths.tag] = service
+		
+	var data = {}
+	
+	var _player_id: PBField
+	func get_player_id() -> int:
+		return _player_id.value
+	func clear_player_id() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_player_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_player_id(value : int) -> void:
+		_player_id.value = value
+	
+	var _team_id: PBField
+	func get_team_id() -> int:
+		return _team_id.value
+	func clear_team_id() -> void:
+		data[2].state = PB_SERVICE_STATE.UNFILLED
+		_team_id.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_team_id(value : int) -> void:
+		_team_id.value = value
+	
+	var _username: PBField
+	func get_username() -> String:
+		return _username.value
+	func clear_username() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_username.value = DEFAULT_VALUES_3[PB_DATA_TYPE.STRING]
+	func set_username(value : String) -> void:
+		_username.value = value
+	
+	var _current_hitpoints: PBField
+	func get_current_hitpoints() -> int:
+		return _current_hitpoints.value
+	func clear_current_hitpoints() -> void:
+		data[4].state = PB_SERVICE_STATE.UNFILLED
+		_current_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_current_hitpoints(value : int) -> void:
+		_current_hitpoints.value = value
+	
+	var _initial_hitpoints: PBField
+	func get_initial_hitpoints() -> int:
+		return _initial_hitpoints.value
+	func clear_initial_hitpoints() -> void:
+		data[5].state = PB_SERVICE_STATE.UNFILLED
+		_initial_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_initial_hitpoints(value : int) -> void:
+		_initial_hitpoints.value = value
+	
+	var _specialization: PBField
+	func get_specialization():
+		return _specialization.value
+	func clear_specialization() -> void:
+		data[6].state = PB_SERVICE_STATE.UNFILLED
+		_specialization.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
+	func set_specialization(value) -> void:
+		_specialization.value = value
+	
+	var _kills: PBField
+	func get_kills() -> int:
+		return _kills.value
+	func clear_kills() -> void:
+		data[7].state = PB_SERVICE_STATE.UNFILLED
+		_kills.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_kills(value : int) -> void:
+		_kills.value = value
+	
+	var _deaths: PBField
+	func get_deaths() -> int:
+		return _deaths.value
+	func clear_deaths() -> void:
+		data[8].state = PB_SERVICE_STATE.UNFILLED
+		_deaths.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_deaths(value : int) -> void:
+		_deaths.value = value
+	
+	func to_string() -> String:
+		return PBPacker.message_to_string(data)
+		
+	func to_bytes() -> PoolByteArray:
+		return PBPacker.pack_message(data)
+		
+	func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:
+		var cur_limit = bytes.size()
+		if limit != -1:
+			cur_limit = limit
+		var result = PBPacker.unpack_message(data, bytes, offset, cur_limit)
+		if result == cur_limit:
+			if PBPacker.check_required(data):
+				if limit == -1:
+					return PB_ERR.NO_ERRORS
+			else:
+				return PB_ERR.REQUIRED_FIELDS
+		elif limit == -1 && result > 0:
+			return PB_ERR.PARSE_INCOMPLETE
+		return result
+	
 class HandshakeResponseModel:
 	func _init():
 		var service
@@ -956,11 +1033,11 @@ class HandshakeResponseModel:
 		service.func_ref = funcref(self, "add_supplies")
 		data[_supplies.tag] = service
 		
-		_players_hitpoints = PBField.new("players_hitpoints", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 7, true, [])
+		_players_data = PBField.new("players_data", PB_DATA_TYPE.MESSAGE, PB_RULE.REPEATED, 7, true, [])
 		service = PBServiceField.new()
-		service.field = _players_hitpoints
-		service.func_ref = funcref(self, "add_players_hitpoints")
-		data[_players_hitpoints.tag] = service
+		service.field = _players_data
+		service.func_ref = funcref(self, "add_players_data")
+		data[_players_data.tag] = service
 		
 	var data = {}
 	
@@ -1020,15 +1097,15 @@ class HandshakeResponseModel:
 		_supplies.value.append(element)
 		return element
 	
-	var _players_hitpoints: PBField
-	func get_players_hitpoints() -> Array:
-		return _players_hitpoints.value
-	func clear_players_hitpoints() -> void:
+	var _players_data: PBField
+	func get_players_data() -> Array:
+		return _players_data.value
+	func clear_players_data() -> void:
 		data[7].state = PB_SERVICE_STATE.UNFILLED
-		_players_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
-	func add_players_hitpoints() -> PlayerHealthModel:
-		var element = PlayerHealthModel.new()
-		_players_hitpoints.value.append(element)
+		_players_data.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func add_players_data() -> PlayerDataModel:
+		var element = PlayerDataModel.new()
+		_players_data.value.append(element)
 		return element
 	
 	func to_string() -> String:

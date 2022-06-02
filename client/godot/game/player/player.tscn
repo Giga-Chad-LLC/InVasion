@@ -1,43 +1,18 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://player/base_player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://player/scripts/player.gd" type="Script" id=2]
 
-[sub_resource type="Shader" id=34]
-resource_local_to_scene = true
-code = "shader_type canvas_item;
-
-uniform float hit_opacity = 0;
-
-void fragment(){
- COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - hit_opacity) + vec3(1,1,1) * hit_opacity; // interpolates between the original sprite's color and the color white depending on the value of hit_opacity
- COLOR.a = texture(TEXTURE, UV).a; // copies the original sprite's alpha values
-}
-"
-
-[sub_resource type="ShaderMaterial" id=35]
-resource_local_to_scene = true
-shader = SubResource( 34 )
-shader_param/hit_opacity = 1.0
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=1]
-
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Sprite" parent="." index="0"]
-material = SubResource( 35 )
-
-[node name="AnimationTree" parent="." index="3"]
-parameters/playback = SubResource( 1 )
-
-[node name="ApplyAbilityCooldownTimer" type="Timer" parent="." index="5"]
+[node name="ApplyAbilityCooldownTimer" type="Timer" parent="." index="3"]
 one_shot = true
 
-[node name="UseSupplyCooldownTimer" type="Timer" parent="." index="6"]
+[node name="UseSupplyCooldownTimer" type="Timer" parent="." index="4"]
 one_shot = true
 
-[node name="GunRotationCooldownTimer" type="Timer" parent="." index="7"]
+[node name="GunRotationCooldownTimer" type="Timer" parent="." index="5"]
 wait_time = 0.5
 one_shot = true
 

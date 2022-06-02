@@ -660,6 +660,13 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
+enum PlayerSpecialization {
+	Stormtrooper = 0,
+	Sentinel = 1,
+	Support = 2,
+	Medic = 3
+}
+
 class PlayerSpecializationResponseModel:
 	func _init():
 		var service
@@ -674,10 +681,10 @@ class PlayerSpecializationResponseModel:
 		service.field = _specialization
 		data[_specialization.tag] = service
 		
-		_hitpoints = PBField.new("hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
+		_initial_hitpoints = PBField.new("initial_hitpoints", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
-		service.field = _hitpoints
-		data[_hitpoints.tag] = service
+		service.field = _initial_hitpoints
+		data[_initial_hitpoints.tag] = service
 		
 		_magazine = PBField.new("magazine", PB_DATA_TYPE.INT32, PB_RULE.OPTIONAL, 4, true, DEFAULT_VALUES_3[PB_DATA_TYPE.INT32])
 		service = PBServiceField.new()
@@ -709,14 +716,14 @@ class PlayerSpecializationResponseModel:
 	func set_specialization(value) -> void:
 		_specialization.value = value
 	
-	var _hitpoints: PBField
-	func get_hitpoints() -> int:
-		return _hitpoints.value
-	func clear_hitpoints() -> void:
+	var _initial_hitpoints: PBField
+	func get_initial_hitpoints() -> int:
+		return _initial_hitpoints.value
+	func clear_initial_hitpoints() -> void:
 		data[3].state = PB_SERVICE_STATE.UNFILLED
-		_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
-	func set_hitpoints(value : int) -> void:
-		_hitpoints.value = value
+		_initial_hitpoints.value = DEFAULT_VALUES_3[PB_DATA_TYPE.INT32]
+	func set_initial_hitpoints(value : int) -> void:
+		_initial_hitpoints.value = value
 	
 	var _magazine: PBField
 	func get_magazine() -> int:
@@ -757,11 +764,4 @@ class PlayerSpecializationResponseModel:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
-enum PlayerSpecialization {
-	Stormtrooper = 0,
-	Sentinel = 1,
-	Support = 2,
-	Medic = 3
-}
-
 ################ USER DATA END #################
