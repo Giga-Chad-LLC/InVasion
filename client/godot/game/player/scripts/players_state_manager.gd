@@ -2,7 +2,7 @@ extends Node
 class_name PlayersStateManager
 
 # scenes
-var player_scene = preload("res://player/player_template.tscn")
+const player_scene = preload("res://player/player_template.tscn")
 var UI
 
 
@@ -38,17 +38,18 @@ func set_players_data(data):
 		}
 
 func spawn_player(player_id, local_team_id, players_parent_node, location):
-	var spawned_player = Global.instance_node_at_location(player_scene, players_parent_node, location)
+	var spawned_player = Global.instance_node_at_location(player_scene, players_parent_node, location)	
 	spawned_player.name = str(player_id)
 	spawned_player.player_id = player_id
 	spawned_player.team_id = players_data[player_id].team_id
 	spawned_player.reset_health_stats(players_data[player_id].current_hitpoints, players_data[player_id].initial_hitpoints)
+	spawned_player.change_skin()
 
 	if (spawned_player.team_id != local_team_id):
 		spawned_player.set_sprite_color(Color(1, 0.27, 0.27))
 	else:
 		spawned_player.set_sprite_color(Color(0.27, 1, 0.27))
-	
+
 
 
 func despawn_player(player_id, players_parent_node):

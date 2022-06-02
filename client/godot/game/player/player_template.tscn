@@ -1,39 +1,14 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://player/base_player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://player/scripts/player_template.gd" type="Script" id=2]
 [ext_resource path="res://ui/health_bar/health_bar.tscn" type="PackedScene" id=3]
 
-[sub_resource type="Shader" id=34]
-resource_local_to_scene = true
-code = "shader_type canvas_item;
-
-uniform float hit_opacity = 0;
-
-void fragment(){
- COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - hit_opacity) + vec3(1,1,1) * hit_opacity; // interpolates between the original sprite's color and the color white depending on the value of hit_opacity
- COLOR.a = texture(TEXTURE, UV).a; // copies the original sprite's alpha values
-}
-"
-
-[sub_resource type="ShaderMaterial" id=35]
-resource_local_to_scene = true
-shader = SubResource( 34 )
-shader_param/hit_opacity = 1.0
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=1]
-
-[node name="Player" instance=ExtResource( 1 )]
+[node name="PlayerTemplate" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="HealthBar" parent="." index="0" instance=ExtResource( 3 )]
-margin_top = -22.0
+[node name="HealthBar" parent="." index="2" instance=ExtResource( 3 )]
+margin_top = -25.0
 margin_right = 0.0
-margin_bottom = -22.0
+margin_bottom = -25.0
 rect_scale = Vector2( 0.15, 0.15 )
-
-[node name="Sprite" parent="." index="1"]
-material = SubResource( 35 )
-
-[node name="AnimationTree" parent="." index="4"]
-parameters/playback = SubResource( 1 )

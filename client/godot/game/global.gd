@@ -64,3 +64,8 @@ enum SupplyType {
 	AmmoCrate = 1,
 }
 
+
+enum TeamId {
+	Humans = 0,
+	Aliens = 1,
+}

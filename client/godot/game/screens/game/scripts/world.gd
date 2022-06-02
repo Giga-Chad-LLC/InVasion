@@ -139,6 +139,7 @@ func _process(_delta):
 					handshake_model.get_player_id(),
 					handshake_model.get_team_id()
 				)
+				Player.change_skin()
 				
 				# set main player id in a leaderboard
 				Leaderboard.set_main_player_id(handshake_model.get_player_id())
