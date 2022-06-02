@@ -19,10 +19,10 @@
 [ext_resource path="res://assets/World/tilesets/WallsTileset.png" type="Texture" id=17]
 [ext_resource path="res://screens/game/scripts/collided_stone_walls_tilemap.gd" type="Script" id=18]
 [ext_resource path="res://assets/World/tilesets/BlueGrassBackground.png" type="Texture" id=19]
-[ext_resource path="res://objects/small-monument/SmallMonument.tscn" type="PackedScene" id=20]
+[ext_resource path="res://objects/monuments/SmallMonument.tscn" type="PackedScene" id=20]
 [ext_resource path="res://screens/game/scripts/monuments.gd" type="Script" id=21]
-[ext_resource path="res://objects/large-monument/LargeMonument.tscn" type="PackedScene" id=22]
-[ext_resource path="res://objects/medium-monument/MediumMonument.tscn" type="PackedScene" id=23]
+[ext_resource path="res://objects/monuments/LargeMonument.tscn" type="PackedScene" id=22]
+[ext_resource path="res://objects/monuments/MediumMonument.tscn" type="PackedScene" id=23]
 
 [sub_resource type="TileSet" id=50]
 0/name = "StonePathTilemap.png 0"
@@ -832,17 +832,17 @@ __meta__ = {
 [node name="Monuments" type="YSort" parent="YSort"]
 script = ExtResource( 21 )
 
-[node name="SmallMonument1" parent="YSort/Monuments" instance=ExtResource( 20 )]
-position = Vector2( 238, 234 )
-
 [node name="LargeMonument1" parent="YSort/Monuments" instance=ExtResource( 22 )]
-position = Vector2( 143, 77 )
+position = Vector2( 272, 77 )
 
 [node name="LargeMonument2" parent="YSort/Monuments" instance=ExtResource( 22 )]
-position = Vector2( 272, 76 )
+position = Vector2( 144, 77 )
 
 [node name="MediumMonument1" parent="YSort/Monuments" instance=ExtResource( 23 )]
-position = Vector2( 215, 169 )
+position = Vector2( 175, 172 )
+
+[node name="SmallMonument1" parent="YSort/Monuments" instance=ExtResource( 20 )]
+position = Vector2( 241, 170 )
 
 [node name="Bushes" type="YSort" parent="YSort"]
 position = Vector2( 1775, -308 )
