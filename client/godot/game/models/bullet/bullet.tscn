@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://models/bullet/images/fire-bullet-pixel.png" type="Texture" id=1]
 [ext_resource path="res://models/bullet/scripts/bullet.gd" type="Script" id=2]
 [ext_resource path="res://models/action_boxes/Hitbox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://models/bullet/bullet_sound.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 2.5, 2.5 )
@@ -28,5 +29,7 @@ collision_mask = 9
 
 [node name="CollisionShape2D" parent="Sprite/Hitbox" index="0"]
 shape = SubResource( 1 )
+
+[node name="BulletSound" parent="." instance=ExtResource( 4 )]
 
 [editable path="Sprite/Hitbox"]

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://models/bullet/sounds/alien_gun_sound.wav" type="AudioStream" id=1]
+[ext_resource path="res://models/bullet/scripts/single_bullet_sound.gd" type="Script" id=2]
+
+[node name="OneBulletSound" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="."]
+pause_mode = 2
+process_priority = 10
+stream = ExtResource( 1 )

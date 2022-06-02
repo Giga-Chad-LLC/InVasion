@@ -14,6 +14,7 @@ func spawn_bullet(data, bullets_parent_node, location):
 	spawned_bullet.player_id = data['player_id']
 	spawned_bullet.velocity = data['velocity']
 	spawned_bullet.rotation = data['velocity'].angle()
+	spawned_bullet.play_sound(1) # team-id send
 
 
 func despawn_bullet(bullet_id, bullets_parent_node):

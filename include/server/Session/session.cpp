@@ -27,6 +27,7 @@
 #include "interactors/FormJSONPlayerStatsResponseInteractor/form-json-player-stats-response-interactor.h"
 #include "interactors/ClientConnectedResponseInteractor/client-connected-response-interactor.h"
 #include "interactors/ClientDisconnectedResponseInteractor/client-disconnected-response-interactor.h"
+#include "algorithm"
 
 
 
@@ -360,7 +361,7 @@ std::size_t Session::getRemainingSessionTime_ms() const noexcept {
     );
 
     std::size_t remainingTime_ms = std::max(
-        0ULL,
+        0UL,
         MATCH_DURATION_MS - (now_ms - MATCH_START_TIMESTAMP_MS).count()
     );
 
