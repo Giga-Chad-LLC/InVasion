@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=2]
+[gd_scene load_steps=82 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -27,6 +27,8 @@
 [ext_resource path="res://screens/game/scripts/pillars.gd" type="Script" id=25]
 [ext_resource path="res://objects/pillars/BrokenPillar.tscn" type="PackedScene" id=26]
 [ext_resource path="res://objects/pillars/SmallPillar.tscn" type="PackedScene" id=27]
+[ext_resource path="res://objects/block/Block.tscn" type="PackedScene" id=28]
+[ext_resource path="res://screens/game/scripts/blocks.gd" type="Script" id=29]
 
 [sub_resource type="TileSet" id=50]
 0/name = "StonePathTilemap.png 0"
@@ -832,6 +834,12 @@ __meta__ = {
 }
 
 [node name="Bullets" type="YSort" parent="YSort"]
+
+[node name="Blocks" type="YSort" parent="YSort"]
+script = ExtResource( 29 )
+
+[node name="Block1" parent="YSort/Blocks" instance=ExtResource( 28 )]
+position = Vector2( 112, -66 )
 
 [node name="Pillars" type="YSort" parent="YSort"]
 script = ExtResource( 25 )
