@@ -12,5 +12,5 @@ func play(team_id):
 		sound.stream = alien_bullet_sound
 	sound.play()
 
-func playing():
+func is_playing():
 	return sound.playing
