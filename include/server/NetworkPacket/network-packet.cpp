@@ -1,12 +1,13 @@
 #include <cstring>
 #include "network-packet.h"
 
-namespace invasion::session {
+namespace invasion::server {
 // NetworkPacket
 NetworkPacket::NetworkPacket(std::unique_ptr<char[]> &&bytes_, uint32_t bytesLength_) : bytes(std::move(bytes_)), bytesLength(bytesLength_) {}
 
 
 NetworkPacket::NetworkPacket(): bytes(nullptr), bytesLength(0U) {}
+
 
 char* NetworkPacket::getStoredBytes() const {
     return bytes.get();
@@ -19,8 +20,12 @@ std::unique_ptr<char[]> NetworkPacket::getPureBytes() {
     return std::move(buffer_ptr);
 }
 
-uint32_t NetworkPacket::bytesSize() const {
+uint32_t NetworkPacket::bytesSize() const noexcept {
     return bytesLength;
+}
+
+uint32_t NetworkPacket::totalSize() const noexcept {
+    return bytesLength + 8U;
 }
 
 
@@ -47,6 +52,27 @@ RequestModel_t NetworkPacketRequest::getMessageTypeById(uint32_t type) {
     }
     else if (type == static_cast<uint32_t> (RequestModel_t::RespawnPlayerRequestModel)) {
         return RequestModel_t::RespawnPlayerRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::SelectPlayerSpecializationRequestModel)) {
+        return RequestModel_t::SelectPlayerSpecializationRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ChangePlayerSpecializationRequestModel)) {
+        return RequestModel_t::ChangePlayerSpecializationRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ApplyAbilityRequestModel)) {
+        return RequestModel_t::ApplyAbilityRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::UseSupplyRequestModel)) {
+        return RequestModel_t::UseSupplyRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::WeaponDirectionRequestModel)) {
+        return RequestModel_t::WeaponDirectionRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ReloadWeaponRequestModel)) {
+        return RequestModel_t::ReloadWeaponRequestModel;
+    }
+    else if (type == static_cast<uint32_t> (RequestModel_t::ClientCredentialsRequestModel)) {
+        return RequestModel_t::ClientCredentialsRequestModel;
     }
 
     return RequestModel_t::UnknownRequestModel;

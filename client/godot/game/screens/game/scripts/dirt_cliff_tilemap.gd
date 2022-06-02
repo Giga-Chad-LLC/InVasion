@@ -1,17 +1,17 @@
 extends TileMap
 
-var STORE_TILES_IN_FILE = true
+var STORE_DATA_IN_FILE = false
 
-const TilemapUtils = preload("res://utils/tilemap_saving.gd")
+const DataSavingUtils = preload("res://utils/data_saving.gd")
 
 func _ready():
 	var tilemap = self
-	var utils = TilemapUtils.new()
+	var utils = DataSavingUtils.new()
 	
 	var cellSize = utils.getMapCellSize(tilemap)
 	var tilesPositions = utils.getTileCentersGlobalPositions(tilemap)
 	
 	var filename = utils.create_filename(tilemap.name)
 	
-	if (STORE_TILES_IN_FILE):
+	if (STORE_DATA_IN_FILE):
 		utils.writeTilemapDataInFile(filename, tilesPositions, cellSize)

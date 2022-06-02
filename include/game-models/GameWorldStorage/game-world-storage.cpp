@@ -1,8 +1,11 @@
 #include <vector>
 
+// game-models
 #include "game-models/Player/player.h"
-#include "game-world-storage.h"
+#include "game-models/Bullet/bullet.h"
+#include "game-models/StaticObject/static-object.h"
 
+#include "game-world-storage.h"
 
 
 namespace invasion::game_models {
@@ -21,6 +24,14 @@ std::vector<std::shared_ptr<Player>>& GameWorldStorage::getKilledPlayers() {
 
 std::vector<std::shared_ptr<Bullet>>& GameWorldStorage::getBullets() {
 	return m_bullets;
+}
+
+std::vector<std::shared_ptr<StaticObject>>& GameWorldStorage::getObstacles() {
+	return m_obstacles;
+}
+
+std::vector<std::shared_ptr<StaticSupply>>& GameWorldStorage::getSupplies() {
+	return m_supplies;
 }
 
 } // namespace invasion::game_models

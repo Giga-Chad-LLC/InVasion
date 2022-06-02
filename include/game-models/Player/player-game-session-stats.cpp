@@ -1,4 +1,8 @@
+#include <string>
+#include <utility>
+
 #include "player-game-session-stats.h"
+
 
 namespace invasion::game_models {
 	
@@ -22,6 +26,23 @@ int PlayerGameSessionStats::getDeaths() const {
 
 void PlayerGameSessionStats::incrementDeaths() {
 	++m_deaths;
+}
+
+
+std::string PlayerGameSessionStats::getUsername() const {
+	return m_username;
+}
+
+
+void PlayerGameSessionStats::setUsername(std::string username) {
+	m_username = std::move(username);
+}
+
+
+void PlayerGameSessionStats::copy(const PlayerGameSessionStats& stats) {
+	m_kills = stats.m_kills;
+	m_deaths = stats.m_deaths;
+	m_username = stats.m_username;
 }
 
 } // namespace invasion::game_models

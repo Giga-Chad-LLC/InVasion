@@ -9,12 +9,12 @@ int main() {
         std::string request;
         std::cin >> request;
         if (request == "login") {
-            std::string nickname, pass;
-            std::cin >> nickname >> pass;
-            if (AuthService::login(nickname, pass)) {
+            std::string username, pass;
+            std::cin >> username >> pass;
+            if (AuthService::login(username, pass)) {
                 std::cout << "Successful login\n";
             } else {
-                std::cout << "Wrong nickname or password\n";
+                std::cout << "Wrong username or password\n";
             }
         } else if (request == "print") {
             std::cout << "allUsers:" << std::endl;
@@ -22,9 +22,9 @@ int main() {
         } else if (request == "delete") {
             AuthService::deleteAllUsers();
         } else if (request == "reg") {
-            std::string nickname, pass;
-            std::cin >> nickname >> pass;
-            AuthService::tryToRegisterUser(nickname, pass);
+            std::string username, pass;
+            std::cin >> username >> pass;
+            AuthService::tryToRegisterUser(username, pass);
         }
     }
 }

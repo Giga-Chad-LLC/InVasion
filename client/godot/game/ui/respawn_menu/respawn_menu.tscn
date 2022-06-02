@@ -1,14 +1,14 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ui/respawn_menu/scripts/respawn_menu.gd" type="Script" id=1]
+[ext_resource path="res://ui/specialization_selector/specialization_selector.tscn" type="PackedScene" id=2]
+
+[sub_resource type="ButtonGroup" id=1]
 
 [node name="RespawnMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -25,9 +25,9 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -73.0
-margin_top = -24.0
+margin_top = -26.0
 margin_right = 57.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 rect_scale = Vector2( 0.5, 0.5 )
 custom_constants/separation = 5
 __meta__ = {
@@ -37,23 +37,33 @@ __meta__ = {
 [node name="RespawnButton" type="Button" parent="RespawnButtonContainer"]
 margin_right = 130.0
 margin_bottom = 20.0
-text = "Respawn"
+text = "Spawn"
+
+[node name="SpecializationSelector" parent="." instance=ExtResource( 2 )]
+anchor_top = 0.0
+anchor_bottom = 0.0
+margin_left = 8.0
+margin_top = 102.0
+margin_right = 184.0
+margin_bottom = 230.0
+specialization_button_group = SubResource( 1 )
 
 [node name="LabelContainer" type="VBoxContainer" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -160.0
 margin_top = 15.0
-margin_right = 160.0
+margin_right = 297.0
 margin_bottom = 38.0
+rect_scale = Vector2( 0.7, 0.7 )
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="LabelContainer"]
+[node name="Title" type="Label" parent="LabelContainer"]
 margin_top = 4.0
-margin_right = 320.0
+margin_right = 457.0
 margin_bottom = 18.0
 text = "You died"
 align = 1

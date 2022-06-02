@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package util_models;
+
+enum SupplyType {
+	AidKit = 0;
+	AmmoCrate = 1;
+}

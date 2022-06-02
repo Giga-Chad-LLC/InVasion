@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package util_models;
+
+enum PlayerTeamId {
+	FirstTeam = 0;
+	SecondTeam = 1;
+}

@@ -190,12 +190,15 @@ cmake
 !client/godot/game/bin
 build
 
+*/cmake-build-debug
 cmake-build-debug
 src/cmake-build-debug
 src/http-server/cmake-build-debug
-cmake-build
+
+include/server/cmake-build-debug
+include/database/cmake-build-debug
 cmake-debug-build
 cmake-release-build
 
-
-src/grpc/out
+*.sqlite
+export_presets.cfg

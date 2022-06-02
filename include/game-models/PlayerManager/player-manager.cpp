@@ -4,18 +4,26 @@
 #include "player-manager.h"
 // game-models
 #include "game-models/Player/player.h"
+#include "game-models/StaticObject/static-object.h"
 #include "game-models/Player/player-game-session-stats.h"
 #include "game-models/Vector2D/vector2d.h"
 
 
 namespace invasion::game_models {
 
-void PlayerManager::updatePlayersPositions(std::vector<std::shared_ptr<Player>>& players, double dt) const {
+void PlayerManager::updatePlayersPositions(
+	std::vector<std::shared_ptr<Player>>& players,
+	std::vector<std::shared_ptr<StaticObject>>& obstacles,
+	double dt) const {
+	
 	for (auto& player_ptr : players) {
 		const bool killed = player_ptr->getLifeState().isInDeadState();
-		if(!killed) {
+		const bool active = player_ptr->getLifeState().isInActiveState();
+
+		if(!killed && active) {
 			this->applyFrictionAndSetResultForceOnPlayer(player_ptr, dt);
 			this->updatePlayerPhysicsOnPlayerCollision(players, player_ptr, dt);
+			this->updatePlayerPhysicsOnObstacleCollision(obstacles, player_ptr, dt);
 			player_ptr->makeMove(dt);
 		}
 	}
@@ -31,8 +39,9 @@ void PlayerManager::findDamagedPlayers(std::vector<std::shared_ptr<Player>>& pla
 		
 		const bool damaged = lifeState.isInDamagedState();
 		const bool killed = lifeState.isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
 
-		if (damaged && !killed) {
+		if (damaged && !killed && active) {
 			damagedPlayers.push_back(player_ptr);
 			lifeState.removeDamagedState();
 		}
@@ -49,8 +58,9 @@ void PlayerManager::findKilledPlayers(std::vector<std::shared_ptr<Player>>& play
 
 		const bool damaged = lifeState.isInDamagedState();
 		const bool killed = lifeState.isInDeadState();
+		const bool active = player_ptr->getLifeState().isInActiveState();
 
-		if(damaged && killed) {
+		if(damaged && killed && active) {
 			killedPlayers.push_back(player_ptr);
 			lifeState.removeDamagedState();
 		}
@@ -66,16 +76,21 @@ void PlayerManager::updatePlayersGameSessionStats(std::vector<std::shared_ptr<Pl
 		const int killedBy = killedPlayer->getLifeState().killedBy();
 
 		for (auto& player : players) {
-			const int playerId = player->getId();
-			PlayerGameSessionStats& stats = player->getGameSessionStats();
+			const bool active = player->getLifeState().isInActiveState();
+			
+			if(active) {
+				const int playerId = player->getId();
+				PlayerGameSessionStats& stats = player->getGameSessionStats();
 
-			if (playerId == killedPlayerId) {
-				stats.incrementDeaths();
+				if (playerId == killedPlayerId) {
+					stats.incrementDeaths();
+				}
+
+				if (playerId == killedBy) {
+					stats.incrementKills();
+				}
 			}
 
-			if (playerId == killedBy) {
-				stats.incrementKills();
-			}
 		}
 	}
 
@@ -120,36 +135,84 @@ void PlayerManager::applyFrictionAndSetResultForceOnPlayer(std::shared_ptr<Playe
 
 void PlayerManager::updatePlayerPhysicsOnPlayerCollision(
 	std::vector<std::shared_ptr<Player>>& players,
-	std::shared_ptr<Player> consideredPlayer_ptr,
+	std::shared_ptr<Player> consideredPlayer,
 	double dt) const {
 	
-	Vector2D curPosition = consideredPlayer_ptr->getPosition();
+	Vector2D curPosition = consideredPlayer->getPosition();
 
 	// imitating player's intented move
-	Vector2D nextPosition = consideredPlayer_ptr->intentMove(dt);
-	consideredPlayer_ptr->setPosition(nextPosition);
+	Vector2D nextPosition = consideredPlayer->intentMove(dt);
+	consideredPlayer->setPosition(nextPosition);
 
+	std::shared_ptr<Player> collidedPlayer;
 	bool inCollision = false;
 
-	for(const auto& other : players) {
-		// if other player is dead or he is considered player
-		if(other->getLifeState().isInDeadState() ||
-		   consideredPlayer_ptr->getId() == other->getId()) {
+	for(const auto other : players) {
+		// if other player is dead/inactive or he is considered player
+		const bool dead = other->getLifeState().isInDeadState();
+		const bool active = other->getLifeState().isInActiveState();
+
+		if(!active || dead || consideredPlayer->getId() == other->getId()) {
 			continue;
 		}
 
-		inCollision = consideredPlayer_ptr->collidesWithShape(other.get());
+		inCollision = consideredPlayer->collidesWithShape(other.get());
 		if(inCollision) {
+			collidedPlayer = other;
 			break;
 		}
 	}
 
-	consideredPlayer_ptr->setPosition(curPosition);
+	consideredPlayer->setPosition(curPosition);
 
 	if(inCollision) {
-		// TODO: make logic to find nearest position where objects do not collide and move player to that position
-		consideredPlayer_ptr->setResultForce(Vector2D::ZERO);
-		consideredPlayer_ptr->setVelocity(Vector2D::ZERO);
+		const bool penetrationOccurred = consideredPlayer->collidesWithShape(collidedPlayer.get());
+		
+		// prevent moving forward only if objects do not penetrate
+		// otherwise let the object leave penetrating zone
+		if(!penetrationOccurred) {
+			consideredPlayer->setResultForce(Vector2D::ZERO);
+			consideredPlayer->setVelocity(Vector2D::ZERO);
+		}
+
+	}
+}
+
+
+void PlayerManager::updatePlayerPhysicsOnObstacleCollision(
+	std::vector<std::shared_ptr<StaticObject>>& obstacles,
+	std::shared_ptr<Player> consideredPlayer,
+	double dt) const {
+	
+	Vector2D curPosition = consideredPlayer->getPosition();
+
+	// imitating player's intented move
+	Vector2D nextPosition = consideredPlayer->intentMove(dt);
+	consideredPlayer->setPosition(nextPosition);
+
+	std::shared_ptr<StaticObject> collidedObject;
+	bool inCollision = false;
+
+	for(const auto obstacle : obstacles) {
+		inCollision = consideredPlayer->collidesWithShape(obstacle.get());
+		if(inCollision) {
+			collidedObject = obstacle;
+			break;
+		}
+	}
+
+	consideredPlayer->setPosition(curPosition);
+
+	if(inCollision) {
+		const bool penetrationOccurred = consideredPlayer->collidesWithShape(collidedObject.get());
+
+		// prevent moving forward only if objects do not penetrate
+		// otherwise let the object leave penetrating zone
+		if(!penetrationOccurred) {
+			consideredPlayer->setResultForce(Vector2D::ZERO);
+			consideredPlayer->setVelocity(Vector2D::ZERO);
+		}
+	
 	}
 }
 

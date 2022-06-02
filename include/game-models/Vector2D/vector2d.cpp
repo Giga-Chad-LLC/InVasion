@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
+#include <utility>
 
 #include "vector2d.h"
 
@@ -11,6 +12,10 @@ const double Vector2D::EPS = 1e-8;
 
 Vector2D::Vector2D(double x, double y)
 	: m_x(x), m_y(y) {}
+
+
+Vector2D::Vector2D(const std::pair<double, double>& coords)
+	: m_x(coords.first), m_y(coords.second) {}
 
 
 void Vector2D::setX(double x) {

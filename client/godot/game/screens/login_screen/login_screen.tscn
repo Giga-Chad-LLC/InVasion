@@ -1,0 +1,141 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://screens/login_screen/scripts/login_screen.gd" type="Script" id=1]
+
+[node name="LoginScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -158, 41 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.847059 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.0
+margin_right = 320.0
+margin_bottom = 179.0
+rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Form" type="Control" parent="CenterContainer"]
+margin_left = 320.0
+margin_top = 180.0
+margin_right = 320.0
+margin_bottom = 180.0
+
+[node name="UsernameInput" type="LineEdit" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -62.0
+margin_right = 90.0
+margin_bottom = -38.0
+rect_pivot_offset = Vector2( -360, -58 )
+align = 1
+max_length = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UsernameLabel" type="Label" parent="CenterContainer/Form"]
+margin_left = -90.0
+margin_top = -86.0
+margin_right = 90.0
+margin_bottom = -72.0
+rect_pivot_offset = Vector2( -360, -34 )
+text = "Enter your username: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PasswordInput" type="LineEdit" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = 2.0
+margin_right = 90.0
+margin_bottom = 26.0
+rect_pivot_offset = Vector2( -360, -58 )
+align = 1
+max_length = 15
+secret = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PasswordLabel" type="Label" parent="CenterContainer/Form"]
+margin_left = -90.0
+margin_top = -22.0
+margin_right = 90.0
+margin_bottom = -8.0
+rect_pivot_offset = Vector2( -360, -34 )
+text = "Enter your password: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ErrorLabel" type="Label" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -164.0
+margin_top = 84.0
+margin_right = 164.0
+margin_bottom = 98.0
+custom_colors/font_color = Color( 1, 0.360784, 0.360784, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Error happened"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubmitButton" type="Button" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = 44.0
+margin_right = 90.0
+margin_bottom = 64.0
+text = "Login"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 74.0
+margin_bottom = 28.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="text_changed" from="CenterContainer/Form/UsernameInput" to="." method="_on_UsernameInput_text_changed"]
+[connection signal="text_changed" from="CenterContainer/Form/PasswordInput" to="." method="_on_PasswordInput_text_changed"]
+[connection signal="pressed" from="CenterContainer/Form/SubmitButton" to="." method="_on_SubmitButton_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]

@@ -4,60 +4,42 @@
 // game-models
 #include "game-models/Bullet/bullet.h"
 #include "game-models/Player/player.h"
+#include "game-models/StaticObject/static-object.h"
 #include "game-models/Player/player-life-state.h"
 
 
 namespace invasion::game_models {
 	
 void BulletManager::updateBulletsPositions(std::vector<std::shared_ptr<Bullet>>& bullets, 
-										   std::vector<std::shared_ptr<Player>>& players,
+										   const std::vector<std::shared_ptr<Player>>& players,
+										   const std::vector<std::shared_ptr<StaticObject>>& obstacles,
 										   double dt) const {
 	const double appliedForceMagnitude = 500;
 
-	for (const auto& bullet_ptr : bullets) {
+	for (const auto& bullet : bullets) {
 		// TODO: do not update result force on every update request because the result force is never changing
-		const Vector2D resultForce = Vector2D::clampMagnitude(bullet_ptr->getMovingForce(), appliedForceMagnitude);
-		bullet_ptr->setResultForce(resultForce);
+		const Vector2D resultForce = Vector2D::clampMagnitude(bullet->getMovingForce(), appliedForceMagnitude);
+		bullet->setResultForce(resultForce);
 
-		// checking collisions
-		std::shared_ptr<Player> collidedPlayer_ptr = nullptr;
+		const Vector2D curPosition = bullet->getPosition();
+		const Vector2D nextPosition = bullet->intentMove(dt);
 
-		const Vector2D curPosition = bullet_ptr->getPosition();
-		const Vector2D nextPosition = bullet_ptr->intentMove(dt);
+		bullet->setPosition(nextPosition);
 
-		bullet_ptr->setPosition(nextPosition);
+		// colliding with obstacles
+		this->collideBulletWithObstacles(bullet, obstacles);
 
-		const int playerId = bullet_ptr->getPlayerId();
-		const PlayerTeamId teamId = bullet_ptr->getPlayerTeamId();
-		const double damage = bullet_ptr->getDamage();
-
-		// searching for collided player
-		for (const auto& player_ptr : players) {
-			if (player_ptr->getLifeState().isInDeadState() == false &&
-				player_ptr->getId() != playerId &&
-			    player_ptr->getTeamId() != teamId &&
-			    player_ptr->collidesWithHitbox(bullet_ptr.get(), Player::HITBOX_POSITION_OFFSET)) {
-				collidedPlayer_ptr = player_ptr;
-				break;
-			}
+		// colliding with players
+		if(bullet->isInCrushedState() == false) {
+			this->collideBulletWithPlayers(bullet, players);
 		}
 
-		bullet_ptr->setPosition(curPosition);
+		// returning to previous position
+		bullet->setPosition(curPosition);
 
-		if (collidedPlayer_ptr != nullptr) {
-			std::cout << "bullet " << bullet_ptr->getId() << " damaged player " << collidedPlayer_ptr->getId();
-
-			PlayerLifeState& lifeState = collidedPlayer_ptr->getLifeState();
-			lifeState.applyDamage(damage, playerId);
-
-			std::cout << " HP: " << lifeState.getHitPoints() << "\n";
-
-			bullet_ptr->setCrushedState(true);
+		if(bullet->isInCrushedState() == false) {
+			bullet->makeMove(dt);
 		}
-		else {
-			bullet_ptr->makeMove(dt);
-		}
-
 	}
 }
 
@@ -72,6 +54,53 @@ void BulletManager::removeCrushedAndFlewOutOfBoundsBullets(std::vector<std::shar
 		std::end(bullets)
 	);
 }
+
+
+void BulletManager::collideBulletWithObstacles(std::shared_ptr<Bullet> bullet,
+											   const std::vector<std::shared_ptr<StaticObject>>& obstacles) const {
+	for(const auto& obstacle : obstacles) {
+		if(bullet->collidesWithShape(obstacle.get())) {
+			bullet->setCrushedState(true);
+			break;
+		}
+	}
+}
+
+
+void BulletManager::collideBulletWithPlayers(std::shared_ptr<Bullet> bullet,
+											 const std::vector<std::shared_ptr<Player>>& players) const {
+	std::shared_ptr<Player> collidedPlayer = nullptr;
+
+	const int playerId = bullet->getPlayerId();
+	const PlayerTeamId teamId = bullet->getPlayerTeamId();
+	const int damage = bullet->getDamage();
+
+	// searching for collided player
+	for (const auto& player : players) {
+		const bool dead = player->getLifeState().isInDeadState();
+		const bool active = player->getLifeState().isInActiveState();
+
+		if (!dead && active &&
+			player->getId() != playerId &&
+			player->getTeamId() != teamId &&
+			player->collidesWithHitbox(bullet.get(), Player::HITBOX_POSITION_OFFSET)
+		) {
+			collidedPlayer = player;
+			break;
+		}
+	}
+
+	if (collidedPlayer) {
+		PlayerLifeState& lifeState = collidedPlayer->getLifeState();
+		lifeState.applyDamage(damage, playerId);
+		
+		bullet->setCrushedState(true);
+
+		std::cout << "bullet " << bullet->getId() << " damaged player " << collidedPlayer->getId();
+		std::cout << " HP: " << lifeState.getHitPoints() << "\n";
+	}
+}
+
 
 } // namespace invasion::game_models
 
