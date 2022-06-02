@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=2]
+[gd_scene load_steps=68 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -14,6 +14,56 @@
 [ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
 [ext_resource path="res://ui/leaderboard/leaderboard.tscn" type="PackedScene" id=13]
 [ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=14]
+[ext_resource path="res://assets/World/tilesets/StonePathTilemap.png" type="Texture" id=15]
+[ext_resource path="res://assets/World/tilesets/StoneGroundTileset.png" type="Texture" id=16]
+
+[sub_resource type="TileSet" id=50]
+0/name = "StonePathTilemap.png 0"
+0/texture = ExtResource( 15 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 96, 112 )
+0/tile_mode = 2
+0/autotile/icon_coordinate = Vector2( 0, 0 )
+0/autotile/tile_size = Vector2( 16, 16 )
+0/autotile/spacing = 0
+0/autotile/occluder_map = [  ]
+0/autotile/navpoly_map = [  ]
+0/autotile/priority_map = [ Vector3( 0, 0, 2 ), Vector3( 0, 1, 2 ), Vector3( 1, 0, 2 ), Vector3( 1, 1, 2 ), Vector3( 2, 0, 2 ), Vector3( 3, 0, 2 ) ]
+0/autotile/z_index_map = [  ]
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+
+[sub_resource type="TileSet" id=51]
+0/name = "StoneGroundTileset.png 0"
+0/texture = ExtResource( 16 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 256, 256 )
+0/tile_mode = 1
+0/autotile/bitmask_mode = 0
+0/autotile/bitmask_flags = [ Vector2( 0, 0 ), 256, Vector2( 0, 1 ), 260, Vector2( 0, 2 ), 4, Vector2( 1, 0 ), 320, Vector2( 1, 1 ), 325, Vector2( 1, 2 ), 5, Vector2( 2, 0 ), 64, Vector2( 2, 1 ), 65, Vector2( 2, 2 ), 1 ]
+0/autotile/icon_coordinate = Vector2( 0, 0 )
+0/autotile/tile_size = Vector2( 32, 32 )
+0/autotile/spacing = 0
+0/autotile/occluder_map = [  ]
+0/autotile/navpoly_map = [  ]
+0/autotile/priority_map = [  ]
+0/autotile/z_index_map = [  ]
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
 
 [sub_resource type="TileSet" id=1]
 0/name = "girt-tileset.png 0"
@@ -495,6 +545,7 @@ script = ExtResource( 8 )
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UI" instance=ExtResource( 14 )]
+visible = false
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
 visible = false
@@ -526,6 +577,16 @@ texture = ExtResource( 5 )
 centered = false
 region_enabled = true
 region_rect = Rect2( -384, -464, 1500, 1500 )
+
+[node name="StonePathTileMap" type="TileMap" parent="."]
+tile_set = SubResource( 50 )
+cell_size = Vector2( 16, 16 )
+format = 1
+
+[node name="StoneGroundTileMap" type="TileMap" parent="."]
+tile_set = SubResource( 51 )
+cell_size = Vector2( 32, 32 )
+format = 1
 
 [node name="DirtPathTileMap" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
