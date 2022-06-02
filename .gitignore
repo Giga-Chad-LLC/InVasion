@@ -201,3 +201,4 @@ cmake-debug-build
 cmake-release-build
 
 *.sqlite
+export_presets.cfg
