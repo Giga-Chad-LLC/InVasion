@@ -118,6 +118,7 @@ func _process(_delta):
 			producer.push_data(gun_rotation_request)
 		var reload_gun_request = Player.get_reload_gun_request()
 		if (reload_gun_request):
+			
 			producer.push_data(reload_gun_request)
 	
 #	Receive data from server

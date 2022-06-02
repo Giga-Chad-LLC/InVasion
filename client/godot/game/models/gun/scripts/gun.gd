@@ -5,7 +5,7 @@ onready var bullet_model = load("res://models/bullet/bullet.tscn")
 onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
-
+onready var reloading_sound = $ReloadingSound
 
 var is_cooldown = false
 var should_follow_mouse: bool = false
@@ -41,3 +41,6 @@ func set_gun_rotation(direction: Vector2):
 	
 func get_gun_rotation():
 	return Vector2(cos(global_rotation), sin(global_rotation))
+
+func play_reloading_sound():
+	reloading_sound.play()

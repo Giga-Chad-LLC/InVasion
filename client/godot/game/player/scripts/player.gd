@@ -119,6 +119,7 @@ func get_reload_gun_request():
 		reload.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(reload.to_bytes(), Global.RequestModels.ReloadWeaponRequestModel)
+		# player_gun.play_reloading_sound()	
 		if (network_packet):
 			return network_packet
 	return null
