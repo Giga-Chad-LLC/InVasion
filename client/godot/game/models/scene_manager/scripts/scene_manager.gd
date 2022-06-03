@@ -5,6 +5,12 @@ onready var menu_sound = $UI/LobbySound
 onready var game_sound = $UI/BattleSound
 var cur_sound
 
+func _process(delta):
+	# if sound ended, play it
+	if (!cur_sound.playing):
+		cur_sound.play()
+
+
 func _ready():
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	cur_sound = menu_sound
