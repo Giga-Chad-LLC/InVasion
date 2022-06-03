@@ -29,13 +29,12 @@
 [ext_resource path="res://objects/pillars/SmallPillar.tscn" type="PackedScene" id=27]
 [ext_resource path="res://objects/block/Block.tscn" type="PackedScene" id=28]
 [ext_resource path="res://screens/game/scripts/blocks.gd" type="Script" id=29]
-[ext_resource path="res://objects/altar/Altar.tscn" type="PackedScene" id=30]
+[ext_resource path="res://objects/altar/altar.tscn" type="PackedScene" id=30]
 [ext_resource path="res://objects/rocks/MediumBlueRock.tscn" type="PackedScene" id=31]
 [ext_resource path="res://screens/game/scripts/blue_rocks.gd" type="Script" id=32]
 [ext_resource path="res://objects/rocks/PretinyBlueRock.tscn" type="PackedScene" id=33]
 [ext_resource path="res://objects/rocks/TinyBlueRock.tscn" type="PackedScene" id=34]
 [ext_resource path="res://objects/effects/Flamelash.tscn" type="PackedScene" id=35]
-[ext_resource path="res://screens/game/scripts/altar.gd" type="Script" id=36]
 [ext_resource path="res://assets/World/tilesets/StonePathBlueTilemap.png" type="Texture" id=37]
 [ext_resource path="res://objects/effects/BrightFlame.tscn" type="PackedScene" id=38]
 
@@ -966,6 +965,15 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 } ]
 0/z_index = 0
 
+[sub_resource type="GDScript" id=55]
+script/source = "extends StaticBody2D
+
+
+func _ready():
+	if (Global.STORE_DATA_IN_FILE):
+		Global.saveNodesChildrenCollisionShapesInFile(self)
+"
+
 [node name="World" type="Node2D"]
 script = ExtResource( 8 )
 
@@ -1073,7 +1081,7 @@ __meta__ = {
 
 [node name="Altar" parent="YSort/AltarContainer" instance=ExtResource( 30 )]
 position = Vector2( 206, 110 )
-script = ExtResource( 36 )
+script = SubResource( 55 )
 
 [node name="AltarFlamelash" parent="YSort/AltarContainer" instance=ExtResource( 35 )]
 position = Vector2( 207, 140 )
