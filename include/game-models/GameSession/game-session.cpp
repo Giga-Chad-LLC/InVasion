@@ -40,6 +40,8 @@ GameSession::GameSession()
 	  m_nextPlayerId(0),
 	  m_nextSupplyId(0) {
 	
+	this->loadCollisionAssets();
+	/*
 	controllers::DirectoryFilesContainer container(COLLISION_ASSETS_DIRECTORY);
 	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
@@ -56,10 +58,34 @@ GameSession::GameSession()
 			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
 		}
 	}
-	std::cout << "Static files uploaded in GameSession, static objects count: " << obstacles.size() << std::endl;
+	*/
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
+
+
+
+void GameSession::loadCollisionAssets() {
+	controllers::DirectoryFilesContainer container(COLLISION_ASSETS_DIRECTORY);
+	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
+
+	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
+
+	for(const auto& entry  : entries) {
+		controllers::StaticObjectsFileReader reader(entry.path().string());
+
+		const auto& objects = reader.getObjectsData();
+
+		for(const auto& object : objects) {
+			const Vector2D shape(object.getShape());
+			const Vector2D position(object.getPosition()); 
+			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
+		}
+	}
+
+	std::cout << "GameSession: collision assets loaded. Object loaded: " << obstacles.size() << std::endl;
+}
+
 
 
 // returns id of created player
