@@ -361,8 +361,8 @@ std::size_t Session::getRemainingSessionTime_ms() const noexcept {
     );
 
     std::size_t remainingTime_ms = std::max(
-        0UL,
-        MATCH_DURATION_MS - (now_ms - MATCH_START_TIMESTAMP_MS).count()
+        static_cast <int64_t> (0),
+        static_cast <int64_t> (MATCH_DURATION_MS - (now_ms - MATCH_START_TIMESTAMP_MS).count())
     );
 
     return remainingTime_ms;
