@@ -955,10 +955,8 @@ script = ExtResource( 8 )
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UI" instance=ExtResource( 14 )]
-visible = false
 
 [node name="RespawnMenu" parent="UI" instance=ExtResource( 9 )]
-visible = false
 
 [node name="SpecializationSelector" parent="UI/RespawnMenu" index="2"]
 specialization_button_group = ExtResource( 12 )
@@ -976,10 +974,8 @@ group = ExtResource( 12 )
 group = ExtResource( 12 )
 
 [node name="Leaderboard" parent="UI" instance=ExtResource( 13 )]
-visible = false
 
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
-visible = false
 
 [node name="BlueGrassBackground" type="Sprite" parent="."]
 position = Vector2( 203, 161 )
