@@ -6,6 +6,7 @@ onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 onready var reloading_sound = $ReloadingSound
+onready var empty_magazine_sound = $EmptyMagazineSound
 
 var is_cooldown = false
 var should_follow_mouse: bool = false
@@ -44,3 +45,6 @@ func get_gun_rotation():
 
 func play_reloading_sound():
 	reloading_sound.play()
+
+func play_empty_magazine_sound():
+	empty_magazine_sound.play()

@@ -273,6 +273,8 @@ func _process(_delta):
 				print("Error while receiving: ", "cannot unpack weapon state model")
 			else:
 				AmmoStats.update_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
+				if (new_weapon_state.get_is_reloading_required()):
+					Player.player_gun.play_empty_magazine_sound()
 		Global.ResponseModels.WeaponDirectionResponseModel:
 			var player_weapon_direction = WeaponDirectionResponseModel.WeaponDirectionResponseModel.new()
 			var result_code = player_weapon_direction.from_bytes(received_packet.get_bytes())
