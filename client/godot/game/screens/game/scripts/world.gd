@@ -2,6 +2,7 @@ extends Node2D
 
 
 signal scene_changed(scene_name)
+signal play_click_sound()
 
 # Nodes
 onready var battle_music = $BattleMusic
@@ -67,6 +68,7 @@ func _unhandled_input(event):
 
 # scene/ui changing
 func _on_Quit_pressed():
+	emit_signal("play_click_sound")
 	emit_signal("scene_changed", "game_lobby")
 
 # disable player movements when escape menu is opened
@@ -76,6 +78,7 @@ func _on_EscapeMenu_toggle_escape_menu(is_escaped):
 
 # player wants to respawn - send required request model for that
 func _on_RespawnButton_pressed():
+	emit_signal("play_click_sound")
 	if (client_connection and client_connection.is_connected_to_host() and producer):
 		 # will be null if specialization did not change
 		var spec_packet = Player.get_player_specialization_request(RespawnSpecializationSelector.selected_specialization)

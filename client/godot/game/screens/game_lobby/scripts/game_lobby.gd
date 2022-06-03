@@ -1,6 +1,8 @@
 extends Control
 
 signal scene_changed(scene_name)
+signal play_click_sound()
+
 
 onready var KillsValue = $CenterContainer/Wrapper/KillsValue
 onready var DeathsValue = $CenterContainer/Wrapper/DeathsValue
@@ -14,10 +16,12 @@ var http_request: HTTPRequester = HTTPRequester.new()
 var max_ratio_length_after_period: int = 2
 
 func _on_ExitButton_pressed():
+	emit_signal("play_click_sound")
 	emit_signal("scene_changed", "start_screen")
 
 
 func _on_StartGameButton_pressed():
+	emit_signal("play_click_sound")
 	emit_signal("scene_changed", "game")
 
 func _ready():
