@@ -1,4 +1,4 @@
-[gd_scene load_steps=92 format=2]
+[gd_scene load_steps=93 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
@@ -37,6 +37,7 @@
 [ext_resource path="res://objects/effects/Flamelash.tscn" type="PackedScene" id=35]
 [ext_resource path="res://screens/game/scripts/altar.gd" type="Script" id=36]
 [ext_resource path="res://assets/World/tilesets/StonePathBlueTilemap.png" type="Texture" id=37]
+[ext_resource path="res://objects/effects/BrightFlame.tscn" type="PackedScene" id=38]
 
 [sub_resource type="TileSet" id=50]
 0/name = "StonePathTilemap.png 0"
@@ -1068,11 +1069,13 @@ __meta__ = {
 
 [node name="Bullets" type="YSort" parent="YSort"]
 
-[node name="Altar" parent="YSort" instance=ExtResource( 30 )]
+[node name="AltarContainer" type="YSort" parent="YSort"]
+
+[node name="Altar" parent="YSort/AltarContainer" instance=ExtResource( 30 )]
 position = Vector2( 206, 110 )
 script = ExtResource( 36 )
 
-[node name="Flamelash" parent="YSort" instance=ExtResource( 35 )]
+[node name="AltarFlamelash" parent="YSort/AltarContainer" instance=ExtResource( 35 )]
 position = Vector2( 207, 140 )
 
 [node name="Blocks" type="YSort" parent="YSort"]
@@ -1090,6 +1093,12 @@ position = Vector2( 120, -63 )
 [node name="Block4" parent="YSort/Blocks" instance=ExtResource( 28 )]
 position = Vector2( -48, 184 )
 
+[node name="Block5" parent="YSort/Blocks" instance=ExtResource( 28 )]
+position = Vector2( 388, -9 )
+
+[node name="Block6" parent="YSort/Blocks" instance=ExtResource( 28 )]
+position = Vector2( 0, 263 )
+
 [node name="Pillars" type="YSort" parent="YSort"]
 script = ExtResource( 25 )
 
@@ -1098,6 +1107,9 @@ position = Vector2( 223, -170 )
 
 [node name="LargePillar2" parent="YSort/Pillars" instance=ExtResource( 24 )]
 position = Vector2( 146, 286 )
+
+[node name="LargePillar3" parent="YSort/Pillars" instance=ExtResource( 24 )]
+position = Vector2( 483, 423 )
 
 [node name="BrokenPliiar1" parent="YSort/Pillars" instance=ExtResource( 26 )]
 position = Vector2( -64, 84 )
@@ -1117,6 +1129,30 @@ position = Vector2( 351, 416 )
 [node name="SmallPillar4" parent="YSort/Pillars" instance=ExtResource( 27 )]
 position = Vector2( 3, -123 )
 
+[node name="SmallPillar5" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 33, 18 )
+
+[node name="SmallPillar6" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 136, -12 )
+
+[node name="SmallPillar7" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 280, -12 )
+
+[node name="SmallPillar8" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 384, 83 )
+
+[node name="SmallPillar9" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 40, 147 )
+
+[node name="SmallPillar10" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 72, 275 )
+
+[node name="SmallPillar11" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 313, 275 )
+
+[node name="SmallPillar12" parent="YSort/Pillars" instance=ExtResource( 27 )]
+position = Vector2( 385, 212 )
+
 [node name="BlueRocks" type="YSort" parent="YSort"]
 script = ExtResource( 32 )
 
@@ -1128,6 +1164,9 @@ position = Vector2( 89, 390 )
 
 [node name="PretinyBlueRock3" parent="YSort/BlueRocks" instance=ExtResource( 33 )]
 position = Vector2( -14, -114 )
+
+[node name="PretinyBlueRock4" parent="YSort/BlueRocks" instance=ExtResource( 33 )]
+position = Vector2( 406, 326 )
 
 [node name="MediumBlueRock1" parent="YSort/BlueRocks" instance=ExtResource( 31 )]
 position = Vector2( 427, 1 )
@@ -1167,6 +1206,14 @@ position = Vector2( 527, 93 )
 
 [node name="SmallMonument2" parent="YSort/Monuments" instance=ExtResource( 20 )]
 position = Vector2( 302, 359 )
+
+[node name="Effects" type="YSort" parent="YSort"]
+
+[node name="BrightFlame1" parent="YSort/Effects" instance=ExtResource( 38 )]
+position = Vector2( -64, 87 )
+
+[node name="BrightFlame2" parent="YSort/Effects" instance=ExtResource( 38 )]
+position = Vector2( 496, 151 )
 
 [node name="Bushes" type="YSort" parent="YSort"]
 position = Vector2( 1775, -308 )
