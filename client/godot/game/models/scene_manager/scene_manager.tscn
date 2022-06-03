@@ -19,3 +19,5 @@ volume_db = -10.0
 [node name="ClickSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = -15.0
+
+[connection signal="finished" from="UI/LobbyMusic" to="." method="_on_LobbyMusic_finished"]
