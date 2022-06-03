@@ -4,6 +4,12 @@ onready var current_scene = $UI/StartScreen
 var current_scene_name = "start_screen"
 onready var lobby_music = $UI/LobbyMusic
 
+func _process(delta):
+	# if sound ended, play it
+	if (!cur_sound.playing):
+		cur_sound.play()
+
+
 func _ready():
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	lobby_music.play()
