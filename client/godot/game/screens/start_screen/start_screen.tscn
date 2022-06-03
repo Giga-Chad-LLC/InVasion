@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://screens/start_screen/scripts/start_screen.gd" type="Script" id=1]
+[ext_resource path="res://Theme.tres" type="Theme" id=2]
 
 [node name="StartScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -43,10 +45,8 @@ margin_left = -54.0
 margin_top = -27.0
 margin_right = 54.0
 margin_bottom = -7.0
+theme = ExtResource( 2 )
 text = "Login"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="RegisterButton" type="Button" parent="CenterContainer/ButtonGroup"]
 anchor_left = 0.5
@@ -58,9 +58,6 @@ margin_top = 7.0
 margin_right = 54.0
 margin_bottom = 27.0
 text = "Register"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="pressed" from="CenterContainer/ButtonGroup/LoginButton" to="." method="_on_LoginButton_pressed"]
 [connection signal="pressed" from="CenterContainer/ButtonGroup/RegisterButton" to="." method="_on_RegisterButton_pressed"]
