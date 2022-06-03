@@ -30,7 +30,7 @@ func getTileCentersGlobalPositions(tileMap) -> Array:
 
 
 
-func create_filename(name) -> String:
+func create_collision_asset_filename(name) -> String:
 	if (not RAND_GENERATOR_ESTABLISHED):
 		RAND_GENERATOR_ESTABLISHED = true
 		randomGenerator.randomize()
@@ -39,6 +39,31 @@ func create_filename(name) -> String:
 					name + "-" + String(randomGenerator.randi()) + \
 					"-static-data.invasion.txt"
 	return filename
+
+
+func create_aliens_respawn_points_filename(name) -> String:
+	if (not RAND_GENERATOR_ESTABLISHED):
+		RAND_GENERATOR_ESTABLISHED = true
+		randomGenerator.randomize()
+		
+	var filename = "res://assets/statics/aliens-respawn-points/" + \
+					name + "-" + String(randomGenerator.randi()) + \
+					"-respawn-points-data.invasion.txt"
+	return filename
+
+
+
+
+func create_humans_respawn_points_filename(name) -> String:
+	if (not RAND_GENERATOR_ESTABLISHED):
+		RAND_GENERATOR_ESTABLISHED = true
+		randomGenerator.randomize()
+		
+	var filename = "res://assets/statics/humans-respawn-points/" + \
+					name + "-" + String(randomGenerator.randi()) + \
+					"-respawn-points-data.invasion.txt"
+	return filename
+
 
 
 
@@ -110,6 +135,27 @@ func writeTilemapDataInFile(filename, tiles, cellSize) -> void:
 			writeInFile(file, tile.x, " ")
 			writeInFile(file, tile.y, "\n")
 			
+		print("Data successfully has been written to '" + filename + "'")
+	else:
+		print("File '" , filename, "' cannot be opened")
+	
+
+
+func writeChildrenPointsDataInFile(filename, parentNode) -> void:
+	var file = File.new()
+	file.open(filename, File.WRITE)
+	
+	if(file.is_open()):
+		var size = parentNode.get_children().size()
+		
+		writeInFile(file, size, "\n")
+		
+		for child in parentNode.get_children():
+			var global_position = parentNode.to_global(child.get_position())
+			
+			writeInFile(file, global_position.x, " ")
+			writeInFile(file, global_position.y, "\n")
+		
 		print("Data successfully has been written to '" + filename + "'")
 	else:
 		print("File '" , filename, "' cannot be opened")

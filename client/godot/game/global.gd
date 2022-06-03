@@ -2,7 +2,9 @@ extends Node
 
 var access_token: String = ""
 var username: String = ""
-var STORE_DATA_IN_FILE = false
+
+var STORE_STATIC_ASSETS_COLLISION_SHAPES_IN_FILE = false
+var STORE_RESPAWN_POINTS_IN_FILE = false
 
 const DataSavingUtils = preload("res://utils/data_saving.gd")
 
@@ -11,7 +13,7 @@ const DataSavingUtils = preload("res://utils/data_saving.gd")
 func saveNodesChildrenCollisionShapesInFile(node):
 	var utils = DataSavingUtils.new()
 	
-	var filename = utils.create_filename(node.name)
+	var filename = utils.create_collision_asset_filename(node.name)
 	utils.writeChildrenWithRectangularShapeInFile(filename, node)
 
 
@@ -22,10 +24,23 @@ func saveTilemapCellsInFile(tilemap):
 	var cellSize = utils.getMapCellSize(tilemap)
 	var tilesPositions = utils.getTileCentersGlobalPositions(tilemap)
 	
-	var filename = utils.create_filename(tilemap.name)
+	var filename = utils.create_collision_asset_filename(tilemap.name)
 	
 	utils.writeTilemapDataInFile(filename, tilesPositions, cellSize)
 
+
+
+func save_aliens_respawn_points_in_file(node):
+	var utils = DataSavingUtils.new()
+	var filename = utils.create_aliens_respawn_points_filename(node.name)
+	utils.writeChildrenPointsDataInFile(filename, node)
+
+
+
+func save_humans_respawn_points_in_file(node):
+	var utils = DataSavingUtils.new()
+	var filename = utils.create_humans_respawn_points_filename(node.name)
+	utils.writeChildrenPointsDataInFile(filename, node)
 
 
 
