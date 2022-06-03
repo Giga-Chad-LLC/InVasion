@@ -12,10 +12,10 @@ script = ExtResource( 1 )
 
 [node name="StartScreen" parent="UI" instance=ExtResource( 2 )]
 
-[node name="LobbySound" type="AudioStreamPlayer2D" parent="UI"]
+[node name="LobbySound" type="AudioStreamPlayer" parent="UI"]
 stream = ExtResource( 4 )
 volume_db = -5.0
 
-[node name="BattleSound" type="AudioStreamPlayer2D" parent="UI"]
+[node name="BattleSound" type="AudioStreamPlayer" parent="UI"]
 stream = ExtResource( 3 )
 volume_db = -5.0
