@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://models/scene_manager/scripts/scene_manager.gd" type="Script" id=1]
 [ext_resource path="res://screens/start_screen/start_screen.tscn" type="PackedScene" id=2]
-[ext_resource path="res://screens/sounds/lobby_sound.wav" type="AudioStream" id=3]
-[ext_resource path="res://screens/sounds/battle_sound.wav" type="AudioStream" id=4]
+[ext_resource path="res://screens/sounds/lobby_music.wav" type="AudioStream" id=4]
 
 [node name="SceneManager" type="Node2D"]
 script = ExtResource( 1 )
@@ -12,10 +11,6 @@ script = ExtResource( 1 )
 
 [node name="StartScreen" parent="UI" instance=ExtResource( 2 )]
 
-[node name="LobbySound" type="AudioStreamPlayer" parent="UI"]
+[node name="LobbyMusic" type="AudioStreamPlayer" parent="UI"]
 stream = ExtResource( 4 )
-volume_db = -5.0
-
-[node name="BattleSound" type="AudioStreamPlayer" parent="UI"]
-stream = ExtResource( 3 )
 volume_db = -5.0

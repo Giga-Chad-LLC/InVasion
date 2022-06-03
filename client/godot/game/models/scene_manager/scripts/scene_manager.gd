@@ -1,55 +1,49 @@
 extends Node2D
 
 onready var current_scene = $UI/StartScreen
-onready var menu_sound = $UI/LobbySound
-onready var game_sound = $UI/BattleSound
-var cur_sound
+var current_scene_name = "start_screen"
+onready var lobby_music = $UI/LobbyMusic
 
 func _ready():
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
-	cur_sound = menu_sound
-	cur_sound.play()
-	
+	lobby_music.play()
 	
 func _handle_scene_changed(next_scene_name):
 	match next_scene_name:
 		'start_screen':
 			var next_scene = load("res://screens/start_screen/start_screen.tscn").instance()
 			$UI.add_child(next_scene)
-			set_current_scene(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		'login_screen':
 			var next_scene = load("res://screens/login_screen/login_screen.tscn").instance()
 			$UI.add_child(next_scene)
-			set_current_scene(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		'register_screen':
 			var next_scene = load("res://screens/register_screen/register_screen.tscn").instance()
 			$UI.add_child(next_scene)
-			set_current_scene(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		'game_lobby':
-			_change_sound("menu")
 			var next_scene = load("res://screens/game_lobby/game_lobby.tscn").instance()
 			$UI.add_child(next_scene)
-			set_current_scene(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		'game':
-			_change_sound("game")
 			var next_scene = load("res://screens/game/world.tscn").instance()
 			add_child(next_scene)
-			set_current_scene(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		_:
 			print("No matching scene found for: '", next_scene_name, "'")
 
 
-func _change_sound(scene_name):
-	if (scene_name == "menu" and cur_sound == menu_sound):
-		return
-	cur_sound.stop()
-	if (scene_name == "game"):
-		cur_sound = game_sound
+func set_current_scene(next_scene, next_scene_name):
+	print("Scene: ", next_scene_name)
+	if (next_scene_name == "game"):
+		print("Stop playing lobby")
+		lobby_music.stop()
 	else:
-		cur_sound = menu_sound
-	cur_sound.play()
-
-func set_current_scene(next_scene):	
+		if (!lobby_music.is_playing()):
+			print("Start playing lobby")
+			lobby_music.play()
+	
 	current_scene.queue_free()
 	current_scene = next_scene
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")

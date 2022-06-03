@@ -4,6 +4,7 @@ extends Node2D
 signal scene_changed(scene_name)
 
 # Nodes
+onready var battle_music = $BattleMusic
 onready var bullets_parent_node = $YSort/Bullets
 onready var players_parent_node = $YSort/OtherPlayers
 onready var supplies_parent_node = $YSort/Supplies
@@ -59,6 +60,7 @@ var is_game_running = true
 # for debugging purposes
 func _unhandled_input(event):
 	if (event.is_action_pressed("print_info")):
+		print(Player.player_specialization)
 		print(players_state_manager.players_data)
 
 
@@ -83,6 +85,9 @@ func _on_RespawnButton_pressed():
 
 
 func _ready():
+	# Play battle music
+	print("Play battle music")
+	battle_music.play()
 	# Establish connection to server
 	client_connection.connection.connect("connected", self, "_handle_connection_opened")
 	add_child(client_connection)

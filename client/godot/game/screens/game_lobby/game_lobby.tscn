@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://screens/game_lobby/scripts/game_lobby.gd" type="Script" id=1]
-[ext_resource path="res://ui/theme/Theme.tres" type="Theme" id=2]
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=2]
 
 [node name="GameLobby" type="Control"]
 anchor_right = 1.0
