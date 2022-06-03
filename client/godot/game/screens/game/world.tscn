@@ -1,9 +1,10 @@
-[gd_scene load_steps=90 format=2]
+[gd_scene load_steps=93 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/bush/bush.tscn" type="PackedScene" id=3]
 [ext_resource path="res://screens/game/images/cliff_tileset.png" type="Texture" id=4]
+[ext_resource path="res://models/respawn_point/respawn_point.tscn" type="PackedScene" id=5]
 [ext_resource path="res://screens/game/images/dirt_tileset.png" type="Texture" id=6]
 [ext_resource path="res://ui/escape_menu/escape_menu.tscn" type="PackedScene" id=7]
 [ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
@@ -13,6 +14,7 @@
 [ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
 [ext_resource path="res://ui/leaderboard/leaderboard.tscn" type="PackedScene" id=13]
 [ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=14]
+[ext_resource path="res://models/respawn_point/scripts/aliens_respawn_points.gd" type="Script" id=15]
 [ext_resource path="res://assets/World/tilesets/StoneGroundTileset.png" type="Texture" id=16]
 [ext_resource path="res://assets/World/tilesets/WallsTileset.png" type="Texture" id=17]
 [ext_resource path="res://objects/tilemaps/scripts/collided_stone_walls_tilemap.gd" type="Script" id=18]
@@ -33,6 +35,7 @@
 [ext_resource path="res://objects/blue_rocks/pretiny_blue_rock.tscn" type="PackedScene" id=33]
 [ext_resource path="res://objects/blue_rocks/tiny_blue_rock.tscn" type="PackedScene" id=34]
 [ext_resource path="res://objects/effects/flamelash.tscn" type="PackedScene" id=35]
+[ext_resource path="res://models/respawn_point/scripts/humans_respawn_points.gd" type="Script" id=36]
 [ext_resource path="res://assets/World/tilesets/StonePathBlueTilemap.png" type="Texture" id=37]
 [ext_resource path="res://objects/effects/bright_flame.tscn" type="PackedScene" id=38]
 
@@ -945,8 +948,9 @@ script/source = "extends StaticBody2D
 
 
 func _ready():
-	if (Global.STORE_DATA_IN_FILE):
-		Global.saveNodesChildrenCollisionShapesInFile(self)
+	pass
+	#if (Global.STORE_DATA_IN_FILE):
+	#	Global.saveNodesChildrenCollisionShapesInFile(self)
 "
 
 [node name="World" type="Node2D"]
@@ -1253,6 +1257,38 @@ __meta__ = {
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="AliensRespawnPoints" type="Node2D" parent="YSort"]
+position = Vector2( 488, -139 )
+script = ExtResource( 15 )
+
+[node name="TopLeftRespawnPoint" parent="YSort/AliensRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( -24, -22 )
+
+[node name="TopRightRespawnPoint" parent="YSort/AliensRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( 24, -22 )
+
+[node name="BottomLeftRespawnPoint" parent="YSort/AliensRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( -24, 26 )
+
+[node name="BottomRightRespawnPoint" parent="YSort/AliensRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( 24, 26 )
+
+[node name="HumansRespawnPoints" type="Node2D" parent="YSort"]
+position = Vector2( -72, 421 )
+script = ExtResource( 36 )
+
+[node name="TopLeftRespawnPoint" parent="YSort/HumansRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( -24, -22 )
+
+[node name="TopRightRespawnPoint" parent="YSort/HumansRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( 24, -22 )
+
+[node name="BottomLeftRespawnPoint" parent="YSort/HumansRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( -24, 26 )
+
+[node name="BottomRightRespawnPoint" parent="YSort/HumansRespawnPoints" instance=ExtResource( 5 )]
+position = Vector2( 24, 26 )
 
 [connection signal="pressed" from="UI/RespawnMenu/RespawnButtonContainer/RespawnButton" to="." method="_on_RespawnButton_pressed"]
 [connection signal="toggle_escape_menu" from="UI/EscapeMenu" to="." method="_on_EscapeMenu_toggle_escape_menu"]
