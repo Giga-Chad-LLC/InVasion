@@ -10,6 +10,8 @@
 #include "game-models/PlayerManager/player-manager.h"
 #include "game-models/BulletManager/bullet-manager.h"
 #include "game-models/Player/player.h"
+#include "game-models/Player/player-team-id-enum.h"
+#include "game-models/Vector2D/vector2d.h"
 #include "game-models/Player/player-specialization-enum.h"
 #include "game-models/Bullet/bullet.h"
 #include "game-models/StaticObject/static-object.h"
@@ -52,6 +54,8 @@ public:
 	const GameSessionStats& getGameStatistics();
 
 	GameMatchResult getMatchResult() const;
+
+	Vector2D getRespawnPoint(PlayerTeamId teamId);
 
 
 	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;

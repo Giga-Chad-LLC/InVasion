@@ -395,4 +395,31 @@ GameMatchResult GameSession::getMatchResult() const {
 }
 
 
+Vector2D GameSession::getRespawnPoint(PlayerTeamId teamId) {
+	std::random_device rd;
+    std::mt19937 gen(rd());
+
+	Vector2D respawnPoint = Vector2D::ZERO;
+
+	if(teamId == PlayerTeamId::FirstTeam) {
+		const auto& points = m_storage.getFirstTeamRespawnPoints();
+		const int size = static_cast<int>(points.size());
+    	std::uniform_int_distribution<> distr(0, std::max(0, size - 1));
+		
+		const int index = distr(gen);
+		respawnPoint = points.at(index);
+	}
+	else if(teamId == PlayerTeamId::SecondTeam) {
+		const auto& points = m_storage.getSecondTeamRespawnPoints();
+		const int size = static_cast<int>(points.size());
+    	std::uniform_int_distribution<> distr(0, std::max(0, size - 1));
+		
+		const int index = distr(gen);
+		respawnPoint = points.at(index);
+	}
+
+	return respawnPoint;
+}
+
+
 } // namespace invasion::game_models

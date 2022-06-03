@@ -22,7 +22,8 @@ RespawnPlayerResponseModel RespawnPlayerInteractor::execute(const RespawnPlayerR
 	const int playerId = req.player_id();
 	std::shared_ptr<Player> player_ptr = session.getPlayer(playerId);
 
-	player_ptr->respawn(Vector2D::ZERO);
+	Vector2D point = session.getRespawnPoint(player_ptr->getTeamId());
+	player_ptr->respawn(point);
 
 	RespawnPlayerResponseModel response;
 	response.set_player_id(playerId);
