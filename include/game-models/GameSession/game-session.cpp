@@ -28,6 +28,7 @@
 // controllers
 #include "controllers/StaticObjectsFileReader/static-objects-file-reader.h"
 #include "controllers/DirectoryFilesContainer/directory-files-container.h"
+#include "controllers/RespawnPointsFileReader/respawn-points-file-reader.h"
 // utils
 #include "utils/TimeUtilities/time-utilities.h"
 
@@ -41,24 +42,26 @@ GameSession::GameSession()
 	  m_nextSupplyId(0) {
 	
 	this->loadCollisionAssets();
-	/*
-	controllers::DirectoryFilesContainer container(COLLISION_ASSETS_DIRECTORY);
-	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
-	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
+	// first team respawn points
+	{
+		auto& respawnPoints = m_storage.getFirstTeamRespawnPoints();
+		this->loadRespawnPoints(GameSession::HUMANS_RESPAWN_POINTS_DIRECTORY, respawnPoints);
 
-	for(const auto& entry  : entries) {
-		controllers::StaticObjectsFileReader reader(entry.path().string());
-
-		const auto& objects = reader.getObjectsData();
-
-		for(const auto& object : objects) {
-			const Vector2D shape(object.getShape());
-			const Vector2D position(object.getPosition()); 
-			obstacles.push_back(std::make_shared<StaticObject>(shape, shape, position));
+		for(auto item : respawnPoints) {
+			std::cout << item << '\n';
 		}
 	}
-	*/
+
+	// second team respawn points
+	{
+		auto& respawnPoints = m_storage.getSecondTeamRespawnPoints();
+		this->loadRespawnPoints(GameSession::ALIENS_RESPAWN_POINTS_DIRECTORY, respawnPoints);
+
+		for(auto item : respawnPoints) {
+			std::cout << item << '\n';
+		}
+	}
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
 }
@@ -66,7 +69,7 @@ GameSession::GameSession()
 
 
 void GameSession::loadCollisionAssets() {
-	controllers::DirectoryFilesContainer container(COLLISION_ASSETS_DIRECTORY);
+	controllers::DirectoryFilesContainer container(GameSession::COLLISION_ASSETS_DIRECTORY);
 	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
 	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
@@ -86,6 +89,24 @@ void GameSession::loadCollisionAssets() {
 	std::cout << "GameSession: collision assets loaded. Object loaded: " << obstacles.size() << std::endl;
 }
 
+
+void GameSession::loadRespawnPoints(const std::string& filepath, std::vector<Vector2D>& respawnPoints) {
+	controllers::DirectoryFilesContainer container(filepath);
+	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
+
+	for(const auto& entry  : entries) {
+		controllers::RespawnPointsFileReader reader(entry.path().string());
+
+		const auto& objects = reader.getObjectsData();
+
+		for(const auto& object : objects) {
+			const Vector2D position(object.getPosition()); 
+			respawnPoints.push_back(position);
+		}
+	}
+
+	std::cout << "GameSession: respawn points loaded. Object loaded: " << respawnPoints.size() << std::endl;
+}
 
 
 // returns id of created player

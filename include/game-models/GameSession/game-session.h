@@ -57,11 +57,12 @@ public:
 	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;
 private:
 	void loadCollisionAssets();
+	void loadRespawnPoints(const std::string& filepath, std::vector<Vector2D>& respawnPoints);
 
 private:
 	inline static const std::string COLLISION_ASSETS_DIRECTORY = "client/godot/game/assets/statics/collision-assets";
-	inline static const std::string ALIENS_RESPAWN_POINTS_DIRECTORY = "client/godot/game/assets/statics/aliens-respawn-points";
 	inline static const std::string HUMANS_RESPAWN_POINTS_DIRECTORY = "client/godot/game/assets/statics/humans-respawn-points";
+	inline static const std::string ALIENS_RESPAWN_POINTS_DIRECTORY = "client/godot/game/assets/statics/aliens-respawn-points";
 
 	long long m_lastGameStateUpdate_ms;
 	int m_nextBulletId;
