@@ -1,6 +1,7 @@
 extends Control
 
 signal scene_changed(scene_name)
+signal play_click_sound()
 
 const HTTPRequester = preload("res://network/http_request.gd")
 var http_request: HTTPRequester = HTTPRequester.new()
@@ -20,9 +21,11 @@ func _ready():
 
 
 func _on_BackButton_pressed():
+	emit_signal("play_click_sound")
 	emit_signal("scene_changed", "start_screen")
 
 func _on_SubmitButton_pressed():
+	emit_signal("play_click_sound")
 	username = UsernameInput.text
 	password = PasswordInput.text
 	if (username.empty() || password.empty()):
