@@ -1,6 +1,6 @@
 [gd_scene load_steps=29 format=2]
 
-[ext_resource path="res://assets/Alien/Alien.png" type="Texture" id=1]
+[ext_resource path="res://player/images/Alien.png" type="Texture" id=1]
 
 [sub_resource type="Shader" id=34]
 resource_local_to_scene = true
