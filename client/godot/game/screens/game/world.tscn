@@ -959,6 +959,7 @@ script = ExtResource( 8 )
 
 [node name="BattleMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 40 )
+volume_db = -10.0
 
 [node name="UI" type="CanvasLayer" parent="."]
 

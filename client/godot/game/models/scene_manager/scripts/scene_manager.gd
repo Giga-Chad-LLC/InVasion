@@ -3,11 +3,17 @@ extends Node2D
 onready var current_scene = $UI/StartScreen
 var current_scene_name = "start_screen"
 onready var lobby_music = $UI/LobbyMusic
+onready var click_sound = $ClickSound
 
 func _ready():
+	current_scene.connect("play_click_sound", self, "_handle_play_click_sound")
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	lobby_music.play()
 	
+	
+func _handle_play_click_sound():
+	click_sound.play()
+		
 func _handle_scene_changed(next_scene_name):
 	match next_scene_name:
 		'start_screen':
@@ -43,6 +49,7 @@ func set_current_scene(next_scene, next_scene_name):
 	
 	current_scene.queue_free()
 	current_scene = next_scene
+	current_scene.connect("play_click_sound", self, "_handle_play_click_sound")
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	
 		
