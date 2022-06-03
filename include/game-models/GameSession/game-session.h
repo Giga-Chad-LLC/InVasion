@@ -56,7 +56,7 @@ public:
 
 	inline static const double MAX_INTERACTIVE_DISTANCE = 20.0;
 private:
-	inline static const std::string TILEMAPS_ASSETS_DIRECTORY = "client/godot/game/assets/statics/";
+	inline static const std::string COLLISION_ASSETS_DIRECTORY = "client/godot/game/assets/statics/collision-assets";
 
 	long long m_lastGameStateUpdate_ms;
 	int m_nextBulletId;

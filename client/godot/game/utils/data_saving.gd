@@ -35,7 +35,7 @@ func create_filename(name) -> String:
 		RAND_GENERATOR_ESTABLISHED = true
 		randomGenerator.randomize()
 	
-	var filename = "res://assets/statics/" + \
+	var filename = "res://assets/statics/collision-assets/" + \
 					name + "-" + String(randomGenerator.randi()) + \
 					"-static-data.invasion.txt"
 	return filename

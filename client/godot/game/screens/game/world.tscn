@@ -974,8 +974,10 @@ group = ExtResource( 12 )
 group = ExtResource( 12 )
 
 [node name="Leaderboard" parent="UI" instance=ExtResource( 13 )]
+visible = false
 
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
+visible = false
 
 [node name="BlueGrassBackground" type="Sprite" parent="."]
 position = Vector2( 203, 161 )
