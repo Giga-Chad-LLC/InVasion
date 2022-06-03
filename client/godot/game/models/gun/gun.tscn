@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://models/gun/images/gun1_sprite.png" type="Texture" id=1]
 [ext_resource path="res://models/gun/scripts/gun.gd" type="Script" id=2]
+[ext_resource path="res://models/gun/sounds/empty_gun_sound.wav" type="AudioStream" id=3]
+[ext_resource path="res://models/gun/sounds/reloading_gun_sound.wav" type="AudioStream" id=4]
 
 [node name="Gun" type="Node2D"]
 script = ExtResource( 2 )
@@ -15,5 +17,14 @@ position = Vector2( 11, 0 )
 
 [node name="CooldownTimer" type="Timer" parent="."]
 wait_time = 0.2
+
+[node name="ReloadingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+
+[node name="EmptyMagazineSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+volume_db = -6.118
+
+[node name="ShootingSounds" type="Node2D" parent="."]
 
 [connection signal="timeout" from="CooldownTimer" to="." method="_on_CooldownTimer_timeout"]

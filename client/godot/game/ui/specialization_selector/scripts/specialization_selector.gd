@@ -10,7 +10,7 @@ func connect_buttons_signals():
 		buttons[i].connect("pressed", self, "set_specialization", [buttons[i].value])
 
 func set_specialization(value):
-	# valuesx: {0, 1, 2, 3}
+	# values: {0, 1, 2, 3}
 	selected_specialization = value
 
 
@@ -22,6 +22,7 @@ func mark_selected_button():
 
 
 func _ready():
+	print("Sepc ready")
 	selected_specialization = Global.SpecializationTypes.Stormtrooper
 	mark_selected_button()
 	connect_buttons_signals()

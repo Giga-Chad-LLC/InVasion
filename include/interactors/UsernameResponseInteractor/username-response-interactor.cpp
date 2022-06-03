@@ -4,8 +4,7 @@
 
 // response-models
 #include "username-response-model.pb.h"
-// util-models
-#include "username-model.pb.h"
+
 
  
 namespace invasion::interactors {

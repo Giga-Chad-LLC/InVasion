@@ -58,11 +58,12 @@ func writeChildrenWithRectangularShapeInFile(filename, parent) -> void:
 		# iterating through children
 		# to find CollisionShape2D child with rect shape
 		for child in parent.get_children():
-			var global_position = parent.to_global(child.get_position())
+			#var global_position = parent.to_global(child.get_position())
 			
 			# if direct child is CollisionShape2D with rect shape
 			if(child is CollisionShape2D and \
 			   child.get_shape() is RectangleShape2D):
+				var global_position = parent.to_global(child.get_position())
 				var shape = child.get_shape().get_extents() * 2
 				suitable_children.push_back([global_position, shape])
 				continue
@@ -72,6 +73,8 @@ func writeChildrenWithRectangularShapeInFile(filename, parent) -> void:
 			for subchild in child.get_children():
 				if(subchild is CollisionShape2D and \
 				   subchild.get_shape() is RectangleShape2D):
+					# maybe 'parent' should be replaced with 'child' on the next line
+					var global_position = child.to_global(subchild.get_position())
 					var shape = subchild.get_shape().get_extents() * 2
 					suitable_children.push_back([global_position, shape])
 		

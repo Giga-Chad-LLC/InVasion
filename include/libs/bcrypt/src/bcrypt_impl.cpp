@@ -124,7 +124,11 @@ encode_salt(char *salt, u_int8_t *csalt, char minor, u_int16_t clen, u_int8_t lo
 	salt[3] = '$';
 
     // Max rounds are 31
+#ifdef WIN32
 	bcrypt_invasion_snprintf(salt + 4, 4, "%2.2u$", logr & 0x001F);
+#else
+    snprintf(salt + 4, 4, "%2.2u$", logr & 0x001F);
+#endif
 
 	encode_base64((u_int8_t *) salt + 7, csalt, clen);
 }
@@ -264,7 +268,12 @@ node_bcrypt(const char *key, size_t key_len, const char *salt, char *encrypted)
 		encrypted[i++] = minor;
 	encrypted[i++] = '$';
 
-	bcrypt_invasion_snprintf(encrypted + i, 4, "%2.2u$", logr & 0x001F);
+#ifdef WIN32
+    bcrypt_invasion_snprintf(encrypted + i, 4, "%2.2u$", logr & 0x001F);
+#else
+    snprintf(encrypted + i, 4, "%2.2u$", logr & 0x001F);
+#endif
+
 
 	encode_base64((u_int8_t *) encrypted + i + 3, csalt, BCRYPT_MAXSALT);
 	encode_base64((u_int8_t *) encrypted + strlen(encrypted), ciphertext,

@@ -1,31 +1,36 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/specialization_selector/scripts/button_export_value.gd" type="Script" id=2]
 [ext_resource path="res://ui/specialization_selector/scripts/specialization_selector.gd" type="Script" id=3]
+[ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=4]
 
 [node name="SpecializationSelector" type="Control"]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -180.0
-margin_right = 174.0
+margin_right = 180.0
 margin_bottom = -52.0
 rect_scale = Vector2( 0.5, 0.5 )
+theme = ExtResource( 1 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false,
 "_editor_description_": ""
 }
+specialization_button_group = ExtResource( 4 )
 
 [node name="StormtrooperButton" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -87.0
+margin_left = -90.0
 margin_top = -64.0
-margin_right = 87.0
+margin_right = 90.0
 margin_bottom = -44.0
 toggle_mode = true
+group = ExtResource( 4 )
 text = "Stormtrooper"
 script = ExtResource( 2 )
 __meta__ = {
@@ -37,11 +42,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -87.0
+margin_left = -90.0
 margin_top = -28.0
-margin_right = 87.0
+margin_right = 90.0
 margin_bottom = -8.0
 toggle_mode = true
+group = ExtResource( 4 )
 text = "Sentinel"
 script = ExtResource( 2 )
 __meta__ = {
@@ -54,11 +60,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -87.0
+margin_left = -90.0
 margin_top = 8.0
-margin_right = 87.0
+margin_right = 90.0
 margin_bottom = 28.0
 toggle_mode = true
+group = ExtResource( 4 )
 text = "Support"
 script = ExtResource( 2 )
 __meta__ = {
@@ -71,11 +78,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -87.0
+margin_left = -90.0
 margin_top = 44.0
-margin_right = 87.0
+margin_right = 90.0
 margin_bottom = 64.0
 toggle_mode = true
+group = ExtResource( 4 )
 text = "Medic"
 script = ExtResource( 2 )
 __meta__ = {
