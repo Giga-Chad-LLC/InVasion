@@ -15,6 +15,9 @@ const ClientCredentialsRequestModel = preload("res://proto/request-models/client
 const PlayerPositionResponseModel = preload("res://proto/response-models/player_position_response_model.gd")
 const GameStateResponseModel = preload("res://proto/response-models/game_state_response_model.gd")
 
+# Network
+const NetworkPacket = preload("res://network/data_types.gd")
+
 
 # Parameters
 var previous_action = MoveRequestModel.MoveRequestModel.MoveEvent.Idle
@@ -34,9 +37,26 @@ onready var use_supply_cooldown_timer = $UseSupplyCooldownTimer
 var is_gun_rotation_cooldown: bool = false
 onready var gun_rotation_cooldown_timer = $GunRotationCooldownTimer
 
-# Network
-const NetworkPacket = preload("res://network/data_types.gd")
+# gun reloading and ammunition
+var ammo: int = 0
+var magazine: int = 0
+var current_magazine: int = 0
+var is_reloading: bool = false setget set_is_reloading
 
+func set_is_reloading(value):
+	is_reloading = value
+
+func reset_ammo_stats(new_ammo: int, new_magazine: int):
+	ammo = new_ammo
+	magazine = new_magazine
+	current_magazine = new_magazine
+
+func update_ammo_stats(new_ammo: int = ammo, new_magazine: int = current_magazine):
+	ammo = new_ammo
+	current_magazine = new_magazine
+
+func maximize_magazine():
+	current_magazine = magazine
 
 # Built-in functions
 func _ready():
@@ -113,12 +133,16 @@ func get_player_shoot_request():
 			return network_packet 
 	return null
 
+
 func get_reload_gun_request():
-	if (Input.is_action_pressed("reload")):
+	if (Input.is_action_pressed("reload") and current_magazine != magazine and not is_reloading):
+		set_is_reloading(true)
+		player_gun.play_reloading_sound()
 		var reload = ReloadWeaponRequestModel.ReloadWeaponRequestModel.new()
 		reload.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(reload.to_bytes(), Global.RequestModels.ReloadWeaponRequestModel)
+		# player_gun.play_reloading_sound()	
 		if (network_packet):
 			return network_packet
 	return null
@@ -234,6 +258,5 @@ func set_player_info(new_player_id, new_team_id) -> void:
 	team_id = new_team_id
 	print("Set my id: ", player_id)
 	print("Set my team id: ", team_id)
-
 
 

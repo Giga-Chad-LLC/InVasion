@@ -16,16 +16,16 @@ __meta__ = {
 
 [node name="TeamsScore" parent="." instance=ExtResource( 2 )]
 
-[node name="AmmoStats" parent="." instance=ExtResource( 3 )]
-margin_left = 9.0
-margin_top = 17.0
-margin_right = -254.0
-margin_bottom = -149.0
-
 [node name="HealthStats" parent="." instance=ExtResource( 4 )]
 margin_left = 127.0
 margin_top = 26.0
 margin_right = -41.0
 margin_bottom = -135.0
+
+[node name="AmmoStats" parent="." instance=ExtResource( 3 )]
+margin_left = 8.0
+margin_top = 17.0
+margin_right = -224.0
+margin_bottom = -149.0
 
 [editable path="TeamsScore"]

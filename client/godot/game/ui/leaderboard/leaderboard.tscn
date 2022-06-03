@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ui/leaderboard/scripts/leaderboard_table.gd" type="Script" id=1]
 [ext_resource path="res://ui/leaderboard/scripts/leaderboard.gd" type="Script" id=2]
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=3]
 
 [node name="Leaderboard" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( -141, -24 )
+theme = ExtResource( 3 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -60,13 +62,13 @@ __meta__ = {
 
 [node name="Header" type="GridContainer" parent="Container/Header"]
 margin_right = 475.0
-margin_bottom = 14.0
+margin_bottom = 12.0
 size_flags_horizontal = 3
 columns = 4
 
 [node name="Username" type="Label" parent="Container/Header/Header"]
 margin_right = 115.0
-margin_bottom = 14.0
+margin_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -80,7 +82,7 @@ __meta__ = {
 [node name="Kills" type="Label" parent="Container/Header/Header"]
 margin_left = 119.0
 margin_right = 234.0
-margin_bottom = 14.0
+margin_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -91,7 +93,7 @@ valign = 1
 [node name="Deaths" type="Label" parent="Container/Header/Header"]
 margin_left = 238.0
 margin_right = 353.0
-margin_bottom = 14.0
+margin_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -105,7 +107,7 @@ __meta__ = {
 [node name="Ratio" type="Label" parent="Container/Header/Header"]
 margin_left = 357.0
 margin_right = 472.0
-margin_bottom = 14.0
+margin_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3

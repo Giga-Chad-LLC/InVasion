@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ui/escape_menu/scripts/escape_menu.gd" type="Script" id=1]
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=2]
 
 [node name="EscapeMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -18,7 +20,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 320.0
@@ -28,18 +30,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 288.0
-margin_top = 157.0
-margin_right = 352.0
-margin_bottom = 202.0
-custom_constants/separation = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="VBoxContainer" type="Control" parent="CenterContainer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -29.0
+margin_right = 90.0
+margin_bottom = 30.0
 
 [node name="Resume" type="Button" parent="CenterContainer/VBoxContainer"]
-margin_right = 64.0
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -90.0
+margin_right = 90.0
 margin_bottom = 20.0
 text = "Resume"
 __meta__ = {
@@ -47,9 +52,13 @@ __meta__ = {
 }
 
 [node name="Quit" type="Button" parent="CenterContainer/VBoxContainer"]
-margin_top = 25.0
-margin_right = 64.0
-margin_bottom = 45.0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -90.0
+margin_top = -20.0
+margin_right = 90.0
 text = "Quit"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Resume" to="." method="_on_Resume_pressed"]
