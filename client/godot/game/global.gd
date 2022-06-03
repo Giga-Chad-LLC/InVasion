@@ -2,7 +2,7 @@ extends Node
 
 var access_token: String = ""
 var username: String = ""
-var STORE_DATA_IN_FILE = true
+var STORE_DATA_IN_FILE = false
 
 const DataSavingUtils = preload("res://utils/data_saving.gd")
 

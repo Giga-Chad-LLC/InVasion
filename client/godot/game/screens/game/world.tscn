@@ -1,65 +1,40 @@
-[gd_scene load_steps=93 format=2]
+[gd_scene load_steps=90 format=2]
 
 [ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/grass/grass.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/bush/bush.tscn" type="PackedScene" id=3]
 [ext_resource path="res://screens/game/images/cliff_tileset.png" type="Texture" id=4]
-[ext_resource path="res://assets/World/tilesets/GrassBackground.png" type="Texture" id=5]
 [ext_resource path="res://screens/game/images/dirt_tileset.png" type="Texture" id=6]
 [ext_resource path="res://ui/escape_menu/escape_menu.tscn" type="PackedScene" id=7]
 [ext_resource path="res://screens/game/scripts/world.gd" type="Script" id=8]
 [ext_resource path="res://ui/respawn_menu/respawn_menu.tscn" type="PackedScene" id=9]
-[ext_resource path="res://screens/game/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
-[ext_resource path="res://screens/game/scripts/bushes.gd" type="Script" id=11]
+[ext_resource path="res://objects/tilemaps/scripts/dirt_cliff_tilemap.gd" type="Script" id=10]
+[ext_resource path="res://objects/bush/scripts/bushes.gd" type="Script" id=11]
 [ext_resource path="res://ui/specialization_selector/specialization_button_group.tres" type="ButtonGroup" id=12]
 [ext_resource path="res://ui/leaderboard/leaderboard.tscn" type="PackedScene" id=13]
 [ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=14]
-[ext_resource path="res://assets/World/tilesets/StonePathTilemap.png" type="Texture" id=15]
 [ext_resource path="res://assets/World/tilesets/StoneGroundTileset.png" type="Texture" id=16]
 [ext_resource path="res://assets/World/tilesets/WallsTileset.png" type="Texture" id=17]
-[ext_resource path="res://screens/game/scripts/collided_stone_walls_tilemap.gd" type="Script" id=18]
+[ext_resource path="res://objects/tilemaps/scripts/collided_stone_walls_tilemap.gd" type="Script" id=18]
 [ext_resource path="res://assets/World/tilesets/BlueGrassBackground.png" type="Texture" id=19]
 [ext_resource path="res://objects/monuments/small_monument.tscn" type="PackedScene" id=20]
-[ext_resource path="res://screens/game/scripts/monuments.gd" type="Script" id=21]
+[ext_resource path="res://objects/monuments/scripts/monuments.gd" type="Script" id=21]
 [ext_resource path="res://objects/monuments/large_monument.tscn" type="PackedScene" id=22]
 [ext_resource path="res://objects/monuments/medium_monument.tscn" type="PackedScene" id=23]
 [ext_resource path="res://objects/pillars/large_pillar.tscn" type="PackedScene" id=24]
-[ext_resource path="res://screens/game/scripts/pillars.gd" type="Script" id=25]
+[ext_resource path="res://objects/pillars/scripts/pillars.gd" type="Script" id=25]
 [ext_resource path="res://objects/pillars/broken_pillar.tscn" type="PackedScene" id=26]
 [ext_resource path="res://objects/pillars/small_pillar.tscn" type="PackedScene" id=27]
 [ext_resource path="res://objects/block/block.tscn" type="PackedScene" id=28]
-[ext_resource path="res://screens/game/scripts/blocks.gd" type="Script" id=29]
+[ext_resource path="res://objects/block/scripts/blocks.gd" type="Script" id=29]
 [ext_resource path="res://objects/altar/altar.tscn" type="PackedScene" id=30]
-[ext_resource path="res://objects/rocks/medium_blue_rock.tscn" type="PackedScene" id=31]
-[ext_resource path="res://screens/game/scripts/blue_rocks.gd" type="Script" id=32]
-[ext_resource path="res://objects/rocks/pretiny_blue_rock.tscn" type="PackedScene" id=33]
-[ext_resource path="res://objects/rocks/tiny_blue_rock.tscn" type="PackedScene" id=34]
+[ext_resource path="res://objects/blue_rocks/medium_blue_rock.tscn" type="PackedScene" id=31]
+[ext_resource path="res://objects/blue_rocks/scripts/blue_rocks.gd" type="Script" id=32]
+[ext_resource path="res://objects/blue_rocks/pretiny_blue_rock.tscn" type="PackedScene" id=33]
+[ext_resource path="res://objects/blue_rocks/tiny_blue_rock.tscn" type="PackedScene" id=34]
 [ext_resource path="res://objects/effects/flamelash.tscn" type="PackedScene" id=35]
 [ext_resource path="res://assets/World/tilesets/StonePathBlueTilemap.png" type="Texture" id=37]
 [ext_resource path="res://objects/effects/bright_flame.tscn" type="PackedScene" id=38]
-
-[sub_resource type="TileSet" id=50]
-0/name = "StonePathTilemap.png 0"
-0/texture = ExtResource( 15 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 96, 112 )
-0/tile_mode = 2
-0/autotile/icon_coordinate = Vector2( 0, 0 )
-0/autotile/tile_size = Vector2( 16, 16 )
-0/autotile/spacing = 0
-0/autotile/occluder_map = [  ]
-0/autotile/navpoly_map = [  ]
-0/autotile/priority_map = [ Vector3( 0, 0, 2 ), Vector3( 0, 1, 2 ), Vector3( 1, 0, 2 ), Vector3( 1, 1, 2 ), Vector3( 2, 0, 2 ), Vector3( 3, 0, 2 ) ]
-0/autotile/z_index_map = [  ]
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shape_offset = Vector2( 0, 0 )
-0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape_one_way = false
-0/shape_one_way_margin = 0.0
-0/shapes = [  ]
-0/z_index = 0
 
 [sub_resource type="TileSet" id=54]
 0/name = "StonePathBlueTilemap.png 0"
@@ -1006,24 +981,11 @@ visible = false
 [node name="EscapeMenu" parent="UI" instance=ExtResource( 7 )]
 visible = false
 
-[node name="GreenGrassBackground" type="Sprite" parent="."]
-visible = false
-position = Vector2( -586, -664 )
-texture = ExtResource( 5 )
-centered = false
-region_enabled = true
-region_rect = Rect2( -384, -464, 1500, 1500 )
-
 [node name="BlueGrassBackground" type="Sprite" parent="."]
 position = Vector2( 203, 161 )
 texture = ExtResource( 19 )
 region_enabled = true
 region_rect = Rect2( -336, -224, 1500, 1500 )
-
-[node name="StonePathTileMap" type="TileMap" parent="."]
-tile_set = SubResource( 50 )
-cell_size = Vector2( 16, 16 )
-format = 1
 
 [node name="StonePathBlueTileMap" type="TileMap" parent="."]
 tile_set = SubResource( 54 )
