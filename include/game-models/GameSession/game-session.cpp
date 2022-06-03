@@ -40,7 +40,7 @@ GameSession::GameSession()
 	  m_nextPlayerId(0),
 	  m_nextSupplyId(0) {
 	
-	controllers::DirectoryFilesContainer container(TILEMAPS_ASSETS_DIRECTORY);
+	controllers::DirectoryFilesContainer container(COLLISION_ASSETS_DIRECTORY);
 	std::vector<std::filesystem::directory_entry> entries = container.obtainFilesWithExtension(".txt");
 
 	std::vector<std::shared_ptr<StaticObject>>& obstacles = m_storage.getObstacles();
