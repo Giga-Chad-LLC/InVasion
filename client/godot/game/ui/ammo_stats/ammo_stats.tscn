@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ui/ammo_stats/scripts/ammo_stats.gd" type="Script" id=1]
+[ext_resource path="res://ui/ammo_stats/sprites/ammo_picture.png" type="Texture" id=2]
 
 [node name="AmmoStats" type="Control"]
 anchor_right = 1.0
@@ -9,9 +10,6 @@ margin_right = -263.0
 margin_bottom = -166.0
 rect_scale = Vector2( 0.5, 0.5 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Magazine" type="Label" parent="."]
 anchor_left = 0.5
@@ -57,3 +55,8 @@ margin_bottom = 7.0
 text = "000"
 align = 1
 valign = 1
+
+[node name="AmmoPicture" type="Sprite" parent="."]
+position = Vector2( 10, 6 )
+scale = Vector2( 0.0934783, 0.0882353 )
+texture = ExtResource( 2 )
