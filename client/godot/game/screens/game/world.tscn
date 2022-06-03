@@ -36,7 +36,7 @@
 [ext_resource path="res://objects/rocks/TinyBlueRock.tscn" type="PackedScene" id=34]
 [ext_resource path="res://objects/effects/Flamelash.tscn" type="PackedScene" id=35]
 [ext_resource path="res://screens/game/scripts/altar.gd" type="Script" id=36]
-[ext_resource path="res://Theme.tres" type="Theme" id=37]
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=37]
 
 [sub_resource type="TileSet" id=50]
 0/name = "StonePathTilemap.png 0"

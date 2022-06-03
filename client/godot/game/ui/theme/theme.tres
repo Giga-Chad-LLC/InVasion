@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=11 format=2]
 
-[ext_resource path="res://Pixel Square 10.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://ui/theme/font_data.ttf" type="DynamicFontData" id=1]
 
 [sub_resource type="DynamicFont" id=10]
 size = 12
