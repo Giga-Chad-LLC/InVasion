@@ -6,11 +6,27 @@ var STORE_DATA_IN_FILE = true
 
 const DataSavingUtils = preload("res://utils/data_saving.gd")
 
+
+
 func saveNodesChildrenCollisionShapesInFile(node):
 	var utils = DataSavingUtils.new()
 	
 	var filename = utils.create_filename(node.name)
 	utils.writeChildrenWithRectangularShapeInFile(filename, node)
+
+
+
+func saveTilemapCellsInFile(tilemap):
+	var utils = DataSavingUtils.new()
+	
+	var cellSize = utils.getMapCellSize(tilemap)
+	var tilesPositions = utils.getTileCentersGlobalPositions(tilemap)
+	
+	var filename = utils.create_filename(tilemap.name)
+	
+	utils.writeTilemapDataInFile(filename, tilesPositions, cellSize)
+
+
 
 
 func instance_node_at_location(node: Object, parent: Object, location: Vector2) -> Object:
