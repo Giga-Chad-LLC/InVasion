@@ -12,10 +12,6 @@ var player_id = -1 # id of owner of the bullet
 #	yield(get_tree(), "idle_frame")
 #	visible = true
 
-onready var bullet_sound = $BulletSound
-
-func play_sound(team_id):
-	bullet_sound.play_sound(team_id)
 
 func update_bullet_position(bullet_position_model):
 	velocity = Vector2(bullet_position_model.get_velocity().get_x(), bullet_position_model.get_velocity().get_y())

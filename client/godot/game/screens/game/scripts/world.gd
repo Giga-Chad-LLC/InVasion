@@ -118,7 +118,6 @@ func _process(_delta):
 			producer.push_data(gun_rotation_request)
 		var reload_gun_request = Player.get_reload_gun_request()
 		if (reload_gun_request):
-			
 			producer.push_data(reload_gun_request)
 	
 #	Receive data from server
@@ -221,6 +220,7 @@ func _process(_delta):
 			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
 				Player.set_is_active(true)
 				Player.visible = true
+				Player.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
 				AmmoStats.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
 				HealthStats.reset_health_stats(new_player_specialization.get_initial_hitpoints(), new_player_specialization.get_initial_hitpoints())
 		Global.ResponseModels.GameStateResponseModel:
@@ -236,7 +236,7 @@ func _process(_delta):
 				# update illed players
 				players_state_manager.update_killed_players_states(new_game_state.get_killed_players(), Player, players_parent_node)
 				# update bullets
-				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node)
+				bullets_state_manager.update_bullets_states(new_game_state.get_bullets(), bullets_parent_node, players_state_manager, Player, players_parent_node)
 				# update scores
 				if (new_game_state.get_killed_players() and !new_game_state.get_killed_players().empty()):
 					var killed_players_info = players_state_manager.get_killed_players_info(
@@ -272,6 +272,8 @@ func _process(_delta):
 			if (result_code != WeaponStateResponseModel.PB_ERR.NO_ERRORS):
 				print("Error while receiving: ", "cannot unpack weapon state model")
 			else:
+				Player.set_is_reloading(new_weapon_state.get_is_reloading())
+				Player.update_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
 				AmmoStats.update_ammo_stats(new_weapon_state.get_left_ammo(), new_weapon_state.get_left_magazine())
 				if (new_weapon_state.get_is_reloading_required()):
 					Player.player_gun.play_empty_magazine_sound()
@@ -305,7 +307,7 @@ func _process(_delta):
 			if (result_code != UpdatePlayerAmmoResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack update player ammo model")
 			else:
-				# print("Our new ammo capacity: ", new_ammo.get_new_ammo())
+				Player.update_ammo_stats(new_ammo.get_new_ammo())
 				AmmoStats.update_ammo_stats(new_ammo.get_new_ammo())
 		Global.ResponseModels.UpdatePlayerHitpointsResponseModel:
 			var new_hitpoints = UpdatePlayerHitpointsResponseModel.UpdatePlayerHitpointsResponseModel.new()
@@ -336,6 +338,7 @@ func _process(_delta):
 			Player.set_is_active(true)
 			RespawnMenu.toggle(false)
 			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
+			Player.maximize_magazine()
 			AmmoStats.maximize_magazine() # uses memorized Ammo
 		_:
 			print("Unknown message type: ", received_packet.message_type)
