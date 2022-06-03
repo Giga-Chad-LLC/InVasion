@@ -2,6 +2,16 @@ extends Node
 
 var access_token: String = ""
 var username: String = ""
+var STORE_DATA_IN_FILE = true
+
+const DataSavingUtils = preload("res://utils/data_saving.gd")
+
+func saveNodesChildrenCollisionShapesInFile(node):
+	var utils = DataSavingUtils.new()
+	
+	var filename = utils.create_filename(node.name)
+	utils.writeChildrenWithRectangularShapeInFile(filename, node)
+
 
 func instance_node_at_location(node: Object, parent: Object, location: Vector2) -> Object:
 	var node_instance = instance_node(node, parent)
