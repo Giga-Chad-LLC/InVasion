@@ -86,7 +86,6 @@ func _on_RespawnButton_pressed():
 
 func _ready():
 	# Play battle music
-	print("Play battle music")
 	battle_music.play()
 	# Establish connection to server
 	client_connection.connection.connect("connected", self, "_handle_connection_opened")

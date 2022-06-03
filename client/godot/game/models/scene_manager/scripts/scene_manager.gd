@@ -4,12 +4,6 @@ onready var current_scene = $UI/StartScreen
 var current_scene_name = "start_screen"
 onready var lobby_music = $UI/LobbyMusic
 
-func _process(delta):
-	# if sound ended, play it
-	if (!cur_sound.playing):
-		cur_sound.play()
-
-
 func _ready():
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	lobby_music.play()
@@ -41,13 +35,10 @@ func _handle_scene_changed(next_scene_name):
 
 
 func set_current_scene(next_scene, next_scene_name):
-	print("Scene: ", next_scene_name)
 	if (next_scene_name == "game"):
-		print("Stop playing lobby")
 		lobby_music.stop()
 	else:
 		if (!lobby_music.is_playing()):
-			print("Start playing lobby")
 			lobby_music.play()
 	
 	current_scene.queue_free()
