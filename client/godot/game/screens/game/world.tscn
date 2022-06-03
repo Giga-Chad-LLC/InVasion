@@ -19,24 +19,24 @@
 [ext_resource path="res://assets/World/tilesets/WallsTileset.png" type="Texture" id=17]
 [ext_resource path="res://screens/game/scripts/collided_stone_walls_tilemap.gd" type="Script" id=18]
 [ext_resource path="res://assets/World/tilesets/BlueGrassBackground.png" type="Texture" id=19]
-[ext_resource path="res://objects/monuments/SmallMonument.tscn" type="PackedScene" id=20]
+[ext_resource path="res://objects/monuments/small_monument.tscn" type="PackedScene" id=20]
 [ext_resource path="res://screens/game/scripts/monuments.gd" type="Script" id=21]
-[ext_resource path="res://objects/monuments/LargeMonument.tscn" type="PackedScene" id=22]
-[ext_resource path="res://objects/monuments/MediumMonument.tscn" type="PackedScene" id=23]
-[ext_resource path="res://objects/pillars/LargePillar.tscn" type="PackedScene" id=24]
+[ext_resource path="res://objects/monuments/large_monument.tscn" type="PackedScene" id=22]
+[ext_resource path="res://objects/monuments/medium_monument.tscn" type="PackedScene" id=23]
+[ext_resource path="res://objects/pillars/large_pillar.tscn" type="PackedScene" id=24]
 [ext_resource path="res://screens/game/scripts/pillars.gd" type="Script" id=25]
-[ext_resource path="res://objects/pillars/BrokenPillar.tscn" type="PackedScene" id=26]
-[ext_resource path="res://objects/pillars/SmallPillar.tscn" type="PackedScene" id=27]
-[ext_resource path="res://objects/block/Block.tscn" type="PackedScene" id=28]
+[ext_resource path="res://objects/pillars/broken_pillar.tscn" type="PackedScene" id=26]
+[ext_resource path="res://objects/pillars/small_pillar.tscn" type="PackedScene" id=27]
+[ext_resource path="res://objects/block/block.tscn" type="PackedScene" id=28]
 [ext_resource path="res://screens/game/scripts/blocks.gd" type="Script" id=29]
 [ext_resource path="res://objects/altar/altar.tscn" type="PackedScene" id=30]
-[ext_resource path="res://objects/rocks/MediumBlueRock.tscn" type="PackedScene" id=31]
+[ext_resource path="res://objects/rocks/medium_blue_rock.tscn" type="PackedScene" id=31]
 [ext_resource path="res://screens/game/scripts/blue_rocks.gd" type="Script" id=32]
-[ext_resource path="res://objects/rocks/PretinyBlueRock.tscn" type="PackedScene" id=33]
-[ext_resource path="res://objects/rocks/TinyBlueRock.tscn" type="PackedScene" id=34]
-[ext_resource path="res://objects/effects/Flamelash.tscn" type="PackedScene" id=35]
+[ext_resource path="res://objects/rocks/pretiny_blue_rock.tscn" type="PackedScene" id=33]
+[ext_resource path="res://objects/rocks/tiny_blue_rock.tscn" type="PackedScene" id=34]
+[ext_resource path="res://objects/effects/flamelash.tscn" type="PackedScene" id=35]
 [ext_resource path="res://assets/World/tilesets/StonePathBlueTilemap.png" type="Texture" id=37]
-[ext_resource path="res://objects/effects/BrightFlame.tscn" type="PackedScene" id=38]
+[ext_resource path="res://objects/effects/bright_flame.tscn" type="PackedScene" id=38]
 
 [sub_resource type="TileSet" id=50]
 0/name = "StonePathTilemap.png 0"
@@ -1093,10 +1093,10 @@ script = ExtResource( 29 )
 position = Vector2( -89, -5 )
 
 [node name="Block2" parent="YSort/Blocks" instance=ExtResource( 28 )]
-position = Vector2( 77, -64 )
+position = Vector2( 71, -67 )
 
 [node name="Block3" parent="YSort/Blocks" instance=ExtResource( 28 )]
-position = Vector2( 120, -63 )
+position = Vector2( 152, -88 )
 
 [node name="Block4" parent="YSort/Blocks" instance=ExtResource( 28 )]
 position = Vector2( -48, 184 )
@@ -1177,7 +1177,7 @@ position = Vector2( -14, -114 )
 position = Vector2( 406, 326 )
 
 [node name="MediumBlueRock1" parent="YSort/BlueRocks" instance=ExtResource( 31 )]
-position = Vector2( 427, 1 )
+position = Vector2( 431, 7 )
 
 [node name="MediumBlueRock2" parent="YSort/BlueRocks" instance=ExtResource( 31 )]
 position = Vector2( 193, -160 )
