@@ -26,5 +26,6 @@ set(INTERACTORS-SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/UsernameResponseInteractor/username-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientConnectedResponseInteractor/client-connected-response-interactor.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientDisconnectedResponseInteractor/client-disconnected-response-interactor.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/GameOverResponseInteractor/game-over-response-interactor.cpp
 	PARENT_SCOPE
 )

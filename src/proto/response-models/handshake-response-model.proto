@@ -48,11 +48,13 @@ message SupplyModel {
 	bool is_active = 7;
 }
 
+
 enum PlayerSpecialization {
 	Stormtrooper = 0;
 	Sentinel = 1;
 	Support = 2;
 	Medic = 3;
+	UNDEFINED = 4;
 }
 
 message PlayerDataModel {
@@ -65,6 +67,7 @@ message PlayerDataModel {
 	int32 kills = 7;
 	int32 deaths = 8; 
 }
+
 
 
 message HandshakeResponseModel {

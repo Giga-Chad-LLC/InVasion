@@ -2,6 +2,7 @@ extends Control
 
 onready var AllyTable = $Container/AllyTeam
 onready var FoeTable = $Container/FoeTeam
+onready var Title = $Title
 var is_active: = true
 
 func _ready():
@@ -14,6 +15,9 @@ func _input(event):
 	elif event.is_action_pressed("leaderboard"):
 		if (is_active):
 			visible = true
+
+func set_text(text):
+	Title.text = text
 
 func set_main_player_id(id: int):
 	AllyTable.main_player_id = id

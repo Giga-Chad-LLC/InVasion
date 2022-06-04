@@ -19,13 +19,14 @@
 namespace invasion::game_models {
 // following data was taken from M16A4 shooting stats (Call of Duty)
 const long long Weapon::RELOAD_DURATION_MS = 2100;
-const int Weapon::MAGAZINE = 30;
+// const int Weapon::MAGAZINE = 30;
 
 
-Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int damage) 
-	: m_leftMagazine(Weapon::MAGAZINE),
+Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int initialMagazine, int damage) 
+	: m_leftMagazine(initialMagazine),
 	  m_leftAmmo(ammo),
 	  m_initialAmmo(ammo),
+	  m_initialMagazine(initialMagazine),
 	  m_damage(damage),
 	  m_direction(1.0, 0.0),
 	  m_playerId(playerId),
@@ -66,7 +67,7 @@ bool Weapon::isAbleToShoot() const {
 bool Weapon::reload() {
 	std::unique_lock ul{ mtx_reload };
 	
-	if (m_leftAmmo == 0 || m_leftMagazine == Weapon::MAGAZINE || m_isReloading.load()) {
+	if (m_leftAmmo == 0 || m_leftMagazine == m_initialMagazine || m_isReloading.load()) {
 		return false;
 	}
 	
@@ -76,13 +77,13 @@ bool Weapon::reload() {
 	// reloading/sleeping
 	std::this_thread::sleep_for(std::chrono::milliseconds(Weapon::RELOAD_DURATION_MS));
 	
-	if(m_leftAmmo < Weapon::MAGAZINE - m_leftMagazine) {
+	if(m_leftAmmo < m_initialMagazine - m_leftMagazine) {
 		m_leftMagazine += m_leftAmmo;
 		m_leftAmmo = 0;
 	}
 	else {
-		m_leftAmmo -= (Weapon::MAGAZINE - m_leftMagazine);
-		m_leftMagazine = Weapon::MAGAZINE;
+		m_leftAmmo -= (m_initialMagazine - m_leftMagazine);
+		m_leftMagazine = m_initialMagazine;
 	}
 
 	ul.lock();
@@ -106,7 +107,7 @@ bool Weapon::isReloading() const {
 void Weapon::reset() {
 	std::unique_lock ul{ mtx_reload };
 
-	m_leftMagazine = Weapon::MAGAZINE;
+	m_leftMagazine = m_initialMagazine;
 	m_leftAmmo = m_initialAmmo;
 	m_isReloading.store(false);
 	m_direction = std::move(Vector2D(1.0, 0.0));

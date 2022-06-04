@@ -20,6 +20,7 @@ public:
 	std::shared_ptr<StaticSupply> applyAbility(int supplyId) override;
 
 	inline static int INITIAL_AMMO = 120;
+	inline static int INITIAL_MAGAZINE = 20;
 private:
 	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
 };

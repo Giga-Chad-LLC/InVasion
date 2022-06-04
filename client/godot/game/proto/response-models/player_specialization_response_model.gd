@@ -660,13 +660,6 @@ class PBPacker:
 ############### USER DATA BEGIN ################
 
 
-enum PlayerSpecialization {
-	Stormtrooper = 0,
-	Sentinel = 1,
-	Support = 2,
-	Medic = 3
-}
-
 class PlayerSpecializationResponseModel:
 	func _init():
 		var service
@@ -764,4 +757,12 @@ class PlayerSpecializationResponseModel:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+enum PlayerSpecialization {
+	Stormtrooper = 0,
+	Sentinel = 1,
+	Support = 2,
+	Medic = 3,
+	UNDEFINED = 4
+}
+
 ################ USER DATA END #################

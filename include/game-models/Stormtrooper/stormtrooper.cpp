@@ -22,6 +22,7 @@ Stormtrooper::Stormtrooper(Vector2D position, int playerId, PlayerTeamId teamId)
 		teamId,
 		Stormtrooper::INITIAL_HIT_POINTS,
 		Stormtrooper::INITIAL_AMMO,
+		Stormtrooper::INITIAL_MAGAZINE,
 		Stormtrooper::DAMAGE
 	) {};
 

@@ -1,6 +1,8 @@
 #include <cassert>
 #include <thread>
 #include <iterator>
+#include <algorithm>
+
 
 #include "session.h"
 // database
@@ -27,7 +29,7 @@
 #include "interactors/FormJSONPlayerStatsResponseInteractor/form-json-player-stats-response-interactor.h"
 #include "interactors/ClientConnectedResponseInteractor/client-connected-response-interactor.h"
 #include "interactors/ClientDisconnectedResponseInteractor/client-disconnected-response-interactor.h"
-#include "algorithm"
+#include "interactors/GameOverResponseInteractor/game-over-response-interactor.h"
 
 
 
@@ -80,7 +82,9 @@ void Session::onGameOver() {
         std::scoped_lock sl{ mtx_connections, mtx_clientsThreadPool };
         latch = std::make_shared <CountDownLatch> (static_cast <uint32_t> (m_connections.size()));
         for (auto [ client, clientResponseQueue ] : m_connections) {
-            response_models::GameOverResponseModel gameOverModel;
+			interactors::GameOverResponseInteractor interactor;
+            response_models::GameOverResponseModel gameOverModel = interactor.execute(*m_gameSession);
+
             auto response = std::make_shared <NetworkPacketResponse> (
                 NetworkPacket::serialize(gameOverModel),
                 ResponseModel_t::GameOverResponseModel,

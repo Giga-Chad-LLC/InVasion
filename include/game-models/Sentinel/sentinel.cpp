@@ -21,6 +21,7 @@ Sentinel::Sentinel(Vector2D position, int playerId, PlayerTeamId teamId)
 		teamId,
 		Sentinel::INITIAL_HIT_POINTS,
 		Sentinel::INITIAL_AMMO,
+		Sentinel::INITIAL_MAGAZINE,
 		Sentinel::DAMAGE
 	) {}
 

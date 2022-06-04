@@ -22,6 +22,7 @@ UnspecializedPlayer::UnspecializedPlayer(Vector2D position, int playerId, Player
 		teamId,
 		Player::INITIAL_HIT_POINTS,
 		Player::INITIAL_AMMO,
+		Player::INITIAL_MAGAZINE,
 		Player::DAMAGE
 	) {
 		// setting unactive state

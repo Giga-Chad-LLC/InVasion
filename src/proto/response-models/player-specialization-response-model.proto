@@ -15,13 +15,7 @@ message PlayerSpecializationResponseModel {
 
 /* // for godobuf 
 
-enum PlayerSpecialization {
-	Stormtrooper = 0;
-	Sentinel = 1;
-	Support = 2;
-	Medic = 3;
-}
-
+import "../utils/player-specialization.proto";
 message PlayerSpecializationResponseModel {
 	int32 player_id = 1;
 	PlayerSpecialization specialization = 2;
@@ -29,5 +23,4 @@ message PlayerSpecializationResponseModel {
 	int32 magazine = 4;
 	int32 ammo = 5;
 }
-
 */
