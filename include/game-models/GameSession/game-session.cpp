@@ -47,20 +47,12 @@ GameSession::GameSession()
 	{
 		auto& respawnPoints = m_storage.getFirstTeamRespawnPoints();
 		this->loadRespawnPoints(GameSession::HUMANS_RESPAWN_POINTS_DIRECTORY, respawnPoints);
-
-		for(auto item : respawnPoints) {
-			std::cout << item << '\n';
-		}
 	}
 
 	// second team respawn points
 	{
 		auto& respawnPoints = m_storage.getSecondTeamRespawnPoints();
 		this->loadRespawnPoints(GameSession::ALIENS_RESPAWN_POINTS_DIRECTORY, respawnPoints);
-
-		for(auto item : respawnPoints) {
-			std::cout << item << '\n';
-		}
 	}
 
 	m_lastGameStateUpdate_ms = utils::TimeUtilities::getCurrentTime_ms();
