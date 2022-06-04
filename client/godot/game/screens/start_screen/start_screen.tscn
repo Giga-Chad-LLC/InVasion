@@ -20,12 +20,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -29.0
+margin_top = 8.0
+margin_right = 29.0
+margin_bottom = 20.0
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 1, 1, 1, 0 )
+text = "InVasion"
+align = 1
+percent_visible = -0.125
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CenterContainer" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 320.0
 margin_bottom = 180.0
 rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ButtonGroup" type="Control" parent="CenterContainer"]
 anchor_left = 0.5
