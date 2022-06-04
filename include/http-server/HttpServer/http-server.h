@@ -5,18 +5,18 @@
 #include <iostream>
 #include <regex>
 #include <thread>
+// libs
+#include "libs/crow/crow_all.h"
 
 namespace invasion::http_server {
     class HttpServer {
     private:
-        std::thread thread_;
-
+        std::thread m_thread;
+        crow::SimpleApp m_app;
     public:
-
         void start();
-
         void stop();
     };
 }
 
-#endif//INVASIONSERVERS_HTTP_SERVER_H_
+#endif // INVASIONSERVERS_HTTP_SERVER_H_

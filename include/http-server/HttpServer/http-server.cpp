@@ -3,8 +3,6 @@
 
 #include "http-server.h"
 
-// libs
-#include "libs/crow/crow_all.h"
 // database
 #include "database/AuthService/auth-service.h"
 #include "database/StatisticAccessor/statistic-accessor.h"
@@ -27,16 +25,15 @@ namespace invasion::http_server {
     }
 
     void HttpServer::start() {
-        StatisticAccessor::clear(); // просто очистка БД для debug-режима
+        StatisticAccessor::clear(); 
         Authenticator::deleteAll();
         DatabaseAccessor::deleteAll();
 
-        thread_ = std::move(std::thread{[]() {
+        m_thread = std::move(std::thread{[this]() {
             static const std::regex invalidSymbols(R"([a-zA-Z0-9]*)");
 
             AuthService::deleteAllUsers();
-            crow::SimpleApp app;
-            CROW_ROUTE(app, "/register")
+            CROW_ROUTE(m_app, "/register")
                     .methods("POST"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
@@ -68,7 +65,7 @@ namespace invasion::http_server {
                                 }
 
                             });
-            CROW_ROUTE(app, "/login")
+            CROW_ROUTE(m_app, "/login")
                     .methods("GET"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
@@ -95,7 +92,7 @@ namespace invasion::http_server {
                                     return crow::response(400, responseJson);
                                 }
                             });
-            CROW_ROUTE(app, "/statistic")  // get player statistic
+            CROW_ROUTE(m_app, "/statistic")  // get player statistic
                     .methods("GET"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
@@ -114,7 +111,7 @@ namespace invasion::http_server {
                                 responseJson = statisticToJson(playerStatistic);
                                 return crow::response(200, responseJson);
                             });
-            CROW_ROUTE(app, "/statistic") // update player statistic
+            CROW_ROUTE(m_app, "/statistic") // update player statistic
                     .methods("PUT"_method)
                             ([](const crow::request &rowRequest) {
                                 auto requestJson = crow::json::load(rowRequest.body);
@@ -138,12 +135,12 @@ namespace invasion::http_server {
                                 return crow::response(200, responseJson);
                             });
 
-            app.port(5555).multithreaded().run();
+            m_app.port(5555).multithreaded().run();
         }});
-        thread_.detach();
+        m_thread.detach();
     }
 
     void HttpServer::stop() {
-        thread_.join();
+        m_app.stop();
     }
 }

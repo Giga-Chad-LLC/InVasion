@@ -15,24 +15,27 @@
 
 int main() {
     try {
-
-        invasion::http_server::HttpServer httpServer;
-        httpServer.start();
-
         bool shouldStop = false;
+        std::string host = "127.0.0.1";
+        short port = 8000;
         invasion::server::Server server;
+        invasion::http_server::HttpServer httpServer;
         
         if (!shouldStop) {
-            server.start("127.0.0.1", 8000); // blocks the current thread of execution!
+            httpServer.start();
+            server.start(host, port); // blocks the current thread of execution!
         }
         else {
-            std::thread serverThread([&server]() {
-                server.start("127.0.0.1", 8000); // blocks the current thread of execution!
+            std::thread serverThread([&server, &httpServer, host, port]() {
+                httpServer.start();
+                server.start(host, port); // blocks the current thread of execution!
             });
+
             serverThread.detach();
 
             invasion::controllers::FixedTimeoutCallbackInvoker timeout;
-            timeout.setTimeout(1000 * 20, [&serverThread, &server]() {
+            timeout.setTimeout(1000 * 20, [&serverThread, &server, &httpServer]() {
+                httpServer.stop();
                 server.stop();
             });
         }
