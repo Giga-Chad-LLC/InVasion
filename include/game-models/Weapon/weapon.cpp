@@ -35,13 +35,13 @@ Weapon::Weapon(int playerId, PlayerTeamId teamId, int ammo, int initialMagazine,
 
 
 // Weapon::shoot may be called only if gun is able to shoot
-std::shared_ptr<Bullet> Weapon::shoot(const Vector2D playerPosition, const int bulletId) {
+std::shared_ptr<Bullet> Weapon::shoot(const Vector2D bulletPosition, const int bulletId) {
 	assert(isAbleToShoot());
 	
 	m_leftMagazine--;
 
 	std::shared_ptr<Bullet> bullet_ptr = std::make_shared<Bullet>(
-		std::move(playerPosition), 
+		std::move(bulletPosition), 
 		bulletId, 
 		m_playerId,
 		m_playerTeamId,
