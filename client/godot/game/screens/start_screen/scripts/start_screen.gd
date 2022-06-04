@@ -14,3 +14,8 @@ func _on_RegisterButton_pressed():
 	emit_signal("scene_changed", "register_screen")
 
 
+
+
+func _on_BackButton_pressed():
+	emit_signal("play_click_sound")
+	emit_signal("scene_changed", "settings_screen")

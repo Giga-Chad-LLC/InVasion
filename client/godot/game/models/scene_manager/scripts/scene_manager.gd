@@ -1,7 +1,7 @@
 extends Node2D
 
-onready var current_scene = $UI/StartScreen
-var current_scene_name = "start_screen"
+onready var current_scene = $UI/SettingsScreen
+var current_scene_name = "settings_screen"
 onready var lobby_music = $UI/LobbyMusic
 onready var click_sound = $ClickSound
 
@@ -16,6 +16,10 @@ func _handle_play_click_sound():
 		
 func _handle_scene_changed(next_scene_name):
 	match next_scene_name:
+		'settings_screen':
+			var next_scene = load("res://screens/settings_screen/settings_screen.tscn").instance()
+			$UI.add_child(next_scene)
+			set_current_scene(next_scene, next_scene_name)
 		'start_screen':
 			var next_scene = load("res://screens/start_screen/start_screen.tscn").instance()
 			$UI.add_child(next_scene)

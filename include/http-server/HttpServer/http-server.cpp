@@ -26,13 +26,12 @@ namespace invasion::http_server {
 
     void HttpServer::start(std::string host, short port) {
         m_app.bindaddr(host);
-        m_app.port(port);
 
         StatisticAccessor::clear(); 
         Authenticator::deleteAll();
         DatabaseAccessor::deleteAll();
 
-        m_thread = std::move(std::thread{[this]() {
+        m_thread = std::move(std::thread{[this, port]() {
             static const std::regex invalidSymbols(R"([a-zA-Z0-9]*)");
 
             AuthService::deleteAllUsers();
@@ -138,7 +137,7 @@ namespace invasion::http_server {
                                 return crow::response(200, responseJson);
                             });
 
-            m_app.port(5555).multithreaded().run();
+            m_app.port(port).multithreaded().run();
         }});
         m_thread.detach();
     }

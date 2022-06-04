@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/theme/theme.tres" type="Theme" id=1]
+[ext_resource path="res://screens/settings_screen/scripts/settings_screen.gd" type="Script" id=2]
+
+[node name="SettingsScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.847059 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -29.0
+margin_top = 8.0
+margin_right = 29.0
+margin_bottom = 20.0
+theme = ExtResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 1, 1, 1, 0 )
+text = "InVasion"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.0
+margin_right = 320.0
+margin_bottom = 179.0
+rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Form" type="Control" parent="CenterContainer"]
+margin_left = 320.0
+margin_top = 180.0
+margin_right = 320.0
+margin_bottom = 180.0
+
+[node name="HostInput" type="LineEdit" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -62.0
+margin_right = 90.0
+margin_bottom = -38.0
+rect_pivot_offset = Vector2( -360, -58 )
+align = 1
+max_length = 15
+placeholder_text = "127.0.0.1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HostLabel" type="Label" parent="CenterContainer/Form"]
+margin_left = -90.0
+margin_top = -86.0
+margin_right = 90.0
+margin_bottom = -72.0
+rect_pivot_offset = Vector2( -360, -34 )
+text = "Enter host ip address: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TcpPortInput" type="LineEdit" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = 2.0
+margin_right = -6.0
+margin_bottom = 26.0
+rect_pivot_offset = Vector2( -360, -58 )
+align = 1
+max_length = 15
+placeholder_text = "TCP port"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HttpPortInput" type="LineEdit" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 6.0
+margin_top = 2.0
+margin_right = 90.0
+margin_bottom = 26.0
+rect_pivot_offset = Vector2( -360, -58 )
+align = 1
+max_length = 15
+placeholder_text = "HTTP port"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortsLabel" type="Label" parent="CenterContainer/Form"]
+margin_left = -90.0
+margin_top = -22.0
+margin_right = 90.0
+margin_bottom = -8.0
+rect_pivot_offset = Vector2( -360, -34 )
+text = "Servers ports (tcp, http):"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextButton" type="Button" parent="CenterContainer/Form"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = 44.0
+margin_right = 90.0
+margin_bottom = 64.0
+text = "Next"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="CenterContainer/Form/NextButton" to="." method="_on_NextButton_pressed"]
