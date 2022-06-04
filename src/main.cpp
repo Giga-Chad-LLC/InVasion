@@ -17,7 +17,7 @@ int main() {
     try {
         bool shouldStop = false;
 
-        std::string host = "192.168.1.71";
+        std::string host = "127.0.0.1"; // 192.168.1.71
         short tcp_port = 8000;
         short http_port = 5555;
         
