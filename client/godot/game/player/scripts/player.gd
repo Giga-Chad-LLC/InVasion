@@ -40,22 +40,26 @@ onready var gun_rotation_cooldown_timer = $GunRotationCooldownTimer
 # gun reloading and ammunition
 var ammo: int = 0
 var magazine: int = 0
+var current_ammo: int = 0
 var current_magazine: int = 0
 var is_reloading: bool = false setget set_is_reloading
 
 func set_is_reloading(value):
 	is_reloading = value
 
+
 func reset_ammo_stats(new_ammo: int, new_magazine: int):
 	ammo = new_ammo
 	magazine = new_magazine
 	current_magazine = new_magazine
+	current_ammo = new_ammo
 
-func update_ammo_stats(new_ammo: int = ammo, new_magazine: int = current_magazine):
-	ammo = new_ammo
+func update_ammo_stats(new_ammo: int = current_ammo, new_magazine: int = current_magazine):
+	current_ammo = new_ammo
 	current_magazine = new_magazine
 
 func maximize_magazine():
+	current_ammo = ammo
 	current_magazine = magazine
 
 # Built-in functions
