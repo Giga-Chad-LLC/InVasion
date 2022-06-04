@@ -675,6 +675,12 @@ class ShootRequestModel:
 		service.func_ref = funcref(self, "new_weapon_direction")
 		data[_weapon_direction.tag] = service
 		
+		_weapon_position = PBField.new("weapon_position", PB_DATA_TYPE.MESSAGE, PB_RULE.OPTIONAL, 3, true, DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE])
+		service = PBServiceField.new()
+		service.field = _weapon_position
+		service.func_ref = funcref(self, "new_weapon_position")
+		data[_weapon_position.tag] = service
+		
 	var data = {}
 	
 	var _player_id: PBField
@@ -695,6 +701,16 @@ class ShootRequestModel:
 	func new_weapon_direction() -> Vector2D:
 		_weapon_direction.value = Vector2D.new()
 		return _weapon_direction.value
+	
+	var _weapon_position: PBField
+	func get_weapon_position() -> Vector2D:
+		return _weapon_position.value
+	func clear_weapon_position() -> void:
+		data[3].state = PB_SERVICE_STATE.UNFILLED
+		_weapon_position.value = DEFAULT_VALUES_3[PB_DATA_TYPE.MESSAGE]
+	func new_weapon_position() -> Vector2D:
+		_weapon_position.value = Vector2D.new()
+		return _weapon_position.value
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)

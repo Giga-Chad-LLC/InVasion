@@ -124,9 +124,15 @@ func get_player_shoot_request():
 		player_gun.start_cooldown()
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
+		
 		action.new_weapon_direction()
 		action.get_weapon_direction().set_x(cos(player_gun.global_rotation))
 		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
+		
+		action.new_weapon_position()
+		action.get_weapon_position().set_x(player_gun.global_rotation.x)
+		action.get_weapon_position().set_y(player_gun.global_rotation.y)
+		
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
 		if (network_packet):
@@ -142,7 +148,6 @@ func get_reload_gun_request():
 		reload.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(reload.to_bytes(), Global.RequestModels.ReloadWeaponRequestModel)
-		# player_gun.play_reloading_sound()	
 		if (network_packet):
 			return network_packet
 	return null
