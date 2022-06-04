@@ -38,7 +38,7 @@ func retrieve_stats():
 	http_request.method_get('/statistic', headers, body)
 
 func _handle_request_complete(response_code: int, headers: PoolStringArray, body: JSONParseResult):
-	print(body.result)
+	# print(body.result)
 	if (response_code == 200):
 		set_data(body.result)
 	elif (response_code == 0):

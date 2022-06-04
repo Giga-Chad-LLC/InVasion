@@ -61,8 +61,9 @@ var is_game_running = true
 # for debugging purposes
 func _unhandled_input(event):
 	if (event.is_action_pressed("print_info")):
-		print(Player.player_specialization)
+		print("Main player specialization: ", Player.player_specialization)
 		print(players_state_manager.players_data)
+		print("Main player health stats: ", HealthStats.current_hitpoints, " / ", HealthStats.initial_hitpoints)
 
 
 
@@ -222,19 +223,17 @@ func _process(_delta):
 			var result_code = new_player_specialization.from_bytes(received_packet.get_bytes())
 			if (result_code != PlayerSpecializationResponseModel.PB_ERR.NO_ERRORS): 
 				print("Error while receiving: ", "cannot unpack player specialization model")
-			
-			players_state_manager.change_player_specialization(
-				new_player_specialization,
-				Player,
-				players_parent_node
-			)
-			
-			if (new_player_specialization.get_player_id() == Player.player_id and !Player.is_dead):
-				Player.set_is_active(true)
-				Player.visible = true
-				Player.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
-				AmmoStats.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
-				HealthStats.reset_health_stats(new_player_specialization.get_initial_hitpoints(), new_player_specialization.get_initial_hitpoints())
+			else:
+				players_state_manager.change_player_specialization(
+					new_player_specialization,
+					Player,
+					players_parent_node
+				)
+				
+				if (new_player_specialization.get_player_id() == Player.player_id):
+					Player.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
+					AmmoStats.reset_ammo_stats(new_player_specialization.get_ammo(), new_player_specialization.get_magazine())
+					HealthStats.reset_health_stats(new_player_specialization.get_initial_hitpoints(), new_player_specialization.get_initial_hitpoints())
 		Global.ResponseModels.GameStateResponseModel:
 			var new_game_state = GameStateResponseModel.GameStateResponseModel.new()
 			var result_code = new_game_state.from_bytes(received_packet.get_bytes())
@@ -343,7 +342,6 @@ func _process(_delta):
 			AmmoStats.maximize_magazine()
 			Player.maximize_magazine()
 		Global.ResponseModels.GameOverResponseModel:
-			print("Game over!")
 			var game_over = GameOverResponseModel.GameOverResponseModel.new()
 			var result_code = game_over.from_bytes(received_packet.get_bytes())
 			if (result_code != GameOverResponseModel.PB_ERR.NO_ERRORS): 
