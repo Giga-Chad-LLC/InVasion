@@ -20,10 +20,10 @@ UnspecializedPlayer::UnspecializedPlayer(Vector2D position, int playerId, Player
 		playerId,
 		PlayerSpecialization::UNDEFINED,
 		teamId,
-		Player::INITIAL_HIT_POINTS,
-		Player::INITIAL_AMMO,
-		Player::INITIAL_MAGAZINE,
-		Player::DAMAGE
+		UnspecializedPlayer::INITIAL_HIT_POINTS,
+		UnspecializedPlayer::INITIAL_AMMO,
+		UnspecializedPlayer::INITIAL_MAGAZINE,
+		UnspecializedPlayer::DAMAGE
 	) {
 		// setting unactive state
 		this->getLifeState().setActiveState(false);

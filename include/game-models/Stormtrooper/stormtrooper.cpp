@@ -16,7 +16,7 @@ Stormtrooper::Stormtrooper(Vector2D position, int playerId, PlayerTeamId teamId)
 		Player::HITBOX_COLLIDER_SIZE,
 		position,
 		Player::MASS,
-		Stormtrooper::MAX_SPEED,
+		Player::MAX_SPEED,
 		playerId,
 		PlayerSpecialization::Stormtrooper,
 		teamId,

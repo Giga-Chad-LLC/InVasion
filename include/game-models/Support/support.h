@@ -19,10 +19,12 @@ public:
 	explicit Support(Vector2D position, int playerId, PlayerTeamId teamId);
 	std::shared_ptr<StaticSupply> applyAbility(int supplyId) override;
 
-	inline static int INITIAL_AMMO = 120;
+	inline static int INITIAL_AMMO = 80;
 	inline static int INITIAL_MAGAZINE = 20;
+	inline static const int DAMAGE = 18;
+	inline static const int INITIAL_HIT_POINTS = 100;
 private:
-	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
+	inline static long long ABILITY_COOL_DOWN_MS = 30 * 1000; // 30 sec
 };
 
 } // namespace invasion::game_models
