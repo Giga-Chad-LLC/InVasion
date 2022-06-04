@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package util_models;
+
+enum GameMatchResult {
+	FirstTeamVictory = 0;
+	SecondTeamVictory = 1;
+	Draw = 2;
+}

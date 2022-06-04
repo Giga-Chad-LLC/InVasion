@@ -1,5 +1,8 @@
 syntax = "proto3";
 
 package response_models;
+import "game-match-result.proto";
 
-message GameOverResponseModel {}
+message GameOverResponseModel {
+	util_models.GameMatchResult winning_team = 1;
+}
