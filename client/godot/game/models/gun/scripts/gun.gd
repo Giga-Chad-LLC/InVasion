@@ -2,14 +2,19 @@ extends Node2D
 
 # Variables
 onready var bullet_model = load("res://models/bullet/bullet.tscn")
+onready var gun_sprite = $Sprite
 onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
 onready var bullet_spawning_node = get_node_or_null("YSort/Bullets")
 onready var reloading_sound = $ReloadingSound
 onready var empty_magazine_sound = $EmptyMagazineSound
+onready var ShootingSounds = $ShootingSounds
+
 const human_gun_sound = preload("res://models/gun/sounds/human_gun_sound.wav")
 const alien_gun_sound = preload("res://models/gun/sounds/alien_gun_sound.wav")
-onready var ShootingSounds = $ShootingSounds
+const human_gun_0 = preload("res://models/gun/images/human_gun_0.png")
+const alien_gun_0 = preload("res://models/gun/images/alien_gun_0.png")
+
 
 var is_cooldown = false
 var should_follow_mouse: bool = false
@@ -28,6 +33,12 @@ func start_cooldown():
 	is_cooldown = true
 	cooldown_timer.start()
 
+
+func change_skin(team_id):
+	if (team_id == Global.TeamId.Humans):
+		gun_sprite.set_texture(human_gun_0)
+	else:
+		gun_sprite.set_texture(alien_gun_0)
 
 func _on_CooldownTimer_timeout():
 	is_cooldown = false

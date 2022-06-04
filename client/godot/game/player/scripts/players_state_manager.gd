@@ -45,13 +45,6 @@ func spawn_player(player_id, local_team_id, players_parent_node, location):
 	spawned_player.reset_health_stats(players_data[player_id].current_hitpoints, players_data[player_id].initial_hitpoints)
 	spawned_player.change_skin()
 
-	if (spawned_player.team_id != local_team_id):
-		spawned_player.set_sprite_color(Color(1, 0.27, 0.27))
-	else:
-		spawned_player.set_sprite_color(Color(0.27, 1, 0.27))
-
-
-
 func despawn_player(player_id, players_parent_node):
 	if (players_parent_node and players_parent_node.has_node(str(player_id))):
 		players_parent_node.get_node(str(player_id)).queue_free()

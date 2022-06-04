@@ -1283,6 +1283,7 @@ position = Vector2( -24, 26 )
 [node name="BottomRightRespawnPoint" parent="YSort/HumansRespawnPoints" instance=ExtResource( 5 )]
 position = Vector2( 24, 26 )
 
+[connection signal="finished" from="BattleMusic" to="." method="_on_BattleMusic_finished"]
 [connection signal="pressed" from="UI/RespawnMenu/RespawnButtonContainer/RespawnButton" to="." method="_on_RespawnButton_pressed"]
 [connection signal="toggle_escape_menu" from="UI/EscapeMenu" to="." method="_on_EscapeMenu_toggle_escape_menu"]
 [connection signal="pressed" from="UI/EscapeMenu/CenterContainer/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]

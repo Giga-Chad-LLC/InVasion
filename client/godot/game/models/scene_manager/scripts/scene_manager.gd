@@ -48,8 +48,15 @@ func set_current_scene(next_scene, next_scene_name):
 			lobby_music.play()
 	
 	current_scene.queue_free()
+	
 	current_scene = next_scene
+	current_scene_name = next_scene_name
 	current_scene.connect("play_click_sound", self, "_handle_play_click_sound")
 	current_scene.connect("scene_changed", self, "_handle_scene_changed")
 	
 		
+
+
+func _on_LobbyMusic_finished():
+	if (current_scene_name != "game"):
+		lobby_music.play()

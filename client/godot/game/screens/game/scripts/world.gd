@@ -66,6 +66,11 @@ func _unhandled_input(event):
 
 
 
+# music stopped play - replay again
+func _on_BattleMusic_finished():
+	battle_music.play()
+
+
 # scene/ui changing
 func _on_Quit_pressed():
 	emit_signal("play_click_sound")
