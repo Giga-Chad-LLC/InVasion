@@ -21,11 +21,11 @@ public:
 
 	void supply(std::shared_ptr<Player> player) override;
 
-	inline static const int SUPPLY_PORTION = 30;
+	inline static const int SUPPLY_PORTION = 20;
 
 private:
 	inline static const Vector2D SHAPE_COLLIDER_SIZE = Vector2D(10.0, 10.0);
-	inline static const int INITIAL_SUPPLY_CAPACITY = 400;
+	inline static const int INITIAL_SUPPLY_CAPACITY = 100;
 };
 
 } // namespace invasion::game_models

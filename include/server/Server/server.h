@@ -76,7 +76,7 @@ public:
     Server();
     ~Server();
     // starts the server acceptor (blocks the current thread of execution)
-    void start(std::string host, short port);
+    void start(std::string host = "127.0.0.1", short port = 8000);
     // stops the server and releases all resources
     void stop();
     // removes session by id

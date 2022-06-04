@@ -16,19 +16,22 @@
 int main() {
     try {
         bool shouldStop = false;
-        std::string host = "127.0.0.1";
-        short port = 8000;
+
+        std::string host = "127.0.0.1"; // 192.168.1.71
+        short tcp_port = 8000;
+        short http_port = 5555;
+        
         invasion::server::Server server;
         invasion::http_server::HttpServer httpServer;
         
         if (!shouldStop) {
-            httpServer.start();
-            server.start(host, port); // blocks the current thread of execution!
+            httpServer.start(host, http_port);
+            server.start(host, tcp_port); // blocks the current thread of execution!
         }
         else {
-            std::thread serverThread([&server, &httpServer, host, port]() {
-                httpServer.start();
-                server.start(host, port); // blocks the current thread of execution!
+            std::thread serverThread([&server, &httpServer, host, tcp_port, http_port]() {
+                httpServer.start(host, http_port);
+                server.start(host, tcp_port); // blocks the current thread of execution!
             });
 
             serverThread.detach();

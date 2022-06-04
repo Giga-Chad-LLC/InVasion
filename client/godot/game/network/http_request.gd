@@ -5,7 +5,7 @@ class_name HTTPRequester
 signal receive(response_code, headers, body)
 signal error(message)
 
-const HOST: String = "127.0.0.1"
+const HOST: String = "127.0.0.1" # 127.0.0.1 | 192.168.1.71
 const PORT: int = 5555
 const PREFIX: String = "http"
 const ENDPOINT: String = PREFIX + "://" + HOST + ":" + str(PORT)

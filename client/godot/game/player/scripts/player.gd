@@ -40,22 +40,26 @@ onready var gun_rotation_cooldown_timer = $GunRotationCooldownTimer
 # gun reloading and ammunition
 var ammo: int = 0
 var magazine: int = 0
+var current_ammo: int = 0
 var current_magazine: int = 0
 var is_reloading: bool = false setget set_is_reloading
 
 func set_is_reloading(value):
 	is_reloading = value
 
+
 func reset_ammo_stats(new_ammo: int, new_magazine: int):
 	ammo = new_ammo
 	magazine = new_magazine
 	current_magazine = new_magazine
+	current_ammo = new_ammo
 
-func update_ammo_stats(new_ammo: int = ammo, new_magazine: int = current_magazine):
-	ammo = new_ammo
+func update_ammo_stats(new_ammo: int = current_ammo, new_magazine: int = current_magazine):
+	current_ammo = new_ammo
 	current_magazine = new_magazine
 
 func maximize_magazine():
+	current_ammo = ammo
 	current_magazine = magazine
 
 # Built-in functions
@@ -124,9 +128,15 @@ func get_player_shoot_request():
 		player_gun.start_cooldown()
 		var action = ShootRequestModel.ShootRequestModel.new()
 		action.set_player_id(player_id)
+		
 		action.new_weapon_direction()
 		action.get_weapon_direction().set_x(cos(player_gun.global_rotation))
 		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
+		
+		action.new_weapon_position()
+		action.get_weapon_position().set_x(player_gun.global_position.x)
+		action.get_weapon_position().set_y(player_gun.global_position.y)
+		
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
 		if (network_packet):
@@ -135,14 +145,13 @@ func get_player_shoot_request():
 
 
 func get_reload_gun_request():
-	if (Input.is_action_pressed("reload") and current_magazine != magazine and not is_reloading):
+	if (Input.is_action_pressed("reload") and current_magazine != magazine and ammo != 0 and not is_reloading):
 		set_is_reloading(true)
 		player_gun.play_reloading_sound()
 		var reload = ReloadWeaponRequestModel.ReloadWeaponRequestModel.new()
 		reload.set_player_id(player_id)
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(reload.to_bytes(), Global.RequestModels.ReloadWeaponRequestModel)
-		# player_gun.play_reloading_sound()	
 		if (network_packet):
 			return network_packet
 	return null

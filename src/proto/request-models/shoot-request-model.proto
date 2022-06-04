@@ -1,9 +1,22 @@
 syntax = "proto3";
 
 package request_models;
+
+/**/
 import "vector2d.proto";
 
 message ShootRequestModel {
 	int32 player_id = 1;
 	util_models.Vector2D weapon_direction = 2;
+	util_models.Vector2D weapon_position = 3;
 }
+
+
+/* // for godot 
+import "../utils/vector2d.proto";
+
+message ShootRequestModel {
+	int32 player_id = 1;
+	Vector2D weapon_direction = 2;
+	Vector2D weapon_position = 3;
+}*/

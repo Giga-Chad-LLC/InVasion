@@ -40,7 +40,7 @@ WeaponStateResponseModel ShootResponseInteractor::execute(const ShootRequestMode
 
 	if(!dead && active) {
 		if(weapon.isAbleToShoot()) {
-			const game_models::Vector2D position = player_ptr->getPosition();
+			const game_models::Vector2D position(req.weapon_position().x(), req.weapon_position().y()); // player_ptr->getPosition();
 			const int bulletId = session.createIdForNewBullet();
 
 			std::shared_ptr<game_models::Bullet> bullet = weapon.shoot(position, bulletId);

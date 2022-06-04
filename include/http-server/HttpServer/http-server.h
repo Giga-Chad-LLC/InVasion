@@ -5,6 +5,7 @@
 #include <iostream>
 #include <regex>
 #include <thread>
+#include <string>
 // libs
 #include "libs/crow/crow_all.h"
 
@@ -14,7 +15,7 @@ namespace invasion::http_server {
         std::thread m_thread;
         crow::SimpleApp m_app;
     public:
-        void start();
+        void start(std::string host = "127.0.0.1", short port = 5555);
         void stop();
     };
 }

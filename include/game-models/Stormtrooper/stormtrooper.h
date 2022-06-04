@@ -15,11 +15,10 @@ class Stormtrooper : public Player {
 public:
 	explicit Stormtrooper(Vector2D position, int playerId, PlayerTeamId teamId);
 
-	inline static const double MAX_SPEED = 110.0;
 	inline static const int INITIAL_HIT_POINTS = 120;
-	inline static const int DAMAGE = 20;
-	inline static const int INITIAL_AMMO = 120;
+	inline static const int INITIAL_AMMO = 35;
 	inline static const int INITIAL_MAGAZINE = 35;
+	inline static const int DAMAGE = 20;
 };
 
 

@@ -17,11 +17,12 @@ public:
 	explicit Medic(Vector2D position, int playerId, PlayerTeamId teamId);
 	std::shared_ptr<StaticSupply> applyAbility(int supplyId) override;
 
-	inline static const int DAMAGE = 12;
-	inline static const int INITIAL_HIT_POINTS = 150;
-	inline static const int INITIAL_MAGAZINE = 20;
+	inline static const int INITIAL_HIT_POINTS = 110;
+	inline static int INITIAL_AMMO = 25;
+	inline static const int INITIAL_MAGAZINE = 25;
+	inline static const int DAMAGE = 18;
 private:
-	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
+	inline static long long ABILITY_COOL_DOWN_MS = 30 * 1000; // 30 sec
 };
 
 } // namespace invasion::game_models

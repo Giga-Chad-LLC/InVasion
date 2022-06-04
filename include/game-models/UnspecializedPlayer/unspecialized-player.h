@@ -14,6 +14,11 @@ namespace invasion::game_models {
 class UnspecializedPlayer : public Player {
 public:
 	explicit UnspecializedPlayer(Vector2D position, int playerId, PlayerTeamId teamId);
+
+	inline static const int INITIAL_HIT_POINTS = 100;
+	inline static int INITIAL_AMMO = 30;
+	inline static const int INITIAL_MAGAZINE = 30;
+	inline static const int DAMAGE = 15;
 };
 
 

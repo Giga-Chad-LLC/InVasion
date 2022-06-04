@@ -340,6 +340,8 @@ func _process(_delta):
 			Player.set_is_active(true)
 			RespawnMenu.toggle(false)
 			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
+			AmmoStats.maximize_magazine()
+			Player.maximize_magazine()
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
 			var game_over = GameOverResponseModel.GameOverResponseModel.new()
