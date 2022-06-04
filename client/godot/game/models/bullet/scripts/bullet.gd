@@ -5,12 +5,7 @@ extends KinematicBody2D
 var velocity = Vector2.ZERO
 var bullet_id = -1
 var player_id = -1 # id of owner of the bullet
-
-# Built-in functions
-#func _ready():
-#	visible = false
-#	yield(get_tree(), "idle_frame")
-#	visible = true
+var team_id = -1 # team id of the owner
 
 
 func update_bullet_position(bullet_position_model):
