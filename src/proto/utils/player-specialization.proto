@@ -7,4 +7,5 @@ enum PlayerSpecialization {
 	Sentinel = 1;
 	Support = 2;
 	Medic = 3;
+	UNDEFINED = 4;
 }

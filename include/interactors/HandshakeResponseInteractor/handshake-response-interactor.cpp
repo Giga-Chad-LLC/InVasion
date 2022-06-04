@@ -83,9 +83,9 @@ HandshakeResponseModel HandshakeResponseInteractor::execute(std::size_t remainin
 		const std::vector<std::shared_ptr<Player>>& players = session.getPlayers();
 
 		for (auto player_ptr : players) {
-			const bool active = player_ptr->getLifeState().isInActiveState();
+			// const bool active = player_ptr->getLifeState().isInActiveState();
 			
-			if(player_ptr->getId() != playerId && active) {
+			if(player_ptr->getId() != playerId) {
 				util_models::PlayerDataModel *model = response.add_players_data();
 				
 				model->set_player_id(player_ptr->getId());
@@ -148,6 +148,9 @@ util_models::PlayerSpecialization HandshakeResponseInteractor::mapPlayerSpeciali
 		}
 		case PlayerSpecialization::Medic: {
 			return util_models::PlayerSpecialization::Medic;
+		}
+		case PlayerSpecialization::UNDEFINED: {
+			return util_models::PlayerSpecialization::UNDEFINED;
 		}
 		default: {
 			throw std::runtime_error("HandshakeResponseInteractor cannot map provided specialization");
