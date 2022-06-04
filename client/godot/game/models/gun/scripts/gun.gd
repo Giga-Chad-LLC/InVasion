@@ -1,7 +1,6 @@
 extends Node2D
 
 # Variables
-onready var bullet_model = load("res://models/bullet/bullet.tscn")
 onready var gun_sprite = $Sprite
 onready var shoot_point = $ShootPoint
 onready var cooldown_timer = $CooldownTimer
@@ -21,13 +20,6 @@ var should_follow_mouse: bool = false
 var new_gun_rotation: float = 0
 
 
-func instance_bullet(rotation: float):
-	var bullet_model_instance = Global.instance_node_at_location(
-		bullet_model,
-		bullet_spawning_node,
-		shoot_point.global_position
-	)
-	bullet_model_instance.rotation = rotation
 
 func start_cooldown():
 	is_cooldown = true
