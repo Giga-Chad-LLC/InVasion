@@ -342,6 +342,25 @@ func _process(_delta):
 			HealthStats.maximize_current_hitpoints() # uses memorized default HPs
 		Global.ResponseModels.GameOverResponseModel:
 			print("Game over!")
+			var game_over = GameOverResponseModel.GameOverResponseModel.new()
+			var result_code = game_over.from_bytes(received_packet.get_bytes())
+			if (result_code != GameOverResponseModel.PB_ERR.NO_ERRORS): 
+				print("Error while receiving: ", "cannot unpack update game over model")
+			else:
+				var winning_team = game_over.get_winning_team()
+				var team_id = -1
+				if (winning_team == GameOverResponseModel.GameMatchResult.FirstTeamVictory):
+					team_id = 0
+				elif (winning_team == GameOverResponseModel.GameMatchResult.SecondTeamVictory):
+					team_id = 1
+				
+				if (team_id == -1):
+					Leaderboard.set_text("Draw!")
+				elif (team_id == Player.team_id):
+					Leaderboard.set_text("Victory!")
+				else:
+					Leaderboard.set_text("Defeat!")
+				
 			# show leaderboard when match ended
 			Leaderboard.is_active = false
 			Leaderboard.visible = true

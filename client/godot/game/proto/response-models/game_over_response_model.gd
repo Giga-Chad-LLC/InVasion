@@ -664,7 +664,21 @@ class GameOverResponseModel:
 	func _init():
 		var service
 		
+		_winning_team = PBField.new("winning_team", PB_DATA_TYPE.ENUM, PB_RULE.OPTIONAL, 1, true, DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM])
+		service = PBServiceField.new()
+		service.field = _winning_team
+		data[_winning_team.tag] = service
+		
 	var data = {}
+	
+	var _winning_team: PBField
+	func get_winning_team():
+		return _winning_team.value
+	func clear_winning_team() -> void:
+		data[1].state = PB_SERVICE_STATE.UNFILLED
+		_winning_team.value = DEFAULT_VALUES_3[PB_DATA_TYPE.ENUM]
+	func set_winning_team(value) -> void:
+		_winning_team.value = value
 	
 	func to_string() -> String:
 		return PBPacker.message_to_string(data)
@@ -687,4 +701,10 @@ class GameOverResponseModel:
 			return PB_ERR.PARSE_INCOMPLETE
 		return result
 	
+enum GameMatchResult {
+	FirstTeamVictory = 0,
+	SecondTeamVictory = 1,
+	Draw = 2
+}
+
 ################ USER DATA END #################
