@@ -11,8 +11,18 @@ onready var ShootingSounds = $ShootingSounds
 
 const human_gun_sound = preload("res://models/gun/sounds/human_gun_sound.wav")
 const alien_gun_sound = preload("res://models/gun/sounds/alien_gun_sound.wav")
-const human_gun_0 = preload("res://models/gun/images/human_gun_0.png")
-const alien_gun_0 = preload("res://models/gun/images/alien_gun_0.png")
+
+const human_gun_stormtrooper = preload("res://models/gun/images/human_gun_stormtrooper.png")
+const alien_gun_stormtrooper = preload("res://models/gun/images/alien_gun_stormtrooper.png")
+
+const human_gun_sentinel = preload("res://models/gun/images/human_gun_sentinel.png")
+const alien_gun_sentinel = preload("res://models/gun/images/alien_gun_sentinel.png")
+
+const human_gun_support = preload("res://models/gun/images/human_gun_support.png")
+const alien_gun_support = preload("res://models/gun/images/alien_gun_support.png")
+
+const human_gun_medic = preload("res://models/gun/images/human_gun_medic.png")
+const alien_gun_medic = preload("res://models/gun/images/alien_gun_medic.png")
 
 
 var is_cooldown = false
@@ -26,11 +36,31 @@ func start_cooldown():
 	cooldown_timer.start()
 
 
-func change_skin(team_id):
+func change_skin(team_id, player_specialization):
+	var texture = human_gun_stormtrooper
 	if (team_id == Global.TeamId.Humans):
-		gun_sprite.set_texture(human_gun_0)
+		match player_specialization:
+			Global.SpecializationTypes.Stormtrooper:
+				texture = human_gun_stormtrooper
+			Global.SpecializationTypes.Sentinel:
+				texture = human_gun_sentinel
+			Global.SpecializationTypes.Support:
+				texture = human_gun_support
+			Global.SpecializationTypes.Medic:
+				texture = human_gun_medic
 	else:
-		gun_sprite.set_texture(alien_gun_0)
+		match player_specialization:
+			Global.SpecializationTypes.Stormtrooper:
+				texture = alien_gun_stormtrooper
+			Global.SpecializationTypes.Sentinel:
+				texture = alien_gun_sentinel
+			Global.SpecializationTypes.Support:
+				texture = alien_gun_support
+			Global.SpecializationTypes.Medic:
+				texture = alien_gun_medic
+	
+	gun_sprite.set_texture(texture)
+
 
 func _on_CooldownTimer_timeout():
 	is_cooldown = false

@@ -1022,7 +1022,7 @@ script = ExtResource( 10 )
 [node name="YSort" type="YSort" parent="."]
 
 [node name="Player" parent="YSort" instance=ExtResource( 1 )]
-position = Vector2( 159, 90 )
+position = Vector2( 207, 132 )
 
 [node name="Camera2D" type="Camera2D" parent="YSort/Player"]
 current = true

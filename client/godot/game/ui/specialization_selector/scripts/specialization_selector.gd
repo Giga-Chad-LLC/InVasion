@@ -22,7 +22,6 @@ func mark_selected_button():
 
 
 func _ready():
-	print("Sepc ready")
 	selected_specialization = Global.SpecializationTypes.Stormtrooper
 	mark_selected_button()
 	connect_buttons_signals()

@@ -47,7 +47,7 @@ func _on_PasswordInput_text_changed(new_text):
 
 func _handle_request_complete(response_code: int, headers: PoolStringArray, body: JSONParseResult):
 	if (response_code == 200):
-		print(body.result)
+		# print(body.result)
 		Global.access_token = body.result.token
 		Global.username = username
 		emit_signal("scene_changed", "game_lobby")

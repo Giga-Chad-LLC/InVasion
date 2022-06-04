@@ -58,9 +58,6 @@ func change_skin():
 	else:
 		skin = alien_skin.instance()
 	
-	
-	player_gun.change_skin(team_id)
-	
 	if (!player_skin.get_children().empty()):
 		player_skin.get_children()[0].queue_free()
 	
@@ -74,6 +71,7 @@ func change_skin():
 	sprite.material.set_shader_param("hit_opacity", 0)
 	
 	set_specialization_skin()
+	player_gun.change_skin(team_id, player_specialization)
 
 
 func animate_player():
@@ -95,6 +93,7 @@ func update_player_position(player_state_model):
 func update_player_specialization(new_player_specialization):
 	player_specialization = new_player_specialization
 	set_specialization_skin()
+	player_gun.change_skin(team_id, player_specialization)
 
 func update_player_gun_rotation(direction):
 	player_gun.set_gun_rotation(direction)
