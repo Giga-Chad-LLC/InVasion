@@ -26,6 +26,7 @@ Medic::Medic(Vector2D position, int playerId, PlayerTeamId teamId)
 		teamId,
 		Medic::INITIAL_HIT_POINTS,
 		Player::INITIAL_AMMO,
+		Medic::INITIAL_MAGAZINE,
 		Medic::DAMAGE,
 		Medic::ABILITY_COOL_DOWN_MS
 	) {}

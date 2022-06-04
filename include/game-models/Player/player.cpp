@@ -24,6 +24,7 @@ Player::Player(
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
+		int initialMagazine,
 		int damage,
 		bool hasAbility
 	) :
@@ -33,7 +34,7 @@ Player::Player(
 		m_specialization(specialization),
 		m_teamId(teamId),
 		m_lifeState(initialHitPoints),
-		m_weapon(playerId, teamId, initialAmmo, damage) {}
+		m_weapon(playerId, teamId, initialAmmo, initialMagazine, damage) {}
 
 
 int Player::getId() const {

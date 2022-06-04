@@ -19,6 +19,7 @@ public:
 
 	inline static const int DAMAGE = 12;
 	inline static const int INITIAL_HIT_POINTS = 150;
+	inline static const int INITIAL_MAGAZINE = 20;
 private:
 	inline static long long ABILITY_COOL_DOWN_MS = 1 * 1000; // 10 sec
 };

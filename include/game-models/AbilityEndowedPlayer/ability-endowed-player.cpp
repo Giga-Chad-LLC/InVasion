@@ -22,6 +22,7 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 	PlayerTeamId teamId,
 	int initialHitPoints,
 	int initialAmmo,
+	int initialMagazine,
 	int damage,
 	long long abilityCoolDown_ms
 ) :
@@ -36,6 +37,7 @@ AbilityEndowedPlayer::AbilityEndowedPlayer(
 		teamId,
 		initialHitPoints,
 		initialAmmo,
+		initialMagazine,
 		damage,
 		true // hasAbility
 	),

@@ -23,6 +23,7 @@ Support::Support(Vector2D position, int playerId, PlayerTeamId teamId)
 		teamId,
 		Player::INITIAL_HIT_POINTS,
 		Support::INITIAL_AMMO,
+		Support::INITIAL_MAGAZINE,
 		Player::DAMAGE,
 		Support::ABILITY_COOL_DOWN_MS
 	) {}

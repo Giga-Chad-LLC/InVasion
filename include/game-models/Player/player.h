@@ -28,6 +28,7 @@ public:
 		PlayerTeamId teamId,
 		int initialHitPoints,
 		int initialAmmo,
+		int initialMagazine,
 		int damage,
 		bool hasAbility = false
 	);
@@ -44,9 +45,10 @@ public:
 	bool hasAbility() const;
 
 
-	inline static const double MAX_SPEED = 100.0;
+	inline static const double MAX_SPEED = 95.0;
 	inline static const double MASS = 60.0;
 	inline static const int INITIAL_AMMO = 180;
+	inline static const int INITIAL_MAGAZINE = 30;
 	inline static const int DAMAGE = 15;
 	inline static const int INITIAL_HIT_POINTS = 100;
 	inline static const Vector2D HITBOX_POSITION_OFFSET = Vector2D(0, -8);
