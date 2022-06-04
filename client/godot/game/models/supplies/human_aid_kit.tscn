@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://models/supplies/images/human_aid_kit.png" type="Texture" id=1]
+[ext_resource path="res://models/supplies/supply.tscn" type="PackedScene" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float opacity = 0;
+
+void fragment(){
+ COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - opacity) + vec3(1,1,1) * opacity; // interpolates between the original sprite's color and the color white depending on the value of hit_opacity
+ COLOR.a = texture(TEXTURE, UV).a; // copies the original sprite's alpha values
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/opacity = 0.0
+
+[node name="AidKit" instance=ExtResource( 2 )]
+
+[node name="Sprite" parent="." index="0"]
+material = SubResource( 2 )
+scale = Vector2( 0.668548, 0.693791 )
+texture = ExtResource( 1 )
