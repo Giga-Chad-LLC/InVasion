@@ -130,8 +130,8 @@ func get_player_shoot_request():
 		action.get_weapon_direction().set_y(sin(player_gun.global_rotation))
 		
 		action.new_weapon_position()
-		action.get_weapon_position().set_x(player_gun.global_rotation.x)
-		action.get_weapon_position().set_y(player_gun.global_rotation.y)
+		action.get_weapon_position().set_x(player_gun.global_position.x)
+		action.get_weapon_position().set_y(player_gun.global_position.y)
 		
 		var network_packet = NetworkPacket.new()
 		network_packet.set_data(action.to_bytes(), Global.RequestModels.ShootRequestModel)
