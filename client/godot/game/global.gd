@@ -1,5 +1,9 @@
 extends Node
 
+var NETWORK_HOST: String = "127.0.0.1"
+var TCP_PORT: int = 8000
+var HTTP_PORT: int = 8001
+
 var access_token: String = ""
 var username: String = ""
 
@@ -7,8 +11,6 @@ var STORE_STATIC_ASSETS_COLLISION_SHAPES_IN_FILE = false
 var STORE_RESPAWN_POINTS_IN_FILE = false
 
 const DataSavingUtils = preload("res://utils/data_saving.gd")
-
-
 
 func saveNodesChildrenCollisionShapesInFile(node):
 	var utils = DataSavingUtils.new()

@@ -52,7 +52,7 @@ _global_script_class_icons={
 
 config/name="InVasion"
 run/main_scene="res://models/scene_manager/scene_manager.tscn"
-config/icon="res://icon.png"
+config/icon="res://invasion_icon.png"
 
 [autoload]
 
@@ -75,6 +75,8 @@ enabled=PoolStringArray( "res://addons/protobuf/plugin.cfg" )
 
 script=false
 window=false
+icon=false
+full=false
 
 [importer_defaults]
 

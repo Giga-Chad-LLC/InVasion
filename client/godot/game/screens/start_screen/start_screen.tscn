@@ -33,7 +33,6 @@ custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 1, 1, 1, 0 )
 text = "InVasion"
 align = 1
-percent_visible = -0.125
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -76,5 +75,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="BackButton" type="Button" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 74.0
+margin_bottom = 28.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="CenterContainer/ButtonGroup/LoginButton" to="." method="_on_LoginButton_pressed"]
 [connection signal="pressed" from="CenterContainer/ButtonGroup/RegisterButton" to="." method="_on_RegisterButton_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]

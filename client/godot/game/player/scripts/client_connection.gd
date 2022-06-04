@@ -2,8 +2,8 @@ extends Node
 
 
 # TCP Networking
-const HOST: String = "127.0.0.1" #  127.0.0.1 | 192.168.1.71
-const PORT: int = 8000
+var HOST: String = Global.NETWORK_HOST #  127.0.0.1 | 192.168.1.71
+var PORT: int = Global.TCP_PORT
 const RECONNECT_TIMEOUT: float = 3.0
 
 const Network = preload("res://network/network.gd")
