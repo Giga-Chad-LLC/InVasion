@@ -210,8 +210,8 @@ void Session::removeClient(uint32_t clientId) {
                 }
                 std::cout << "Total clients in game session: " << players.size() << std::endl;
 
-                client->stop(); // stop client's threads
                 ios->stop(); // stop ios
+                client->stop(); // stop client's threads
 
                 m_connections.erase(std::next(m_connections.begin(), i));
                 m_clientsThreadPool.erase(std::next(m_clientsThreadPool.begin(), i));
