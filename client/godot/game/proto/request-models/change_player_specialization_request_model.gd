@@ -719,7 +719,8 @@ enum PlayerSpecialization {
 	Stormtrooper = 0,
 	Sentinel = 1,
 	Support = 2,
-	Medic = 3
+	Medic = 3,
+	UNDEFINED = 4
 }
 
 ################ USER DATA END #################

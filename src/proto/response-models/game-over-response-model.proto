@@ -1,8 +1,19 @@
 syntax = "proto3";
 
 package response_models;
+
+/**/
 import "game-match-result.proto";
 
 message GameOverResponseModel {
 	util_models.GameMatchResult winning_team = 1;
 }
+
+
+/* // for godot 
+import "../utils/game-match-result.proto";
+
+message GameOverResponseModel {
+	GameMatchResult winning_team = 1;
+}
+*/
