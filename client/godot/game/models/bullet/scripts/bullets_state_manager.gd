@@ -1,17 +1,25 @@
 extends Reference
 
 # scenes
-var bullet_scene = preload("res://models/bullet/bullet.tscn")
+const human_bullet_scene = preload("res://models/bullet/human_bullet.tscn")
+const alien_bullet_scene = preload("res://models/bullet/alien_bullet.tscn")
 
 
 class_name BulletsStateManager
 
 func spawn_bullet(data, bullets_parent_node, location):
-	# data = { bullet_id, player_id, velocity }
+	# data = { bullet_id, player_id, team_id, velocity }
+	var bullet_scene = null
+	if (data['team_id'] == Global.TeamId.Humans):
+		bullet_scene = human_bullet_scene
+	else:
+		bullet_scene = alien_bullet_scene
+	
 	var spawned_bullet = Global.instance_node_at_location(bullet_scene, bullets_parent_node, location)
 	spawned_bullet.name = str(data['bullet_id'])
 	spawned_bullet.bullet_id = data['bullet_id']
 	spawned_bullet.player_id = data['player_id']
+	spawned_bullet.team_id = data['team_id']
 	spawned_bullet.velocity = data['velocity']
 	spawned_bullet.rotation = data['velocity'].angle()
 
@@ -48,6 +56,7 @@ func update_bullets_states(bullets_positions: Array, bullets_parent_node, player
 			var data = {
 				'bullet_id': bullet_id,
 				'player_id': player_id,
+				'team_id': get_team_id(player_id, players_state_manager, main_player, players_parent_node),
 				'velocity': Vector2(bullet.get_velocity().get_x(), bullet.get_velocity().get_y())
 			}
 			play_shooting_sound(player_id, players_state_manager, main_player, players_parent_node)
@@ -62,6 +71,16 @@ func update_bullets_states(bullets_positions: Array, bullets_parent_node, player
 			despawn_bullet(bullets_on_map[i], bullets_parent_node)
 	bullets_on_map = valid_bullets
 
+func get_team_id(player_id, players_state_manager, main_player, players_parent_node):
+	if (players_state_manager.players_data.has(player_id) and players_parent_node.has_node(str(player_id))):
+		return players_state_manager.players_data[player_id].team_id
+	elif (player_id == main_player.player_id):
+		return main_player.team_id
+	else:
+		print("Bullets state manager error: ", "there is no player with id of ", player_id, " on a map")
+	
+	return Global.TeamId.Humans
+	
 
 func play_shooting_sound(player_id, players_state_manager, main_player, players_parent_node):
 	# play the shooting sound

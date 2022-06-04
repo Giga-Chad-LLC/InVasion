@@ -55,6 +55,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
 		./src/proto/utils/supply-type.proto
 		./src/proto/utils/player-health-model.proto
 		./src/proto/utils/player-data-model.proto
+		./src/proto/utils/game-match-result.proto
 
 		# response-models
         ./src/proto/response-models/player-position-response-model.proto

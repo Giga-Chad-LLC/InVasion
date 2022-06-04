@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/World/effects/flamelash.png" type="Texture" id=1]
+[ext_resource path="res://objects/effects/sounds/altar-fire-burning.wav" type="AudioStream" id=2]
+[ext_resource path="res://objects/effects/scripts/flamelash.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "FlamelashAnimation"
@@ -36,6 +38,7 @@ tracks/0/keys = {
 }
 
 [node name="Flamelash" type="Node2D"]
+script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -20 )
@@ -48,3 +51,9 @@ region_rect = Rect2( 0, 0, 100, 100 )
 autoplay = "FlamelashAnimation"
 anims/FlamelashAnimation = SubResource( 1 )
 anims/RESET = SubResource( 2 )
+
+[node name="FlamelashSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+max_distance = 125.0
+
+[connection signal="finished" from="FlamelashSound" to="." method="_on_FlamelashSound_finished"]
