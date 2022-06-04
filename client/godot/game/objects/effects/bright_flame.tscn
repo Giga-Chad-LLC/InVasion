@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/World/effects/brightfire.png" type="Texture" id=1]
+[ext_resource path="res://objects/effects/sounds/fire-burning.wav" type="AudioStream" id=2]
+[ext_resource path="res://objects/effects/scripts/bright_flame.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=2]
 length = 3.05
@@ -36,17 +38,25 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 
-[node name="Node2D" type="Node2D"]
+[node name="BrightFlame" type="Node2D"]
+script = ExtResource( 3 )
 
 [node name="BrightFlameSprite" type="Sprite" parent="."]
 position = Vector2( -3, -38 )
 texture = ExtResource( 1 )
 hframes = 8
 vframes = 8
-frame = 58
 region_rect = Rect2( 0, 0, 100, 100 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "RESET"
 anims/RESET = SubResource( 2 )
 anims/TorchFire = SubResource( 1 )
+
+[node name="FlameSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+volume_db = 20.0
+autoplay = true
+max_distance = 125.0
+
+[connection signal="finished" from="FlameSound" to="." method="_on_FlameSound_finished"]
