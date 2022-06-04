@@ -135,7 +135,7 @@ func get_player_shoot_request():
 
 
 func get_reload_gun_request():
-	if (Input.is_action_pressed("reload") and current_magazine != magazine and not is_reloading):
+	if (Input.is_action_pressed("reload") and current_magazine != magazine and ammo != 0 and not is_reloading):
 		set_is_reloading(true)
 		player_gun.play_reloading_sound()
 		var reload = ReloadWeaponRequestModel.ReloadWeaponRequestModel.new()

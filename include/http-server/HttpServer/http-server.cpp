@@ -24,7 +24,10 @@ namespace invasion::http_server {
         return responseJson;
     }
 
-    void HttpServer::start() {
+    void HttpServer::start(std::string host, short port) {
+        m_app.bindaddr(host);
+        m_app.port(port);
+
         StatisticAccessor::clear(); 
         Authenticator::deleteAll();
         DatabaseAccessor::deleteAll();
