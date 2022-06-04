@@ -28,7 +28,7 @@
 
 ## Скриншоты, демо-видео: 
 
-![](screens_game_process/screen_game_process.png)
+![](readme/game_screenshot_1.png)
 
 ## Сборка проекта:
 
