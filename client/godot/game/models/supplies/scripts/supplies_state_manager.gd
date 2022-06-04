@@ -2,19 +2,28 @@ extends Reference
 
 class_name SuppliesStateManager
 
-var aid_kit_scene = preload("res://models/supplies/aid_kit.tscn")
-var ammo_crate_scene = preload("res://models/supplies/ammo_crate.tscn")
+const human_aid_kit_scene = preload("res://models/supplies/human_aid_kit.tscn")
+const human_ammo_crate_scene = preload("res://models/supplies/human_ammo_crate.tscn")
+const alien_aid_kit_scene = preload("res://models/supplies/alien_aid_kit.tscn")
+const alien_ammo_crate_scene = preload("res://models/supplies/alien_ammo_crate.tscn")
 
 func spawn_supply(data, supplies_parent_node, location):
 	# data = { supply_type, supply_id }
 	var supply_type = data["supply_type"]
 	var supply_id = data["supply_id"]
+	var team_id = data["team_id"]
 	
 	var supply_scene = null
 	if (supply_type == Global.SupplyType.AidKit):
-		supply_scene = aid_kit_scene
+		if (team_id == Global.TeamId.Humans):
+			supply_scene = human_aid_kit_scene
+		else:
+			supply_scene = alien_aid_kit_scene
 	elif (supply_type == Global.SupplyType.AmmoCrate):
-		supply_scene = ammo_crate_scene
+		if (team_id == Global.TeamId.Humans):
+			supply_scene = human_ammo_crate_scene
+		else:
+			supply_scene = alien_ammo_crate_scene
 	else:
 		print("Unknown supply type: ", supply_type)
 		return
@@ -31,7 +40,8 @@ func update_supplies_states(supplies: Array, supplies_parent_node):
 		if (supplies_on_map.find(supply.get_supply_id()) == -1):
 			var data = {
 				"supply_type": supply.get_supply_type(),
-				"supply_id": supply.get_supply_id()
+				"supply_id": supply.get_supply_id(),
+				"team_id": supply.get_player_team_id()
 			}
 			supplies_on_map.push_back(supply.get_supply_id())
 			spawn_supply(
