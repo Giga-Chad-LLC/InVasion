@@ -43,3 +43,11 @@
 Также необходимо установить компилятор [protocol buffers](https://developers.google.com/protocol-buffers/docs/downloads), мы использовали версию `v3.18.0`, ее можно установить по [ссылке](https://github.com/protocolbuffers/protobuf/releases/tag/v3.18.0).
 
 Последнее, что необходимо к установке — [sqlite](https://www.sqlite.org/index.html).
+
+P.S Если у вас Linux и не запускается sqlite, то установка дополнительных компонентов должна решить проблему
+
+```
+sudo apt update
+sudo apt-get install libsqlite3-dev
+sudo apt-get install sqlite3
+```
