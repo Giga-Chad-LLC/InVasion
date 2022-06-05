@@ -227,7 +227,7 @@ TEST_CASE("Supplies using") {
 
 
 
-/*
+
 TEST_CASE("Decrementing players in teams") {
 	GameSession session;
 
@@ -274,38 +274,11 @@ TEST_CASE("Decrementing players in teams") {
 	CHECK(stats.getFirstTeamPlayersCount() == 0);
 	CHECK(stats.getSecondTeamPlayersCount() == 0);
 }
-*/
-
-
-/*
-TEST_CASE("setTimeout testing") {
-	FixedTimeoutCallbackInvoker invoker;
-
-	for(int i = 0; i < 10; i++) {
-		invoker.setTimeout(500, [i]() {
-			std::cout << '\n' << "Hello World " << i << "! 500" << std::endl;
-		});
-	}
-
-	invoker.setTimeout(1000, []() {
-		std::cout << '\n' << "Hello World 1000!" << std::endl;
-	});
-
-	invoker.setTimeout(3000, []() {
-		std::cout << '\n' << "Hello World! 3000" << std::endl;
-	});
-
-	std::cout << "testing!" << std::endl;
-
-	invoker.setTimeout(60 * 1000, []() {
-		std::cout << '\n' << "One minute has passed" << std::endl;
-	}); // 1 minute
-}
-*/
 
 
 
-/*
+
+
 TEST_CASE("Updating kills counts of teams") {
 	using namespace std::chrono_literals;
 	GameSession session;
@@ -342,48 +315,11 @@ TEST_CASE("Updating kills counts of teams") {
 		std::cout << "player2 life state: " << player2->getLifeState().isInDeadState() << std::endl;
 		std::cout << "player2 HP: " << player2->getLifeState().getHitPoints() << std::endl;
 	}
-
-	GameSessionStats stats = session.getStats_debug();
-
-	if (player1->getTeamId() == PlayerTeamId::FirstTeam) {
-		CHECK(stats.getFirstTeamKillsCount() == 1);
-		CHECK(stats.getSecondTeamKillsCount() == 0);
-	}
-	else if (player1->getTeamId() == PlayerTeamId::SecondTeam) {
-		CHECK(stats.getFirstTeamKillsCount() == 0);
-		CHECK(stats.getSecondTeamKillsCount() == 1);
-	}
-}*/
+}
 
 
-/*
-TEST_CASE("Distributing players by teams") {
-	GameSession session;
-
-	for(int i = 0; i < 1000; i++) {
-		session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
-		// temporary method
-		GameSessionStats stats = session.getStats_debug();
-		const int count1 = stats.getFirstTeamPlayersCount();
-		const int count2 = stats.getSecondTeamPlayersCount();
-
-		// std::cout << "players count: " << session.getPlayers().size() 
-		// 		  << "  first team: " << count1
-		// 		  << "  second team: " << count2 << '\n';
-
-		CHECK(std::abs(count1 - count2) <= 1);
-
-		if(i % 2 == 0) {
-			CHECK(std::abs(count1 - count2) == 1); 
-		}
-		else {
-			CHECK(std::abs(count1 - count2) == 0); 
-		}
-	}
-}*/
 
 
-/*
 TEST_CASE("Deleting players from GameSession") {
 	GameSession session;
 	const int id1 = session.createPlayerAndReturnId(PlayerSpecialization::Stormtrooper);
@@ -406,10 +342,7 @@ TEST_CASE("Deleting players from GameSession") {
 	}
 
 	CHECK(session.getPlayers().size() == prevSize - deletedCount);
-
-	// deleting non-existing players
-	// session.removePlayerById(-1);
-}*/
+}
 
 
 }
