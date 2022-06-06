@@ -27,16 +27,8 @@
 
 Нарезка игрового процесса:
 
-<div class="embed-container">
-  <iframe
-      src="readme/game_footage.mp4"
-      width="700"
-      height="480"
-      frameborder="0"
-      allowfullscreen="">
-  </iframe>
-</div>
-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3j8ecF8Wt4E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
 
 Внутриигровые скриншоты:
 <div style="text-align: center;">
