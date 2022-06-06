@@ -11,7 +11,7 @@ Actions take place in the distant future. People invade an alien planet in order
 The task of both teams is to keep the lead in points until the end of the match.
 
 
-### Управление:
+### Controls:
 
 | Buttons | Action | | Buttons | Action |
 | --- | --- | --- | --- | --- |
