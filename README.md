@@ -3,57 +3,59 @@
     <img src="readme/repo_logo.png" />
 </div>
 
-## Описание проекта:
+Read this in other languages: [English](./README.md), [Русский](./README.ru.md)
 
-Действия происходят в далеком будущем. Люди вторгаются на чужую планету с целью захвата ресурсов другой цивилизации. В сражении участвуют две команды: люди и пришельцы.
-Задача обеих команд сохранить лидерство по очкам до конца игровой матча.  
+## Project Description:
 
+Actions take place in the distant future. People invade an alien planet in order to capture the resources of another civilization. Two teams participate in the battle: humans and aliens.
+The task of both teams is to keep the lead in points until the end of the match.
 
 
 ### Управление:
 
-| Кнопки | Действие | | Кнопки | Действие |
+| Buttons | Action | | Buttons | Action |
 | --- | --- | --- | --- | --- |
-| `W` / `up` | движение вперед |  | `E` | использовать аптечку/набор патронов |
-| `A` / `left` | движение влево |  | `F` | поставить аптечку/набор патронов |
-| `S` / `down` | движение назад |  | `R` | перезарядить оружие |
-| `D` / `right` | движение вправо |  | `Tab` | просмотреть статистику матча |
-| `Esc` | открыть игровое меню во время матча |  |
+| `W` / `up` | move forward | | `e` | use aid kit / ammo crate |
+| `A` / `left` | move left | | `F` | put aid kit / ammo crate |
+| `S` / `down` | move backward | | `R` | reload weapon |
+| `D` / `right` | move right | | `Tab` | view match statistics |
+| `Esc` | open the game menu during a match | |
 
+## Project demo: 
 
-## Демонстрация проекта: 
+Project defense presentation (ru) - [link](https://docs.google.com/presentation/d/1lBzSjmXYhELPg0OBNJKAoncFke5LDX_C9CTU3kSo5jA/edit?usp=sharing).
 
-Презентация, использованная при защите проекта - [ссылка](https://docs.google.com/presentation/d/1lBzSjmXYhELPg0OBNJKAoncFke5LDX_C9CTU3kSo5jA/edit?usp=sharing).
-
-Нарезка игрового процесса:
+Gameplay footage:
 
 [![InVasion - Gameplay Footage](https://img.youtube.com/vi/mrqsUgST12c/0.jpg)](https://www.youtube.com/watch?v=mrqsUgST12c)
 
 
-Внутриигровые скриншоты:
+In-game screenshots:
 <div style="text-align: center;">
     <img src="readme/screenshot_1.png" style="margin-bottom: 10px;" />
     <img src="readme/screenshot_2.png" />
 </div>
 
-## Сборка проекта:
+## Project build:
 
-### Настройка клиента:
-Необходимо скачать [редактор Godot](https://godotengine.org/download/windows). При разработке мы использовали версию `v3.4.2`, ее можно установить, перейдя по [ссылке](https://downloads.tuxfamily.org/godotengine/3.4.2/).
+### Client setup:
+[Godot editor](https://godotengine.org/download/windows) is required. During development, we used the version `v3.4.2`, you can install it by clicking on the [link](https://downloads.tuxfamily.org/godotengine/3.4.2/).
 
-Далее необходимо открыть файл `/client/godot/game/default_env.tres` внутри движка, после чего можно начинать редактирование исходников клиентского кода.
+Next, you need to open the `/client/godot/game/default_env.tres` file inside the engine, after which you can start editing the client code sources.
 
-### Настройка сервера: 
+### Server setup: 
 
-При сборке под Windows рекомендуем использовать пакетный менеджер [vcpkg](https://github.com/microsoft/vcpkg) для установки всего перечисленного ниже.
+When building on Windows, we recommend using the [vcpkg](https://github.com/microsoft/vcpkg) package manager to install all of the following dependencies.
 
-Для сборки сервера необходимо установить [boost](https://www.boost.org/), мы разрабатывали на версии `v1.71.0`, ее можно установить по [ссылке](https://www.boost.org/users/history/version_1_71_0.html).
 
-Также необходимо установить компилятор [protocol buffers](https://developers.google.com/protocol-buffers/docs/downloads), мы использовали версию `v3.18.0`, ее можно установить по [ссылке](https://github.com/protocolbuffers/protobuf/releases/tag/v3.18.0).
+To build the server, you need to install [boost](https://www.boost.org/), we developed on version `v1.71.0`, it can be installed from the [link](https://www.boost.org/users/history/version_1_71_0.html).
 
-Последнее, что необходимо к установке — [sqlite](https://www.sqlite.org/index.html).
 
-P.S. Если у вас Linux и не запускается sqlite, то установка дополнительных компонентов должна решить проблему
+You also need to install the [protocol buffers](https://developers.google.com/protocol-buffers/docs/downloads) compiler, we used version `v3.18.0`, it can be installed from the [link](https://github.com/protocolbuffers/protobuf/releases/tag/v3.18.0).
+
+The last thing you need to install is [sqlite](https://www.sqlite.org/index.html).
+
+P.S. If you have Linux and sqlite does not start, then installing additional components should solve the problem:
 
 ```sh
 sudo apt update
