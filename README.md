@@ -9,6 +9,7 @@
 Задача обеих команд сохранить лидерство по очкам до конца игровой матча.  
 
 
+
 ### Управление:
 
 | Кнопки | Действие | | Кнопки | Действие |
@@ -20,8 +21,24 @@
 | `Esc` | открыть игровое меню во время матча |  |
 
 
-## Скриншоты, демо-видео: 
+## Демонстрация проекта: 
 
+Презентация, использованная при защите проекта - [ссылка](https://docs.google.com/presentation/d/1lBzSjmXYhELPg0OBNJKAoncFke5LDX_C9CTU3kSo5jA/edit?usp=sharing).
+
+Нарезка игрового процесса:
+
+<div class="embed-container">
+  <iframe
+      src="readme/game_footage.mp4"
+      width="700"
+      height="480"
+      frameborder="0"
+      allowfullscreen="">
+  </iframe>
+</div>
+
+
+Внутриигровые скриншоты:
 <div style="text-align: center;">
     <img src="readme/screenshot_1.png" style="margin-bottom: 10px;" />
     <img src="readme/screenshot_2.png" />
@@ -44,9 +61,9 @@
 
 Последнее, что необходимо к установке — [sqlite](https://www.sqlite.org/index.html).
 
-P.S Если у вас Linux и не запускается sqlite, то установка дополнительных компонентов должна решить проблему
+P.S. Если у вас Linux и не запускается sqlite, то установка дополнительных компонентов должна решить проблему
 
-```
+```sh
 sudo apt update
 sudo apt-get install libsqlite3-dev
 sudo apt-get install sqlite3
