@@ -15,7 +15,7 @@ The task of both teams is to keep the lead in points until the end of the match.
 
 | Buttons | Action | | Buttons | Action |
 | --- | --- | --- | --- | --- |
-| `W` / `up` | move forward | | `e` | use aid kit / ammo crate |
+| `W` / `up` | move forward | | `E` | use aid kit / ammo crate |
 | `A` / `left` | move left | | `F` | put aid kit / ammo crate |
 | `S` / `down` | move backward | | `R` | reload weapon |
 | `D` / `right` | move right | | `Tab` | view match statistics |
