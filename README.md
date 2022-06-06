@@ -27,7 +27,7 @@
 
 Нарезка игрового процесса:
 
-https://www.youtube.com/embed/3j8ecF8Wt4E
+[![InVasion - Gameplay Footage](https://img.youtube.com/vi/mrqsUgST12c/0.jpg)](https://www.youtube.com/watch?v=mrqsUgST12c)
 
 
 Внутриигровые скриншоты:
