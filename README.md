@@ -27,8 +27,8 @@
 
 Нарезка игрового процесса:
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3j8ecF8Wt4E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3j8ecF8Wt4E/0.jpg)](https://drive.google.com/file/d/1XfaVxzAHiXhedogH9DHjZVV4j73LQ3I5/view?usp=sharing)
 
 Внутриигровые скриншоты:
 <div style="text-align: center;">
