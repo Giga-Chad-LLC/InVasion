@@ -28,7 +28,7 @@
 Нарезка игрового процесса:
 
 
-[![InVasion]({readme/screenshot_1.png})]({https://www.youtube.com/embed/3j8ecF8Wt4E} "InVasion")
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3j8ecF8Wt4E/0.jpg)](https://drive.google.com/file/d/1XfaVxzAHiXhedogH9DHjZVV4j73LQ3I5/view?usp=sharing)
 
 Внутриигровые скриншоты:
 <div style="text-align: center;">
