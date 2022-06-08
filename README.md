@@ -39,8 +39,17 @@ Gameplay footage:
 In-game screenshots:
 <div style="text-align: center;">
     <img src="readme/screenshot_1.png" style="margin-bottom: 10px;" />
-    <img src="readme/screenshot_2.png" />
+    <img src="readme/screenshot_2.png" style="margin-bottom: 10px;" />
+    <img src="readme/leaderboard.png" />
 </div>
+
+Classes abilities demonstration (medic and support):
+
+
+![](./readme/medic-demonstration.gif)
+
+![](./readme/support-demonstration.gif)
+
 
 ## Project build:
 

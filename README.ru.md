@@ -40,8 +40,18 @@ Read this in other languages: [English](./README.md), [Русский](./README.
 Внутриигровые скриншоты:
 <div style="text-align: center;">
     <img src="readme/screenshot_1.png" style="margin-bottom: 10px;" />
-    <img src="readme/screenshot_2.png" />
+    <img src="readme/screenshot_2.png" style="margin-bottom: 10px;" />
+    <img src="readme/leaderboard.png" />
 </div>
+
+
+Демонстрация способностей классов (медик и поддержка):
+
+![](./readme/medic-demonstration.gif)
+
+![](./readme/support-demonstration.gif)
+
+
 
 ## Сборка проекта:
 
